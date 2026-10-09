@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#18140f">
+<title>ビビル文字ジェネレータ</title>
+<style>
+:root{--bg:#18140f;--paper:#efe1b9;--ink:#18140f;--panel:#fffaf0;--line:#cdbf98;--muted:#776b54}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:auto;padding:16px 12px 48px}
+.hero{text-align:center;color:#fff7e5;padding:16px 0 18px}.hero h1{margin:0;font-size:27px;letter-spacing:.06em}.hero p{font-size:13px;opacity:.72;margin:7px 0 0}
+.card{background:var(--panel);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px #0005}
+label{font-size:13px;font-weight:800}
+textarea{width:100%;min-height:100px;margin-top:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:18px;resize:vertical}
+.previewWrap{margin-top:12px;padding:10px;background:#dfcea0;border-radius:14px;overflow:auto}
+canvas{display:block;max-width:100%;height:auto;margin:auto}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button{appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:11px 15px;font-weight:800;font-size:14px}
+button.primary{background:var(--ink);color:#fff;border-color:var(--ink);flex:1}
+button.secondary{flex:1}
+.status,.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:9px}
+.shareView{text-align:center}.shareView h2{font-size:18px;margin:2px 0 4px}.shareView .lead{font-size:13px;color:var(--muted);margin:0 0 10px}
+.answer{margin-top:13px;padding:13px;background:#f4ead0;border-radius:12px;font-size:18px;font-weight:800;word-break:break-word}
+.brand{font-weight:900;letter-spacing:.08em}
+.hidden{display:none!important}
+.admin{border-top:1px dashed var(--line);margin-top:15px;padding-top:13px}
+@media(max-width:520px){.wrap{padding:10px 10px 36px}.card{padding:13px;border-radius:15px}.hero h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero"><h1 id="secretTitle">ビビル文字ジェネレータ</h1><p>ことばを、ビビル文字にしてみよう。</p></header>
+
+<section id="maker">
+ <div class="card">
+  <label for="text">ことばをいれてね</label>
+  <textarea id="text" maxlength="120">ビビルのとう</textarea>
+  <div class="note">ひらがな・カタカナ・英字・数字・一部の記号に対応しています。英字は大文字・小文字どちらでも同じ文字として変換されます。小さい「ゃ・ゅ・ょ・っ」などは大きい文字に置きかわります。未対応の文字は空白になります。</div>
+ </div>
+ <div class="card">
+  
+  <div class="previewWrap"><canvas id="preview"></canvas></div>
+  <div id="missing" class="status"></div>
+  <div class="row">
+   <button id="savePng" class="primary">もじをほぞん</button>
+   <button id="sharePage" class="secondary">もじをおくる</button><button id="shareXMaker" class="secondary">Xでシェア</button>
+  </div>
+  <div class="note">画像には『ビビルの塔』と ©2026 PANDA KINEMA が入ります。</div>
+  <div id="admin" class="admin hidden">
+   <div class="note">管理者モード</div>
+   <div class="row"><button id="saveSvg">SVGでほぞん</button><button id="resetData">初期データに戻す</button></div>
+   <div class="row"><input id="jsonFile" type="file" accept=".json,application/json"></div>
+  </div>
+ </div>
+</section>
+
+<section id="challenge" class="hidden">
+ <div class="card shareView">
+  <h2>このビビル文字、よめる？</h2>
+  <p class="lead">こたえがわかったら、ボタンをおしてみよう。</p>
+  <div class="previewWrap"><canvas id="challengeCanvas"></canvas></div>
+  <div class="row"><button id="reveal" class="primary">こたえをみる</button></div>
+  <div id="answer" class="answer hidden"></div>
+  <div class="row"><button id="shareX" class="primary">Xでシェア</button><button id="makeMine" class="secondary">じぶんもつくる</button></div>
+ </div>
+</section>
+</div>
+<script>
+const BUILTIN={"0":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,0,1,1,0,0,1,0,0,1,1,0,1,1,0,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"1":[1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"2":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1],"3":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"4":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,1,1,0,1,0,1,1,0,1,0,1,0,1],"5":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"6":[1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"7":[1,0,1,1,1,1,1,1,0,1,0,0,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,0,0,1,1,1,0,1,1,0,1,0,1,0,1],"8":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"9":[1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1],"び":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],"る":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"れ":[1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],"ら":[1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1],"た":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1],"て":[1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1],"つ":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"づ":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"か":[1,0,1,0,1,1,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,0,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"き":[1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1],"う":[1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1],"み":[1,1,1,0,1,1,1,0,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1],"わ":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1],"い":[1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,1,0,0,1,0,1,0,1,1,0,1,0,1,1],"そ":[1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"お":[1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,0,1,1,0,0,0,1,0,0,1,1,1,0,1,0,1,1],"し":[1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ね":[1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,0,1,0,1,1,0,1,0,1,1],"む":[1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"さ":[1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"に":[1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1],"く":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"り":[1,0,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,0,0,1,1,0,1,0,1,1,1],"せ":[1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1],"ど":[1,0,1,0,1,0,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,1,1],"ほ":[1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1],"ん":[1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"で":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1],"あ":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1],"や":[1,0,1,0,0,1,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,1],"こ":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ち":[1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1],"え":[1,1,1,0,1,1,1,0,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"け":[1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"す":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"と":[1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,1,1],"な":[1,1,1,0,1,0,1,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,0,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"は":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,1,1,1],"ぬ":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"の":[1,0,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ひ":[1,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],"ふ":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1],"へ":[1,1,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,1,1,0,1,1,1,0,1],"ま":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1],"め":[1,1,1,0,1,1,1,0,0,1,0,1,0,1,1,0,1,0,1,0,0,0,0,1,1,1,1,1,1,0,1,0,1,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,1],"を":[1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,0,1,1,0,0,0,1,0,1,0,1,1,0,1,0,1,1],"も":[1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,0,0,1,1,0,1,1,1,1],"ゆ":[1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,0,1,1,1,1,1,1,1],"よ":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ろ":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"ぴ":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],"ば":[1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,1,1,1],"ぶ":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1],"！":[1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1],"？":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,0,0,1,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1],"ー":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ぱ":[1,0,1,0,1,0,1,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,1,1,1],"べ":[1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,1,1,0,1,1,1,0,1],"ぼ":[1,1,0,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1],"だ":[1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1],"ぢ":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1],"ぷ":[1,1,1,0,1,0,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1],"ぺ":[1,1,1,0,1,0,1,1,0,0,0,1,1,1,1,0,1,0,0,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,1,1,0,1,1,1,0,1],"ぽ":[1,1,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1],"が":[1,0,1,0,1,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,0,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"ぎ":[1,1,0,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1],"ぐ":[1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"げ":[1,0,0,0,1,0,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"ご":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ざ":[1,0,1,0,1,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1],"じ":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"ず":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1],"ぜ":[1,0,1,0,1,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1],"ぞ":[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"A":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,1,0,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,0,1],"C":[1,0,1,1,1,1,1,1,0,1,0,0,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,1,1,0,1,1,1,1,1],"D":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,0,1,1,0,1,0,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"B":[1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,0,1,1,0,1,0,1,0,0,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"E":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],"F":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,1,1],"G":[1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,1,1,0,0,1,0,1,0,0,1,0,1,0,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1],"H":[1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,0,1,0,1,0,1,0,1],"I":[1,0,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"J":[1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"K":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,0,0,1,0,0,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,0,1,0,1],"L":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,1,0,0,0,0,1,0,1,1,1,1,1],"M":[1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,0,1,1,1],"N":[1,1,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1],"O":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"P":[1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,1,0,1,0,0,0,0,1,0,1,0,1,1,1],"Q":[1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,0,1,0,1,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,0,1,0,1,0,1,1,1],"R":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1],"S":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],"T":[1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1],"U":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"V":[1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,1,1,0,0,1,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,0,1,1,1,0,1,1,1],"W":[1,1,1,0,1,1,1,1,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,0,1,1,0,0,1,0,0,1,1,0,0,1,0,0,1,1,1,1,1,1,1,1],"X":[1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,0,0,1,0,1,1,0,1,0,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1],"Y":[1,0,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,1,1,0,1],"Z":[1,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1]};
+let glyphs=JSON.parse(localStorage.getItem("bibilu-converter-glyphs")||"null")||JSON.parse(JSON.stringify(BUILTIN));
+const $=q=>document.querySelector(q);
+const CELL=24,GAP=1,GLYPH=7,MAX=6;
+function glyphBounds(g){
+ if(!g)return {left:0,right:GLYPH-1,width:GLYPH};
+ let left=GLYPH,right=-1;
+ for(let r=0;r<GLYPH;r++)for(let c=0;c<GLYPH;c++)if(g[r*GLYPH+c]){
+   if(c<left)left=c;if(c>right)right=c;
+ }
+ if(right<left)return {left:0,right:GLYPH-1,width:GLYPH};
+ return {left,right,width:right-left+1};
+}
+function charWidth(ch){ return GLYPH; }
+function lineWidth(line,unit){ if(!line.length)return 0; return line.length*GLYPH*unit+(line.length-1)*GAP*unit; }
+function normalizeText(s){
+ let t=s.normalize("NFC").replace(/[a-z]/g,ch=>ch.toUpperCase()).replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60));
+ const small={"ぁ":"あ","ぃ":"い","ぅ":"う","ぇ":"え","ぉ":"お","ゃ":"や","ゅ":"ゆ","ょ":"よ","っ":"つ","ゎ":"わ","ゕ":"か","ゖ":"け"};
+ return Array.from(t,ch=>small[ch]||ch).join("");
+}
+function linesFor(s){
+ const out=[];
+ for(const source of Array.from(normalizeText(s)).reduce((a,ch)=>{if(ch==="\n")a.push([]);else a[a.length-1].push(ch);return a},[[]])){
+   if(!source.length){out.push([]);continue}
+   for(let i=0;i<source.length;i+=MAX)out.push(source.slice(i,i+MAX));
+ }
+ return out.length?out:[[]];
+}
+function drawTo(canvas,text,branded=true){
+ const ctx=canvas.getContext("2d"),lines=linesFor(text);
+ const cell=CELL,pad=2*cell,top=branded?2.6*cell:pad,bottom=branded?3.4*cell:pad;
+ const widest=Math.max(cell,...lines.map(line=>lineWidth(line,cell)));
+ const w=Math.max(11*cell,pad*2+widest);
+ const h=Math.max(12*cell,top+lines.length*GLYPH*cell+Math.max(0,lines.length-1)*GAP*cell+bottom);
+ canvas.width=w;canvas.height=h;ctx.fillStyle="#efe1b9";ctx.fillRect(0,0,w,h);ctx.fillStyle="#18140f";
+ const missing=new Set();
+ lines.forEach((line,li)=>{
+   let x=(w-lineWidth(line,cell))/2,y=top+li*(GLYPH+GAP)*cell;
+   line.forEach(ch=>{
+     const g=glyphs[ch];
+     if(g){
+       for(let r=0;r<GLYPH;r++){
+         let c=0;
+         while(c<GLYPH){
+           if(!g[r*GLYPH+c]){c++;continue}
+           const start=c;
+           while(c<GLYPH&&g[r*GLYPH+c])c++;
+           ctx.fillRect(x+start*cell,y+r*cell,(c-start)*cell,cell);
+         }
+       }
+     }else if(ch!==" "&&ch!=="　")missing.add(ch);
+     x+=charWidth(ch)*cell+GAP*cell;
+   });
+ });
+ if(branded){
+   ctx.textAlign="center";ctx.fillStyle="#18140f";
+   ctx.font="900 16px -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif";
+   ctx.fillText("ビビルの塔",w/2,h-42);
+   ctx.font="11px -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif";
+   ctx.fillText("©2026 PANDA KINEMA",w/2,h-21);
+ }
+ return missing;
+}
+function refresh(){
+ const m=drawTo($("#preview"),$("#text").value,true);
+ $("#missing").textContent=m.size?"未収録："+[...m].join("、"):`収録字形：${Object.keys(glyphs).length}文字`;
+}
+$("#text").addEventListener("input",refresh);
+function blobOf(c){return new Promise(r=>c.toBlob(r,"image/png"))}
+$("#savePng").onclick=async()=>{
+ refresh();
+ const blob=await blobOf($("#preview"));
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="ビビル文字.png";
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+};
+function encoded(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function decoded(s){try{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return decodeURIComponent(escape(atob(s)))}catch{return""}}
+function shareUrl(){
+ const u=new URL(location.href);u.search="";u.hash="q="+encoded($("#text").value);return u.toString()
+}
+$("#sharePage").onclick=async()=>{
+ const url=shareUrl(),data={title:"このビビル文字、よめる？",text:"このビビル文字、よめる？",url};
+ try{if(navigator.share){await navigator.share(data);return}}catch(e){if(e.name==="AbortError")return}
+ try{await navigator.clipboard.writeText(url);alert("出題用URLをコピーしました")}catch{prompt("このURLを共有してください",url)}
+};
+
+function openXShare(url){
+ const share="https://twitter.com/intent/tweet?"+new URLSearchParams({
+   text:"このビビル文字、よめる？ #ビビルの塔",
+   url:url
+ }).toString();
+ window.open(share,"_blank","noopener,noreferrer");
+}
+$("#shareXMaker").onclick=()=>openXShare(shareUrl());
+$("#shareX").onclick=()=>openXShare(location.href);
+
+function showChallenge(text){
+ $("#maker").classList.add("hidden");$("#challenge").classList.remove("hidden");$("#answer").classList.add("hidden");$("#answer").textContent=text;
+ drawTo($("#challengeCanvas"),text,true)
+}
+$("#reveal").onclick=()=>$("#answer").classList.remove("hidden");
+$("#makeMine").onclick=()=>{history.replaceState(null,"",location.pathname);$("#challenge").classList.add("hidden");$("#maker").classList.remove("hidden");refresh();scrollTo(0,0)};
+$("#jsonFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text()),src=o.glyphs||o,clean={};for(const[k,v]of Object.entries(src))if(Array.isArray(v)&&v.length===49)clean[k]=v.map(x=>x?1:0);if(!Object.keys(clean).length)throw 0;glyphs=clean;localStorage.setItem("bibilu-converter-glyphs",JSON.stringify(glyphs));refresh();alert(`${Object.keys(clean).length}文字を読み込みました`)}catch{alert("JSONを読み込めませんでした")}e.target.value=""};
+$("#resetData").onclick=()=>{if(confirm("初期データに戻しますか？")){glyphs=JSON.parse(JSON.stringify(BUILTIN));localStorage.removeItem("bibilu-converter-glyphs");refresh()}};
+function unionPath(g,x0,y0,u){
+ const edges=[];
+ const on=(r,c)=>r>=0&&r<7&&c>=0&&c<7&&g[r*7+c];
+ const add=(x1,y1,x2,y2)=>edges.push([[x1,y1],[x2,y2]]);
+ for(let r=0;r<7;r++)for(let c=0;c<7;c++)if(on(r,c)){
+   const x=x0+c*u,y=y0+r*u;
+   if(!on(r-1,c))add(x,y,x+u,y);
+   if(!on(r,c+1))add(x+u,y,x+u,y+u);
+   if(!on(r+1,c))add(x+u,y+u,x,y+u);
+   if(!on(r,c-1))add(x,y+u,x,y);
+ }
+ const key=p=>p[0]+","+p[1], byStart=new Map();
+ edges.forEach((e,i)=>{const k=key(e[0]);if(!byStart.has(k))byStart.set(k,[]);byStart.get(k).push(i)});
+ const used=new Set();let d="";
+ for(let i=0;i<edges.length;i++){
+   if(used.has(i))continue;
+   let e=edges[i];used.add(i);let cur=e[1];
+   d+=`M${e[0][0]} ${e[0][1]}L${cur[0]} ${cur[1]}`;
+   while(key(cur)!==key(e[0])){
+     const candidates=byStart.get(key(cur))||[];
+     const j=candidates.find(v=>!used.has(v));
+     if(j===undefined)break;
+     used.add(j);cur=edges[j][1];d+=`L${cur[0]} ${cur[1]}`;
+   }
+   d+="Z";
+ }
+ return d;
+}
+function svgFor(text){
+ const lines=linesFor(text),unit=10,pad=20;
+ const widest=Math.max(unit,...lines.map(line=>lineWidth(line,unit)));
+ const w=pad*2+widest;
+ const h=pad*2+lines.length*GLYPH*unit+Math.max(0,lines.length-1)*GAP*unit;
+ let body="";
+ lines.forEach((line,li)=>{
+   let x=(w-lineWidth(line,unit))/2,y=pad+li*(GLYPH+GAP)*unit;
+   line.forEach(ch=>{
+     const g=glyphs[ch];
+     if(g)body+=`<path d="${unionPath(g,x,y,unit)}" fill="#000" fill-rule="evenodd"/>`;
+     x+=charWidth(ch)*unit+GAP*unit;
+   });
+ });
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${body}</svg>`;
+}
+$("#saveSvg").onclick=()=>{
+ const blob=new Blob([svgFor($("#text").value)],{type:"image/svg+xml"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="ビビル文字.svg";document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+};
+let taps=0,timer;$("#secretTitle").onclick=()=>{taps++;clearTimeout(timer);timer=setTimeout(()=>taps=0,1300);if(taps>=5){$("#admin").classList.toggle("hidden");taps=0}};
+const hash=new URLSearchParams(location.hash.slice(1)),q=hash.get("q");
+if(q){const t=decoded(q);if(t)showChallenge(t);else refresh()}else refresh();
+</script>
+</body></html>
