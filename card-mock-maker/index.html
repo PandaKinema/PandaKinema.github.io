@@ -52,11 +52,16 @@ body{
 }
 header{
   min-height:58px;background:var(--ui-panel);border-bottom:1px solid var(--ui-border);
-  display:flex;align-items:center;gap:9px;padding:10px 16px;position:sticky;top:0;z-index:20;flex-wrap:wrap;
+  display:flex;align-items:center;gap:7px;padding:9px 12px;position:sticky;top:0;z-index:20;
+  flex-wrap:nowrap;white-space:nowrap;
 }
 header strong{font-size:15px;margin-right:6px}
 header select{width:auto!important}
-.pdf-note{font-size:11px;color:#777;white-space:nowrap}
+.pdf-note{
+  font-size:10px;color:var(--ui-muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+  max-width:300px;min-width:80px;flex:0 1 300px;
+}
 button,select,input,textarea{font:inherit}
 button{
   border:1px solid var(--ui-border-strong);background:var(--ui-control);color:var(--ui-control-ink);border-radius:7px;padding:7px 11px;cursor:pointer;
@@ -784,9 +789,215 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 /* Physical paper/card preview must not inherit dark UI colors. */
 .paper,.thumb-paper,.print-page,.face{color:#191919}
 
+
+/* Compact desktop widths: keep toolbar on one line instead of wrapping. */
+@media (max-width:1250px) and (min-width:721px){
+  .app-brand > span{display:none}
+  .pdf-note{display:none}
+  #sheetTitleInput{width:140px!important}
+}
+
+/* Smartphone layout */
+@media (max-width:720px){
+  html,body{min-width:0;overflow-x:hidden}
+  body{background:var(--bg)}
+
+  header{
+    position:relative;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:7px;
+    padding:10px;
+    min-height:0;
+    white-space:normal;
+  }
+  .app-brand{
+    grid-column:1 / -1;
+    margin:0 0 2px;
+  }
+  .app-brand strong{font-size:15px}
+  .app-brand > span{display:none}
+
+  header select{
+    width:100%!important;
+    min-width:0!important;
+    height:36px;
+  }
+  #sheetTitleInput{
+    grid-column:1 / -1;
+    width:100%!important;
+    height:38px;
+  }
+  .history-controls{
+    grid-column:1 / 2;
+    align-self:center;
+  }
+  .history-controls .icon-btn{
+    width:38px;
+    height:36px;
+  }
+  #editablePdfBtn,#loadPdfBtn{
+    width:100%;
+    min-height:36px;
+  }
+  #editablePdfBtn{grid-column:1 / 2}
+  #loadPdfBtn{grid-column:2 / 3}
+  .pdf-note{
+    grid-column:1 / -1;
+    display:block;
+    max-width:none;
+    min-width:0;
+    font-size:9px;
+    line-height:1.35;
+    white-space:normal;
+    overflow:visible;
+  }
+  .toolbar-spacer{display:none}
+  #printBtn{
+    grid-column:2 / 3;
+    grid-row:4;
+    width:100%;
+    min-height:36px;
+  }
+
+  .layout{
+    display:block;
+    min-height:0;
+  }
+  main{
+    overflow:visible;
+  }
+  .workspace{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    min-height:0;
+  }
+
+  /* Pages become a horizontal filmstrip. */
+  .page-sidebar{
+    order:0;
+    width:100%;
+    border-right:0;
+    border-bottom:1px solid var(--ui-border);
+    padding:8px 10px;
+    overflow:hidden;
+    gap:6px;
+  }
+  .page-sidebar-head{
+    min-height:26px;
+  }
+  .page-actions{
+    display:block;
+  }
+  .page-actions #addPage{
+    width:auto;
+    min-height:30px;
+  }
+  .page-thumbs{
+    flex-direction:row;
+    align-items:stretch;
+    gap:5px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 0 8px;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+  }
+  .page-thumb{
+    flex:0 0 126px;
+    scroll-snap-align:start;
+  }
+  .page-drop-zone{
+    flex:0 0 7px;
+    width:7px;
+    height:auto;
+    min-height:100px;
+  }
+  .page-drop-zone.drag-over{
+    flex-basis:16px;
+    width:16px;
+    height:auto;
+  }
+
+  /* A4 preview scales to phone width. */
+  .canvas-area{
+    order:1;
+    width:100%;
+    overflow:hidden;
+    padding:12px 10px 14px;
+  }
+  .paper-wrap{
+    min-width:0!important;
+    width:100%;
+    display:block;
+    overflow:visible;
+  }
+  .paper{
+    transform-origin:top center;
+  }
+
+  /* Settings move below preview. */
+  aside{
+    width:100%;
+    border-left:0;
+    border-top:1px solid var(--ui-border);
+    padding:10px 12px 14px;
+    overflow:visible;
+    max-height:none;
+  }
+  aside .group{
+    max-width:none;
+  }
+
+  /* Tool rows stay usable on narrow screens. */
+  .tool-strip,.format-row,.frame-color-row{
+    flex-wrap:wrap;
+  }
+  .tool-main-input{
+    flex:1 1 100%!important;
+  }
+  .tool-textarea{
+    width:100%;
+  }
+  .tool-number-wrap{
+    flex:0 0 auto;
+  }
+  .option-tool-head{
+    min-height:34px;
+  }
+
+  /* Prevent iOS from zooming the page when editing fields. */
+  header input,header select,
+  aside input[type="text"],aside input[type="number"],aside textarea,aside select{
+    font-size:16px;
+  }
+  aside .tool-number,
+  aside .stroke-width-select{
+    font-size:13px;
+  }
+
+  .public-beta-note{
+    margin-top:12px;
+  }
+
+  /* Popup always fits inside a phone viewport. */
+  .color-popup{
+    max-width:calc(100vw - 16px);
+    max-height:calc(100dvh - 16px);
+    overflow:auto;
+  }
+}
+
+@media (max-width:390px){
+  header{grid-template-columns:1fr 1fr}
+  .pdf-note{font-size:8.5px}
+  .page-thumb{flex-basis:118px}
+}
+
 @media(max-width:1050px){
   .layout{grid-template-columns:1fr}
-  aside{border-left:0;border-top:1px solid #ddd}
+  aside{border-left:0;border-top:1px solid var(--ui-border)}
 }
 @page{margin:0}
 @media print{
@@ -824,33 +1035,29 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 <body>
 <header>
   <div class="app-brand">
-    <strong>カードモックツクール <span class="beta">β</span></strong>
-    <span>Card Mock Maker</span>
+    <strong>カードモックツクール</strong>
+    <span class="beta-badge">β</span>
+    <span class="brand-en">Card Mock Maker</span>
   </div>
-  <select id="paperOrientation" title="用紙方向">
-    <option value="landscape">A4 横</option>
-    <option value="portrait">A4 縦</option>
-  </select>
-  <select id="cardSize" title="カードサイズ">
-    <option value="poker">ポーカー (63×88)</option>
-    <option value="bridge">ブリッジ (58×89)</option>
-    <option value="business">名刺 (55×91)</option>
-    <option value="yugioh">遊戯王サイズ (59×86)</option>
-    <option value="credit">クレジット (54×86)</option>
-    <option value="half">ハーフ (44×63)</option>
-  </select>
-  <input id="sheetTitleInput" type="text" placeholder="シートタイトル" style="width:180px">
   <div class="history-controls" aria-label="履歴">
     <button id="undoBtn" class="icon-btn" title="戻る（⌘Z / Ctrl+Z）" aria-label="戻る">←</button>
-    <button id="redoBtn" class="icon-btn" title="進む（⇧⌘Z / Ctrl+Y）" aria-label="進む">→</button>
+    <button id="redoBtn" class="icon-btn" title="進む（⌘Y / Ctrl+Y / ⇧⌘Z）" aria-label="進む">→</button>
   </div>
+  <select id="paperOrientation" title="用紙方向">
+    <option value="landscape">A4 横</option><option value="portrait">A4 縦</option>
+  </select>
+  <select id="cardSize" title="カードサイズ">
+    <option value="poker">ポーカー (63×88)</option><option value="bridge">ブリッジ (58×89)</option>
+    <option value="business">名刺 (55×91)</option><option value="yugioh">遊戯王サイズ (59×86)</option>
+    <option value="credit">クレジット (54×86)</option><option value="half">ハーフ (44×63)</option>
+  </select>
+  <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
+  <span class="toolbar-spacer header-action-gap"></span>
   <button id="editablePdfBtn">PDF保存</button>
   <button id="loadPdfBtn">PDF読み込み</button>
   <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
-  <span class="pdf-note">※ここで作成したPDFを読み込むと、作業を途中から始められます</span>
-  <span class="toolbar-spacer"></span>
-  <span id="fitStatus" class="size-note"></span>
   <button id="printBtn" class="primary">印刷</button>
+  <span id="fitStatus" class="size-note hidden"></span>
 </header>
 
 <div class="layout">
@@ -1091,7 +1298,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
       <strong>フレームテキスト</strong>
       <button id="addFrameText" class="mini">＋ 追加</button>
     </div>
-    <div class="status compact-help">枠と面を持つテキスト。位置・縦横比を自由に変更できます。</div>
+    <div class="status compact-help">面と線を持つテキスト。位置・縦横比を自由に変更できます。</div>
     <div id="frameTextList"></div>
   </div>
 
@@ -1249,9 +1456,20 @@ function setPaper(){
   renderSheet();
 }
 function fitPaper(){
-  const p=paperMM(),mainWidth=document.querySelector(".canvas-area").clientWidth-44;
+  const p=paperMM(),area=document.querySelector(".canvas-area");
+  const mobile=window.matchMedia("(max-width:720px)").matches;
+  const pad=mobile?20:44;
+  const mainWidth=Math.max(1,area.clientWidth-pad);
   const raw=p.w*MM_TO_PX,scale=Math.min(1,mainWidth/raw);
-  paper.style.transform=`scale(${scale})`;
+
+  if(mobile){
+    paper.style.left="50%";
+    paper.style.transform=`translateX(-50%) scale(${scale})`;
+  }else{
+    paper.style.left="";
+    paper.style.transform=`scale(${scale})`;
+  }
+
   paper.parentElement.style.height=p.h*MM_TO_PX*scale+"px";
 }
 function updateFit(){
@@ -1403,7 +1621,13 @@ function openColorPopup(input,anchor){
   swatches(pop.querySelector(".preset-swatches"),PRESET);renderUsed();update(false);
   field.addEventListener("pointerdown",e=>{const move=ev=>{const r=field.getBoundingClientRect();hsv.s=clamp((ev.clientX-r.left)/r.width,0,1);hsv.v=1-clamp((ev.clientY-r.top)/r.height,0,1);update(true)};move(e);window.addEventListener("pointermove",move);window.addEventListener("pointerup",()=>window.removeEventListener("pointermove",move),{once:true})});
   hue.addEventListener("input",()=>{hsv.h=Number(hue.value);update(true)});modeSel.addEventListener("change",()=>{mode=modeSel.value;renderValues()});pop.querySelector(".color-popup-close").onclick=closeColorPopup;pop.querySelector(".color-none-btn").onclick=()=>{applyNoColor(input);closeColorPopup()};
-  const r=anchor.getBoundingClientRect(),w=320;let left=Math.min(window.innerWidth-w-8,Math.max(8,r.left)),top=r.bottom+6;requestAnimationFrame(()=>{if(top+pop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-pop.offsetHeight-6);pop.style.left=left+"px";pop.style.top=top+"px"});
+  const r=anchor.getBoundingClientRect(),w=Math.min(320,window.innerWidth-16);
+  pop.style.width=w+"px";
+  let left=Math.min(window.innerWidth-w-8,Math.max(8,r.left)),top=r.bottom+6;
+  requestAnimationFrame(()=>{
+    if(top+pop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-pop.offsetHeight-6);
+    pop.style.left=left+"px";pop.style.top=top+"px";
+  });
 }
 function renderSwatches(){refreshOpenColorPopup()}
 
@@ -1859,7 +2083,7 @@ function renderTextBoxEditors(d){
     wrap.className="textbox-editor";
     wrap.innerHTML=`
       <div class="textbox-editor-head">
-        <strong>テキスト${index+1}</strong>
+        <strong>テキストボックス${index+1}</strong>
         <button type="button" class="textbox-delete">削除</button>
       </div>
       <input class="tb-text" type="text" value="${esc(item.text||"")}" placeholder="テキスト${index+1}">
@@ -1924,7 +2148,7 @@ function renderFrameTextEditors(d){
   items.forEach((item,index)=>{
     const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
     const wrap=document.createElement("div");wrap.className="frame-editor";
-    wrap.innerHTML=`<div class="frame-editor-head"><strong>フレーム${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
+    wrap.innerHTML=`<div class="frame-editor-head"><strong>フレームテキスト${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
       <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
       <div class="tool-strip tool-strip-secondary">
         <div class="tool-number-wrap" title="文字サイズ"><span class="size-icon">A</span><input class="ft-size tool-number" type="number" min="7" max="100" value="${st.size||14}"></div>
@@ -1946,8 +2170,8 @@ function renderFrameTextEditors(d){
             <option value="3" ${Number(item.borderWidth)===3?"selected":""}>太い</option>
           </select>
         </div>
-        <label class="checkline" style="margin-left:auto"><input class="ft-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>
-      </div>`;
+      </div>
+      <label class="checkline" style="margin:6px 0 0"><input class="ft-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;
     const text=wrap.querySelector(".ft-text"),size=wrap.querySelector(".ft-size"),bold=wrap.querySelector(".ft-bold"),italic=wrap.querySelector(".ft-italic"),underline=wrap.querySelector(".ft-underline"),tc=wrap.querySelector(".ft-text-color"),bc=wrap.querySelector(".ft-border-color"),bw=wrap.querySelector(".ft-border-width"),fc=wrap.querySelector(".ft-fill-color"),center=wrap.querySelector(".ft-center"),del=wrap.querySelector(".textbox-delete");
     text.oninput=()=>{item.text=text.value;renderSheet()};
     [size,bold,italic,underline].forEach(x=>x.oninput=()=>{item.style={...item.style,size:Number(size.value)||14,bold:bold.checked,italic:italic.checked,underline:underline.checked};renderSheet()});
@@ -2191,7 +2415,7 @@ el("dupPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.spl
 el("deletePage").addEventListener("click",()=>{if(pages.length<=1)return;pages.splice(currentPage,1);if(currentPage>=pages.length)currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 
 function getProject(){
-  return {app:"card-mock-maker-prototype",version:41,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
+  return {app:"card-mock-maker-prototype",version:48,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
 }
 
 function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
@@ -2300,6 +2524,13 @@ function hydrateProjectImages(project,attachments){
   return project;
 }
 
+function showPdfReeditTip(){
+  let t=document.querySelector(".pdf-reedit-toast");
+  if(!t){t=document.createElement("div");t.className="pdf-reedit-toast";t.textContent="保存したPDFは「PDF読み込み」で再編集できます";document.body.appendChild(t)}
+  clearTimeout(showPdfReeditTip.timer);
+  requestAnimationFrame(()=>t.classList.add("show"));
+  showPdfReeditTip.timer=setTimeout(()=>t.classList.remove("show"),3200);
+}
 async function buildEditablePdf(){
   if(!window.html2canvas || !window.PDFLib) throw new Error("PDFライブラリを読み込めませんでした。インターネット接続を確認してください。");
   const {PDFDocument}=PDFLib;
@@ -2386,8 +2617,9 @@ el("editablePdfBtn").addEventListener("click",async()=>{
   try{
     btn.disabled=true;btn.textContent="PDF作成中…";
     await buildEditablePdf();
+    showPdfReeditTip();
   }catch(e){
-    console.error(e);alert(e.message||"編集可能PDFの作成に失敗しました。");
+    console.error(e);alert(e.message||"PDFの保存に失敗しました。");
   }finally{btn.disabled=false;btn.textContent=old}
 });
 
@@ -2452,6 +2684,177 @@ initHistory();renderSwatches();
   background:transparent;
   color:var(--ui-control-ink);
   padding:3px 18px 3px 5px;
+  font-size:10px;
+}
+</style>
+
+<style>
+.pdf-note{display:none!important}
+header .history-controls{margin-right:5px}
+header #sheetTitleInput{margin-right:12px}
+.pdf-reedit-toast{
+ position:fixed;right:16px;top:70px;z-index:10050;max-width:310px;
+ padding:9px 12px;border:1px solid var(--ui-border);border-radius:8px;
+ background:var(--ui-panel);color:var(--ink);box-shadow:0 7px 24px rgba(0,0,0,.16);
+ font-size:11px;line-height:1.45;opacity:0;transform:translateY(-5px);
+ pointer-events:none;transition:opacity .18s,transform .18s
+}
+.pdf-reedit-toast.show{opacity:1;transform:none}
+@media(max-width:720px){
+ header{grid-template-columns:auto minmax(0,1fr) minmax(0,1fr)}
+ header .history-controls{grid-column:1/2;grid-row:1;margin:0}
+ header #paperOrientation{grid-column:2/3;grid-row:1}
+ header #cardSize{grid-column:3/4;grid-row:1}
+ header #sheetTitleInput{grid-column:1/-1;grid-row:2;margin:0}
+ header .toolbar-spacer{display:none}
+ header #editablePdfBtn{grid-column:1/2;grid-row:3}
+ header #loadPdfBtn{grid-column:2/3;grid-row:3}
+ header #printBtn{grid-column:3/4;grid-row:3}
+ .pdf-reedit-toast{left:10px;right:10px;top:10px;max-width:none}
+}
+</style>
+
+<style>
+header .app-brand{
+  flex:0 0 auto;
+  margin-right:4px;
+}
+header .app-brand strong{
+  font-size:15px;
+  white-space:nowrap;
+}
+header #sheetTitleInput{
+  width:clamp(170px,18vw,240px)!important;
+  margin-right:0;
+}
+header .header-action-gap{
+  flex:1 1 28px;
+  min-width:28px;
+}
+@media(max-width:1250px) and (min-width:721px){
+  header .app-brand{display:flex}
+  header .app-brand strong{font-size:13px}
+  header #sheetTitleInput{width:clamp(140px,15vw,190px)!important}
+  header .header-action-gap{min-width:14px}
+}
+@media(max-width:720px){
+  header .app-brand{
+    display:flex;
+    grid-column:1/-1;
+    grid-row:1;
+    margin:0 0 2px;
+  }
+  header .app-brand strong{font-size:15px}
+  header .history-controls{grid-row:2}
+  header #paperOrientation{grid-row:2}
+  header #cardSize{grid-row:2}
+  header #sheetTitleInput{
+    grid-column:1/-1;
+    grid-row:3;
+    width:100%!important;
+  }
+  header .header-action-gap{display:none}
+  header #editablePdfBtn{grid-row:4}
+  header #loadPdfBtn{grid-row:4}
+  header #printBtn{grid-row:4}
+}
+</style>
+
+<style>
+header .app-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-right:5px;
+}
+header .app-brand strong{
+  font-size:15px;
+  font-weight:700;
+  white-space:nowrap;
+}
+header .beta-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:21px;
+  height:21px;
+  border:1px solid var(--ui-border-strong);
+  border-radius:5px;
+  font-size:12px;
+  font-weight:700;
+  line-height:1;
+  color:var(--ui-muted);
+}
+header .brand-en{
+  font-size:11px;
+  color:var(--ui-muted);
+  white-space:nowrap;
+}
+header #sheetTitleInput{
+  width:clamp(250px,27vw,360px)!important;
+}
+@media(max-width:1250px) and (min-width:721px){
+  header .app-brand strong{font-size:13px}
+  header .brand-en{display:none}
+  header #sheetTitleInput{width:clamp(200px,22vw,285px)!important}
+}
+@media(max-width:720px){
+  header .app-brand{
+    display:flex;
+    grid-column:1/-1;
+    gap:7px;
+  }
+  header .app-brand strong{font-size:15px}
+  header .brand-en{display:inline}
+  header #sheetTitleInput{width:100%!important}
+}
+</style>
+
+<style>
+.page-thumb-menu-btn{
+  top:1px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+.page-thumb-menu-btn{padding-bottom:4px}
+</style>
+
+<style>
+header .app-brand > .beta-badge{display:inline-flex}
+@media(max-width:1250px){
+  header .app-brand > .beta-badge{display:inline-flex}
+}
+</style>
+
+<style>
+/* Thumbnail menu: optically align with the page number. */
+.page-thumb-menu-btn{
+  transform:translateY(-5px);
+}
+</style>
+
+<style>
+.textbox-editor,.frame-editor{
+  margin-top:7px;
+  padding:8px;
+  border:1px solid var(--ui-border);
+  border-radius:7px;
+  background:var(--ui-panel-2);
+}
+.textbox-editor-head,.frame-editor-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:25px;
+  margin-bottom:6px;
+}
+.textbox-editor-head strong,.frame-editor-head strong{
+  font-size:10px;
+  font-weight:700;
+}
+.textbox-editor .checkline,.frame-editor .checkline{
   font-size:10px;
 }
 </style>
