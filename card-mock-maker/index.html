@@ -1,1 +1,2251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カードモックツクール β — Card Mock Maker</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f3f3f3;
+  --ink:#191919;
+  --cyan:#24b8f2;
+  --line:#666;
+  --ui-panel:#ffffff;
+  --ui-panel-soft:#f7f7f7;
+  --ui-panel-hover:#f1f1f1;
+  --ui-border:#d8d8d8;
+  --ui-border-strong:#bdbdbd;
+  --ui-muted:#686868;
+  --ui-control:#ffffff;
+  --ui-control-ink:#222222;
+  --ui-shadow:rgba(0,0,0,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1d1d1d;
+    --ink:#eeeeee;
+    --ui-panel:#262626;
+    --ui-panel-soft:#303030;
+    --ui-panel-hover:#393939;
+    --ui-border:#444444;
+    --ui-border-strong:#5a5a5a;
+    --ui-muted:#aaaaaa;
+    --ui-control:#303030;
+    --ui-control-ink:#f0f0f0;
+    --ui-shadow:rgba(0,0,0,.48);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;
+  color:var(--ink); background:var(--bg);
+}
+header{
+  min-height:58px;background:var(--ui-panel);border-bottom:1px solid var(--ui-border);
+  display:flex;align-items:center;gap:9px;padding:10px 16px;position:sticky;top:0;z-index:20;flex-wrap:wrap;
+}
+header strong{font-size:15px;margin-right:6px}
+header select{width:auto!important}
+.pdf-note{font-size:11px;color:#777;white-space:nowrap}
+button,select,input,textarea{font:inherit}
+button{
+  border:1px solid var(--ui-border-strong);background:var(--ui-control);color:var(--ui-control-ink);border-radius:7px;padding:7px 11px;cursor:pointer;
+}
+button:hover{background:var(--ui-panel-hover)}
+button.primary{background:#111;color:#fff;border-color:#111}
+button:disabled{opacity:.4;cursor:default}
+.toolbar-spacer{flex:1}
+.size-note{font-size:12px;color:#666}
+.warn{color:#b42318;font-weight:600}
 
+.layout{display:grid;grid-template-columns:minmax(700px,1fr) 350px;min-height:calc(100vh - 58px)}
+main{padding:0;overflow:hidden}
+.workspace{display:grid;grid-template-columns:148px minmax(0,1fr);height:calc(100vh - 58px)}
+.page-sidebar{
+  background:var(--ui-panel-soft);border-right:1px solid var(--ui-border);padding:10px 8px;
+  overflow:auto;display:flex;flex-direction:column;gap:8px;
+}
+.page-sidebar-head{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.page-sidebar-head span{font-size:10px;color:#777}
+.page-actions{display:grid;grid-template-columns:34px 1fr 1fr;gap:4px}
+.page-actions button{padding:5px 4px;font-size:10px}
+.page-thumbs{display:flex;flex-direction:column;gap:9px;padding-bottom:14px}
+.page-thumb{
+  position:relative;background:#ddd;border:2px solid transparent;border-radius:5px;
+  padding:5px;cursor:pointer;transition:.12s;
+}
+.page-thumb:hover{background:#d7d7d7}
+.page-thumb.active{border-color:var(--cyan);background:#fff}
+.page-thumb.dragging{opacity:.45}
+.page-drop-zone{height:7px;border-radius:4px;transition:.12s}
+.page-drop-zone.drag-over{height:16px;background:var(--cyan)}
+.page-thumb-num{font-size:10px;color:#555;margin:0 0 4px 2px;padding-right:24px}
+
+
+.style-toggle{
+  margin:0 0 3px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.style-toggle input{display:none}
+.style-toggle span{
+  width:28px;height:26px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid #ccc;border-radius:5px;background:#fff;
+  font-size:13px;line-height:1;color:#333;
+}
+.style-toggle .bold-mark{font-weight:700}
+.style-toggle .italic-mark{font-style:italic;font-family:Georgia,serif}
+.style-toggle input:checked + span{
+  background:#222;color:#fff;border-color:#222;
+}
+.format-row{
+  display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;margin-top:4px;
+}
+.format-row > label:first-child{
+  width:82px;margin:0;
+}
+.format-row .format-color{
+  margin-left:auto;min-width:72px;
+}
+.tcg-field-block{
+  margin-bottom:7px;
+}
+.tcg-field-block textarea{
+  min-height:48px;
+}
+.tcg-color-row{
+  margin-top:7px;
+  justify-content:space-between;
+}
+.tcg-color-row .checkline{
+  margin:0 0 4px;
+}
+
+
+
+.size-icon{
+  position:relative;
+  width:21px;
+  height:26px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding-left:2px;
+  color:var(--ui-muted);
+  font-size:14px;
+  line-height:1;
+}
+.size-icon::before,.size-icon::after{
+  content:"";
+  position:absolute;
+  right:1px;
+  width:0;height:0;
+  border-left:3px solid transparent;
+  border-right:3px solid transparent;
+}
+.size-icon::before{
+  top:5px;
+  border-bottom:4px solid var(--cyan);
+}
+.size-icon::after{
+  bottom:5px;
+  border-top:4px solid var(--cyan);
+}
+.style-toggle .underline-mark{text-decoration:underline;font-family:Arial,sans-serif}
+.color-trigger{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+.color-trigger-icon{display:block;position:relative}
+.color-trigger-text-icon{
+  width:22px;height:23px;
+  font-size:20px;
+  line-height:19px;
+  font-family:Arial,sans-serif;
+  text-align:center;
+  color:var(--ui-control-ink);
+}
+.color-trigger-text-icon::after{
+  content:"";
+  position:absolute;
+  left:1px;right:1px;bottom:0;
+  height:4px;
+  border-radius:1px;
+  background:var(--trigger-color,#222);
+}
+.color-trigger-stroke-icon{
+  width:21px;height:21px;
+  box-sizing:border-box;
+  border:3px solid var(--trigger-color,#222);
+  background:transparent;
+}
+.color-trigger-fill-icon{
+  width:21px;height:21px;
+  box-sizing:border-box;
+  border:1px solid var(--ui-border-strong);
+  background:var(--trigger-color,#fff);
+}
+.color-trigger.is-none::after{
+  content:"";
+  position:absolute;
+  left:4px;right:4px;top:50%;
+  height:2px;
+  background:#e31b23;
+  transform:rotate(-45deg);
+  transform-origin:center;
+  pointer-events:none;
+}
+.color-trigger.is-none .color-trigger-text-icon::after{background:transparent}
+.color-trigger.is-none .color-trigger-stroke-icon{border-color:var(--ui-border-strong)}
+.color-trigger.is-none .color-trigger-fill-icon{background:transparent}
+.color-none-btn{
+  width:100%;
+  margin:0 0 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:7px 8px;
+}
+.none-icon{
+  width:18px;height:18px;border:1px solid var(--ui-border-strong);border-radius:2px;
+  background:linear-gradient(135deg,transparent 43%,#e31b23 44%,#e31b23 56%,transparent 57%);
+}
+.option-subtool{margin-top:10px;padding-top:8px;border-top:1px solid var(--ui-border)}
+.frame-text{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  user-select:none;
+  touch-action:none;
+  z-index:91;
+}
+.frame-text.editable{cursor:move}
+.frame-text .resize-handle{
+  position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;
+  background:var(--cyan);border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize;
+}
+.frame-editor{border:1px solid var(--ui-border);border-radius:7px;padding:7px;margin-bottom:7px;background:var(--ui-panel-soft)}
+.frame-editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.frame-color-row{display:flex;gap:8px;align-items:flex-end;margin-top:5px}
+.frame-color-row .tool-color{margin-right:4px}
+
+
+.color-trigger{
+  background:var(--ui-control)!important;
+  color:var(--ui-control-ink)!important;
+  border-color:var(--ui-border-strong)!important;
+}
+.color-trigger:hover{
+  background:var(--ui-control-ink)!important;
+  color:var(--ui-control)!important;
+}
+.color-trigger-text-icon{color:currentColor!important}
+.color-trigger-fill-icon{
+  background:var(--trigger-color,#fff)!important;
+  border-color:var(--ui-border-strong)!important;
+}
+.color-trigger-stroke-icon{
+  background:transparent!important;
+  border-color:var(--trigger-color,#222)!important;
+}
+.color-trigger.is-none .color-trigger-fill-icon{background:transparent!important}
+.color-trigger.is-none .color-trigger-stroke-icon{border-color:var(--ui-border-strong)!important}
+.stroke-width-control{width:108px}
+.stroke-width-icon{
+  width:22px;
+  height:28px;
+  display:inline-block;
+  position:relative;
+  background:
+    linear-gradient(currentColor,currentColor) center 7px / 14px 1px no-repeat,
+    linear-gradient(currentColor,currentColor) center 13px / 14px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) center 20px / 14px 3px no-repeat;
+  color:var(--ui-control-ink);
+}
+.face-bg-tool{margin-top:6px}
+.face-bg-tool .tool-file-line{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  margin-top:6px;
+}
+.face-bg-tool .tool-file-line input[type="file"]{flex:1;min-width:0}
+.face-bg-tool .tool-file-line button{flex:0 0 auto}
+
+/* Compact editor-tool grammar */
+.tool-block{
+  border-top:1px solid var(--ui-border);
+  padding:7px 0 6px;
+}
+.tool-block:first-child{border-top:0;padding-top:1px}
+.tool-block-title{
+  font-size:10px;
+  font-weight:700;
+  color:var(--ui-muted);
+  margin:0 0 5px;
+  letter-spacing:.03em;
+}
+.tool-strip{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+.tool-strip-secondary{margin-top:5px;justify-content:flex-start}
+.tool-main-input{
+  min-width:0!important;
+  flex:1 1 auto;
+  height:30px;
+  padding:5px 7px!important;
+}
+.tool-number-wrap{
+  height:30px;
+  display:flex;
+  align-items:center;
+  border:1px solid var(--ui-border-strong);
+  border-radius:5px;
+  background:var(--ui-control);
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.tool-symbol{
+  width:22px;
+  text-align:center;
+  color:var(--ui-muted);
+  font-size:11px;
+}
+.tool-number{
+  width:48px!important;
+  height:28px;
+  border:0!important;
+  border-left:1px solid var(--ui-border)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--ui-control-ink);
+  padding:3px 4px!important;
+  text-align:center;
+}
+.tool-symbol-select{width:64px!important;height:30px;padding:4px 6px!important;font-size:16px}
+.tool-small-select{width:52px!important;height:30px;padding:4px 5px!important}
+.tool-mode-select{width:70px!important;height:30px;padding:4px 5px!important}
+.tool-file-line input[type="file"]{font-size:10px;padding:4px 0}
+.tool-textarea{min-height:54px!important;padding:6px 7px!important}
+.tool-color{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.tool-color .color-trigger{
+  width:30px!important;
+  height:30px!important;
+  padding:3px!important;
+  border-radius:5px!important;
+}
+
+.style-toggle{margin:0!important;flex:0 0 auto}
+.style-toggle span{
+  width:30px!important;
+  height:30px!important;
+  border-color:var(--ui-border-strong)!important;
+  background:var(--ui-control)!important;
+  color:var(--ui-control-ink)!important;
+}
+.style-toggle input:checked + span{
+  background:var(--ui-control-ink)!important;
+  color:var(--ui-control)!important;
+  border-color:var(--ui-control-ink)!important;
+}
+.icon-toggle .slash-mark{font-size:18px;font-weight:700}
+.compact-layout-choice{
+  grid-template-columns:64px 64px!important;
+  justify-content:start;
+}
+.compact-layout-choice .layout-choice{
+  padding:4px!important;
+  justify-content:center;
+}
+.compact-layout-choice .layout-choice input{display:none}
+.compact-layout-choice .layout-choice:has(input:checked){
+  border-color:var(--cyan)!important;
+  box-shadow:0 0 0 1px var(--cyan) inset;
+}
+
+.compact-template-controls{padding-top:6px;padding-bottom:6px}
+.compact-template-controls > label{margin-top:5px}
+.compact-template-controls .row{gap:6px;margin-bottom:4px}
+.compact-template-controls .row > label{margin:0;flex:1}
+.style-line{
+  display:flex;align-items:flex-end;gap:7px;margin:4px 0 6px;flex-wrap:wrap;
+}
+.style-line > label:first-child{width:82px;margin:0}
+.style-line .checkline{margin:0 0 4px}
+.style-line .inline-color{margin-left:auto;min-width:72px}
+.inline-color label{margin-bottom:2px}
+.inline-color input[type="color"]{height:26px}
+.compact-file-row{margin-top:4px!important}
+.compact-file-row input[type="file"]{margin-top:3px}
+.color-line{justify-content:space-between}
+#tcgLayoutControls{margin:5px 0}
+#tcgLayoutControls > label{margin-bottom:3px}
+#tcgLayoutControls .status{display:none}
+.page-actions{display:block}
+.page-actions button{width:100%}
+.page-thumb-menu-btn{
+  position:absolute;right:4px;top:2px;z-index:20;
+  width:23px;height:22px;padding:0;border:0;background:transparent;
+  font-size:16px;line-height:1;border-radius:4px;
+}
+.page-thumb-menu-btn:hover{background:rgba(0,0,0,.08)}
+.page-thumb-menu{
+  position:absolute;right:4px;top:25px;z-index:50;
+  min-width:92px;background:#fff;border:1px solid #ccc;border-radius:6px;
+  box-shadow:0 5px 16px rgba(0,0,0,.16);padding:4px;
+}
+.page-thumb-menu button{
+  display:block;width:100%;border:0;background:transparent;text-align:left;
+  padding:6px 7px;font-size:11px;border-radius:4px;
+}
+.page-thumb-menu button:hover{background:#f0f0f0}
+
+.thumb-viewport{position:relative;width:100%;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.thumb-paper{position:absolute;left:0;top:0;transform-origin:top left;background:#fff}
+.canvas-area{overflow:auto;padding:22px}
+.paper-wrap{min-width:max-content}
+
+aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);padding:12px 14px;overflow:auto}
+.paper-wrap{width:100%;display:flex;justify-content:center;align-items:flex-start}
+.paper{position:relative;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.12);transform-origin:top center}
+.sheet-title{
+  position:absolute;z-index:6;font-size:4mm;font-weight:700;line-height:1.2;color:#333;
+  max-width:80mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.paper.landscape-paper .sheet-title{left:10mm;top:6mm}
+.paper.portrait-paper .sheet-title{left:8mm;top:8mm}
+
+.sheet-grid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;gap:0}
+.sheet-grid.portrait-card{
+  grid-template-columns:var(--pair-w) var(--pair-w);
+  grid-template-rows:var(--pair-h) var(--pair-h);
+  width:var(--grid-w);height:var(--grid-h);
+}
+.sheet-grid.landscape-card{
+  grid-template-columns:var(--pair-w) var(--pair-w);
+  grid-template-rows:var(--pair-h) var(--pair-h);
+  width:var(--grid-w);height:var(--grid-h);
+}
+
+.pair{position:relative;display:flex}
+.portrait-card .pair{width:var(--pair-w);height:var(--pair-h);flex-direction:row}
+.landscape-card .pair{width:var(--pair-w);height:var(--pair-h);flex-direction:column}
+
+.face{position:relative;overflow:hidden;background:#fff;cursor:pointer;border:.22mm solid var(--line);flex:none}
+.face{width:var(--face-w);height:var(--face-h)}
+.portrait-card .face:first-of-type{border-right:0}
+.landscape-card .face:first-of-type{border-bottom:0}
+.face.selected{z-index:4}
+.face.selected::after{
+  content:"";position:absolute;inset:0;border:1.1mm solid var(--cyan);pointer-events:none;z-index:9999;
+}
+.fold{position:absolute;pointer-events:none;z-index:5}
+.portrait-card .fold{left:var(--fold-pos);top:0;bottom:0;width:0;border-left:.35mm dashed #777}
+.landscape-card .fold{left:0;right:0;top:var(--fold-pos);height:0;border-top:.35mm dashed #777}
+
+.empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:4mm}
+.solid{width:100%;height:100%}
+.face img{display:block}
+.face-content{position:absolute;inset:0;z-index:1}
+
+.card-template{position:absolute;inset:0;background:transparent;color:#111;z-index:1}
+.corner{position:absolute;font-weight:700;font-size:7mm;line-height:1;text-align:center;min-width:10mm}
+.corner small{display:block;margin-top:1mm;line-height:1}
+.corner .suit-text,.corner .suit-img{display:block;margin:1mm auto 0}
+.corner .suit-text.small{font-size:2.8mm}
+.corner .suit-text.medium{font-size:4mm}
+.corner .suit-text.large{font-size:5.2mm}
+.corner .suit-img.small{width:3mm;height:3mm;object-fit:contain}
+.corner .suit-img.medium{width:4.5mm;height:4.5mm;object-fit:contain}
+.corner .suit-img.large{width:6mm;height:6mm;object-fit:contain}
+.tl{left:4mm;top:4mm}.tr{right:4mm;top:4mm}
+.bl{left:4mm;bottom:4mm;transform:rotate(180deg)}.br{right:4mm;bottom:4mm;transform:rotate(180deg)}
+.center-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:31mm;line-height:1}
+.card-text{position:absolute;left:7mm;right:7mm;bottom:12mm;text-align:center;font-size:3.5mm;line-height:1.45;white-space:pre-wrap}
+
+.landscape-card .card-template .corner{font-size:6mm;min-width:9mm}
+.landscape-card .card-template .corner small{font-size:3.6mm}
+.landscape-card .corner .suit-text.small{font-size:2.5mm}
+.landscape-card .corner .suit-text.medium{font-size:3.5mm}
+.landscape-card .corner .suit-text.large{font-size:4.6mm}
+.landscape-card .corner .suit-img.small{width:2.8mm;height:2.8mm}
+.landscape-card .corner .suit-img.medium{width:4mm;height:4mm}
+.landscape-card .corner .suit-img.large{width:5.5mm;height:5.5mm}
+.landscape-card .card-template .center-num{font-size:25mm}
+.landscape-card .card-template .card-text{left:16mm;right:16mm;bottom:7mm;font-size:3.2mm}
+
+/* TCG */
+.tcg-card{
+  position:absolute;inset:0;padding:4mm;z-index:1;
+  color:var(--tcg-text,#222);background:transparent;
+}
+.tcg-name{
+  height:9mm;border:0.4mm solid var(--tcg-border,#222);border-radius:1.2mm;
+  background:var(--tcg-panel,#fff);
+  display:flex;align-items:center;padding:0 3mm;font-size:4mm;font-weight:700;overflow:hidden;
+}
+.tcg-image{
+  position:absolute;left:4mm;right:4mm;top:16mm;height:42mm;
+  border:0.45mm solid var(--tcg-border,#222);border-radius:1.3mm;overflow:hidden;background:var(--tcg-panel,#fff);
+  display:flex;align-items:center;justify-content:center;color:#999;font-size:3.4mm;
+}
+.tcg-image img{width:100%;height:100%;object-fit:cover}
+.tcg-desc{
+  position:absolute;left:4mm;right:4mm;bottom:4mm;height:22mm;
+  border:0.45mm solid var(--tcg-border,#222);border-radius:1.3mm;padding:2.5mm;background:var(--tcg-panel,#fff);
+  font-size:3.1mm;line-height:1.4;white-space:pre-wrap;overflow:hidden;
+}
+
+/* Horizontal card layout 1: stacked */
+.landscape-card .tcg-card.layout1{padding:4mm}
+.landscape-card .tcg-card.layout1 .tcg-name{
+  height:8mm;font-size:3.7mm;
+}
+.landscape-card .tcg-card.layout1 .tcg-image{
+  left:4mm;right:4mm;top:15mm;height:25mm;bottom:auto;width:auto;
+}
+.landscape-card .tcg-card.layout1 .tcg-desc{
+  left:4mm;right:4mm;top:43mm;bottom:4mm;height:auto;
+}
+
+/* Horizontal card layout 2: image left / text right */
+.landscape-card .tcg-card.layout2{padding:4mm}
+.landscape-card .tcg-card.layout2 .tcg-name{height:8mm;font-size:3.7mm}
+.landscape-card .tcg-card.layout2 .tcg-image{
+  left:4mm;top:15mm;width:42mm;height:auto;bottom:4mm;right:auto;
+}
+.landscape-card .tcg-card.layout2 .tcg-desc{
+  left:50mm;right:4mm;top:15mm;bottom:4mm;height:auto;
+}
+
+
+
+/* Generic text boxes */
+.generic-textbox{position:absolute;border:.45mm dashed #777;padding:1.2mm;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(255,255,255,.22);user-select:none;touch-action:none;overflow:hidden;z-index:30}
+.generic-textbox.editable{cursor:move}
+.generic-textbox .resize-handle{position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;background:var(--cyan);border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize}
+.textbox-editor{border:1px solid #e2e2e2;border-radius:7px;padding:7px;margin-bottom:7px;background:#fafafa}
+.textbox-editor-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}.textbox-editor-head strong{font-size:11px}.textbox-delete{padding:3px 7px;font-size:10px}
+.snap-guide-x,.snap-guide-y{position:absolute;pointer-events:none;z-index:29;display:none;background:rgba(36,184,242,.65)}
+.snap-guide-x{left:50%;top:0;width:.3mm;height:100%}.snap-guide-y{left:0;top:50%;width:100%;height:.3mm}
+.face.show-snap-x .snap-guide-x,.face.show-snap-y .snap-guide-y{display:block}
+
+/* Color popup */
+input[type="color"].color-source{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
+.color-trigger{width:34px;height:26px;border:1px solid #cfcfcf;border-radius:6px;background:#fff;padding:3px;cursor:pointer;vertical-align:middle}
+
+.color-popup{position:fixed;z-index:10000;width:320px;padding:10px;background:var(--ui-panel);color:var(--ink);border:1px solid var(--ui-border-strong);border-radius:10px;box-shadow:0 12px 32px var(--ui-shadow);font-size:11px}
+.color-popup-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.color-popup-head strong{font-size:13px}.color-popup-close{border:0;background:transparent;font-size:18px;cursor:pointer;padding:0 3px}
+.color-field{position:relative;height:130px;border-radius:6px;background:#f00;overflow:hidden;cursor:crosshair}.color-field:before{content:"";position:absolute;inset:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}.color-field:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,#000,rgba(0,0,0,0))}
+.color-field-marker{position:absolute;width:10px;height:10px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
+.color-hue{width:100%;margin:8px 0}
+.color-popup-row{display:flex;align-items:flex-start;gap:7px}.color-preview{width:28px;height:28px;border:1px solid #ccc;border-radius:50%;flex:0 0 auto}.color-mode{width:66px!important;flex:0 0 auto}.color-values{display:flex;gap:4px;flex:1}.color-value{flex:1;text-align:center}.color-value input{width:100%!important;padding:4px!important;text-align:center}.color-value label{font-size:9px;color:#666}
+.color-popup-section{font-size:10px;color:#666;margin:8px 0 4px}.color-popup .swatches{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.color-popup .swatch{min-height:22px;border-radius:5px;border:1px solid #ccc}.color-used-empty{font-size:10px;color:#999;grid-column:1/-1}
+
+/* Custom */
+.custom-card{position:absolute;inset:0;background:transparent;z-index:1}
+.custom-text{
+  position:absolute;border:0.45mm dashed #777;padding:1.3mm;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:rgba(255,255,255,.25);user-select:none;touch-action:none;overflow:hidden;
+}
+.custom-text.editable{cursor:move}
+.custom-text .resize-handle{
+  position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;background:var(--cyan);
+  border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize;
+}
+.custom-editor{
+  border:1px solid #e2e2e2;border-radius:7px;padding:7px;margin-bottom:7px;background:#fafafa;
+}
+.custom-editor-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.custom-editor-head strong{font-size:11px}
+.custom-delete{padding:3px 7px;font-size:10px}
+
+/* Word */
+.word-card{position:absolute;inset:0;background:transparent;color:#111;z-index:1}
+.word-main{
+  position:absolute;inset:8mm;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14mm;line-height:1.15;text-align:center;white-space:pre-wrap;
+}
+.portrait-card .word-main.vertical{writing-mode:vertical-rl;text-orientation:upright}
+.word-sub{
+  position:absolute;border:0.45mm dashed #777;padding:1.3mm;
+  font-size:3.2mm;line-height:1.25;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.82);user-select:none;touch-action:none;
+}
+.word-sub.editable{cursor:move}
+.word-sub .resize-handle{
+  position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;background:var(--cyan);
+  border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize;
+}
+
+
+.app-brand{
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  margin-right:4px;
+  white-space:nowrap;
+}
+.app-brand strong{
+  font-size:15px;
+  margin:0;
+  letter-spacing:.01em;
+}
+.app-brand > span{
+  font-size:10px;
+  color:#888;
+}
+.app-brand .beta{
+  display:inline-block;
+  margin-left:2px;
+  font-size:10px;
+  line-height:1;
+  padding:2px 4px;
+  border:1px solid #bdbdbd;
+  border-radius:4px;
+  vertical-align:2px;
+  color:#666;
+}
+#fitStatus{display:none!important}
+.selected-face-label{
+  margin:-1px 0 8px;
+  font-size:10px;
+  color:#777;
+}
+.option-tool-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:4px;
+}
+.option-tool-head strong{font-size:11px}
+.compact-help{
+  margin:0 0 7px;
+  line-height:1.45;
+}
+.face-section .section-title,
+.template-section .section-title,
+.option-section .section-title{
+  font-size:13px;
+  letter-spacing:.02em;
+  margin-bottom:7px;
+}
+
+.panel-title{font-weight:700;margin:0 0 8px}
+.section-title{font-weight:700;font-size:13px;margin-bottom:6px}
+.group{border-top:1px solid var(--ui-border);padding-top:9px;margin-top:9px}
+.group:first-of-type{border-top:0;padding-top:0}
+label{display:block;font-size:11px;margin:6px 0 3px;color:var(--ui-muted)}
+select,input[type="text"],textarea{
+  width:100%;border:1px solid var(--ui-border-strong);border-radius:7px;padding:8px 9px;background:var(--ui-control);color:var(--ui-control-ink)
+}
+textarea{min-height:76px;resize:vertical}
+input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;border-radius:7px;background:#fff}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .type-row{display:grid;grid-template-columns:1.15fr .9fr .9fr;gap:5px;margin-top:4px}
+  .type-row label{margin:0;font-size:10px}
+  .type-row input[type="number"]{width:100%;border:1px solid #c8c8c8;border-radius:6px;padding:5px 6px}
+  .checkline{display:flex;align-items:center;gap:4px;border:1px solid #ddd;border-radius:6px;padding:4px 5px;background:#fafafa;font-size:10px}
+  .layout-choice-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px}
+  .layout-choice{
+    display:flex;align-items:flex-start;gap:6px;border:1px solid #d5d5d5;border-radius:7px;
+    padding:6px;background:#fff;cursor:pointer;font-size:11px;color:#333;
+  }
+  .layout-choice b{display:block;margin-bottom:5px}
+  .layout-choice input{margin-top:2px}
+  .layout-diagram{
+    width:46px;height:32px;border:1px solid #777;border-radius:3px;background:#fff;
+    display:flex;flex:none;padding:3px;gap:3px;
+  }
+  .layout-diagram.stack{flex-direction:column}
+  .layout-diagram.stack span{display:block;border:1px solid #aaa;flex:1}
+  .layout-diagram.side{flex-direction:column}
+  .layout-diagram.side .top{height:7px;border:1px solid #aaa}
+  .layout-diagram.side .bottom{display:grid;grid-template-columns:1.15fr 1fr;gap:3px;flex:1}
+  .layout-diagram.side .bottom span{border:1px solid #aaa}
+.hidden{display:none!important}
+.mini{padding:6px 9px;font-size:12px}
+.hint{background:#f7f7f7;border:1px solid #e5e5e5;border-radius:8px;padding:10px;font-size:12px;line-height:1.55;color:#555}
+.status{font-size:12px;color:#777;line-height:1.5;margin-top:8px}
+.divider-label{font-size:11px;color:#999;margin:8px 0 4px}
+
+.swatches{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+.swatch{
+  aspect-ratio:1/1;border-radius:4px;border:1px solid rgba(0,0,0,.18);cursor:pointer;position:relative;min-width:0;padding:0
+}
+.swatch:hover::after{content:"";position:absolute;inset:-2px;border:2px solid #111;border-radius:6px}
+.swatch.empty{background:repeating-linear-gradient(45deg,#eee,#eee 5px,#fff 5px,#fff 10px)}
+
+.print-pages{display:none}
+#dynamicPageStyle{}
+
+
+@media (prefers-color-scheme:dark){
+  header,aside{background:var(--ui-panel);border-color:var(--ui-border)}
+  .page-sidebar{background:#222;border-color:var(--ui-border)}
+  .page-thumb{background:#303030}
+  .page-thumb:hover{background:#373737}
+  .page-thumb.active{background:#2b2b2b}
+  button,select,input[type="text"],input[type="number"],textarea{
+    background:var(--ui-control);
+    color:var(--ui-control-ink);
+    border-color:var(--ui-border-strong);
+  }
+  button:hover{background:var(--ui-panel-hover)}
+  button.primary{background:#f0f0f0;color:#111;border-color:#f0f0f0}
+  label,.hint,.status,.pdf-note,.page-thumb-num,.page-sidebar-head span{color:var(--ui-muted)}
+  .group,.tool-block{border-color:var(--ui-border)}
+  .layout-choice{background:var(--ui-control);color:var(--ui-control-ink);border-color:var(--ui-border-strong)}
+  .layout-diagram{background:#f7f7f7}
+  .page-thumb-menu,.color-popup,.textbox-editor{
+    background:var(--ui-panel);
+    color:var(--ink);
+    border-color:var(--ui-border-strong);
+    box-shadow:0 8px 26px var(--ui-shadow);
+  }
+  .page-thumb-menu button{color:var(--ink)}
+  .page-thumb-menu button:hover{background:var(--ui-panel-hover)}
+  .color-popup-section,.color-value label{color:var(--ui-muted)}
+  .color-value input,.color-mode{
+    background:var(--ui-control)!important;
+    color:var(--ui-control-ink)!important;
+    border-color:var(--ui-border-strong)!important;
+  }
+  .color-popup-close{color:var(--ink)}
+  .swatch{border-color:var(--ui-border-strong)!important}
+  .option-tool-head strong,.section-title,.panel-title{color:var(--ink)}
+}
+/* Physical paper/card preview must not inherit dark UI colors. */
+.paper,.thumb-paper,.print-page,.face{color:#191919}
+
+@media(max-width:1050px){
+  .layout{grid-template-columns:1fr}
+  aside{border-left:0;border-top:1px solid #ddd}
+}
+@page{margin:0}
+@media print{
+  header,aside,.page-sidebar,.screen-paper{display:none!important}
+  html,body,main,.layout,.workspace,.canvas-area{margin:0!important;padding:0!important;background:#fff!important;display:block!important;height:auto!important;overflow:visible!important}
+  .print-pages{display:block!important;margin:0!important;padding:0!important}
+  .print-sheet{
+    position:relative!important;
+    display:block!important;
+    background:#fff!important;
+    box-shadow:none!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+    break-inside:avoid-page!important;
+    page-break-inside:avoid!important;
+    break-after:page!important;
+    page-break-after:always!important;
+  }
+  .print-sheet + .print-sheet{
+    break-before:page!important;
+    page-break-before:always!important;
+  }
+  .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+  .face.selected::after{display:none!important}
+  .generic-textbox{border-color:transparent!important;background:transparent!important}
+  .generic-textbox .resize-handle,.frame-text .resize-handle,.snap-guide-x,.snap-guide-y{display:none!important}
+  .word-sub{border-color:transparent!important}
+  .word-sub .resize-handle{display:none!important}
+}
+</style>
+<style id="dynamicPageStyle">@page{size:297mm 210mm;margin:0}</style>
+</head>
+<body>
+<header>
+  <div class="app-brand">
+    <strong>カードモックツクール <span class="beta">β</span></strong>
+    <span>Card Mock Maker</span>
+  </div>
+  <select id="paperOrientation" title="用紙方向">
+    <option value="landscape">A4 横</option>
+    <option value="portrait">A4 縦</option>
+  </select>
+  <select id="cardSize" title="カードサイズ">
+    <option value="poker">ポーカー (63×88)</option>
+    <option value="bridge">ブリッジ (58×89)</option>
+    <option value="business">名刺 (55×91)</option>
+    <option value="yugioh">遊戯王サイズ (59×86)</option>
+    <option value="credit">クレジット (54×86)</option>
+    <option value="half">ハーフ (44×63)</option>
+  </select>
+  <input id="sheetTitleInput" type="text" placeholder="シートタイトル" style="width:180px">
+  <button id="editablePdfBtn">PDF保存</button>
+  <button id="loadPdfBtn">PDF読み込み</button>
+  <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
+  <span class="pdf-note">※ここで作成したPDFを読み込むと、作業を途中から始められます</span>
+  <span class="toolbar-spacer"></span>
+  <span id="fitStatus" class="size-note"></span>
+  <button id="printBtn" class="primary">印刷</button>
+</header>
+
+<div class="layout">
+<main>
+  <div class="workspace">
+    <nav class="page-sidebar">
+      <div class="page-sidebar-head">
+        <strong>ページ</strong>
+        <span id="pageCount">1 / 1</span>
+      </div>
+      <div class="page-actions">
+        <button id="addPage" class="mini" title="ページ追加">＋ ページ</button>
+        <button id="dupPage" class="mini hidden" title="ページ複製">複製</button>
+        <button id="deletePage" class="mini hidden" title="ページ削除">削除</button>
+      </div>
+      <div id="pageThumbs" class="page-thumbs"></div>
+    </nav>
+
+    <div class="canvas-area">
+      <div class="paper-wrap screen-paper">
+        <div id="paper" class="paper landscape-paper">
+          <div id="sheetTitle" class="sheet-title"></div>
+          <div id="sheetGrid" class="sheet-grid portrait-card"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="printPages" class="print-pages"></div>
+</main>
+
+<aside>
+
+  <div class="group face-section">
+    <div class="section-title">面</div>
+    <div id="selectedLabel" class="hint selected-face-label">カード1・表</div>
+
+    <label>面の内容</label>
+    <select id="faceType">
+      <option value="plain">無地</option>
+      <option value="template">テンプレート</option>
+      <option value="image">画像</option>
+    </select>
+
+    <div class="tool-block face-bg-tool">
+      <div class="tool-block-title">背景</div>
+      <div class="tool-strip">
+        <div class="tool-color fill-color" title="面色">
+          <input id="faceBgColor" class="palette-target" type="color" value="#ffffff" aria-label="背景の面色">
+        </div>
+        <div class="tool-color stroke-color" title="線色">
+          <input id="faceBorderColor" class="palette-target" type="color" value="#222222" aria-label="背景の線色">
+        </div>
+        <div class="tool-number-wrap stroke-width-control" title="線の太さ">
+          <span class="stroke-width-icon" aria-hidden="true"></span>
+          <select id="faceBorderWidth" class="stroke-width-select" aria-label="背景の線の太さ">
+            <option value="0.5">細い</option>
+            <option value="0.75">やや細い</option>
+            <option value="1" selected>標準</option>
+            <option value="2">やや太い</option>
+            <option value="3">太い</option>
+          </select>
+        </div>
+      </div>
+      <div class="tool-file-line">
+        <input id="faceBgImageInput" type="file" accept="image/*" aria-label="背景画像">
+        <button id="clearFaceBgImage" class="mini">削除</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="templateSelector" class="group template-section">
+    <div class="section-title">テンプレート</div>
+    <label>種類</label>
+    <select id="templateType">
+      <option value="playing">テンプレ1：トランプ</option>
+      <option value="tcg">テンプレ2：トレカ</option>
+      <option value="word">テンプレ3：ワードゲーム</option>
+      <option value="custom">テンプレ4：カスタム</option>
+    </select>
+  </div>
+
+  <div id="playingControls" class="group compact-template-controls">
+    <div class="tool-block">
+      <div class="tool-block-title">数字</div>
+      <div class="tool-strip">
+        <input id="numInput" class="tool-main-input" type="text" value="7" aria-label="数字" title="数字">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon" aria-hidden="true">A</span>
+          <input id="playingSize" class="tool-number" type="number" min="8" max="100" value="31" aria-label="文字サイズ">
+        </div>
+        <label class="style-toggle" title="太字"><input id="playingBold" type="checkbox" checked><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input id="playingItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="playingUnderline" type="checkbox"><span class="underline-mark">U</span></label>
+        <div class="tool-color" title="数字の色"><input id="playingNumberColor" class="palette-target" type="color" value="#d94a4a" aria-label="数字の色"></div>
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">スート</div>
+      <div class="tool-strip">
+        <select id="suitInput" class="tool-symbol-select" aria-label="スート" title="スート">
+          <option>●</option><option>▲</option><option>■</option><option>★</option>
+          <option>♥</option><option>♠</option><option>♦</option><option>♣</option>
+        </select>
+        <select id="suitSize" class="tool-small-select" aria-label="スートサイズ" title="スートサイズ">
+          <option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option>
+        </select>
+        <select id="suitMode" class="tool-mode-select" aria-label="スート種類" title="スート種類">
+          <option value="text">規定</option><option value="image">画像</option>
+        </select>
+      </div>
+      <div id="suitImageControls" class="hidden tool-file-line">
+        <input id="suitImageInput" type="file" accept="image/*" aria-label="スート画像">
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">テキスト</div>
+      <div class="tool-strip">
+        <input id="playingText" class="tool-main-input" type="text" placeholder="テキスト" aria-label="テキスト">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon" aria-hidden="true">A</span>
+          <input id="playingTextSize" class="tool-number" type="number" min="7" max="40" value="12" aria-label="文字サイズ">
+        </div>
+        <label class="style-toggle" title="太字"><input id="playingTextBold" type="checkbox"><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input id="playingTextItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="playingTextUnderline" type="checkbox"><span class="underline-mark">U</span></label>
+        <div class="tool-color" title="文字色"><input id="playingTextColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tcgControls" class="group hidden compact-template-controls">
+    <div class="tool-block">
+      <div class="tool-block-title">カード名</div>
+      <div class="tool-strip">
+        <input id="tcgName" class="tool-main-input" type="text" placeholder="カード名" aria-label="カード名">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon" aria-hidden="true">A</span>
+          <input id="tcgNameSize" class="tool-number" type="number" min="8" max="60" value="15" aria-label="文字サイズ">
+        </div>
+        <label class="style-toggle" title="太字"><input id="tcgNameBold" type="checkbox" checked><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input id="tcgNameItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="tcgNameUnderline" type="checkbox"><span class="underline-mark">U</span></label>
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">画像</div>
+      <div class="tool-file-line">
+        <input id="tcgImageInput" type="file" accept="image/*" aria-label="中段画像">
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">テキスト</div>
+      <textarea id="tcgDesc" class="tool-textarea" placeholder="テキスト" aria-label="テキスト"></textarea>
+      <div class="tool-strip tool-strip-secondary">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon" aria-hidden="true">A</span>
+          <input id="tcgDescSize" class="tool-number" type="number" min="7" max="40" value="12" aria-label="文字サイズ">
+        </div>
+        <label class="style-toggle" title="太字"><input id="tcgDescBold" type="checkbox"><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input id="tcgDescItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="tcgDescUnderline" type="checkbox"><span class="underline-mark">U</span></label>
+        <div class="tool-color" title="文字色"><input id="tcgTextColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
+      </div>
+    </div>
+
+    <div id="tcgLayoutControls" class="tool-block">
+      <div class="tool-block-title">レイアウト</div>
+      <div class="layout-choice-wrap compact-layout-choice">
+        <label class="layout-choice" title="上下3段">
+          <input type="radio" name="tcgLayout" value="1" checked>
+          <span><span class="layout-diagram stack" aria-hidden="true"><span></span><span></span><span></span></span></span>
+        </label>
+        <label class="layout-choice" title="上段＋左右分割">
+          <input type="radio" name="tcgLayout" value="2">
+          <span><span class="layout-diagram side" aria-hidden="true"><span class="top"></span><span class="bottom"><span></span><span></span></span></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">フレーム</div>
+      <div class="tool-strip">
+        <div class="tool-color fill-color" title="フレームの面色"><input id="tcgPanelColor" class="palette-target" type="color" value="#ffffff" aria-label="フレームの面色"></div>
+        <div class="tool-color stroke-color" title="フレームの線色"><input id="tcgBorderColor" class="palette-target" type="color" value="#222222" aria-label="フレームの線色"></div>
+        <div class="tool-number-wrap stroke-width-control" title="線の太さ">
+          <span class="stroke-width-icon" aria-hidden="true"></span>
+          <select id="tcgBorderWidth" class="stroke-width-select" aria-label="フレームの線の太さ">
+            <option value="0.5">細い</option>
+            <option value="0.75">やや細い</option>
+            <option value="1" selected>標準</option>
+            <option value="2">やや太い</option>
+            <option value="3">太い</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wordControls" class="group hidden compact-template-controls">
+    <div class="tool-block">
+      <div class="tool-block-title">メイン文字</div>
+      <div class="tool-strip">
+        <input id="wordMain" class="tool-main-input" type="text" placeholder="ことば" aria-label="メイン文字">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon" aria-hidden="true">A</span>
+          <input id="wordMainSize" class="tool-number" type="number" min="8" max="100" value="53" aria-label="文字サイズ">
+        </div>
+        <label class="style-toggle" title="太字"><input id="wordMainBold" type="checkbox" checked><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input id="wordMainItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="wordMainUnderline" type="checkbox"><span class="underline-mark">U</span></label>
+        <div class="tool-color" title="文字色"><input id="wordMainColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="customControls" class="group hidden">
+    <div class="status">背景画像とテキストボックスを組み合わせて自由に作れます。</div>
+  </div>
+
+  <div id="imageControls" class="group hidden">
+    <label>画像を読み込む</label>
+    <input id="imageInput" type="file" accept="image/*">
+  </div>
+
+
+
+
+  <div class="group option-section" id="textBoxControls">
+    <div class="section-title">オプション</div>
+    <div class="option-tool-head">
+      <strong>テキストボックス</strong>
+      <button id="addTextBox" class="mini">＋ 追加</button>
+    </div>
+    <div class="status compact-help">最大5個まで。ドラッグで移動し、右下ハンドルで拡大・縮小できます。</div>
+    <div id="textBoxList"></div>
+
+    <div class="option-tool-head option-subtool">
+      <strong>フレームテキスト</strong>
+      <button id="addFrameText" class="mini">＋ 追加</button>
+    </div>
+    <div class="status compact-help">枠と面を持つテキスト。位置・縦横比を自由に変更できます。</div>
+    <div id="frameTextList"></div>
+  </div>
+
+  <div class="group">
+    <button id="copyToPageSide" class="mini" style="width:100%">この面をこのページの表面へ複製</button>
+    <button id="copyToAllPagesSide" class="mini" style="width:100%;margin-top:6px">この面を全てのページの表面へ複製</button>
+
+  </div>
+
+</aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script>
+(() => {
+const MM_TO_PX=3.7795275591;
+const PRESET=["#111111","#ffffff","#d94a4a","#e48a2a","#e4c62a","#6bbf59","#2fa67f","#3a8dde","#5967d8","#8b5cc7","#d45aa1","#8a6b4c"];
+let recentColors=[];
+
+const makePlain=()=>({type:"plain",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true});
+const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●",suitSize:"medium",suitMode:"text",suitImage:null,
+  numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,
+  numberStyle:{size:31,bold:true,italic:false},textStyle:{size:12,bold:false,italic:false}});
+const makeImageFace=()=>({type:"image",src:null,bgColor:"#ffffff",bgImage:null});
+const makePage=()=>Array.from({length:8},(_,i)=>i%2===0?makePlaying():makePlain());
+
+let pages=[makePage()],currentPage=0,selected=0,sheetTitle="";
+
+const el=id=>document.getElementById(id);
+const paper=el("paper"),grid=el("sheetGrid");
+
+const CARD_SIZES={
+  poker:{label:"ポーカー",w:63,h:88},
+  bridge:{label:"ブリッジ",w:58,h:89},
+  business:{label:"名刺",w:55,h:91},
+  yugioh:{label:"遊戯王サイズ",w:59,h:86},
+  credit:{label:"クレジット",w:54,h:86},
+  half:{label:"ハーフ",w:44,h:63}
+};
+function cardMM(){return CARD_SIZES[el("cardSize")?.value]||CARD_SIZES.poker}
+function isLandscapeCard(){ return el("paperOrientation").value==="portrait"; } // A4 portrait => horizontal card
+function paperMM(){return el("paperOrientation").value==="landscape"?{w:297,h:210}:{w:210,h:297}}
+function blockMM(){
+  const c=cardMM();
+  return isLandscapeCard()?{w:c.h*2,h:c.w*4}:{w:c.w*4,h:c.h*2};
+}
+function applyCardGeometry(container){
+  const c=cardMM();
+  let fw,fh,pw,ph,gw,gh,fold;
+  if(isLandscapeCard()){
+    fw=c.h; fh=c.w;
+    pw=c.h; ph=c.w*2;
+    gw=c.h*2; gh=c.w*4;
+    fold=c.w;
+  }else{
+    fw=c.w; fh=c.h;
+    pw=c.w*2; ph=c.h;
+    gw=c.w*4; gh=c.h*2;
+    fold=c.w;
+  }
+  container.style.setProperty("--face-w",fw+"mm");
+  container.style.setProperty("--face-h",fh+"mm");
+  container.style.setProperty("--pair-w",pw+"mm");
+  container.style.setProperty("--pair-h",ph+"mm");
+  container.style.setProperty("--grid-w",gw+"mm");
+  container.style.setProperty("--grid-h",gh+"mm");
+  container.style.setProperty("--fold-pos",fold+"mm");
+}
+function currentFaces(){return pages[currentPage]}
+function deep(v){return JSON.parse(JSON.stringify(v))}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]))}
+
+
+function ensureTextBoxes(d){ if(!Array.isArray(d.textBoxes)) d.textBoxes=[]; return d.textBoxes; }
+function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"テキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
+function ensureFrameTexts(d){if(!Array.isArray(d.frameTexts))d.frameTexts=[];return d.frameTexts}
+function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"フレームテキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
+function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
+  const items=ensureTextBoxes(d);
+  const gx=document.createElement("div");gx.className="snap-guide-x";faceEl.appendChild(gx);
+  const gy=document.createElement("div");gy.className="snap-guide-y";faceEl.appendChild(gy);
+  items.forEach((item,n)=>{
+    const st=item.style||{size:14,bold:false,italic:false,color:"#222222"},b=item.box||{x:20,y:18+n*16,w:60,h:14};
+    const div=document.createElement("div");div.className="generic-textbox"+(selectable?" editable":"");
+    div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
+    div.style.fontSize=st.size+"px";div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";div.style.color=st.colorNone?"transparent":(st.color||"#222");div.textContent=item.text||"";
+    if(selectable){const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableGenericTextBox(div,idx,item.id)}
+    faceEl.appendChild(div);
+  });
+  renderFrameTexts(faceEl,d,selectable,idx);
+}
+
+function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
+  const items=ensureFrameTexts(d);
+  items.forEach((item,n)=>{
+    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const b=item.box||{x:18,y:22+n*14,w:64,h:18};
+    const div=document.createElement("div");
+    div.className="frame-text"+(selectable?" editable":"");
+    div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
+    div.style.fontSize=st.size+"px";div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";
+    div.style.color=st.colorNone?"transparent":(st.color||"#222");
+    div.style.border=(Number(item.borderWidth)||1)+"px solid "+(item.borderNone?"transparent":(item.borderColor||"#222"));
+    div.style.background=item.fillNone?"transparent":(item.fillColor||"#fff");
+    div.textContent=item.text||"";
+    if(selectable){const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableFrameText(div,idx,item.id)}
+    faceEl.appendChild(div);
+  });
+}
+function enableFrameText(node,idx,itemId){
+  let mode=null,startX=0,startY=0,start=null;const handle=node.querySelector(".resize-handle");
+  const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;const item=ensureFrameTexts(currentFaces()[idx]).find(x=>x.id===itemId);if(!item)return;start={...(item.box||{x:18,y:22,w:64,h:18})};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true})};
+  node.addEventListener("pointerdown",e=>{if(e.target!==handle)down(e,"move")});handle.addEventListener("pointerdown",e=>down(e,"resize"));
+  function move(e){if(!mode)return;const face=node.closest(".face"),r=face.getBoundingClientRect();const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;const item=ensureFrameTexts(currentFaces()[idx]).find(x=>x.id===itemId);if(!item)return;
+    if(mode==="move"){let x=clamp(start.x+dx,0,100-start.w),y=clamp(start.y+dy,0,100-start.h);face.classList.remove("show-snap-x","show-snap-y");if(item.centerSnap){const cx=x+start.w/2,cy=y+start.h/2,th=4.5;if(Math.abs(cx-50)<=th){x=50-start.w/2;face.classList.add("show-snap-x")}if(Math.abs(cy-50)<=th){y=50-start.h/2;face.classList.add("show-snap-y")}}item.box={...start,x,y}}
+    else{item.box={...start,w:clamp(start.w+dx,12,100-start.x),h:clamp(start.h+dy,7,100-start.y)}}
+    const b=item.box;node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
+  }
+  function up(){const face=node.closest(".face");if(face)face.classList.remove("show-snap-x","show-snap-y");mode=null;window.removeEventListener("pointermove",move)}
+}
+
+function enableGenericTextBox(node,idx,itemId){
+  let mode=null,startX=0,startY=0,start=null;const handle=node.querySelector(".resize-handle");
+  const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;const item=ensureTextBoxes(currentFaces()[idx]).find(x=>x.id===itemId);if(!item)return;start={...(item.box||{x:20,y:20,w:60,h:14})};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true})};
+  node.addEventListener("pointerdown",e=>{if(e.target!==handle)down(e,"move")});handle.addEventListener("pointerdown",e=>down(e,"resize"));
+  function move(e){if(!mode)return;const face=node.closest(".face"),r=face.getBoundingClientRect();const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;const item=ensureTextBoxes(currentFaces()[idx]).find(x=>x.id===itemId);if(!item)return;
+    if(mode==="move"){let x=clamp(start.x+dx,0,100-start.w),y=clamp(start.y+dy,0,100-start.h);face.classList.remove("show-snap-x","show-snap-y");if(item.centerSnap){const cx=x+start.w/2,cy=y+start.h/2,th=4.5;if(Math.abs(cx-50)<=th){x=50-start.w/2;face.classList.add("show-snap-x")}if(Math.abs(cy-50)<=th){y=50-start.h/2;face.classList.add("show-snap-y")}}item.box={...start,x,y}}
+    else{const ratio=start.w/start.h;let nw=start.w+dx,nh=nw/ratio;if(Math.abs(dy)>Math.abs(dx)){nh=start.h+dy;nw=nh*ratio}nw=clamp(nw,12,100-start.x);nh=nw/ratio;if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}if(nh<6){nh=6;nw=nh*ratio}item.box={...start,w:nw,h:nh}}
+    const b=item.box;node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
+  }
+  function up(){const face=node.closest(".face");if(face)face.classList.remove("show-snap-x","show-snap-y");mode=null;window.removeEventListener("pointermove",move)}
+}
+
+function faceName(i){
+  const card=Math.floor(i/2)+1;
+  return `カード${currentPage*4+card}（ページ内${card}）・${i%2===0?"表":"裏"}`;
+}
+
+function setPaper(){
+  const p=paperMM();
+  paper.style.width=p.w*MM_TO_PX+"px";
+  paper.style.height=p.h*MM_TO_PX+"px";
+  paper.className="paper "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
+  grid.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
+  updateFit();
+  fitPaper();
+  renderSheet();
+}
+function fitPaper(){
+  const p=paperMM(),mainWidth=document.querySelector(".canvas-area").clientWidth-44;
+  const raw=p.w*MM_TO_PX,scale=Math.min(1,mainWidth/raw);
+  paper.style.transform=`scale(${scale})`;
+  paper.parentElement.style.height=p.h*MM_TO_PX*scale+"px";
+}
+function updateFit(){
+  const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2;
+  el("fitStatus").textContent=`A4実寸100%想定：左右${x.toFixed(1)}mm / 上下${y.toFixed(1)}mm余白`;
+}
+
+
+function addRecentColor(c){ refreshOpenColorPopup(); }
+function getUsedColors(){
+  const out=[],seen=new Set();const add=c=>{if(!c)return;c=String(c).toLowerCase();if(!seen.has(c)){seen.add(c);out.push(c)}};
+  pages.forEach(pg=>pg.forEach(d=>{if(!d)return;[d.bgColor,d.color,d.numberColor,d.textColor,d.borderColor,d.panelColor,d.mainColor].forEach(add);if(Array.isArray(d.textBoxes))d.textBoxes.forEach(tb=>add(tb&&tb.style&&!tb.style.colorNone&&tb.style.color));if(Array.isArray(d.frameTexts))d.frameTexts.forEach(ft=>{add(ft&&ft.style&&!ft.style.colorNone&&ft.style.color);if(ft&&!ft.borderNone)add(ft.borderColor);if(ft&&!ft.fillNone)add(ft.fillColor)})}));
+  return out.slice(0,24);
+}
+let colorPopup=null,activeColorInput=null;
+function hexToRgb(hex){const h=String(hex||"#000000").replace("#","");const n=parseInt(h.length===3?h.split("").map(x=>x+x).join(""):h,16)||0;return {r:(n>>16)&255,g:(n>>8)&255,b:n&255}}
+function rgbToHex(r,g,b){const f=n=>clamp(Math.round(n),0,255).toString(16).padStart(2,"0");return "#"+f(r)+f(g)+f(b)}
+function rgbToHsv(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return {h,s:mx?d/mx:0,v:mx}}
+function hsvToRgb(h,s,v){const c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c;let r=0,g=0,b=0;if(h<60){r=c;g=x}else if(h<120){r=x;g=c}else if(h<180){g=c;b=x}else if(h<240){g=x;b=c}else if(h<300){r=x;b=c}else{r=c;b=x}return {r:(r+m)*255,g:(g+m)*255,b:(b+m)*255}}
+function rgbToCmyk(r,g,b){r/=255;g/=255;b/=255;const k=1-Math.max(r,g,b);if(k>=.9999)return {c:0,m:0,y:0,k:100};return {c:(1-r-k)/(1-k)*100,m:(1-g-k)/(1-k)*100,y:(1-b-k)/(1-k)*100,k:k*100}}
+function cmykToRgb(c,m,y,k){
+  c=clamp(Number(c)||0,0,100)/100;
+  m=clamp(Number(m)||0,0,100)/100;
+  y=clamp(Number(y)||0,0,100)/100;
+  k=clamp(Number(k)||0,0,100)/100;
+  return {r:255*(1-c)*(1-k),g:255*(1-m)*(1-k),b:255*(1-y)*(1-k)}
+}
+function closeColorPopup(){if(colorPopup){colorPopup.remove();colorPopup=null}activeColorInput=null}
+function colorRoleForInput(input){
+  if(!input)return "fill";
+  if(input.id==="tcgBorderColor" || input.classList.contains("ft-border-color")) return "stroke";
+  if(
+    ["playingNumberColor","playingTextColor","tcgTextColor","wordMainColor"].includes(input.id) ||
+    input.classList.contains("tb-color") ||
+    input.classList.contains("ft-text-color")
+  ) return "text";
+  return "fill";
+}
+function refreshColorTrigger(input){
+  if(!input||!input._colorTrigger)return;
+  const btn=input._colorTrigger;
+  btn.classList.toggle("is-none",input.dataset.none==="1");
+  btn.style.setProperty("--trigger-color",input.value||"#222222");
+}
+function applyColorToInput(input,color){
+  input.dataset.none="0";
+  input.value=color;
+  input.dispatchEvent(new Event("input",{bubbles:true}));
+  refreshColorTrigger(input);
+}
+function applyNoColor(input){
+  input.dataset.none="1";
+  input.dispatchEvent(new CustomEvent("colornone",{bubbles:true}));
+  refreshColorTrigger(input);
+  refreshOpenColorPopup();
+}
+function setupColorInput(input){
+  if(!input||input.dataset.colorReady)return;
+  input.dataset.colorReady="1";
+  input.classList.add("color-source");
+
+  const role=colorRoleForInput(input);
+  const btn=document.createElement("button");
+  btn.type="button";
+  btn.className="color-trigger color-trigger-"+role;
+  btn.title=input.getAttribute("aria-label")||input.title||"カラー";
+
+  if(role==="text"){
+    btn.innerHTML='<span class="color-trigger-icon color-trigger-text-icon">A</span>';
+  }else if(role==="stroke"){
+    btn.innerHTML='<span class="color-trigger-icon color-trigger-stroke-icon"></span>';
+  }else{
+    btn.innerHTML='<span class="color-trigger-icon color-trigger-fill-icon"></span>';
+  }
+
+  input.insertAdjacentElement("afterend",btn);
+  input._colorTrigger=btn;
+  btn.addEventListener("click",e=>{
+    e.preventDefault();e.stopPropagation();
+    openColorPopup(input,btn);
+  });
+  input.addEventListener("input",()=>refreshColorTrigger(input));
+  refreshColorTrigger(input);
+}
+function setupAllColorInputs(){document.querySelectorAll('input[type="color"]').forEach(setupColorInput)}
+function refreshOpenColorPopup(){if(colorPopup&&colorPopup._renderUsed)colorPopup._renderUsed()}
+function openColorPopup(input,anchor){
+  if(colorPopup && activeColorInput===input){closeColorPopup();return}
+  closeColorPopup();activeColorInput=input;let rgb=hexToRgb(input.value),hsv=rgbToHsv(rgb.r,rgb.g,rgb.b),mode="CMYK";
+  const pop=document.createElement("div");pop.className="color-popup";pop.innerHTML=`<div class="color-popup-head"><strong>カラー</strong><button type="button" class="color-popup-close">×</button></div><div class="color-field"><span class="color-field-marker"></span></div><input class="color-hue" type="range" min="0" max="359" value="${Math.round(hsv.h)}"><div class="color-popup-row"><span class="color-preview"></span><select class="color-mode"><option value="CMYK">CMYK</option><option value="RGB">RGB</option></select><div class="color-values"></div></div><button type="button" class="color-none-btn"><span class="none-icon"></span><span>カラーなし</span></button><div class="color-popup-section">規定色</div><div class="swatches preset-swatches"></div><div class="color-popup-section">使われている色</div><div class="swatches used-swatches"></div>`;
+  document.body.appendChild(pop);colorPopup=pop;
+  const field=pop.querySelector(".color-field"),marker=pop.querySelector(".color-field-marker"),hue=pop.querySelector(".color-hue"),preview=pop.querySelector(".color-preview"),values=pop.querySelector(".color-values"),modeSel=pop.querySelector(".color-mode");
+  const currentHex=()=>{const x=hsvToRgb(hsv.h,hsv.s,hsv.v);return rgbToHex(x.r,x.g,x.b)};
+  function renderValues(){
+    const r=hexToRgb(currentHex());
+    values.innerHTML="";
+    const arr=mode==="CMYK"
+      ?(()=>{const c=rgbToCmyk(r.r,r.g,r.b);return [["C",c.c,100],["M",c.m,100],["Y",c.y,100],["K",c.k,100]]})()
+      :[["R",r.r,255],["G",r.g,255],["B",r.b,255]];
+
+    arr.forEach(([lab,val,max],index)=>{
+      const cell=document.createElement("div");
+      cell.className="color-value";
+      cell.innerHTML=`<input type="number" inputmode="numeric" step="1" min="0" max="${max}" value="${Math.round(val)}" aria-label="${lab}"><label>${lab}</label>`;
+      const num=cell.querySelector("input");
+
+      const commitNumber=()=>{
+        const inputs=[...values.querySelectorAll("input")];
+        inputs.forEach(x=>{
+          const mx=Number(x.max);
+          x.value=String(Math.round(clamp(Number(x.value)||0,0,mx)));
+        });
+        const nums=inputs.map(x=>Number(x.value)||0);
+        const rr=mode==="CMYK"
+          ?cmykToRgb(nums[0],nums[1],nums[2],nums[3])
+          :{r:clamp(nums[0],0,255),g:clamp(nums[1],0,255),b:clamp(nums[2],0,255)};
+        hsv=rgbToHsv(rr.r,rr.g,rr.b);
+        hue.value=Math.round(hsv.h);
+        update(true,false);
+      };
+
+      // Commit when leaving a field. Because the numeric controls are not rebuilt,
+      // normal Tab order remains C→M→Y→K (or R→G→B).
+      num.addEventListener("change",commitNumber);
+      num.addEventListener("keydown",e=>{
+        if(e.key==="Enter"){
+          e.preventDefault();
+          commitNumber();
+          const inputs=[...values.querySelectorAll("input")];
+          const next=inputs[index+1];
+          if(next){next.focus();next.select()}
+        }
+      });
+      values.appendChild(cell);
+    });
+  }
+  function swatches(container,colors){container.innerHTML="";colors.forEach(c=>{const b=document.createElement("button");b.type="button";b.className="swatch";b.style.background=c;b.title=c;b.addEventListener("click",e=>{e.stopPropagation();const r=hexToRgb(c);hsv=rgbToHsv(r.r,r.g,r.b);hue.value=Math.round(hsv.h);update(true)});container.appendChild(b)})}
+  function renderUsed(){const box=pop.querySelector(".used-swatches"),colors=getUsedColors();swatches(box,colors);if(!colors.length){const x=document.createElement("div");x.className="color-used-empty";x.textContent="まだありません";box.appendChild(x)}}pop._renderUsed=renderUsed;
+  function update(commit,syncNumbers=true){
+    field.style.background=`hsl(${hsv.h} 100% 50%)`;
+    marker.style.left=(hsv.s*100)+"%";
+    marker.style.top=((1-hsv.v)*100)+"%";
+    const hex=currentHex();
+    preview.style.background=hex;
+    if(commit)applyColorToInput(input,hex);
+    if(syncNumbers)renderValues();
+    renderUsed();
+  }
+  swatches(pop.querySelector(".preset-swatches"),PRESET);renderUsed();update(false);
+  field.addEventListener("pointerdown",e=>{const move=ev=>{const r=field.getBoundingClientRect();hsv.s=clamp((ev.clientX-r.left)/r.width,0,1);hsv.v=1-clamp((ev.clientY-r.top)/r.height,0,1);update(true)};move(e);window.addEventListener("pointermove",move);window.addEventListener("pointerup",()=>window.removeEventListener("pointermove",move),{once:true})});
+  hue.addEventListener("input",()=>{hsv.h=Number(hue.value);update(true)});modeSel.addEventListener("change",()=>{mode=modeSel.value;renderValues()});pop.querySelector(".color-popup-close").onclick=closeColorPopup;pop.querySelector(".color-none-btn").onclick=()=>{applyNoColor(input);closeColorPopup()};
+  const r=anchor.getBoundingClientRect(),w=320;let left=Math.min(window.innerWidth-w-8,Math.max(8,r.left)),top=r.bottom+6;requestAnimationFrame(()=>{if(top+pop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-pop.offsetHeight-6);pop.style.left=left+"px";pop.style.top=top+"px"});
+}
+function renderSwatches(){refreshOpenColorPopup()}
+
+function renderSuitHTML(d){
+  const size=d.suitSize||"medium";
+  if(d.suitMode==="image" && d.suitImage){
+    return `<img class="suit-img ${size}" src="${d.suitImage}" alt="">`;
+  }
+  return `<span class="suit-text ${size}">${esc(d.suit||"")}</span>`;
+}
+
+function renderFace(faceEl,d,selectable=false,idx=-1){
+  faceEl.innerHTML="";
+  faceEl.style.background=d.bgNone?"transparent":(d.bgColor||"#ffffff");
+  const faceBorderW=Number(d.bgBorderWidth)||1;
+  faceEl.style.boxShadow=d.bgBorderNone?"none":`inset 0 0 0 ${faceBorderW}px ${d.bgBorderColor||"#222222"}`;
+
+  if(d.bgImage){
+    const bg=document.createElement("img");
+    bg.src=d.bgImage;
+    bg.style.position="absolute";
+    bg.style.inset="0";
+    bg.style.width="100%";
+    bg.style.height="100%";
+    bg.style.objectFit="cover";
+    bg.style.zIndex="0";
+    bg.style.pointerEvents="none";
+    faceEl.appendChild(bg);
+  }
+
+  if(d.type==="plain"){renderGenericTextBoxes(faceEl,d,selectable,idx);return;}
+  if(d.type==="image"){
+    if(d.src){const img=document.createElement("img");img.src=d.src;img.style.width="100%";img.style.height="100%";img.style.objectFit="cover";img.style.position="relative";img.style.zIndex="1";faceEl.appendChild(img)}
+    else faceEl.innerHTML='<div class="empty">画像未設定</div>';
+    renderGenericTextBoxes(faceEl,d,selectable,idx);
+    return
+  }
+
+  if(d.template==="tcg"){
+    const layout = isLandscapeCard() ? (d.horizontalLayout||1) : 1;
+    const wrap=document.createElement("div");
+    wrap.className="tcg-card layout"+layout;
+    const legacy=d.color||"#222222";
+    wrap.style.setProperty("--tcg-text",d.textColorNone?"transparent":(d.textColor||legacy));
+    wrap.style.setProperty("--tcg-border",d.borderNone?"transparent":(d.borderColor||legacy));wrap.style.setProperty("--tcg-border-width",(Number(d.borderWidth)||1)+"px");
+    wrap.style.setProperty("--tcg-panel",d.panelNone?"transparent":(d.panelColor||"#ffffff"));
+
+    const ns=d.nameStyle||{size:15,bold:true,italic:false};
+    const ds=d.descStyle||{size:12,bold:false,italic:false};
+    wrap.innerHTML=`<div class="tcg-name" style="font-size:${ns.size}px;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${esc(d.name||"カード名")}</div>
+      <div class="tcg-image">${d.image?`<img src="${d.image}">`:"画像"}</div>
+      <div class="tcg-desc" style="font-size:${ds.size}px;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${esc(d.desc||"テキスト")}</div>`;
+    faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
+  }
+
+  if(d.template==="word"){
+    const wrap=document.createElement("div");wrap.className="word-card";
+    const main=document.createElement("div");main.className="word-main"+(!isLandscapeCard()?" vertical":"");
+    const ms=d.mainStyle||{size:53,bold:true,italic:false};main.style.fontSize=ms.size+"px";main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");main.textContent=d.main||"ことば";
+    wrap.appendChild(main);faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
+  }
+
+  if(d.template==="custom"){
+    const wrap=document.createElement("div");wrap.className="custom-card";faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
+  }
+
+  const wrap=document.createElement("div");wrap.className="card-template";
+  const nc=d.numberColorNone?"transparent":(d.numberColor||d.color||"#d94a4a");
+  const tc=d.textColorNone?"transparent":(d.textColor||"#222222");
+  const ts=d.textStyle||{size:12,bold:false,italic:false};
+  wrap.innerHTML=`
+    <div class="corner tl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
+    <div class="corner tr" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
+    <div class="corner bl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
+    <div class="corner br" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
+    <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||31}mm;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>
+    <div class="card-text" style="color:${tc};font-size:${ts.size}px;font-weight:${ts.bold?700:400};font-style:${ts.italic?"italic":"normal"};text-decoration:${ts.underline?"underline":"none"}">${esc(d.text||"")}</div>`;
+  faceEl.appendChild(wrap);
+  renderGenericTextBoxes(faceEl,d,selectable,idx);
+}
+
+
+function enableCustomBox(node,idx,key){
+  let mode=null,startX=0,startY=0,start=null;
+  const handle=node.querySelector(".resize-handle");
+  const pointerDown=(e,m)=>{
+    e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;
+    const d=currentFaces()[idx],b=(d.customBoxes&&d.customBoxes[key])||{x:20,y:20,w:60,h:14};
+    start={...b};
+    window.addEventListener("pointermove",move);
+    window.addEventListener("pointerup",up,{once:true});
+  };
+  node.addEventListener("pointerdown",e=>{if(e.target===handle)return;pointerDown(e,"move")});
+  handle.addEventListener("pointerdown",e=>pointerDown(e,"resize"));
+  function move(e){
+    if(!mode)return;
+    const face=node.closest(".face"),r=face.getBoundingClientRect();
+    const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;
+    const d=currentFaces()[idx];
+    d.customBoxes=d.customBoxes||{};
+    if(mode==="move"){
+      d.customBoxes[key]={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-start.h)};
+    }else{
+      if(e.shiftKey){
+        const ratio=start.w/start.h;
+        let nw=clamp(start.w+dx,12,100-start.x);
+        let nh=nw/ratio;
+        if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}
+        if(nh<6){nh=6;nw=nh*ratio}
+        d.customBoxes[key]={...start,w:nw,h:nh};
+      }else{
+        d.customBoxes[key]={...start,w:clamp(start.w+dx,12,100-start.x),h:clamp(start.h+dy,6,100-start.y)};
+      }
+    }
+    const b=d.customBoxes[key];
+    node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
+  }
+  function up(){mode=null;window.removeEventListener("pointermove",move)}
+}
+
+function enableSubtitleBox(node,idx){
+  let mode=null,startX=0,startY=0,start=null;
+  const handle=node.querySelector(".resize-handle");
+  const pointerDown=(e,m)=>{
+    e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;
+    const d=currentFaces()[idx],b=d.subBox||{x:20,y:73,w:60,h:14};start={...b};
+    window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true});
+  };
+  node.addEventListener("pointerdown",e=>{if(e.target===handle)return;pointerDown(e,"move")});
+  handle.addEventListener("pointerdown",e=>pointerDown(e,"resize"));
+  function move(e){
+    if(!mode)return;
+    const face=node.closest(".face"),r=face.getBoundingClientRect();
+    const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;
+    const d=currentFaces()[idx];
+    if(mode==="move"){
+      d.subBox={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-start.h)};
+    }else{
+      if(e.shiftKey){
+        const ratio=start.w/start.h;
+        let nw=clamp(start.w+dx,15,100-start.x);
+        let nh=nw/ratio;
+        if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}
+        if(nh<7){nh=7;nw=nh*ratio}
+        d.subBox={...start,w:nw,h:nh};
+      }else{
+        d.subBox={...start,w:clamp(start.w+dx,15,100-start.x),h:clamp(start.h+dy,7,100-start.y)};
+      }
+    }
+    const b=d.subBox;node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
+  }
+  function up(){mode=null;window.removeEventListener("pointermove",move)}
+}
+
+function buildSheet(container,faces,selectable=true){
+  container.innerHTML="";
+  container.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
+  applyCardGeometry(container);
+  for(let c=0;c<4;c++){
+    const pair=document.createElement("div");pair.className="pair";
+    for(let side=0;side<2;side++){
+      const idx=c*2+side,f=document.createElement("div");
+      f.className="face"+(selectable&&idx===selected?" selected":"");
+      renderFace(f,faces[idx],selectable&&idx===selected,idx);
+      if(selectable) f.addEventListener("click",()=>{selected=idx;renderSheet();syncControls()});
+      pair.appendChild(f);
+    }
+    const fold=document.createElement("div");fold.className="fold";pair.appendChild(fold);
+    container.appendChild(pair);
+  }
+}
+
+function renderSheet(){
+  el("sheetTitle").textContent=sheetTitle;
+  buildSheet(grid,currentFaces(),true);
+  el("pageCount").textContent=`${currentPage+1} / ${pages.length}`;
+  el("addPage").disabled=pages.length>=25;
+  el("dupPage").disabled=pages.length>=25;
+  el("deletePage").disabled=pages.length<=1;
+  renderPageSidebar();
+}
+
+
+function renderPageSidebar(){
+  const box=el("pageThumbs");
+  if(!box)return;
+  box.innerHTML="";
+  const p=paperMM();
+  const viewportW=116;
+  const fullW=p.w*MM_TO_PX, fullH=p.h*MM_TO_PX;
+  const scale=viewportW/fullW;
+  const viewportH=fullH*scale;
+
+  let dragFrom=null;
+
+  function makeDropZone(insertIndex){
+    const zone=document.createElement("div");
+    zone.className="page-drop-zone";
+    zone.addEventListener("dragover",e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect="move";
+      zone.classList.add("drag-over");
+    });
+    zone.addEventListener("dragleave",()=>zone.classList.remove("drag-over"));
+    zone.addEventListener("drop",e=>{
+      e.preventDefault();
+      zone.classList.remove("drag-over");
+      const from=dragFrom ?? Number(e.dataTransfer.getData("text/plain"));
+      if(from===null || Number.isNaN(from))return;
+
+      const activePage=pages[currentPage];
+      const moved=pages.splice(from,1)[0];
+      let target=insertIndex;
+      if(from<insertIndex) target--;
+      target=Math.max(0,Math.min(target,pages.length));
+      pages.splice(target,0,moved);
+
+      currentPage=pages.indexOf(activePage);
+      if(currentPage<0) currentPage=target;
+      dragFrom=null;
+      renderSheet();
+      syncControls();
+    });
+    return zone;
+  }
+
+  pages.forEach((pg,i)=>{
+    box.appendChild(makeDropZone(i));
+
+    const item=document.createElement("div");
+    item.className="page-thumb"+(i===currentPage?" active":"");
+    item.draggable=true;
+    item.dataset.index=i;
+    item.onclick=()=>{
+      currentPage=i;selected=0;renderSheet();syncControls();
+    };
+    item.addEventListener("dragstart",e=>{
+      dragFrom=i;
+      e.dataTransfer.setData("text/plain",String(i));
+      e.dataTransfer.effectAllowed="move";
+      item.classList.add("dragging");
+    });
+    item.addEventListener("dragend",()=>{
+      item.classList.remove("dragging");
+      document.querySelectorAll(".page-drop-zone.drag-over").forEach(z=>z.classList.remove("drag-over"));
+    });
+
+    const n=document.createElement("div");
+    n.className="page-thumb-num";
+    n.textContent=`${i+1}`;
+    item.appendChild(n);
+
+    const menuBtn=document.createElement("button");
+    menuBtn.type="button";
+    menuBtn.className="page-thumb-menu-btn";
+    menuBtn.textContent="…";
+    menuBtn.title="ページメニュー";
+    menuBtn.addEventListener("click",e=>{
+      e.preventDefault();e.stopPropagation();
+      document.querySelectorAll(".page-thumb-menu").forEach(m=>m.remove());
+      const menu=document.createElement("div");
+      menu.className="page-thumb-menu";
+
+      const dup=document.createElement("button");
+      dup.type="button";dup.textContent="複製";dup.disabled=pages.length>=25;
+      dup.addEventListener("click",ev=>{
+        ev.stopPropagation();
+        if(pages.length>=25)return;
+        pages.splice(i+1,0,deep(pages[i]));
+        currentPage=i+1;selected=0;
+        renderSheet();syncControls();
+      });
+
+      const del=document.createElement("button");
+      del.type="button";del.textContent="削除";del.disabled=pages.length<=1;
+      del.addEventListener("click",ev=>{
+        ev.stopPropagation();
+        if(pages.length<=1)return;
+        pages.splice(i,1);
+        if(currentPage===i) currentPage=Math.min(i,pages.length-1);
+        else if(currentPage>i) currentPage--;
+        selected=0;
+        renderSheet();syncControls();
+      });
+
+      menu.appendChild(dup);menu.appendChild(del);
+      item.appendChild(menu);
+    });
+    item.appendChild(menuBtn);
+
+    const vp=document.createElement("div");
+    vp.className="thumb-viewport";
+    vp.style.height=viewportH+"px";
+
+    const thumb=document.createElement("div");
+    thumb.className="thumb-paper "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
+    thumb.style.width=fullW+"px";
+    thumb.style.height=fullH+"px";
+    thumb.style.transform=`scale(${scale})`;
+
+    const title=document.createElement("div");
+    title.className="sheet-title";
+    title.textContent=sheetTitle;
+    thumb.appendChild(title);
+
+    const sg=document.createElement("div");
+    buildSheet(sg,pg,false);
+    thumb.appendChild(sg);
+
+    vp.appendChild(thumb);
+    item.appendChild(vp);
+    box.appendChild(item);
+  });
+
+  box.appendChild(makeDropZone(pages.length));
+}
+
+
+function renderTextBoxEditors(d){
+  const list=el("textBoxList"),items=ensureTextBoxes(d);
+  list.innerHTML="";
+
+  items.forEach((item,index)=>{
+    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const wrap=document.createElement("div");
+    wrap.className="textbox-editor";
+    wrap.innerHTML=`
+      <div class="textbox-editor-head">
+        <strong>テキスト${index+1}</strong>
+        <button type="button" class="textbox-delete">削除</button>
+      </div>
+      <input class="tb-text" type="text" value="${esc(item.text||"")}" placeholder="テキスト${index+1}">
+      <div class="tool-strip tool-strip-secondary">
+        <div class="tool-number-wrap" title="文字サイズ">
+          <span class="size-icon">A</span>
+          <input class="tb-size tool-number" type="number" min="7" max="100" value="${st.size||14}">
+        </div>
+        <label class="style-toggle" title="太字"><input class="tb-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
+        <label class="style-toggle" title="斜体"><input class="tb-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
+        <label class="style-toggle" title="下線"><input class="tb-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
+        <div class="tool-color" title="文字色"><input class="tb-color" type="color" value="${st.color||"#222222"}" aria-label="文字色"></div>
+      </div>
+      <label class="checkline" style="margin:6px 0 0"><input class="tb-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;
+
+    const text=wrap.querySelector(".tb-text");
+    const size=wrap.querySelector(".tb-size");
+    const bold=wrap.querySelector(".tb-bold");
+    const italic=wrap.querySelector(".tb-italic");
+    const underline=wrap.querySelector(".tb-underline");
+    const color=wrap.querySelector(".tb-color");
+    const center=wrap.querySelector(".tb-center");
+    const del=wrap.querySelector(".textbox-delete");
+
+    text.oninput=()=>{item.text=text.value;renderSheet()};
+    [size,bold,italic,underline].forEach(inp=>inp.oninput=()=>{
+      item.style={
+        ...item.style,
+        size:Number(size.value)||14,
+        bold:bold.checked,
+        italic:italic.checked,
+        underline:underline.checked
+      };
+      renderSheet();
+    });
+
+    color.dataset.none=st.colorNone?"1":"0";
+    color.oninput=()=>{
+      item.style={...item.style,color:color.value,colorNone:false};
+      color.dataset.none="0";
+      renderSheet();
+      refreshOpenColorPopup();
+    };
+    color.addEventListener("colornone",()=>{
+      item.style={...item.style,colorNone:true};
+      renderSheet();
+    });
+
+    center.onchange=()=>{item.centerSnap=center.checked;renderSheet()};
+    del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};
+
+    list.appendChild(wrap);
+    setupColorInput(color);
+    refreshColorTrigger(color);
+  });
+
+  el("addTextBox").disabled=items.length>=5;
+}
+
+function renderFrameTextEditors(d){
+  const list=el("frameTextList"),items=ensureFrameTexts(d);list.innerHTML="";
+  items.forEach((item,index)=>{
+    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const wrap=document.createElement("div");wrap.className="frame-editor";
+    wrap.innerHTML=`<div class="frame-editor-head"><strong>フレーム${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
+      <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
+      <div class="tool-strip tool-strip-secondary">
+        <div class="tool-number-wrap" title="文字サイズ"><span class="size-icon">A</span><input class="ft-size tool-number" type="number" min="7" max="100" value="${st.size||14}"></div>
+        <label class="style-toggle"><input class="ft-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
+        <label class="style-toggle"><input class="ft-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
+        <label class="style-toggle"><input class="ft-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
+      </div>
+      <div class="frame-color-row">
+        <div class="tool-color" title="文字色"><input class="ft-text-color" aria-label="文字色" type="color" value="${st.color||"#222222"}"></div>
+        <div class="tool-color fill-color" title="面色"><input class="ft-fill-color" aria-label="面色" type="color" value="${item.fillColor||"#ffffff"}"></div>
+        <div class="tool-color stroke-color" title="線色"><input class="ft-border-color" aria-label="線色" type="color" value="${item.borderColor||"#222222"}"></div>
+        <div class="tool-number-wrap stroke-width-control" title="線の太さ">
+          <span class="stroke-width-icon" aria-hidden="true"></span>
+          <select class="ft-border-width stroke-width-select" aria-label="線の太さ">
+            <option value="0.5" ${Number(item.borderWidth)===0.5?"selected":""}>細い</option>
+            <option value="0.75" ${Number(item.borderWidth)===0.75?"selected":""}>やや細い</option>
+            <option value="1" ${Number(item.borderWidth??1)===1?"selected":""}>標準</option>
+            <option value="2" ${Number(item.borderWidth)===2?"selected":""}>やや太い</option>
+            <option value="3" ${Number(item.borderWidth)===3?"selected":""}>太い</option>
+          </select>
+        </div>
+        <label class="checkline" style="margin-left:auto"><input class="ft-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>
+      </div>`;
+    const text=wrap.querySelector(".ft-text"),size=wrap.querySelector(".ft-size"),bold=wrap.querySelector(".ft-bold"),italic=wrap.querySelector(".ft-italic"),underline=wrap.querySelector(".ft-underline"),tc=wrap.querySelector(".ft-text-color"),bc=wrap.querySelector(".ft-border-color"),bw=wrap.querySelector(".ft-border-width"),fc=wrap.querySelector(".ft-fill-color"),center=wrap.querySelector(".ft-center"),del=wrap.querySelector(".textbox-delete");
+    text.oninput=()=>{item.text=text.value;renderSheet()};
+    [size,bold,italic,underline].forEach(x=>x.oninput=()=>{item.style={...item.style,size:Number(size.value)||14,bold:bold.checked,italic:italic.checked,underline:underline.checked};renderSheet()});
+    tc.dataset.none=st.colorNone?"1":"0";bc.dataset.none=item.borderNone?"1":"0";fc.dataset.none=item.fillNone?"1":"0";
+    tc.oninput=()=>{item.style={...item.style,color:tc.value,colorNone:false};tc.dataset.none="0";renderSheet();refreshOpenColorPopup()};
+    bc.oninput=()=>{item.borderColor=bc.value;item.borderNone=false;bc.dataset.none="0";renderSheet();refreshOpenColorPopup()};bw.onchange=()=>{item.borderWidth=Number(bw.value)||1;renderSheet()};
+    fc.oninput=()=>{item.fillColor=fc.value;item.fillNone=false;fc.dataset.none="0";renderSheet();refreshOpenColorPopup()};
+    tc.addEventListener("colornone",()=>{item.style.colorNone=true;renderSheet()});
+    bc.addEventListener("colornone",()=>{item.borderNone=true;renderSheet()});
+    fc.addEventListener("colornone",()=>{item.fillNone=true;renderSheet()});
+    center.onchange=()=>{item.centerSnap=center.checked;renderSheet()};
+    del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};
+    list.appendChild(wrap);[tc,bc,fc].forEach(x=>{setupColorInput(x);refreshColorTrigger(x)});
+  });
+  el("addFrameText").disabled=items.length>=5;
+}
+
+function syncControls(){
+  const d=currentFaces()[selected];
+  el("selectedLabel").textContent=faceName(selected);
+  refreshCopyButtonLabels();
+  el("faceType").value=d.type;
+  const templ=d.type==="template";
+  el("templateSelector").classList.toggle("hidden",!templ);
+  el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
+  el("imageControls").classList.toggle("hidden",d.type!=="image");
+
+
+  el("suitImageControls").classList.add("hidden");
+  if(templ){
+    el("templateType").value=d.template||"playing";
+    if((d.template||"playing")==="playing"){
+      el("playingControls").classList.remove("hidden");
+      el("numInput").value=d.number??"";el("suitInput").value=d.suit??"●";
+      el("playingNumberColor").value=d.numberColor||d.color||"#d94a4a";el("playingNumberColor").dataset.none=d.numberColorNone?"1":"0";
+      el("playingText").value=d.text??"";
+      el("playingTextColor").value=d.textColor||"#222222";el("playingTextColor").dataset.none=d.textColorNone?"1":"0";
+      el("suitSize").value=d.suitSize||"medium";
+      el("suitMode").value=d.suitMode||"text";
+      el("suitImageControls").classList.toggle("hidden",(d.suitMode||"text")!=="image");
+      const st=d.numberStyle||{size:31,bold:true,italic:false};
+      const tt=d.textStyle||{size:12,bold:false,italic:false};
+      el("playingSize").value=st.size;el("playingBold").checked=st.bold!==false;el("playingItalic").checked=!!st.italic;el("playingUnderline").checked=!!st.underline;
+      el("playingTextSize").value=tt.size;el("playingTextBold").checked=!!tt.bold;el("playingTextItalic").checked=!!tt.italic;el("playingTextUnderline").checked=!!tt.underline;
+    }else if(d.template==="tcg"){
+      el("tcgControls").classList.remove("hidden");
+      el("tcgName").value=d.name??"";el("tcgDesc").value=d.desc??"";
+      const legacy=d.color||"#222222";
+      el("tcgTextColor").value=d.textColor||legacy;el("tcgTextColor").dataset.none=d.textColorNone?"1":"0";
+      el("tcgBorderColor").value=d.borderColor||legacy;el("tcgBorderColor").dataset.none=d.borderNone?"1":"0";el("tcgBorderWidth").value=String(d.borderWidth??1);
+            el("tcgPanelColor").value=d.panelColor||"#ffffff";el("tcgPanelColor").dataset.none=d.panelNone?"1":"0";
+      document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.checked=String(d.horizontalLayout||1)===r.value);
+      const ns=d.nameStyle||{size:15,bold:true,italic:false},ds=d.descStyle||{size:12,bold:false,italic:false};
+      el("tcgNameSize").value=ns.size;el("tcgNameBold").checked=!!ns.bold;el("tcgNameItalic").checked=!!ns.italic;el("tcgNameUnderline").checked=!!ns.underline;
+      el("tcgDescSize").value=ds.size;el("tcgDescBold").checked=!!ds.bold;el("tcgDescItalic").checked=!!ds.italic;el("tcgDescUnderline").checked=!!ds.underline;
+    }else if(d.template==="word"){
+      el("wordControls").classList.remove("hidden");
+      el("wordMain").value=d.main??"";
+      el("wordMainColor").value=d.mainColor||d.color||"#222222";el("wordMainColor").dataset.none=d.mainColorNone?"1":"0";
+      const ms=d.mainStyle||{size:53,bold:true,italic:false},ss=d.subStyle||{size:12,bold:false,italic:false};
+      el("wordMainSize").value=ms.size;el("wordMainBold").checked=!!ms.bold;el("wordMainItalic").checked=!!ms.italic;el("wordMainUnderline").checked=!!ms.underline;
+    }else if(d.template==="custom"){el("customControls").classList.remove("hidden");}
+  }
+  el("faceBgColor").value=d.bgColor||"#ffffff";el("faceBgColor").dataset.none=d.bgNone?"1":"0";
+  el("faceBorderColor").value=d.bgBorderColor||"#222222";el("faceBorderColor").dataset.none=d.bgBorderNone?"1":"0";
+  el("faceBorderWidth").value=String(d.bgBorderWidth??1);
+  renderTextBoxEditors(d);
+  renderFrameTextEditors(d);
+  setupAllColorInputs();
+  const showTcgLayout = templ && d.template==="tcg" && isLandscapeCard();
+  el("tcgLayoutControls").classList.toggle("hidden",!showTcgLayout);
+  renderSwatches();
+}
+function updateSelected(patch){const f=currentFaces();f[selected]={...f[selected],...patch};renderSheet()}
+
+el("sheetTitleInput").addEventListener("input",e=>{sheetTitle=e.target.value;renderSheet()});
+el("paperOrientation").addEventListener("change",()=>{setPaper();syncControls()});
+el("cardSize").addEventListener("change",()=>{setPaper();syncControls()});
+window.addEventListener("resize",fitPaper);
+
+el("faceType").addEventListener("change",e=>{
+  const t=e.target.value,f=currentFaces(),old=f[selected];
+  const bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null;
+  const bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false;
+  const textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old));
+  if(t==="plain")f[selected]={type:"plain",bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
+  else if(t==="template")f[selected]={...makePlaying(),bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
+  else if(t==="image")f[selected]={type:"image",src:null,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
+  renderSheet();syncControls();
+});
+el("templateType").addEventListener("change",e=>{
+  const t=e.target.value;
+  const keepBg=currentFaces()[selected].bgColor||"#ffffff";
+  const keepBgImage=currentFaces()[selected].bgImage||null;
+  const keepBgBorderColor=currentFaces()[selected].bgBorderColor||"#222222";
+  const keepBgBorderWidth=currentFaces()[selected].bgBorderWidth??1;
+  const keepBgBorderNone=currentFaces()[selected].bgBorderNone!==false;
+  const keepTextBoxes=deep(ensureTextBoxes(currentFaces()[selected]));
+  const keepFrameTexts=deep(ensureFrameTexts(currentFaces()[selected]));
+  if(t==="playing")currentFaces()[selected]={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts};
+  if(t==="tcg")currentFaces()[selected]={type:"template",template:"tcg",name:"カード名",desc:"テキスト",image:null,bgColor:keepBg,bgImage:keepBgImage,
+    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,
+    nameStyle:{size:15,bold:true,italic:false},descStyle:{size:12,bold:false,italic:false}};
+  if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,mainStyle:{size:53,bold:true,italic:false}};
+  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,textBoxes:boxes,frameTexts:keepFrameTexts};}
+  renderSheet();syncControls();
+});
+
+["numInput","suitInput","suitSize","suitMode"].forEach(id=>el(id).addEventListener("input",()=>{
+  updateSelected({
+    number:el("numInput").value,
+    suit:el("suitInput").value,
+    suitSize:el("suitSize").value,
+    suitMode:el("suitMode").value
+  });
+  el("suitImageControls").classList.toggle("hidden",el("suitMode").value!=="image");
+}));
+el("playingNumberColor").addEventListener("input",()=>{const c=el("playingNumberColor").value;addRecentColor(c);updateSelected({numberColor:c,numberColorNone:false});renderSwatches()});
+el("playingText").addEventListener("input",()=>updateSelected({text:el("playingText").value}));
+el("playingTextColor").addEventListener("input",()=>{const c=el("playingTextColor").value;addRecentColor(c);updateSelected({textColor:c,textColorNone:false});renderSwatches()});
+el("suitImageInput").addEventListener("change",e=>{
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>updateSelected({suitMode:"image",suitImage:r.result});
+  r.readAsDataURL(file);
+});
+["playingSize","playingBold","playingItalic","playingUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
+  updateSelected({numberStyle:{size:Number(el("playingSize").value)||31,bold:el("playingBold").checked,italic:el("playingItalic").checked,underline:el("playingUnderline").checked}})
+}));
+["playingTextSize","playingTextBold","playingTextItalic","playingTextUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
+  updateSelected({textStyle:{size:Number(el("playingTextSize").value)||12,bold:el("playingTextBold").checked,italic:el("playingTextItalic").checked,underline:el("playingTextUnderline").checked}})
+}));
+
+["tcgName","tcgDesc"].forEach(id=>el(id).addEventListener("input",()=>updateSelected({name:el("tcgName").value,desc:el("tcgDesc").value})));
+el("tcgTextColor").addEventListener("input",()=>{const c=el("tcgTextColor").value;addRecentColor(c);updateSelected({textColor:c,textColorNone:false});renderSwatches()});
+el("tcgBorderColor").addEventListener("input",()=>{const c=el("tcgBorderColor").value;addRecentColor(c);updateSelected({borderColor:c,borderNone:false});renderSwatches()});
+el("tcgPanelColor").addEventListener("input",()=>{const c=el("tcgPanelColor").value;addRecentColor(c);updateSelected({panelColor:c,panelNone:false});renderSwatches()});
+document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.addEventListener("change",()=>{
+  if(r.checked) updateSelected({horizontalLayout:Number(r.value)});
+}));
+["tcgNameSize","tcgNameBold","tcgNameItalic","tcgNameUnderline","tcgDescSize","tcgDescBold","tcgDescItalic","tcgDescUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
+  updateSelected({
+    nameStyle:{size:Number(el("tcgNameSize").value)||15,bold:el("tcgNameBold").checked,italic:el("tcgNameItalic").checked,underline:el("tcgNameUnderline").checked},
+    descStyle:{size:Number(el("tcgDescSize").value)||12,bold:el("tcgDescBold").checked,italic:el("tcgDescItalic").checked,underline:el("tcgDescUnderline").checked}
+  })
+}));
+el("tcgImageInput").addEventListener("change",e=>{
+  const file=e.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=()=>updateSelected({image:r.result});r.readAsDataURL(file);
+});
+
+el("wordMain").addEventListener("input",()=>updateSelected({main:el("wordMain").value}));
+el("wordMainColor").addEventListener("input",()=>{const c=el("wordMainColor").value;addRecentColor(c);updateSelected({mainColor:c,mainColorNone:false});renderSwatches()});
+["wordMainSize","wordMainBold","wordMainItalic","wordMainUnderline"].forEach(id=>el(id).addEventListener("input",()=>{updateSelected({mainStyle:{size:Number(el("wordMainSize").value)||53,bold:el("wordMainBold").checked,italic:el("wordMainItalic").checked,underline:el("wordMainUnderline").checked}})}));
+
+
+
+el("addTextBox").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureTextBoxes(d);if(items.length>=5)return;items.push(makeTextBox(items.length));renderSheet();syncControls()});
+el("addFrameText").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureFrameTexts(d);if(items.length>=5)return;items.push(makeFrameText(items.length));renderSheet();syncControls()});
+
+el("imageInput").addEventListener("change",e=>{
+  const file=e.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=()=>{const old=currentFaces()[selected],bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null,bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false,textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old));currentFaces()[selected]={type:"image",src:r.result,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};renderSheet()};r.readAsDataURL(file);
+});
+el("faceBgColor").addEventListener("input",()=>{const c=el("faceBgColor").value;addRecentColor(c);updateSelected({bgColor:c,bgNone:false});renderSwatches()});
+
+el("faceBorderColor").addEventListener("input",()=>{const c=el("faceBorderColor").value;updateSelected({bgBorderColor:c,bgBorderNone:false});refreshOpenColorPopup()});
+el("faceBorderWidth").addEventListener("change",()=>updateSelected({bgBorderWidth:Number(el("faceBorderWidth").value)||1}));
+el("faceBorderColor").addEventListener("colornone",()=>updateSelected({bgBorderNone:true}));
+
+
+el("faceBgColor").addEventListener("colornone",()=>updateSelected({bgNone:true}));
+el("playingNumberColor").addEventListener("colornone",()=>updateSelected({numberColorNone:true}));
+el("playingTextColor").addEventListener("colornone",()=>updateSelected({textColorNone:true}));
+el("tcgTextColor").addEventListener("colornone",()=>updateSelected({textColorNone:true}));
+el("tcgBorderColor").addEventListener("colornone",()=>updateSelected({borderNone:true}));
+el("tcgBorderWidth").addEventListener("change",()=>updateSelected({borderWidth:Number(el("tcgBorderWidth").value)||1}));
+el("tcgPanelColor").addEventListener("colornone",()=>updateSelected({panelNone:true}));
+el("wordMainColor").addEventListener("colornone",()=>updateSelected({mainColorNone:true}));
+
+el("faceBgImageInput").addEventListener("change",e=>{
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>updateSelected({bgImage:r.result});
+  r.readAsDataURL(file);
+});
+el("clearFaceBgImage").addEventListener("click",()=>{
+  updateSelected({bgImage:null});
+  el("faceBgImageInput").value="";
+});
+
+function refreshCopyButtonLabels(){
+  const side=selected%2===0?"表面":"裏面";
+  el("copyToPageSide").textContent=`この面をこのページの${side}へ複製`;
+  el("copyToAllPagesSide").textContent=`この面を全てのページの${side}へ複製`;
+}
+
+el("copyToPageSide").addEventListener("click",()=>{
+  const src=deep(currentFaces()[selected]),side=selected%2;
+  for(let i=side;i<8;i+=2) currentFaces()[i]=deep(src);
+  renderSheet();syncControls();
+});
+
+el("copyToAllPagesSide").addEventListener("click",()=>{
+  const src=deep(currentFaces()[selected]),side=selected%2;
+  pages.forEach(pg=>{
+    for(let i=side;i<8;i+=2) pg[i]=deep(src);
+  });
+  renderSheet();syncControls();
+});
+
+document.addEventListener("click",()=>document.querySelectorAll(".page-thumb-menu").forEach(m=>m.remove()));
+
+el("addPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.push(makePage());currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
+el("dupPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.splice(currentPage+1,0,deep(currentFaces()));currentPage++;selected=0;renderSheet();syncControls()});
+el("deletePage").addEventListener("click",()=>{if(pages.length<=1)return;pages.splice(currentPage,1);if(currentPage>=pages.length)currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
+
+function getProject(){
+  return {app:"card-mock-maker-prototype",version:39,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
+}
+
+function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
+
+
+function migrateBgBorders(project){
+  (project.pages||[]).forEach(pg=>pg.forEach(d=>{
+    if(!d)return;
+    if(d.bgBorderColor===undefined){
+      if(!(d.type==="template" && d.template==="tcg") && d.borderColor!==undefined){
+        d.bgBorderColor=d.borderColor||"#222222";
+        d.bgBorderWidth=Number(d.borderWidth)>0?Number(d.borderWidth):1.5;
+        d.bgBorderNone=d.borderNone===true || !(Number(d.borderWidth)>0);
+      }else{
+        d.bgBorderColor="#222222";
+        d.bgBorderWidth=1.5;
+        d.bgBorderNone=true;
+      }
+    }
+  }));
+  return project;
+}
+
+function restoreProject(p){
+  if(!p.pages)throw new Error("invalid project");
+  p=migrateGenericTextBoxes(p);
+  p=migrateBgBorders(p);
+  pages=p.pages.slice(0,25);sheetTitle=p.sheetTitle||"";recentColors=(p.recentColors||[]).slice(0,12);
+  el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("sheetTitleInput").value=sheetTitle;
+  currentPage=0;selected=0;setupAllColorInputs();
+document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
+setPaper();renderSheet();syncControls();
+}
+
+
+
+function dataUrlToAsset(dataUrl){
+  const m=/^data:([^;]+);base64,(.+)$/.exec(dataUrl||"");
+  if(!m)return null;
+  const mime=m[1],bin=atob(m[2]),bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  let ext="bin";
+  if(mime==="image/png")ext="png";
+  else if(mime==="image/jpeg")ext="jpg";
+  else if(mime==="image/webp")ext="webp";
+  else if(mime==="image/svg+xml")ext="svg";
+  return {mime,bytes,ext};
+}
+
+function bytesToDataUrl(bytes,mime){
+  let bin="";
+  const chunk=0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    bin+=String.fromCharCode(...bytes.subarray(i,Math.min(i+chunk,bytes.length)));
+  }
+  return `data:${mime};base64,${btoa(bin)}`;
+}
+
+function externalizeProjectImages(project){
+  const clone=deep(project),assets=[],seen=new Map(),keys=new Set(["bgImage","src","suitImage","image"]);
+  function walk(obj){
+    if(!obj||typeof obj!=="object")return;
+    for(const [k,v] of Object.entries(obj)){
+      if(keys.has(k) && typeof v==="string" && v.startsWith("data:image/")){
+        if(!seen.has(v)){
+          const asset=dataUrlToAsset(v);
+          if(asset){
+            const name=`asset_${String(assets.length+1).padStart(3,"0")}.${asset.ext}`;
+            assets.push({name,...asset});
+            seen.set(v,name);
+          }
+        }
+        if(seen.has(v)) obj[k]={__pdfAsset:seen.get(v)};
+      }else if(v && typeof v==="object"){
+        walk(v);
+      }
+    }
+  }
+  walk(clone);
+  return {project:clone,assets};
+}
+
+function hydrateProjectImages(project,attachments){
+  const byName=new Map(attachments.map(a=>[a.name,a]));
+  function mimeFromName(name){
+    const ext=(name.split(".").pop()||"").toLowerCase();
+    if(ext==="png")return "image/png";
+    if(ext==="jpg"||ext==="jpeg")return "image/jpeg";
+    if(ext==="webp")return "image/webp";
+    if(ext==="svg")return "image/svg+xml";
+    return "application/octet-stream";
+  }
+  function walk(obj){
+    if(!obj||typeof obj!=="object")return;
+    for(const [k,v] of Object.entries(obj)){
+      if(v && typeof v==="object" && v.__pdfAsset){
+        const a=byName.get(v.__pdfAsset);
+        if(a)obj[k]=bytesToDataUrl(a.data,mimeFromName(a.name));
+      }else if(v && typeof v==="object"){
+        walk(v);
+      }
+    }
+  }
+  walk(project);
+  return project;
+}
+
+async function buildEditablePdf(){
+  if(!window.html2canvas || !window.PDFLib) throw new Error("PDFライブラリを読み込めませんでした。インターネット接続を確認してください。");
+  const {PDFDocument}=PDFLib;
+  const p=paperMM();
+  const ptPerMm=72/25.4;
+  const pdf=await PDFDocument.create();
+
+  const staging=document.createElement("div");
+  staging.style.position="fixed";staging.style.left="-12000px";staging.style.top="0";
+  staging.style.background="#fff";staging.style.zIndex="-1";
+  document.body.appendChild(staging);
+
+  try{
+    for(const pg of pages){
+      const sheet=document.createElement("div");
+      sheet.className="print-sheet "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
+      sheet.style.position="relative";
+      sheet.style.width=p.w+"mm";sheet.style.height=p.h+"mm";
+    sheet.style.minWidth=p.w+"mm";sheet.style.maxWidth=p.w+"mm";
+    sheet.style.minHeight=p.h+"mm";sheet.style.maxHeight=p.h+"mm";sheet.style.background="#fff";sheet.style.overflow="hidden";
+      const title=document.createElement("div");title.className="sheet-title";title.textContent=sheetTitle;sheet.appendChild(title);
+      const sg=document.createElement("div");buildSheet(sg,pg,false);sheet.appendChild(sg);
+      staging.appendChild(sheet);
+
+      const canvas=await html2canvas(sheet,{backgroundColor:"#ffffff",scale:2,useCORS:true,logging:false});
+      const png=canvas.toDataURL("image/png");
+      const img=await pdf.embedPng(png);
+      const page=pdf.addPage([p.w*ptPerMm,p.h*ptPerMm]);
+      page.drawImage(img,{x:0,y:0,width:p.w*ptPerMm,height:p.h*ptPerMm});
+      staging.removeChild(sheet);
+    }
+
+    const packed=externalizeProjectImages(getProject());
+    const projectBytes=new TextEncoder().encode(JSON.stringify(packed.project));
+    await pdf.attach(projectBytes,"card-mock-project.json",{
+      mimeType:"application/json",
+      description:"Card Mock Maker editable project"
+    });
+    for(const asset of packed.assets){
+      await pdf.attach(asset.bytes,asset.name,{
+        mimeType:asset.mime,
+        description:"Card Mock Maker image asset"
+      });
+    }
+    pdf.setTitle(sheetTitle||"Card Mock Maker");
+    pdf.setSubject("Editable Card Mock Maker PDF");
+    pdf.setKeywords(["card-mock-maker","editable-project"]);
+
+    const bytes=await pdf.save();
+    const blob=new Blob([bytes],{type:"application/pdf"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=(sheetTitle||"card-mock")+".pdf";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+  }finally{
+    staging.remove();
+  }
+}
+
+function extractPdfAttachments(pdfDoc){
+  const {PDFName,PDFDict,PDFArray,PDFStream,decodePDFRawStream}=PDFLib;
+  if(!pdfDoc.catalog.has(PDFName.of("Names")))return [];
+  const names=pdfDoc.catalog.lookup(PDFName.of("Names"),PDFDict);
+  if(!names.has(PDFName.of("EmbeddedFiles")))return [];
+  let embedded=names.lookup(PDFName.of("EmbeddedFiles"),PDFDict);
+  if(!embedded.has(PDFName.of("Names")) && embedded.has(PDFName.of("Kids"))){
+    const kids=embedded.lookup(PDFName.of("Kids"),PDFArray);
+    if(kids.size()) embedded=kids.lookup(0,PDFDict);
+  }
+  if(!embedded.has(PDFName.of("Names")))return [];
+  const arr=embedded.lookup(PDFName.of("Names"),PDFArray),out=[];
+  for(let i=0;i<arr.size();i+=2){
+    const fileName=arr.lookup(i);
+    const spec=arr.lookup(i+1,PDFDict);
+    const stream=spec.lookup(PDFName.of("EF"),PDFDict).lookup(PDFName.of("F"),PDFStream);
+    out.push({name:fileName.decodeText(),data:decodePDFRawStream(stream).decode()});
+  }
+  return out;
+}
+
+el("editablePdfBtn").addEventListener("click",async()=>{
+  const btn=el("editablePdfBtn"),old=btn.textContent;
+  try{
+    btn.disabled=true;btn.textContent="PDF作成中…";
+    await buildEditablePdf();
+  }catch(e){
+    console.error(e);alert(e.message||"編集可能PDFの作成に失敗しました。");
+  }finally{btn.disabled=false;btn.textContent=old}
+});
+
+el("loadPdfBtn").addEventListener("click",()=>el("loadPdf").click());
+el("loadPdf").addEventListener("change",async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{
+    if(!window.PDFLib)throw new Error("PDFライブラリを読み込めませんでした。");
+    const bytes=await file.arrayBuffer();
+    const pdf=await PDFLib.PDFDocument.load(bytes);
+    const atts=extractPdfAttachments(pdf);
+    const project=atts.find(x=>x.name==="card-mock-project.json");
+    if(!project)throw new Error("このPDFにはCard Mock Makerの編集データがありません。");
+    const text=new TextDecoder().decode(project.data);
+    const parsed=JSON.parse(text);
+    restoreProject(hydrateProjectImages(parsed,atts));
+  }catch(err){
+    console.error(err);alert(err.message||"PDFを読み込めませんでした。");
+  }finally{e.target.value=""}
+});
+
+function preparePrintPages(){
+  const wrap=el("printPages");wrap.innerHTML="";const p=paperMM();
+  pages.forEach(pg=>{
+    const sheet=document.createElement("div");sheet.className="print-sheet "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
+    sheet.style.width=p.w+"mm";sheet.style.height=p.h+"mm";
+    sheet.style.minWidth=p.w+"mm";sheet.style.maxWidth=p.w+"mm";
+    sheet.style.minHeight=p.h+"mm";sheet.style.maxHeight=p.h+"mm";
+    const title=document.createElement("div");title.className="sheet-title";title.textContent=sheetTitle;sheet.appendChild(title);
+    const sg=document.createElement("div");buildSheet(sg,pg,false);sheet.appendChild(sg);wrap.appendChild(sheet);
+  });
+}
+function setExactPrintPage(){const p=paperMM();el("dynamicPageStyle").textContent=`@page{size:${p.w}mm ${p.h}mm;margin:0}`}
+el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPages();setTimeout(()=>window.print(),80)});
+
+
+
+setPaper();renderSheet();syncControls();renderSwatches();
+})();
+</script>
+</body>
+</html>
+<style>
+.generic-textbox.editable,.frame-text.editable{outline:0}
+.generic-textbox.editable{border-color:#5b5b5b}
+.frame-text.editable .resize-handle,.generic-textbox.editable .resize-handle{z-index:5}
+</style>
+
+<style>
+.tool-block .stroke-color + .fill-color{margin-left:4px}
+.frame-color-row .stroke-color,.frame-color-row .fill-color{margin-right:2px}
+</style>
+
+<style>
+.stroke-width-select{
+  width:82px;
+  height:28px;
+  border:0;
+  border-left:1px solid var(--ui-border);
+  border-radius:0;
+  background:transparent;
+  color:var(--ui-control-ink);
+  padding:3px 18px 3px 5px;
+  font-size:10px;
+}
+</style>
