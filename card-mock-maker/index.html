@@ -3,7 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>カードモックツクール β — Card Mock Maker</title>
+<title>カードモックツクール β | Card Mock Maker</title>
+<meta name="description" content="ボードゲーム・カードゲームのカードモックをブラウザ上で作成・印刷できる無料ツール。テンプレート、画像、テキストボックス、PDF保存・再編集に対応。">
+<meta name="theme-color" content="#f3f3f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="カードモックツクール β | Card Mock Maker">
+<meta property="og:description" content="カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+
 <style>
 :root{
   color-scheme:light dark;
@@ -427,7 +435,7 @@ main{padding:0;overflow:hidden}
 .canvas-area{overflow:auto;padding:22px}
 .paper-wrap{min-width:max-content}
 
-aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);padding:12px 14px;overflow:auto}
+aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);display:flex;flex-direction:column;padding:12px 14px;overflow:auto}
 .paper-wrap{width:100%;display:flex;justify-content:center;align-items:flex-start}
 .paper{position:relative;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.12);transform-origin:top center}
 .sheet-title{
@@ -601,6 +609,40 @@ input[type="color"].color-source{position:absolute!important;opacity:0!important
   border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize;
 }
 
+
+
+.history-controls{
+  display:flex;
+  gap:3px;
+  margin-left:2px;
+}
+.icon-btn{
+  width:32px;
+  height:30px;
+  padding:0!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+}
+.icon-btn:disabled{
+  opacity:.35;
+  cursor:default;
+}
+.public-beta-note{
+  margin-top:auto;
+  padding:10px 12px 12px;
+  border-top:1px solid var(--ui-border);
+  font-size:9.5px;
+  line-height:1.45;
+  color:var(--ui-muted);
+}
+.public-beta-note strong{
+  display:inline-block;
+  margin-right:5px;
+  color:var(--ink);
+}
 
 .app-brand{
   display:flex;
@@ -798,6 +840,10 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <option value="half">ハーフ (44×63)</option>
   </select>
   <input id="sheetTitleInput" type="text" placeholder="シートタイトル" style="width:180px">
+  <div class="history-controls" aria-label="履歴">
+    <button id="undoBtn" class="icon-btn" title="戻る（⌘Z / Ctrl+Z）" aria-label="戻る">←</button>
+    <button id="redoBtn" class="icon-btn" title="進む（⇧⌘Z / Ctrl+Y）" aria-label="進む">→</button>
+  </div>
   <button id="editablePdfBtn">PDF保存</button>
   <button id="loadPdfBtn">PDF読み込み</button>
   <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
@@ -1053,6 +1099,12 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <button id="copyToPageSide" class="mini" style="width:100%">この面をこのページの表面へ複製</button>
     <button id="copyToAllPagesSide" class="mini" style="width:100%;margin-top:6px">この面を全てのページの表面へ複製</button>
 
+  </div>
+
+
+  <div class="public-beta-note">
+    <strong>β版</strong>
+    <span>画像や編集データはブラウザ内で処理され、サーバーへ送信されません。</span>
   </div>
 
 </aside>
@@ -1506,6 +1558,132 @@ function enableSubtitleBox(node,idx){
   function up(){mode=null;window.removeEventListener("pointermove",move)}
 }
 
+
+// ---------- Undo / Redo ----------
+let undoStack=[];
+let redoStack=[];
+let historyLastSnapshot=null;
+let historyRestoring=false;
+let historyPendingStart=null;
+let historyTimer=null;
+const HISTORY_LIMIT=80;
+const HISTORY_GROUP_MS=900;
+
+function historyState(){
+  return JSON.stringify({
+    pages,
+    sheetTitle,
+    paperOrientation:el("paperOrientation").value,
+    cardSize:el("cardSize").value
+  });
+}
+
+function updateHistoryButtons(){
+  const u=el("undoBtn"),r=el("redoBtn");
+  if(u)u.disabled=!undoStack.length && !historyPendingStart;
+  if(r)r.disabled=!redoStack.length;
+}
+
+function initHistory(){
+  if(historyTimer){clearTimeout(historyTimer);historyTimer=null}
+  historyLastSnapshot=historyState();
+  historyPendingStart=null;
+  undoStack=[];
+  redoStack=[];
+  updateHistoryButtons();
+}
+
+function beginGroupedHistory(){
+  if(historyRestoring)return;
+  const now=historyState();
+  if(historyLastSnapshot===null)historyLastSnapshot=now;
+
+  if(historyPendingStart===null){
+    historyPendingStart=historyLastSnapshot;
+    redoStack=[];
+  }
+
+  historyLastSnapshot=now;
+
+  if(historyTimer)clearTimeout(historyTimer);
+  historyTimer=setTimeout(commitGroupedHistory,HISTORY_GROUP_MS);
+  updateHistoryButtons();
+}
+
+function commitGroupedHistory(){
+  if(historyTimer){clearTimeout(historyTimer);historyTimer=null}
+  if(historyPendingStart===null)return;
+
+  const now=historyState();
+  // Only create a history step when something actually changed.
+  if(now!==historyPendingStart){
+    undoStack.push(historyPendingStart);
+    if(undoStack.length>HISTORY_LIMIT)undoStack.shift();
+    redoStack=[];
+  }
+
+  historyLastSnapshot=now;
+  historyPendingStart=null;
+  updateHistoryButtons();
+}
+
+function recordHistory(){
+  if(historyRestoring)return;
+  const now=historyState();
+  if(historyLastSnapshot===null){
+    historyLastSnapshot=now;
+    return;
+  }
+  if(now===historyLastSnapshot)return;
+  beginGroupedHistory();
+}
+
+function flushHistoryBeforeNavigation(){
+  commitGroupedHistory();
+}
+
+function applyHistorySnapshot(snapshot){
+  const st=JSON.parse(snapshot);
+  historyRestoring=true;
+
+  pages=st.pages;
+  sheetTitle=st.sheetTitle||"";
+  el("paperOrientation").value=st.paperOrientation||"landscape";
+  el("cardSize").value=st.cardSize||"poker";
+  el("sheetTitleInput").value=sheetTitle;
+
+  currentPage=Math.min(currentPage,pages.length-1);
+  selected=Math.min(selected,7);
+
+  setPaper();
+  syncControls();
+
+  historyLastSnapshot=snapshot;
+  historyPendingStart=null;
+  historyRestoring=false;
+  updateHistoryButtons();
+}
+
+function undoHistory(){
+  flushHistoryBeforeNavigation();
+  if(!undoStack.length)return;
+
+  const current=historyState();
+  const previous=undoStack.pop();
+  redoStack.push(current);
+  applyHistorySnapshot(previous);
+}
+
+function redoHistory(){
+  flushHistoryBeforeNavigation();
+  if(!redoStack.length)return;
+
+  const current=historyState();
+  const next=redoStack.pop();
+  undoStack.push(current);
+  applyHistorySnapshot(next);
+}
+
 function buildSheet(container,faces,selectable=true){
   container.innerHTML="";
   container.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
@@ -1525,6 +1703,7 @@ function buildSheet(container,faces,selectable=true){
 }
 
 function renderSheet(){
+  recordHistory();
   el("sheetTitle").textContent=sheetTitle;
   buildSheet(grid,currentFaces(),true);
   el("pageCount").textContent=`${currentPage+1} / ${pages.length}`;
@@ -1845,6 +2024,31 @@ function syncControls(){
 function updateSelected(patch){const f=currentFaces();f[selected]={...f[selected],...patch};renderSheet()}
 
 el("sheetTitleInput").addEventListener("input",e=>{sheetTitle=e.target.value;renderSheet()});
+
+// Finish one undo step when the current UI interaction ends.
+document.addEventListener("pointerup",()=>commitGroupedHistory(),true);
+document.addEventListener("change",()=>commitGroupedHistory(),true);
+document.addEventListener("blur",e=>{
+  if(e.target.matches("input, textarea, select"))commitGroupedHistory();
+},true);
+
+el("undoBtn").addEventListener("click",undoHistory);
+el("redoBtn").addEventListener("click",redoHistory);
+
+document.addEventListener("keydown",e=>{
+  const mod=e.metaKey||e.ctrlKey;
+  if(!mod)return;
+  const key=e.key.toLowerCase();
+  if(key==="z"){
+    e.preventDefault();
+    if(e.shiftKey)redoHistory();
+    else undoHistory();
+  }else if(key==="y"){
+    e.preventDefault();
+    redoHistory();
+  }
+});
+
 el("paperOrientation").addEventListener("change",()=>{setPaper();syncControls()});
 el("cardSize").addEventListener("change",()=>{setPaper();syncControls()});
 window.addEventListener("resize",fitPaper);
@@ -1987,7 +2191,7 @@ el("dupPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.spl
 el("deletePage").addEventListener("click",()=>{if(pages.length<=1)return;pages.splice(currentPage,1);if(currentPage>=pages.length)currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 
 function getProject(){
-  return {app:"card-mock-maker-prototype",version:39,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
+  return {app:"card-mock-maker-prototype",version:41,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
 }
 
 function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
@@ -2020,6 +2224,7 @@ function restoreProject(p){
   currentPage=0;selected=0;setupAllColorInputs();
 document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
 setPaper();renderSheet();syncControls();
+initHistory();
 }
 
 
@@ -2220,7 +2425,8 @@ el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPag
 
 
 
-setPaper();renderSheet();syncControls();renderSwatches();
+setPaper();renderSheet();syncControls();
+initHistory();renderSwatches();
 })();
 </script>
 </body>
