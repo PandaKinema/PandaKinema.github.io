@@ -486,7 +486,8 @@ aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);display:
 .card-template{position:absolute;inset:0;background:transparent;color:#111;z-index:1}
 .corner{position:absolute;font-weight:700;font-size:7mm;line-height:1;text-align:center;min-width:10mm}
 .corner small{display:block;margin-top:1mm;line-height:1}
-.corner .suit-text,.corner .suit-img{display:block;margin:1mm auto 0}
+.corner .suit-text,.corner .suit-img{display:block;margin:0 auto}
+.corner .suit-stack{display:flex;flex-direction:column;align-items:center;gap:.45mm;margin-top:1mm;line-height:1}
 .corner .suit-text.small{font-size:2.8mm}
 .corner .suit-text.medium{font-size:4mm}
 .corner .suit-text.large{font-size:5.2mm}
@@ -1030,7 +1031,638 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
   .word-sub .resize-handle{display:none!important}
 }
 </style>
-<style id="dynamicPageStyle">@page{size:297mm 210mm;margin:0}</style>
+<style id="dynamicPageStyle">@page{size:297mm 210mm;margin:0}
+/* v49: option images */
+.option-image{position:absolute;z-index:32;touch-action:none;user-select:none;transform-origin:center center}
+.option-image img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.option-image.editable{outline:1px dashed rgba(0,180,210,.75);cursor:move}
+.option-image .resize-handle{position:absolute;right:-5px;bottom:-5px;width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid #fff;cursor:nwse-resize}
+.option-image .rotate-handle{position:absolute;left:50%;top:-22px;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--cyan);border:2px solid #fff;cursor:grab}
+.option-image .rotate-handle:after{content:"";position:absolute;left:50%;top:10px;width:1px;height:10px;background:var(--cyan)}
+.option-image-editor{margin-top:7px;padding:8px;border:1px solid var(--ui-line);border-radius:7px;background:var(--ui-panel-2)}
+.option-image-editor-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.option-image-editor img{width:42px;height:42px;object-fit:contain;border:1px solid var(--ui-line);border-radius:5px;background:#fff}
+.option-image-row{display:flex;align-items:center;gap:8px}
+.option-image-angle{width:72px}
+</style>
+
+<style>
+/* v50: phone editing shows one card pair instead of shrinking the whole A4 sheet. */
+.mobile-card-preview{display:none}
+@media(max-width:720px){
+  .page-sidebar{display:none!important}
+  .canvas-area{
+    padding:10px 10px 14px;
+    overflow:visible;
+  }
+  .screen-paper{display:none!important}
+  .mobile-card-preview{
+    display:block;
+    width:100%;
+    max-width:560px;
+    margin:0 auto;
+  }
+  .mobile-card-nav{
+    display:grid;
+    grid-template-columns:42px 1fr 42px;
+    align-items:center;
+    gap:8px;
+    margin:0 0 10px;
+  }
+  .mobile-card-nav strong{
+    text-align:center;
+    font-size:12px;
+  }
+  .mobile-card-nav button{
+    min-width:42px;
+    height:34px;
+    padding:0;
+  }
+  .mobile-card-pair{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+  }
+  .mobile-card-pair .face{
+    box-sizing:border-box;
+    width:auto!important;
+    height:auto!important;
+    cursor:pointer;
+    flex:0 1 auto;
+    aspect-ratio:var(--mobile-card-ratio);
+    box-shadow:0 4px 16px rgba(0,0,0,.12);
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:calc((100vw - 36px)/2)!important;
+    max-width:245px;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    flex-direction:column;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 20px),520px)!important;
+  }
+  .mobile-face-labels{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:6px;
+    color:var(--ui-muted);
+    font-size:10px;
+    text-align:center;
+  }
+  .mobile-face-labels.stacked{
+    display:none;
+  }
+  .mobile-card-pair .face.selected::after{
+    border-width:3px;
+  }
+}
+</style>
+
+
+<style>
+/* v51 smartphone workspace.
+   Everything here is scoped to <=720px so the desktop A4 editor remains unchanged. */
+@media(max-width:720px){
+  html,body{
+    height:100%;
+    overflow:hidden!important;
+  }
+  body{
+    min-height:100dvh;
+  }
+
+  /* Keep the application header compact and fixed in the phone viewport. */
+  header{
+    position:relative;
+    z-index:40;
+    max-height:112px;
+    overflow:auto;
+  }
+
+  .workspace{
+    height:calc(100dvh - 112px);
+    min-height:0;
+    overflow:hidden;
+    display:block!important;
+  }
+  .center{
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    display:flex!important;
+    flex-direction:column;
+  }
+  .canvas-area{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden!important;
+    padding:8px 10px 68px!important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+
+  /* Phone toolbar stays reachable without page scrolling. */
+  .mobile-quick-bar{
+    order:2;
+    position:fixed;
+    z-index:65;
+    left:0;
+    right:0;
+    bottom:0;
+    height:58px;
+    padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+    background:var(--ui-panel);
+    border-top:1px solid var(--ui-border);
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:7px;
+  }
+  .mobile-quick-bar button{
+    min-width:0;
+    height:42px;
+    padding:0 8px;
+    font-size:12px;
+  }
+
+  .mobile-card-preview{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex!important;
+    flex-direction:column;
+    justify-content:flex-start;
+    overflow:hidden;
+  }
+  .mobile-card-nav{
+    flex:0 0 auto;
+    margin-bottom:6px!important;
+  }
+  .mobile-card-pair{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  /* Fit both faces into the available viewport instead of making the page scroll. */
+  .mobile-card-pair.mobile-portrait-card{
+    align-items:flex-start;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 36px)/2), calc((100dvh - 245px) * .50))!important;
+    max-width:245px;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    justify-content:flex-start;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 20px), calc((100dvh - 260px) * 1.05))!important;
+    max-height:calc((100dvh - 260px)/2);
+  }
+  .mobile-face-labels{
+    flex:0 0 auto;
+  }
+
+  /* Existing right controls become an app-like bottom sheet.
+     Only the sheet scrolls; the card preview stays visible behind it. */
+  aside{
+    display:block!important;
+    position:fixed!important;
+    z-index:60;
+    left:0;
+    right:0;
+    bottom:58px;
+    top:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    height:min(58dvh,520px);
+    max-height:calc(100dvh - 150px);
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:12px 12px 22px!important;
+    background:var(--ui-panel);
+    border:1px solid var(--ui-border);
+    border-left:0;
+    border-right:0;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -10px 28px rgba(0,0,0,.18);
+    transform:translateY(calc(100% + 70px));
+    transition:transform .2s ease;
+    visibility:hidden;
+  }
+  body.mobile-editor-open aside{
+    transform:translateY(0);
+    visibility:visible;
+  }
+
+  /* Keep legacy page/sidebar and A4 preview out of the phone workspace. */
+  .page-sidebar,.screen-paper{
+    display:none!important;
+  }
+}
+@media(min-width:721px){
+  .mobile-quick-bar{display:none!important}
+}
+</style>
+
+
+<style>
+/* v52: repair smartphone bottom sheet target and simplify viewport sizing. */
+@media(max-width:720px){
+  .layout,main,.workspace,.center,.canvas-area{
+    min-width:0!important;
+  }
+  main{
+    height:calc(100dvh - 112px)!important;
+    overflow:hidden!important;
+  }
+  .workspace{
+    height:100%!important;
+  }
+  .canvas-area{
+    height:100%!important;
+    box-sizing:border-box;
+    touch-action:manipulation;
+  }
+  .mobile-card-preview{
+    width:100%;
+    height:100%;
+    box-sizing:border-box;
+    padding-bottom:2px;
+    pointer-events:auto;
+  }
+  .mobile-card-pair{
+    pointer-events:auto;
+  }
+  .mobile-card-pair .face{
+    pointer-events:auto;
+    touch-action:none;
+  }
+  aside{
+    box-sizing:border-box;
+  }
+  body.mobile-editor-open aside{
+    pointer-events:auto;
+  }
+}
+</style>
+
+
+<style>
+/* v53 — compact phone workspace. Desktop remains governed by the original styles. */
+@media(max-width:720px){
+  :root{--mobile-dock-h:62px}
+
+  html,body{height:100%;overflow:hidden!important}
+  body{min-height:100dvh;background:var(--ui-bg)}
+
+  /* Phone header: preserve identity, remove desktop clutter from the working viewport. */
+  header{
+    height:52px!important;
+    min-height:52px!important;
+    max-height:52px!important;
+    padding:7px 10px!important;
+    overflow:hidden!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    flex-wrap:nowrap!important;
+  }
+  header .app-brand{flex:1 1 auto;min-width:0;white-space:nowrap}
+  header .app-brand .brand-en{display:none!important}
+  header .app-brand .brand-ja{font-size:15px!important}
+  header .app-brand .beta-badge{transform:scale(.86)}
+  header > *:not(.app-brand){display:none!important}
+
+  main,.workspace{
+    height:calc(100dvh - 52px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .center{height:100%!important;min-height:0!important;overflow:hidden!important}
+  .canvas-area{
+    height:100%!important;
+    min-height:0!important;
+    padding:8px 10px calc(var(--mobile-dock-h) + 8px)!important;
+    overflow:hidden!important;
+  }
+
+  /* Card navigation is always visible and compact. */
+  .mobile-card-preview{height:100%!important;min-height:0!important}
+  .mobile-card-nav{
+    height:38px!important;
+    min-height:38px!important;
+    margin:0 0 8px!important;
+    grid-template-columns:38px 1fr 38px!important;
+  }
+  .mobile-card-nav button{height:36px!important;min-width:36px!important;border-radius:9px!important}
+  .mobile-card-nav strong{font-size:12px!important}
+
+  .mobile-card-pair{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    gap:8px!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 34px)/2), 245px)!important;
+    max-height:calc(100dvh - 180px)!important;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    flex-direction:column!important;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 22px),500px)!important;
+    max-height:calc((100dvh - 190px)/2)!important;
+  }
+
+  /* Five-tool dock: app-like and thumb reachable. */
+  .mobile-quick-bar{
+    position:fixed!important;
+    z-index:80!important;
+    left:0!important;right:0!important;bottom:0!important;
+    height:var(--mobile-dock-h)!important;
+    box-sizing:content-box!important;
+    padding:5px 6px env(safe-area-inset-bottom)!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,1fr)!important;
+    gap:2px!important;
+    background:color-mix(in srgb,var(--ui-panel) 96%,transparent)!important;
+    border-top:1px solid var(--ui-border)!important;
+    box-shadow:0 -5px 18px rgba(0,0,0,.10)!important;
+  }
+  .mobile-quick-bar button{
+    height:52px!important;
+    min-width:0!important;
+    padding:4px 2px!important;
+    border:0!important;
+    background:transparent!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:2px!important;
+    font-size:10px!important;
+    border-radius:9px!important;
+  }
+  .mobile-quick-bar button:active{background:var(--ui-panel-2)!important}
+  .mq-icon{font-size:18px;line-height:19px;font-weight:700}
+
+  /* Settings become a half-height tray. Preview remains visible above it. */
+  aside{
+    display:block!important;
+    position:fixed!important;
+    z-index:75!important;
+    left:0!important;right:0!important;
+    bottom:calc(var(--mobile-dock-h) + env(safe-area-inset-bottom))!important;
+    top:auto!important;
+    width:100%!important;
+    height:44dvh!important;
+    max-height:390px!important;
+    min-height:220px!important;
+    box-sizing:border-box!important;
+    padding:30px 12px 18px!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    border-radius:16px 16px 0 0!important;
+    border:1px solid var(--ui-border)!important;
+    border-bottom:0!important;
+    background:var(--ui-panel)!important;
+    box-shadow:0 -8px 28px rgba(0,0,0,.20)!important;
+    transform:translateY(calc(100% + var(--mobile-dock-h) + 30px))!important;
+    visibility:hidden!important;
+    transition:transform .18s ease,visibility 0s linear .18s!important;
+  }
+  body.mobile-editor-open aside{
+    transform:translateY(0)!important;
+    visibility:visible!important;
+    transition:transform .18s ease!important;
+  }
+  .mobile-tray-close{
+    display:block!important;
+    position:sticky!important;
+    z-index:5!important;
+    top:-25px!important;
+    margin:-25px 0 4px auto!important;
+    width:32px!important;height:32px!important;
+    padding:0!important;
+    border-radius:50%!important;
+    font-size:22px!important;
+    line-height:28px!important;
+    background:var(--ui-panel-2)!important;
+  }
+  .mobile-section-hit{scroll-margin-top:34px}
+
+  .page-sidebar,.screen-paper{display:none!important}
+}
+@media(min-width:721px){
+  .mobile-tray-close{display:none!important}
+}
+</style>
+
+
+<style>
+/* v54 — deterministic mobile controls. Desktop remains untouched. */
+@media(max-width:720px){
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+    font-weight:700!important;
+  }
+
+  /* The settings tray is a viewport, not a scrollable sheet.
+     Buttons jump directly to a category; tapping the active category closes it. */
+  aside{
+    height:36dvh!important;
+    min-height:190px!important;
+    max-height:310px!important;
+    overflow:hidden!important;
+    overscroll-behavior:none!important;
+    touch-action:manipulation!important;
+    padding-top:32px!important;
+  }
+  aside > *{
+    scroll-margin-top:32px;
+  }
+  body.mobile-editor-open .mobile-card-preview{
+    padding-bottom:min(36dvh,310px);
+    box-sizing:border-box;
+  }
+
+  /* Make the dock the only mobile navigation target; no accidental page scroll. */
+  .mobile-quick-bar{
+    touch-action:manipulation!important;
+  }
+  .mobile-quick-bar button{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation!important;
+  }
+}
+</style>
+
+
+<style>
+/* v55 — independent phone tool windows; the preview never reflows when a panel opens. */
+@media(max-width:720px){
+  /* Retire the reused desktop aside completely on phone. */
+  aside{display:none!important}
+
+  /* Card preview keeps exactly the same geometry whether a tool window is open or closed. */
+  body.mobile-editor-open .mobile-card-preview,
+  .mobile-card-preview{padding-bottom:0!important}
+
+  .mobile-tool-panel{
+    display:none;
+    position:fixed;
+    z-index:76;
+    left:8px;
+    right:8px;
+    bottom:calc(68px + env(safe-area-inset-bottom));
+    height:250px;
+    max-height:38dvh;
+    box-sizing:border-box;
+    background:var(--ui-panel);
+    border:1px solid var(--ui-border);
+    border-radius:14px;
+    box-shadow:0 10px 32px rgba(0,0,0,.28);
+    overflow:hidden;
+  }
+  .mobile-tool-panel.open{display:flex;flex-direction:column}
+  .mobile-panel-head{
+    height:42px;
+    flex:0 0 42px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 8px 0 14px;
+    border-bottom:1px solid var(--ui-border);
+  }
+  .mobile-panel-close{
+    width:32px;height:32px;padding:0!important;
+    border:0!important;background:transparent!important;
+    font-size:22px!important;
+  }
+  .mobile-panel-body{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:10px 12px 14px;
+  }
+  .mobile-more-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    align-content:start;
+  }
+  .mobile-more-grid button{
+    min-height:70px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+  }
+  .mobile-more-grid small{font-size:10px;opacity:.7}
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+    font-weight:700!important;
+  }
+}
+@media(min-width:721px){
+  .mobile-tool-panel{display:none!important}
+}
+</style>
+
+
+<style>
+/* v56 — phone UX polish + repaired actions. Desktop styles are untouched. */
+@media(max-width:720px){
+  .mobile-card-nav{
+    position:relative;
+    z-index:2;
+    margin-bottom:10px!important;
+  }
+  .mobile-count-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1px;
+    line-height:1.15;
+  }
+  .mobile-count-wrap strong{font-size:12px!important}
+  .mobile-count-wrap span{font-size:9px;color:var(--ui-muted)}
+
+  /* Keep the card pair directly under navigation. No large dead area. */
+  .mobile-card-pair{
+    flex:0 0 auto!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    margin-top:0!important;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 34px)/2),210px)!important;
+    max-height:none!important;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    align-items:center!important;
+    justify-content:flex-start!important;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 28px),430px)!important;
+    max-height:none!important;
+  }
+  .mobile-face-labels{
+    margin-top:5px!important;
+  }
+
+  /* Tool windows are compact overlays. Opening them never resizes or moves the cards. */
+  .mobile-tool-panel{
+    height:228px!important;
+    max-height:34dvh!important;
+    left:10px!important;
+    right:10px!important;
+    bottom:calc(68px + env(safe-area-inset-bottom))!important;
+    border-radius:16px!important;
+  }
+  .mobile-panel-head{
+    height:40px!important;
+    flex-basis:40px!important;
+  }
+  .mobile-panel-body{
+    padding:9px 12px 12px!important;
+  }
+
+  .mobile-more-grid{
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:6px!important;
+  }
+  .mobile-more-grid button{
+    min-height:66px!important;
+    padding:6px 2px!important;
+  }
+
+  /* Make the bottom dock read as navigation rather than five ordinary buttons. */
+  .mobile-quick-bar{
+    height:58px!important;
+    padding-top:3px!important;
+  }
+  .mobile-quick-bar button{
+    height:50px!important;
+    border-radius:10px!important;
+  }
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -1043,9 +1675,8 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <button id="undoBtn" class="icon-btn" title="戻る（⌘Z / Ctrl+Z）" aria-label="戻る">←</button>
     <button id="redoBtn" class="icon-btn" title="進む（⌘Y / Ctrl+Y / ⇧⌘Z）" aria-label="進む">→</button>
   </div>
-  <select id="paperOrientation" title="用紙方向">
-    <option value="landscape">A4 横</option><option value="portrait">A4 縦</option>
-  </select>
+  <select id="paperSize" title="用紙サイズ"><option value="a4">A4</option><option value="a3">A3</option></select>
+  <select id="paperOrientation" title="用紙方向"><option value="landscape">横</option><option value="portrait">縦</option></select>
   <select id="cardSize" title="カードサイズ">
     <option value="poker">ポーカー (63×88)</option><option value="bridge">ブリッジ (58×89)</option>
     <option value="business">名刺 (55×91)</option><option value="yugioh">遊戯王サイズ (59×86)</option>
@@ -1083,6 +1714,49 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
           <div id="sheetGrid" class="sheet-grid portrait-card"></div>
         </div>
       </div>
+      
+      <div id="mobileQuickBar" class="mobile-quick-bar" aria-label="スマホ用ツールバー">
+        <button id="mobileAddPage" type="button"><span class="mq-icon">＋</span><span>ページ</span></button>
+        <button id="mobileFaceTab" type="button"><span class="mq-icon">▣</span><span>面</span></button>
+        <button id="mobileTemplateTab" type="button"><span class="mq-icon">A</span><span>テンプレ</span></button>
+        <button id="mobileOptionsJump" type="button"><span class="mq-icon">＋</span><span>オプション</span></button>
+        <button id="mobileMore" type="button"><span class="mq-icon">•••</span><span>その他</span></button>
+      </div>
+      
+      <div id="mobileFacePanel" class="mobile-tool-panel" aria-hidden="true">
+        <div class="mobile-panel-head"><strong>面</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div id="mobileFacePanelBody" class="mobile-panel-body"></div>
+      </div>
+      <div id="mobileTemplatePanel" class="mobile-tool-panel" aria-hidden="true">
+        <div class="mobile-panel-head"><strong>テンプレート</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div id="mobileTemplatePanelBody" class="mobile-panel-body"></div>
+      </div>
+      <div id="mobileOptionsPanel" class="mobile-tool-panel" aria-hidden="true">
+        <div class="mobile-panel-head"><strong>オプション</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div id="mobileOptionsPanelBody" class="mobile-panel-body"></div>
+      </div>
+      <div id="mobileMorePanel" class="mobile-tool-panel mobile-more-panel" aria-hidden="true">
+        <div class="mobile-panel-head"><strong>その他</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div class="mobile-panel-body mobile-more-grid">
+          <button id="mobileUndo" type="button">←<small>取り消し</small></button>
+          <button id="mobileRedo" type="button">→<small>やり直し</small></button>
+          <button id="mobilePdfSave" type="button">PDF<small>保存</small></button>
+          <button id="mobilePdfLoad" type="button">PDF<small>読み込み</small></button>
+          <button id="mobilePrint" type="button">印刷<small>印刷</small></button>
+          <button id="mobileDupPage" type="button">⧉<small>ページ複製</small></button>
+          <button id="mobileDeletePage" type="button">−<small>ページ削除</small></button>
+        </div>
+      </div>
+
+      <section id="mobileCardPreview" class="mobile-card-preview" aria-label="スマホ用カードプレビュー">
+        <div class="mobile-card-nav">
+          <button id="mobilePrevCard" type="button" aria-label="前のカード">←</button>
+          <div class="mobile-count-wrap"><strong id="mobileCardCount">カード 1 / 4</strong><span id="mobilePageCount">ページ 1 / 1</span></div>
+          <button id="mobileNextCard" type="button" aria-label="次のカード">→</button>
+        </div>
+        <div id="mobileCardPair" class="mobile-card-pair"></div>
+        <div class="mobile-face-labels"><span>表</span><span>裏</span></div>
+      </section>
     </div>
   </div>
   <div id="printPages" class="print-pages"></div>
@@ -1112,12 +1786,11 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         </div>
         <div class="tool-number-wrap stroke-width-control" title="線の太さ">
           <span class="stroke-width-icon" aria-hidden="true"></span>
-          <select id="faceBorderWidth" class="stroke-width-select" aria-label="背景の線の太さ">
-            <option value="0.5">細い</option>
-            <option value="0.75">やや細い</option>
-            <option value="1" selected>標準</option>
-            <option value="2">やや太い</option>
-            <option value="3">太い</option>
+          <select id="faceBorderWidth" class="stroke-width-select" aria-label="背景の線の太さ" title="線幅">
+            <option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1" selected>1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option>
+          </select>
+          <select id="faceBorderAlign" class="stroke-align-select" aria-label="背景の線の位置" title="線の位置">
+            <option value="inside" selected>内側</option><option value="center">中央</option><option value="outside">外側</option>
           </select>
         </div>
       </div>
@@ -1164,6 +1837,9 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <select id="suitSize" class="tool-small-select" aria-label="スートサイズ" title="スートサイズ">
           <option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option>
         </select>
+        <select id="suitCount" class="tool-small-select" aria-label="スート個数" title="スート個数">
+          <option value="1">×1</option><option value="2">×2</option><option value="3">×3</option><option value="4">×4</option><option value="5">×5</option>
+        </select>
         <select id="suitMode" class="tool-mode-select" aria-label="スート種類" title="スート種類">
           <option value="text">規定</option><option value="image">画像</option>
         </select>
@@ -1171,21 +1847,18 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
       <div id="suitImageControls" class="hidden tool-file-line">
         <input id="suitImageInput" type="file" accept="image/*" aria-label="スート画像">
       </div>
-    </div>
-
-    <div class="tool-block">
-      <div class="tool-block-title">テキスト</div>
-      <div class="tool-strip">
-        <input id="playingText" class="tool-main-input" type="text" placeholder="テキスト" aria-label="テキスト">
-        <div class="tool-number-wrap" title="文字サイズ">
-          <span class="size-icon" aria-hidden="true">A</span>
-          <input id="playingTextSize" class="tool-number" type="number" min="7" max="40" value="12" aria-label="文字サイズ">
-        </div>
-        <label class="style-toggle" title="太字"><input id="playingTextBold" type="checkbox"><span class="bold-mark">B</span></label>
-        <label class="style-toggle" title="斜体"><input id="playingTextItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="playingTextUnderline" type="checkbox"><span class="underline-mark">U</span></label>
-        <div class="tool-color" title="文字色"><input id="playingTextColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
+      <div class="tool-file-line" style="margin-top:6px">
+        <label for="cornerPlacement" style="margin:0;white-space:nowrap">配置</label>
+        <select id="cornerPlacement" aria-label="数字とスートの配置">
+          <option value="four">四つ角</option>
+          <option value="top">上段のみ</option>
+          <option value="diagRight">右対角線</option>
+          <option value="diagLeft">左対角線</option>
+        </select>
       </div>
     </div>
+
+
   </div>
 
   <div id="tcgControls" class="group hidden compact-template-controls">
@@ -1244,13 +1917,8 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <div class="tool-color stroke-color" title="フレームの線色"><input id="tcgBorderColor" class="palette-target" type="color" value="#222222" aria-label="フレームの線色"></div>
         <div class="tool-number-wrap stroke-width-control" title="線の太さ">
           <span class="stroke-width-icon" aria-hidden="true"></span>
-          <select id="tcgBorderWidth" class="stroke-width-select" aria-label="フレームの線の太さ">
-            <option value="0.5">細い</option>
-            <option value="0.75">やや細い</option>
-            <option value="1" selected>標準</option>
-            <option value="2">やや太い</option>
-            <option value="3">太い</option>
-          </select>
+          <select id="tcgBorderWidth" class="stroke-width-select" aria-label="フレームの線の太さ"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1" selected>1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select>
+          <select id="tcgBorderAlign" class="stroke-align-select" aria-label="フレームの線の位置"><option value="inside" selected>内側</option><option value="center">中央</option><option value="outside">外側</option></select>
         </div>
       </div>
     </div>
@@ -1300,6 +1968,18 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     </div>
     <div class="status compact-help">面と線を持つテキスト。位置・縦横比を自由に変更できます。</div>
     <div id="frameTextList"></div>
+
+    <div class="option-tool-head option-subtool">
+      <strong>画像</strong>
+      <button id="addOptionImage" class="mini">＋ 追加</button>
+      <input id="optionImageInput" type="file" accept="image/*" class="hidden">
+    </div>
+    <div class="status compact-help">最大5個まで。ドラッグで移動、右下で拡大・縮小、上の丸で回転できます。</div>
+    <div id="optionImageList"></div>
+
+    <div class="option-tool-head option-subtool"><strong>図形</strong><div class="shape-add-row"><button type="button" class="mini add-shape" data-shape="circle">○</button><button type="button" class="mini add-shape" data-shape="triangle">△</button><button type="button" class="mini add-shape" data-shape="rect">□</button><button type="button" class="mini add-shape" data-shape="polygon">⬡</button><button type="button" class="mini add-shape" data-shape="star">★</button></div></div>
+    <div class="status compact-help">円・三角・四角・多角形・星。多角形と星は頂点数を変更できます。</div>
+    <div id="shapeList"></div>
   </div>
 
   <div class="group">
@@ -1325,12 +2005,12 @@ const MM_TO_PX=3.7795275591;
 const PRESET=["#111111","#ffffff","#d94a4a","#e48a2a","#e4c62a","#6bbf59","#2fa67f","#3a8dde","#5967d8","#8b5cc7","#d45aa1","#8a6b4c"];
 let recentColors=[];
 
-const makePlain=()=>({type:"plain",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true});
-const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●",suitSize:"medium",suitMode:"text",suitImage:null,
-  numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,
+const makePlain=()=>({type:"plain",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside"});
+const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●",suitSize:"medium",suitCount:1,suitMode:"text",suitImage:null,cornerPlacement:"four",
+  numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
   numberStyle:{size:31,bold:true,italic:false},textStyle:{size:12,bold:false,italic:false}});
 const makeImageFace=()=>({type:"image",src:null,bgColor:"#ffffff",bgImage:null});
-const makePage=()=>Array.from({length:8},(_,i)=>i%2===0?makePlaying():makePlain());
+const makePage=(n=4)=>Array.from({length:n*2},(_,i)=>i%2===0?makePlaying():makePlain());
 
 let pages=[makePage()],currentPage=0,selected=0,sheetTitle="";
 
@@ -1346,24 +2026,25 @@ const CARD_SIZES={
   half:{label:"ハーフ",w:44,h:63}
 };
 function cardMM(){return CARD_SIZES[el("cardSize")?.value]||CARD_SIZES.poker}
-function isLandscapeCard(){ return el("paperOrientation").value==="portrait"; } // A4 portrait => horizontal card
-function paperMM(){return el("paperOrientation").value==="landscape"?{w:297,h:210}:{w:210,h:297}}
-function blockMM(){
-  const c=cardMM();
-  return isLandscapeCard()?{w:c.h*2,h:c.w*4}:{w:c.w*4,h:c.h*2};
-}
+function isLandscapeCard(){ return el("paperOrientation").value==="portrait"; }
+function paperMM(){const l=el("paperOrientation").value==="landscape",a3=el("paperSize")?.value==="a3";return a3?(l?{w:420,h:297}:{w:297,h:420}):(l?{w:297,h:210}:{w:210,h:297})}
+function pairMM(){const c=cardMM();return isLandscapeCard()?{w:c.h,h:c.w*2}:{w:c.w*2,h:c.h}}
+function gridRC(){const p=paperMM(),q=pairMM();return {cols:Math.max(1,Math.floor(p.w/q.w)),rows:Math.max(1,Math.floor(p.h/q.h))}}
+function cardsPerPage(){const g=gridRC();return g.cols*g.rows}
+function blockMM(){const q=pairMM(),g=gridRC();return {w:q.w*g.cols,h:q.h*g.rows}}
+function resizePagesForLayout(){const n=cardsPerPage()*2;pages=pages.map(pg=>{const a=pg.slice(0,n);while(a.length<n)a.push(a.length%2===0?makePlaying():makePlain());return a});selected=Math.min(selected,n-1)}
 function applyCardGeometry(container){
-  const c=cardMM();
+  const c=cardMM(),g=gridRC();
   let fw,fh,pw,ph,gw,gh,fold;
   if(isLandscapeCard()){
     fw=c.h; fh=c.w;
     pw=c.h; ph=c.w*2;
-    gw=c.h*2; gh=c.w*4;
+    gw=pw*g.cols; gh=ph*g.rows;
     fold=c.w;
   }else{
     fw=c.w; fh=c.h;
     pw=c.w*2; ph=c.h;
-    gw=c.w*4; gh=c.h*2;
+    gw=pw*g.cols; gh=ph*g.rows;
     fold=c.w;
   }
   container.style.setProperty("--face-w",fw+"mm");
@@ -1373,6 +2054,8 @@ function applyCardGeometry(container){
   container.style.setProperty("--grid-w",gw+"mm");
   container.style.setProperty("--grid-h",gh+"mm");
   container.style.setProperty("--fold-pos",fold+"mm");
+  container.style.gridTemplateColumns=`repeat(${g.cols}, var(--pair-w))`;
+  container.style.gridTemplateRows=`repeat(${g.rows}, var(--pair-h))`;
 }
 function currentFaces(){return pages[currentPage]}
 function deep(v){return JSON.parse(JSON.stringify(v))}
@@ -1384,6 +2067,11 @@ function ensureTextBoxes(d){ if(!Array.isArray(d.textBoxes)) d.textBoxes=[]; ret
 function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"テキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
 function ensureFrameTexts(d){if(!Array.isArray(d.frameTexts))d.frameTexts=[];return d.frameTexts}
 function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"フレームテキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
+function ensureOptionImages(d){if(!Array.isArray(d.optionImages))d.optionImages=[];if(!Array.isArray(d.shapes))d.shapes=[];return d.optionImages}
+function ensureShapes(d){if(!Array.isArray(d.shapes))d.shapes=[];return d.shapes}
+function makeShape(type,i=0){return {id:"sh_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),type,points:(type==="star"?5:6),fillColor:"#ffffff",fillNone:false,borderColor:"#222222",borderNone:false,borderWidth:1,borderAlign:"inside",box:{x:30,y:30+i*4,w:38,h:38},centerSnap:false}}
+function shapePoints(type,n){n=Math.max(3,Math.min(12,Number(n)||5));let pts=[];if(type==="triangle")n=3;if(type==="polygon"||type==="triangle"){for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n;pts.push(`${50+46*Math.cos(a)},${50+46*Math.sin(a)}`)}}else if(type==="star"){for(let i=0;i<n*2;i++){let a=-Math.PI/2+i*Math.PI/n,r=i%2?21:46;pts.push(`${50+r*Math.cos(a)},${50+r*Math.sin(a)}`)}}return pts.join(" ")}
+function makeOptionImage(src,i=0){return {id:"oi_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),src,box:{x:30,y:28+i*5,w:40,h:30},rotation:0,centerSnap:false}}
 function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
   const items=ensureTextBoxes(d);
   const gx=document.createElement("div");gx.className="snap-guide-x";faceEl.appendChild(gx);
@@ -1397,6 +2085,8 @@ function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
     faceEl.appendChild(div);
   });
   renderFrameTexts(faceEl,d,selectable,idx);
+  renderOptionImages(faceEl,d,selectable,idx);
+  renderShapes(faceEl,d,selectable,idx);
 }
 
 function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
@@ -1409,13 +2099,34 @@ function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
     div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
     div.style.fontSize=st.size+"px";div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";
     div.style.color=st.colorNone?"transparent":(st.color||"#222");
-    div.style.border=(Number(item.borderWidth)||1)+"px solid "+(item.borderNone?"transparent":(item.borderColor||"#222"));
+    div.style.border="0";if(!item.borderNone){const w=Number(item.borderWidth)||1,c=item.borderColor||"#222",a=item.borderAlign||"inside";if(a==="outside")div.style.boxShadow=`0 0 0 ${w}mm ${c}`;else if(a==="center")div.style.boxShadow=`inset 0 0 0 ${w/2}mm ${c},0 0 0 ${w/2}mm ${c}`;else div.style.boxShadow=`inset 0 0 0 ${w}mm ${c}`}
     div.style.background=item.fillNone?"transparent":(item.fillColor||"#fff");
     div.textContent=item.text||"";
     if(selectable){const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableFrameText(div,idx,item.id)}
     faceEl.appendChild(div);
   });
 }
+function renderOptionImages(faceEl,d,selectable=false,idx=-1){
+  ensureOptionImages(d).forEach((item,n)=>{if(!item.src)return;const b=item.box||{x:30,y:28+n*5,w:40,h:30};const div=document.createElement("div");div.className="option-image"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";div.style.transform=`rotate(${Number(item.rotation)||0}deg)`;div.innerHTML=`<img src="${item.src}" alt="">`;if(selectable){div.innerHTML+=`<div class="resize-handle"></div><div class="rotate-handle"></div>`;enableOptionImage(div,idx,item.id)}faceEl.appendChild(div)})
+}
+function renderShapes(faceEl,d,selectable=false,idx=-1){
+  ensureShapes(d).forEach(item=>{const b=item.box||{x:30,y:30,w:38,h:38},div=document.createElement("div");div.className="option-shape"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.aspectRatio="1 / 1";
+    let tag=item.type==="circle"?'<ellipse cx="50" cy="50" rx="46" ry="46"/>':item.type==="rect"?'<rect x="4" y="4" width="92" height="92"/>':`<polygon points="${shapePoints(item.type,item.points)}"/>`;
+    const sw=Math.max(.1,Number(item.borderWidth)||1), align=item.borderAlign||"inside"; let svgStroke=sw*MM_TO_PX; if(align==="inside")svgStroke*=2; else if(align==="outside")svgStroke*=2;
+    div.innerHTML=`<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g fill="${item.fillNone?'none':item.fillColor||'#fff'}" stroke="${item.borderNone?'none':item.borderColor||'#222'}" stroke-width="${svgStroke}" vector-effect="non-scaling-stroke">${tag}</g></svg>${selectable?'<div class="resize-handle"></div>':''}`;
+    if(selectable)enableShape(div,idx,item.id);faceEl.appendChild(div)})
+}
+function enableShape(node,idx,itemId){let mode=null,sx=0,sy=0,start=null;const h=node.querySelector('.resize-handle'),get=()=>ensureShapes(currentFaces()[idx]).find(x=>x.id===itemId);const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;sx=e.clientX;sy=e.clientY;start={...(get().box)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up,{once:true})};node.addEventListener('pointerdown',e=>{if(e.target!==h)down(e,'move')});h&&h.addEventListener('pointerdown',e=>down(e,'resize'));function move(e){const it=get(),r=node.closest('.face').getBoundingClientRect(),dx=(e.clientX-sx)/r.width*100,dy=(e.clientY-sy)/r.height*100;const currentH=it.box.h||start.h||38;if(mode==='move'){const visualH=(it.box.w||start.w)*r.width/r.height;it.box={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-visualH),h:visualH}}else{let nw=start.w+(Math.abs(dx)>=Math.abs(dy)?dx:dy*r.height/r.width);nw=clamp(nw,8,100-start.x);let nh=nw*r.width/r.height;if(nh>100-start.y){nh=100-start.y;nw=nh*r.height/r.width}it.box={...start,w:nw,h:nh}}Object.assign(node.style,{left:it.box.x+'%',top:it.box.y+'%',width:it.box.w+'%',height:'auto',aspectRatio:'1 / 1'})}function up(){mode=null;window.removeEventListener('pointermove',move);syncControls()}}
+
+function enableOptionImage(node,idx,itemId){
+  let mode=null,startX=0,startY=0,start=null,startAngle=0;const resize=node.querySelector(".resize-handle"),rotate=node.querySelector(".rotate-handle");
+  const getItem=()=>ensureOptionImages(currentFaces()[idx]).find(x=>x.id===itemId);
+  const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;const item=getItem();if(!item)return;start={...(item.box||{x:30,y:28,w:40,h:30})};startAngle=Number(item.rotation)||0;window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true})};
+  node.addEventListener("pointerdown",e=>{if(e.target!==resize&&e.target!==rotate)down(e,"move")});resize.addEventListener("pointerdown",e=>down(e,"resize"));rotate.addEventListener("pointerdown",e=>down(e,"rotate"));
+  function move(e){const item=getItem();if(!item||!mode)return;const face=node.closest(".face"),r=face.getBoundingClientRect();if(mode==="rotate"){const nr=node.getBoundingClientRect(),cx=nr.left+nr.width/2,cy=nr.top+nr.height/2;item.rotation=Math.round(Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI+90);node.style.transform=`rotate(${item.rotation}deg)`;return}const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;if(mode==="move"){let x=clamp(start.x+dx,0,100-start.w),y=clamp(start.y+dy,0,100-start.h);face.classList.remove("show-snap-x","show-snap-y");if(item.centerSnap){const th=4.5;if(Math.abs(x+start.w/2-50)<=th){x=50-start.w/2;face.classList.add("show-snap-x")}if(Math.abs(y+start.h/2-50)<=th){y=50-start.h/2;face.classList.add("show-snap-y")}}item.box={...start,x,y}}else{const ratio=start.w/start.h;let nw=start.w+dx,nh=nw/ratio;if(Math.abs(dy)>Math.abs(dx)){nh=start.h+dy;nw=nh*ratio}nw=clamp(nw,8,100-start.x);nh=nw/ratio;if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}item.box={...start,w:nw,h:nh}}const b=item.box;node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%"}
+  function up(){const face=node.closest(".face");if(face)face.classList.remove("show-snap-x","show-snap-y");mode=null;window.removeEventListener("pointermove",move);syncControls()}
+}
+
 function enableFrameText(node,idx,itemId){
   let mode=null,startX=0,startY=0,start=null;const handle=node.querySelector(".resize-handle");
   const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;const item=ensureFrameTexts(currentFaces()[idx]).find(x=>x.id===itemId);if(!item)return;start={...(item.box||{x:18,y:22,w:64,h:18})};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true})};
@@ -1442,7 +2153,7 @@ function enableGenericTextBox(node,idx,itemId){
 
 function faceName(i){
   const card=Math.floor(i/2)+1;
-  return `カード${currentPage*4+card}（ページ内${card}）・${i%2===0?"表":"裏"}`;
+  return `カード${currentPage*cardsPerPage()+card}（ページ内${card}）・${i%2===0?"表":"裏"}`;
 }
 
 function setPaper(){
@@ -1474,7 +2185,7 @@ function fitPaper(){
 }
 function updateFit(){
   const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2;
-  el("fitStatus").textContent=`A4実寸100%想定：左右${x.toFixed(1)}mm / 上下${y.toFixed(1)}mm余白`;
+  el("fitStatus").textContent=`${el("paperSize")?.value==="a3"?"A3":"A4"}実寸100%想定：${cardsPerPage()}枚面付け / 左右${x.toFixed(1)}mm / 上下${y.toFixed(1)}mm余白`;
 }
 
 
@@ -1500,9 +2211,10 @@ function cmykToRgb(c,m,y,k){
 function closeColorPopup(){if(colorPopup){colorPopup.remove();colorPopup=null}activeColorInput=null}
 function colorRoleForInput(input){
   if(!input)return "fill";
-  if(input.id==="tcgBorderColor" || input.classList.contains("ft-border-color")) return "stroke";
+  /* Same semantic role = same icon everywhere. Parent role classes are the source of truth. */
+  if(input.closest?.(".stroke-color") || input.classList.contains("shape-stroke") || input.classList.contains("ft-border-color")) return "stroke";
   if(
-    ["playingNumberColor","playingTextColor","tcgTextColor","wordMainColor"].includes(input.id) ||
+    ["playingNumberColor","tcgTextColor","wordMainColor"].includes(input.id) ||
     input.classList.contains("tb-color") ||
     input.classList.contains("ft-text-color")
   ) return "text";
@@ -1559,9 +2271,9 @@ function refreshOpenColorPopup(){if(colorPopup&&colorPopup._renderUsed)colorPopu
 function openColorPopup(input,anchor){
   if(colorPopup && activeColorInput===input){closeColorPopup();return}
   closeColorPopup();activeColorInput=input;let rgb=hexToRgb(input.value),hsv=rgbToHsv(rgb.r,rgb.g,rgb.b),mode="CMYK";
-  const pop=document.createElement("div");pop.className="color-popup";pop.innerHTML=`<div class="color-popup-head"><strong>カラー</strong><button type="button" class="color-popup-close">×</button></div><div class="color-field"><span class="color-field-marker"></span></div><input class="color-hue" type="range" min="0" max="359" value="${Math.round(hsv.h)}"><div class="color-popup-row"><span class="color-preview"></span><select class="color-mode"><option value="CMYK">CMYK</option><option value="RGB">RGB</option></select><div class="color-values"></div></div><button type="button" class="color-none-btn"><span class="none-icon"></span><span>カラーなし</span></button><div class="color-popup-section">規定色</div><div class="swatches preset-swatches"></div><div class="color-popup-section">使われている色</div><div class="swatches used-swatches"></div>`;
+  const pop=document.createElement("div");pop.className="color-popup";pop.innerHTML=`<div class="color-popup-head"><strong>カラー</strong><button type="button" class="color-popup-close">×</button></div><div class="color-field"><span class="color-field-marker"></span></div><input class="color-hue" type="range" min="0" max="359" value="${Math.round(hsv.h)}"><div class="color-popup-row"><span class="color-preview"></span><select class="color-mode"><option value="CMYK">CMYK</option><option value="RGB">RGB</option></select><div class="color-values"></div></div><div class="color-bottom-row"><button type="button" class="color-none-btn"><span class="none-icon"></span><span>なし</span></button><label class="hex-wrap"><input class="color-hex" type="text" maxlength="7" spellcheck="false" aria-label="カラーコード" placeholder="#D94A4A"></label></div><div class="color-popup-section">規定色</div><div class="swatches preset-swatches"></div><div class="color-popup-section">使われている色</div><div class="swatches used-swatches"></div>`;
   document.body.appendChild(pop);colorPopup=pop;
-  const field=pop.querySelector(".color-field"),marker=pop.querySelector(".color-field-marker"),hue=pop.querySelector(".color-hue"),preview=pop.querySelector(".color-preview"),values=pop.querySelector(".color-values"),modeSel=pop.querySelector(".color-mode");
+  const field=pop.querySelector(".color-field"),marker=pop.querySelector(".color-field-marker"),hue=pop.querySelector(".color-hue"),preview=pop.querySelector(".color-preview"),values=pop.querySelector(".color-values"),modeSel=pop.querySelector(".color-mode"),hexInput=pop.querySelector(".color-hex");
   const currentHex=()=>{const x=hsvToRgb(hsv.h,hsv.s,hsv.v);return rgbToHex(x.r,x.g,x.b)};
   function renderValues(){
     const r=hexToRgb(currentHex());
@@ -1614,13 +2326,14 @@ function openColorPopup(input,anchor){
     marker.style.top=((1-hsv.v)*100)+"%";
     const hex=currentHex();
     preview.style.background=hex;
+    if(document.activeElement!==hexInput)hexInput.value=hex.toUpperCase();
     if(commit)applyColorToInput(input,hex);
     if(syncNumbers)renderValues();
     renderUsed();
   }
   swatches(pop.querySelector(".preset-swatches"),PRESET);renderUsed();update(false);
   field.addEventListener("pointerdown",e=>{const move=ev=>{const r=field.getBoundingClientRect();hsv.s=clamp((ev.clientX-r.left)/r.width,0,1);hsv.v=1-clamp((ev.clientY-r.top)/r.height,0,1);update(true)};move(e);window.addEventListener("pointermove",move);window.addEventListener("pointerup",()=>window.removeEventListener("pointermove",move),{once:true})});
-  hue.addEventListener("input",()=>{hsv.h=Number(hue.value);update(true)});modeSel.addEventListener("change",()=>{mode=modeSel.value;renderValues()});pop.querySelector(".color-popup-close").onclick=closeColorPopup;pop.querySelector(".color-none-btn").onclick=()=>{applyNoColor(input);closeColorPopup()};
+  hue.addEventListener("input",()=>{hsv.h=Number(hue.value);update(true)});hexInput.addEventListener("change",()=>{let v=hexInput.value.trim();if(!v.startsWith("#"))v="#"+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){const rr=hexToRgb(v);hsv=rgbToHsv(rr.r,rr.g,rr.b);hue.value=Math.round(hsv.h);update(true)}else hexInput.value=currentHex().toUpperCase()});modeSel.addEventListener("change",()=>{mode=modeSel.value;renderValues()});pop.querySelector(".color-popup-close").onclick=closeColorPopup;pop.querySelector(".color-none-btn").onclick=()=>{applyNoColor(input);closeColorPopup()};
   const r=anchor.getBoundingClientRect(),w=Math.min(320,window.innerWidth-16);
   pop.style.width=w+"px";
   let left=Math.min(window.innerWidth-w-8,Math.max(8,r.left)),top=r.bottom+6;
@@ -1632,18 +2345,24 @@ function openColorPopup(input,anchor){
 function renderSwatches(){refreshOpenColorPopup()}
 
 function renderSuitHTML(d){
-  const size=d.suitSize||"medium";
-  if(d.suitMode==="image" && d.suitImage){
-    return `<img class="suit-img ${size}" src="${d.suitImage}" alt="">`;
-  }
-  return `<span class="suit-text ${size}">${esc(d.suit||"")}</span>`;
+  const size=d.suitSize||"medium",count=clamp(Number(d.suitCount)||1,1,5);
+  const one=()=>d.suitMode==="image"&&d.suitImage?`<img class="suit-img ${size}" src="${d.suitImage}" alt="">`:`<span class="suit-text ${size}">${esc(d.suit||"")}</span>`;
+  return `<span class="suit-stack">${Array.from({length:count},one).join("")}</span>`;
 }
+function cornerVisible(pos,key){pos=pos||"four";if(pos==="top")return key==="tl"||key==="tr";if(pos==="diagRight")return key==="tr"||key==="bl";if(pos==="diagLeft")return key==="tl"||key==="br";return true}
 
 function renderFace(faceEl,d,selectable=false,idx=-1){
   faceEl.innerHTML="";
   faceEl.style.background=d.bgNone?"transparent":(d.bgColor||"#ffffff");
   const faceBorderW=Number(d.bgBorderWidth)||1;
-  faceEl.style.boxShadow=d.bgBorderNone?"none":`inset 0 0 0 ${faceBorderW}px ${d.bgBorderColor||"#222222"}`;
+  const faceBorderAlign=d.bgBorderAlign||"inside";
+  if(d.bgBorderNone) faceEl.style.boxShadow="none";
+  else{
+    const c=d.bgBorderColor||"#222222";
+    if(faceBorderAlign==="outside") faceEl.style.boxShadow=`0 0 0 ${faceBorderW}mm ${c}`;
+    else if(faceBorderAlign==="center"){const half=faceBorderW/2;faceEl.style.boxShadow=`inset 0 0 0 ${half}mm ${c}, 0 0 0 ${half}mm ${c}`;}
+    else faceEl.style.boxShadow=`inset 0 0 0 ${faceBorderW}mm ${c}`;
+  }
 
   if(d.bgImage){
     const bg=document.createElement("img");
@@ -1672,7 +2391,7 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     wrap.className="tcg-card layout"+layout;
     const legacy=d.color||"#222222";
     wrap.style.setProperty("--tcg-text",d.textColorNone?"transparent":(d.textColor||legacy));
-    wrap.style.setProperty("--tcg-border",d.borderNone?"transparent":(d.borderColor||legacy));wrap.style.setProperty("--tcg-border-width",(Number(d.borderWidth)||1)+"px");
+    wrap.style.setProperty("--tcg-border",d.borderNone?"transparent":(d.borderColor||legacy));wrap.style.setProperty("--tcg-border-width",(Number(d.borderWidth)||1)+"mm");wrap.dataset.borderAlign=d.borderAlign||"inside";
     wrap.style.setProperty("--tcg-panel",d.panelNone?"transparent":(d.panelColor||"#ffffff"));
 
     const ns=d.nameStyle||{size:15,bold:true,italic:false};
@@ -1696,15 +2415,12 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
 
   const wrap=document.createElement("div");wrap.className="card-template";
   const nc=d.numberColorNone?"transparent":(d.numberColor||d.color||"#d94a4a");
-  const tc=d.textColorNone?"transparent":(d.textColor||"#222222");
-  const ts=d.textStyle||{size:12,bold:false,italic:false};
   wrap.innerHTML=`
-    <div class="corner tl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
-    <div class="corner tr" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
-    <div class="corner bl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
-    <div class="corner br" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>
-    <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||31}mm;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>
-    <div class="card-text" style="color:${tc};font-size:${ts.size}px;font-weight:${ts.bold?700:400};font-style:${ts.italic?"italic":"normal"};text-decoration:${ts.underline?"underline":"none"}">${esc(d.text||"")}</div>`;
+    ${cornerVisible(d.cornerPlacement,"tl")?`<div class="corner tl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
+    ${cornerVisible(d.cornerPlacement,"tr")?`<div class="corner tr" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
+    ${cornerVisible(d.cornerPlacement,"bl")?`<div class="corner bl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
+    ${cornerVisible(d.cornerPlacement,"br")?`<div class="corner br" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
+    <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||31}mm;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>`;
   faceEl.appendChild(wrap);
   renderGenericTextBoxes(faceEl,d,selectable,idx);
 }
@@ -1797,6 +2513,7 @@ function historyState(){
   return JSON.stringify({
     pages,
     sheetTitle,
+    paperSize:el("paperSize").value,
     paperOrientation:el("paperOrientation").value,
     cardSize:el("cardSize").value
   });
@@ -1872,6 +2589,7 @@ function applyHistorySnapshot(snapshot){
 
   pages=st.pages;
   sheetTitle=st.sheetTitle||"";
+  el("paperSize").value=st.paperSize||"a4";
   el("paperOrientation").value=st.paperOrientation||"landscape";
   el("cardSize").value=st.cardSize||"poker";
   el("sheetTitleInput").value=sheetTitle;
@@ -1912,7 +2630,7 @@ function buildSheet(container,faces,selectable=true){
   container.innerHTML="";
   container.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
   applyCardGeometry(container);
-  for(let c=0;c<4;c++){
+  for(let c=0;c<cardsPerPage();c++){
     const pair=document.createElement("div");pair.className="pair";
     for(let side=0;side<2;side++){
       const idx=c*2+side,f=document.createElement("div");
@@ -1935,8 +2653,150 @@ function renderSheet(){
   el("dupPage").disabled=pages.length>=25;
   el("deletePage").disabled=pages.length<=1;
   renderPageSidebar();
+  renderMobileCardPreview();
 }
 
+
+
+
+function mobileUIActive(){
+  return window.matchMedia("(max-width:720px)").matches;
+}
+let mobilePanelOpen="";
+
+function mobileAddPage(){
+  const add=el("addPage");
+  if(!add || add.disabled)return;
+  closeMobilePanel();
+  add.click();
+}
+
+function closeMobilePanel(){
+  mobilePanelOpen="";
+  document.querySelectorAll(".mobile-tool-panel").forEach(p=>{
+    p.classList.remove("open");
+    p.setAttribute("aria-hidden","true");
+  });
+  document.querySelectorAll(".mobile-quick-bar button").forEach(b=>b.classList.remove("active"));
+}
+
+function openMobilePanel(name,buttonId){
+  if(!mobileUIActive())return;
+  if(mobilePanelOpen===name){ closeMobilePanel(); return; }
+  closeMobilePanel();
+  const p=el("mobile"+name+"Panel");
+  if(!p)return;
+  mobilePanelOpen=name;
+  p.classList.add("open");
+  p.setAttribute("aria-hidden","false");
+  el(buttonId)?.classList.add("active");
+}
+
+function cloneControlsForMobile(){
+  if(!mobileUIActive())return;
+  const aside=document.querySelector("aside");
+  if(!aside)return;
+
+  // Separate phone windows: each receives only the controls belonging to that category.
+  const sections=[...aside.children].filter(n=>!n.classList.contains("mobile-tray-close"));
+  const titleOf=n=>{
+    const h=n.matches?.(".section-title,h2,h3,h4")?n:n.querySelector?.(".section-title,h2,h3,h4");
+    return (h?.textContent||"").trim();
+  };
+  const buckets={Face:[],Template:[],Options:[]};
+  let mode="Face";
+  sections.forEach(n=>{
+    const t=titleOf(n);
+    if(/^テンプレート/.test(t)) mode="Template";
+    else if(/^オプション/.test(t)) mode="Options";
+    buckets[mode].push(n);
+  });
+
+  for(const [key,nodes] of Object.entries(buckets)){
+    const host=el("mobile"+key+"PanelBody");
+    if(!host)continue;
+    host.innerHTML="";
+    nodes.forEach(n=>{
+      const c=n.cloneNode(true);
+      // cloned controls mirror the desktop controls by forwarding input/change/click.
+      c.querySelectorAll("[id]").forEach(x=>{
+        const originalId=x.id;
+        x.removeAttribute("id");
+        const original=el(originalId);
+        if(!original)return;
+        if("value" in x) x.value=original.value;
+        if("checked" in x) x.checked=original.checked;
+        x.addEventListener("input",()=>{
+          if("value" in original) original.value=x.value;
+          if("checked" in original) original.checked=x.checked;
+          original.dispatchEvent(new Event("input",{bubbles:true}));
+        });
+        x.addEventListener("change",()=>{
+          if("value" in original) original.value=x.value;
+          if("checked" in original) original.checked=x.checked;
+          original.dispatchEvent(new Event("change",{bubbles:true}));
+          setTimeout(cloneControlsForMobile,0);
+        });
+        if(x.tagName==="BUTTON") x.addEventListener("click",()=>original.click());
+      });
+      host.appendChild(c);
+    });
+  }
+}
+
+window.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll(".mobile-panel-close").forEach(b=>b.addEventListener("click",closeMobilePanel));
+  cloneControlsForMobile();
+});
+
+function mobileCardIndex(){
+  return currentPage*cardsPerPage() + Math.floor(selected/2);
+}
+function goToMobileCard(delta){
+  const total=pages.length*cardsPerPage();
+  const side=selected%2;
+  let next=clamp(mobileCardIndex()+delta,0,total-1);
+  const n=cardsPerPage(); currentPage=Math.floor(next/n);
+  selected=(next%n)*2+side;
+  renderSheet();
+  syncControls();
+}
+function renderMobileCardPreview(){
+  const host=el("mobileCardPair");
+  if(!host)return;
+
+  const cardInPage=Math.floor(selected/2);
+  const frontIdx=cardInPage*2;
+  const faces=currentFaces();
+  const c=cardMM();
+  const landscape=isLandscapeCard();
+
+  host.innerHTML="";
+  host.className="mobile-card-pair "+(landscape?"mobile-landscape-card":"mobile-portrait-card");
+
+  [frontIdx,frontIdx+1].forEach(idx=>{
+    const f=document.createElement("div");
+    f.className="face"+(idx===selected?" selected":"");
+    f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);
+    renderFace(f,faces[idx],idx===selected,idx);
+    f.addEventListener("click",()=>{
+      selected=idx;
+      renderMobileCardPreview();
+      syncControls();
+    });
+    host.appendChild(f);
+  });
+
+  const absolute=mobileCardIndex();
+  const total=pages.length*cardsPerPage();
+  el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;
+  if(el("mobilePageCount")) el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
+  el("mobilePrevCard").disabled=absolute<=0;
+  el("mobileNextCard").disabled=absolute>=total-1;
+
+  const labels=document.querySelector(".mobile-face-labels");
+  if(labels) labels.classList.toggle("stacked",landscape);
+}
 
 function renderPageSidebar(){
   const box=el("pageThumbs");
@@ -2143,6 +3003,13 @@ function renderTextBoxEditors(d){
   el("addTextBox").disabled=items.length>=5;
 }
 
+function renderOptionImageEditors(d){
+  const list=el("optionImageList"),items=ensureOptionImages(d);list.innerHTML="";
+  items.forEach((item,index)=>{const wrap=document.createElement("div");wrap.className="option-image-editor";wrap.innerHTML=`<div class="option-image-editor-head"><strong>画像${index+1}</strong><button type="button" class="textbox-delete">削除</button></div><div class="option-image-row"><img src="${item.src}" alt=""><label>回転 <input class="option-image-angle" type="number" min="-180" max="180" value="${Number(item.rotation)||0}">°</label></div><label class="checkline" style="margin:6px 0 0"><input class="oi-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;const angle=wrap.querySelector(".option-image-angle"),center=wrap.querySelector(".oi-center"),del=wrap.querySelector(".textbox-delete");angle.oninput=()=>{item.rotation=Number(angle.value)||0;renderSheet()};center.onchange=()=>{item.centerSnap=center.checked;renderSheet()};del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};list.appendChild(wrap)});el("addOptionImage").disabled=items.length>=5
+}
+
+function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);list.innerHTML='';items.forEach((item,i)=>{const w=document.createElement('div');w.className='shape-editor';const names={circle:'円',triangle:'三角形',rect:'四角形',polygon:'多角形',star:'星'};w.innerHTML=`<div class="shape-editor-head"><strong>${names[item.type]||'図形'}${i+1}</strong><button class="textbox-delete" type="button">削除</button></div><div class="shape-editor-row">${['polygon','star'].includes(item.type)?`<label>頂点 <input class="shape-points" type="number" min="${item.type==='star'?4:3}" max="12" value="${item.points||5}" style="width:54px"></label>`:''}<div class="tool-color fill-color" title="面色"><input class="shape-fill" type="color" value="${item.fillColor||'#fff'}"></div><div class="tool-color stroke-color" title="線色"><input class="shape-stroke" type="color" value="${item.borderColor||'#222'}"></div><select class="shape-width stroke-width-select"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1">1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select><select class="shape-align stroke-align-select"><option value="inside">内側</option><option value="center">中央</option><option value="outside">外側</option></select></div>`;const pts=w.querySelector('.shape-points'),fill=w.querySelector('.shape-fill'),stroke=w.querySelector('.shape-stroke'),width=w.querySelector('.shape-width'),align=w.querySelector('.shape-align');width.value=String(item.borderWidth||1);align.value=item.borderAlign||'inside';if(pts)pts.oninput=()=>{item.points=clamp(Number(pts.value)||5,item.type==='star'?4:3,12);renderSheet()};fill.dataset.none=item.fillNone?'1':'0';stroke.dataset.none=item.borderNone?'1':'0';fill.oninput=()=>{item.fillColor=fill.value;item.fillNone=false;renderSheet()};stroke.oninput=()=>{item.borderColor=stroke.value;item.borderNone=false;renderSheet()};fill.addEventListener('colornone',()=>{item.fillNone=true;renderSheet()});stroke.addEventListener('colornone',()=>{item.borderNone=true;renderSheet()});width.onchange=()=>{item.borderWidth=Number(width.value)||1;renderSheet()};align.onchange=()=>{item.borderAlign=align.value;renderSheet()};w.querySelector('.textbox-delete').onclick=()=>{items.splice(i,1);renderSheet();syncControls()};list.appendChild(w);[fill,stroke].forEach(setupColorInput)})}
+
 function renderFrameTextEditors(d){
   const list=el("frameTextList"),items=ensureFrameTexts(d);list.innerHTML="";
   items.forEach((item,index)=>{
@@ -2163,21 +3030,16 @@ function renderFrameTextEditors(d){
         <div class="tool-number-wrap stroke-width-control" title="線の太さ">
           <span class="stroke-width-icon" aria-hidden="true"></span>
           <select class="ft-border-width stroke-width-select" aria-label="線の太さ">
-            <option value="0.5" ${Number(item.borderWidth)===0.5?"selected":""}>細い</option>
-            <option value="0.75" ${Number(item.borderWidth)===0.75?"selected":""}>やや細い</option>
-            <option value="1" ${Number(item.borderWidth??1)===1?"selected":""}>標準</option>
-            <option value="2" ${Number(item.borderWidth)===2?"selected":""}>やや太い</option>
-            <option value="3" ${Number(item.borderWidth)===3?"selected":""}>太い</option>
-          </select>
+            <option value="0.5" ${Number(item.borderWidth)===0.5?"selected":""}>0.5 mm</option><option value="0.75" ${Number(item.borderWidth)===0.75?"selected":""}>0.75 mm</option><option value="1" ${Number(item.borderWidth??1)===1?"selected":""}>1 mm</option><option value="2" ${Number(item.borderWidth)===2?"selected":""}>2 mm</option><option value="3" ${Number(item.borderWidth)===3?"selected":""}>3 mm</option></select><select class="ft-border-align stroke-align-select" aria-label="線の位置"><option value="inside" ${(item.borderAlign||"inside")==="inside"?"selected":""}>内側</option><option value="center" ${item.borderAlign==="center"?"selected":""}>中央</option><option value="outside" ${item.borderAlign==="outside"?"selected":""}>外側</option></select>
         </div>
       </div>
       <label class="checkline" style="margin:6px 0 0"><input class="ft-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;
-    const text=wrap.querySelector(".ft-text"),size=wrap.querySelector(".ft-size"),bold=wrap.querySelector(".ft-bold"),italic=wrap.querySelector(".ft-italic"),underline=wrap.querySelector(".ft-underline"),tc=wrap.querySelector(".ft-text-color"),bc=wrap.querySelector(".ft-border-color"),bw=wrap.querySelector(".ft-border-width"),fc=wrap.querySelector(".ft-fill-color"),center=wrap.querySelector(".ft-center"),del=wrap.querySelector(".textbox-delete");
+    const text=wrap.querySelector(".ft-text"),size=wrap.querySelector(".ft-size"),bold=wrap.querySelector(".ft-bold"),italic=wrap.querySelector(".ft-italic"),underline=wrap.querySelector(".ft-underline"),tc=wrap.querySelector(".ft-text-color"),bc=wrap.querySelector(".ft-border-color"),bw=wrap.querySelector(".ft-border-width"),ba=wrap.querySelector(".ft-border-align"),fc=wrap.querySelector(".ft-fill-color"),center=wrap.querySelector(".ft-center"),del=wrap.querySelector(".textbox-delete");
     text.oninput=()=>{item.text=text.value;renderSheet()};
     [size,bold,italic,underline].forEach(x=>x.oninput=()=>{item.style={...item.style,size:Number(size.value)||14,bold:bold.checked,italic:italic.checked,underline:underline.checked};renderSheet()});
     tc.dataset.none=st.colorNone?"1":"0";bc.dataset.none=item.borderNone?"1":"0";fc.dataset.none=item.fillNone?"1":"0";
     tc.oninput=()=>{item.style={...item.style,color:tc.value,colorNone:false};tc.dataset.none="0";renderSheet();refreshOpenColorPopup()};
-    bc.oninput=()=>{item.borderColor=bc.value;item.borderNone=false;bc.dataset.none="0";renderSheet();refreshOpenColorPopup()};bw.onchange=()=>{item.borderWidth=Number(bw.value)||1;renderSheet()};
+    bc.oninput=()=>{item.borderColor=bc.value;item.borderNone=false;bc.dataset.none="0";renderSheet();refreshOpenColorPopup()};bw.onchange=()=>{item.borderWidth=Number(bw.value)||1;renderSheet()};ba.onchange=()=>{item.borderAlign=ba.value;renderSheet()};
     fc.oninput=()=>{item.fillColor=fc.value;item.fillNone=false;fc.dataset.none="0";renderSheet();refreshOpenColorPopup()};
     tc.addEventListener("colornone",()=>{item.style.colorNone=true;renderSheet()});
     bc.addEventListener("colornone",()=>{item.borderNone=true;renderSheet()});
@@ -2207,21 +3069,19 @@ function syncControls(){
       el("playingControls").classList.remove("hidden");
       el("numInput").value=d.number??"";el("suitInput").value=d.suit??"●";
       el("playingNumberColor").value=d.numberColor||d.color||"#d94a4a";el("playingNumberColor").dataset.none=d.numberColorNone?"1":"0";
-      el("playingText").value=d.text??"";
-      el("playingTextColor").value=d.textColor||"#222222";el("playingTextColor").dataset.none=d.textColorNone?"1":"0";
       el("suitSize").value=d.suitSize||"medium";
+      el("suitCount").value=String(d.suitCount||1);
+      el("cornerPlacement").value=d.cornerPlacement||"four";
       el("suitMode").value=d.suitMode||"text";
       el("suitImageControls").classList.toggle("hidden",(d.suitMode||"text")!=="image");
       const st=d.numberStyle||{size:31,bold:true,italic:false};
-      const tt=d.textStyle||{size:12,bold:false,italic:false};
       el("playingSize").value=st.size;el("playingBold").checked=st.bold!==false;el("playingItalic").checked=!!st.italic;el("playingUnderline").checked=!!st.underline;
-      el("playingTextSize").value=tt.size;el("playingTextBold").checked=!!tt.bold;el("playingTextItalic").checked=!!tt.italic;el("playingTextUnderline").checked=!!tt.underline;
     }else if(d.template==="tcg"){
       el("tcgControls").classList.remove("hidden");
       el("tcgName").value=d.name??"";el("tcgDesc").value=d.desc??"";
       const legacy=d.color||"#222222";
       el("tcgTextColor").value=d.textColor||legacy;el("tcgTextColor").dataset.none=d.textColorNone?"1":"0";
-      el("tcgBorderColor").value=d.borderColor||legacy;el("tcgBorderColor").dataset.none=d.borderNone?"1":"0";el("tcgBorderWidth").value=String(d.borderWidth??1);
+      el("tcgBorderColor").value=d.borderColor||legacy;el("tcgBorderColor").dataset.none=d.borderNone?"1":"0";el("tcgBorderWidth").value=String(d.borderWidth??1);el("tcgBorderAlign").value=d.borderAlign||"inside";
             el("tcgPanelColor").value=d.panelColor||"#ffffff";el("tcgPanelColor").dataset.none=d.panelNone?"1":"0";
       document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.checked=String(d.horizontalLayout||1)===r.value);
       const ns=d.nameStyle||{size:15,bold:true,italic:false},ds=d.descStyle||{size:12,bold:false,italic:false};
@@ -2237,9 +3097,11 @@ function syncControls(){
   }
   el("faceBgColor").value=d.bgColor||"#ffffff";el("faceBgColor").dataset.none=d.bgNone?"1":"0";
   el("faceBorderColor").value=d.bgBorderColor||"#222222";el("faceBorderColor").dataset.none=d.bgBorderNone?"1":"0";
-  el("faceBorderWidth").value=String(d.bgBorderWidth??1);
+  el("faceBorderWidth").value=String(d.bgBorderWidth??1);el("faceBorderAlign").value=d.bgBorderAlign||"inside";
   renderTextBoxEditors(d);
   renderFrameTextEditors(d);
+  renderOptionImageEditors(d);
+  renderShapeEditors(d);
   setupAllColorInputs();
   const showTcgLayout = templ && d.template==="tcg" && isLandscapeCard();
   el("tcgLayoutControls").classList.toggle("hidden",!showTcgLayout);
@@ -2273,18 +3135,34 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-el("paperOrientation").addEventListener("change",()=>{setPaper();syncControls()});
-el("cardSize").addEventListener("change",()=>{setPaper();syncControls()});
+
+el("mobileAddPage")?.addEventListener("click",mobileAddPage);
+el("mobileFaceTab")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Face","mobileFaceTab")});
+el("mobileTemplateTab")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Template","mobileTemplateTab")});
+el("mobileOptionsJump")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Options","mobileOptionsJump")});
+el("mobileMore")?.addEventListener("click",()=>openMobilePanel("More","mobileMore"));
+el("mobileUndo")?.addEventListener("click",()=>el("undoBtn")?.click());
+el("mobileRedo")?.addEventListener("click",()=>el("redoBtn")?.click());
+el("mobilePdfSave")?.addEventListener("click",()=>el("editablePdfBtn")?.click());
+el("mobilePdfLoad")?.addEventListener("click",()=>el("loadPdfBtn")?.click());
+el("mobilePrint")?.addEventListener("click",()=>el("printBtn")?.click());
+el("mobileDupPage")?.addEventListener("click",()=>el("dupPage")?.click());
+el("mobileDeletePage")?.addEventListener("click",()=>el("deletePage")?.click());
+el("mobilePrevCard")?.addEventListener("click",()=>goToMobileCard(-1));
+el("mobileNextCard")?.addEventListener("click",()=>goToMobileCard(1));
+el("paperSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
+el("paperOrientation").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
+el("cardSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
 window.addEventListener("resize",fitPaper);
 
 el("faceType").addEventListener("change",e=>{
   const t=e.target.value,f=currentFaces(),old=f[selected];
   const bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null;
   const bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false;
-  const textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old));
-  if(t==="plain")f[selected]={type:"plain",bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
-  else if(t==="template")f[selected]={...makePlaying(),bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
-  else if(t==="image")f[selected]={type:"image",src:null,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};
+  const textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old)),optionImages=deep(ensureOptionImages(old)),shapes=deep(ensureShapes(old));
+  if(t==="plain")f[selected]={type:"plain",bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
+  else if(t==="template")f[selected]={...makePlaying(),bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
+  else if(t==="image")f[selected]={type:"image",src:null,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
   renderSheet();syncControls();
 });
 el("templateType").addEventListener("change",e=>{
@@ -2294,29 +3172,31 @@ el("templateType").addEventListener("change",e=>{
   const keepBgBorderColor=currentFaces()[selected].bgBorderColor||"#222222";
   const keepBgBorderWidth=currentFaces()[selected].bgBorderWidth??1;
   const keepBgBorderNone=currentFaces()[selected].bgBorderNone!==false;
+  const keepBgBorderAlign=currentFaces()[selected].bgBorderAlign||"inside";
   const keepTextBoxes=deep(ensureTextBoxes(currentFaces()[selected]));
   const keepFrameTexts=deep(ensureFrameTexts(currentFaces()[selected]));
-  if(t==="playing")currentFaces()[selected]={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts};
+  const keepOptionImages=deep(ensureOptionImages(currentFaces()[selected]));
+  if(t==="playing")currentFaces()[selected]={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};
   if(t==="tcg")currentFaces()[selected]={type:"template",template:"tcg",name:"カード名",desc:"テキスト",image:null,bgColor:keepBg,bgImage:keepBgImage,
-    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,
+    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
     nameStyle:{size:15,bold:true,italic:false},descStyle:{size:12,bold:false,italic:false}};
-  if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,mainStyle:{size:53,bold:true,italic:false}};
-  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,textBoxes:boxes,frameTexts:keepFrameTexts};}
+  if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:53,bold:true,italic:false}};
+  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,textBoxes:boxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};}
   renderSheet();syncControls();
 });
 
-["numInput","suitInput","suitSize","suitMode"].forEach(id=>el(id).addEventListener("input",()=>{
+["numInput","suitInput","suitSize","suitCount","suitMode","cornerPlacement"].forEach(id=>el(id).addEventListener("input",()=>{
   updateSelected({
     number:el("numInput").value,
     suit:el("suitInput").value,
     suitSize:el("suitSize").value,
-    suitMode:el("suitMode").value
+    suitCount:Number(el("suitCount").value)||1,
+    suitMode:el("suitMode").value,
+    cornerPlacement:el("cornerPlacement").value
   });
   el("suitImageControls").classList.toggle("hidden",el("suitMode").value!=="image");
 }));
 el("playingNumberColor").addEventListener("input",()=>{const c=el("playingNumberColor").value;addRecentColor(c);updateSelected({numberColor:c,numberColorNone:false});renderSwatches()});
-el("playingText").addEventListener("input",()=>updateSelected({text:el("playingText").value}));
-el("playingTextColor").addEventListener("input",()=>{const c=el("playingTextColor").value;addRecentColor(c);updateSelected({textColor:c,textColorNone:false});renderSwatches()});
 el("suitImageInput").addEventListener("change",e=>{
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
@@ -2325,9 +3205,6 @@ el("suitImageInput").addEventListener("change",e=>{
 });
 ["playingSize","playingBold","playingItalic","playingUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
   updateSelected({numberStyle:{size:Number(el("playingSize").value)||31,bold:el("playingBold").checked,italic:el("playingItalic").checked,underline:el("playingUnderline").checked}})
-}));
-["playingTextSize","playingTextBold","playingTextItalic","playingTextUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
-  updateSelected({textStyle:{size:Number(el("playingTextSize").value)||12,bold:el("playingTextBold").checked,italic:el("playingTextItalic").checked,underline:el("playingTextUnderline").checked}})
 }));
 
 ["tcgName","tcgDesc"].forEach(id=>el(id).addEventListener("input",()=>updateSelected({name:el("tcgName").value,desc:el("tcgDesc").value})));
@@ -2356,24 +3233,28 @@ el("wordMainColor").addEventListener("input",()=>{const c=el("wordMainColor").va
 
 el("addTextBox").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureTextBoxes(d);if(items.length>=5)return;items.push(makeTextBox(items.length));renderSheet();syncControls()});
 el("addFrameText").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureFrameTexts(d);if(items.length>=5)return;items.push(makeFrameText(items.length));renderSheet();syncControls()});
+document.querySelectorAll(".add-shape").forEach(b=>b.addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureShapes(d);if(items.length>=10)return;items.push(makeShape(b.dataset.shape,items.length));renderSheet();syncControls()}));
+el("addOptionImage").addEventListener("click",()=>{if(ensureOptionImages(currentFaces()[selected]).length>=5)return;el("optionImageInput").click()});
+el("optionImageInput").addEventListener("change",e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const items=ensureOptionImages(currentFaces()[selected]);if(items.length<5)items.push(makeOptionImage(r.result,items.length));e.target.value="";renderSheet();syncControls()};r.readAsDataURL(file)});
 
 el("imageInput").addEventListener("change",e=>{
   const file=e.target.files[0];if(!file)return;const r=new FileReader();
-  r.onload=()=>{const old=currentFaces()[selected],bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null,bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false,textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old));currentFaces()[selected]={type:"image",src:r.result,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts};renderSheet()};r.readAsDataURL(file);
+  r.onload=()=>{const old=currentFaces()[selected],bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null,bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false,textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old)),optionImages=deep(ensureOptionImages(old)),shapes=deep(ensureShapes(old));currentFaces()[selected]={type:"image",src:r.result,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};renderSheet()};r.readAsDataURL(file);
 });
 el("faceBgColor").addEventListener("input",()=>{const c=el("faceBgColor").value;addRecentColor(c);updateSelected({bgColor:c,bgNone:false});renderSwatches()});
 
 el("faceBorderColor").addEventListener("input",()=>{const c=el("faceBorderColor").value;updateSelected({bgBorderColor:c,bgBorderNone:false});refreshOpenColorPopup()});
 el("faceBorderWidth").addEventListener("change",()=>updateSelected({bgBorderWidth:Number(el("faceBorderWidth").value)||1}));
+el("faceBorderAlign").addEventListener("change",()=>updateSelected({bgBorderAlign:el("faceBorderAlign").value||"inside"}));
 el("faceBorderColor").addEventListener("colornone",()=>updateSelected({bgBorderNone:true}));
 
 
 el("faceBgColor").addEventListener("colornone",()=>updateSelected({bgNone:true}));
 el("playingNumberColor").addEventListener("colornone",()=>updateSelected({numberColorNone:true}));
-el("playingTextColor").addEventListener("colornone",()=>updateSelected({textColorNone:true}));
 el("tcgTextColor").addEventListener("colornone",()=>updateSelected({textColorNone:true}));
 el("tcgBorderColor").addEventListener("colornone",()=>updateSelected({borderNone:true}));
 el("tcgBorderWidth").addEventListener("change",()=>updateSelected({borderWidth:Number(el("tcgBorderWidth").value)||1}));
+el("tcgBorderAlign").addEventListener("change",()=>updateSelected({borderAlign:el("tcgBorderAlign").value||"inside"}));
 el("tcgPanelColor").addEventListener("colornone",()=>updateSelected({panelNone:true}));
 el("wordMainColor").addEventListener("colornone",()=>updateSelected({mainColorNone:true}));
 
@@ -2396,29 +3277,29 @@ function refreshCopyButtonLabels(){
 
 el("copyToPageSide").addEventListener("click",()=>{
   const src=deep(currentFaces()[selected]),side=selected%2;
-  for(let i=side;i<8;i+=2) currentFaces()[i]=deep(src);
+  for(let i=side;i<cardsPerPage()*2;i+=2) currentFaces()[i]=deep(src);
   renderSheet();syncControls();
 });
 
 el("copyToAllPagesSide").addEventListener("click",()=>{
   const src=deep(currentFaces()[selected]),side=selected%2;
   pages.forEach(pg=>{
-    for(let i=side;i<8;i+=2) pg[i]=deep(src);
+    for(let i=side;i<cardsPerPage()*2;i+=2) pg[i]=deep(src);
   });
   renderSheet();syncControls();
 });
 
 document.addEventListener("click",()=>document.querySelectorAll(".page-thumb-menu").forEach(m=>m.remove()));
 
-el("addPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.push(makePage());currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
+el("addPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.push(makePage(cardsPerPage()));currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 el("dupPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.splice(currentPage+1,0,deep(currentFaces()));currentPage++;selected=0;renderSheet();syncControls()});
 el("deletePage").addEventListener("click",()=>{if(pages.length<=1)return;pages.splice(currentPage,1);if(currentPage>=pages.length)currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 
 function getProject(){
-  return {app:"card-mock-maker-prototype",version:48,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
+  return {app:"card-mock-maker-prototype",version:71,paperSize:el("paperSize").value,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
 }
 
-function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
+function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(!Array.isArray(d.optionImages))d.optionImages=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
 
 
 function migrateBgBorders(project){
@@ -2444,7 +3325,7 @@ function restoreProject(p){
   p=migrateGenericTextBoxes(p);
   p=migrateBgBorders(p);
   pages=p.pages.slice(0,25);sheetTitle=p.sheetTitle||"";recentColors=(p.recentColors||[]).slice(0,12);
-  el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("sheetTitleInput").value=sheetTitle;
+  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;setupAllColorInputs();
 document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
 setPaper();renderSheet();syncControls();
@@ -2659,8 +3540,92 @@ el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPag
 
 setPaper();renderSheet();syncControls();
 initHistory();renderSwatches();
+
+
 })();
 </script>
+
+<style id="v68Style">
+.stroke-width-control{max-width:100%;overflow:visible}.stroke-width-select{width:76px!important}.stroke-align-select{width:78px;height:28px;border:0;border-left:1px solid var(--ui-border);border-radius:0;background:transparent;color:var(--ui-control-ink);padding:3px 22px 3px 8px;font-size:11px;flex:0 0 78px}
+.color-hue{-webkit-appearance:none;appearance:none;height:14px;border-radius:7px;border:1px solid var(--ui-border);background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);padding:0}.color-hue::-webkit-slider-runnable-track{height:12px;background:transparent}.color-hue::-moz-range-track{height:12px;background:transparent}.color-hue::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-2px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #555;background:transparent}.color-hue::-moz-range-thumb{width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #555;background:transparent}
+.color-value input{appearance:textfield;-moz-appearance:textfield;box-shadow:none!important;background:var(--ui-control)!important;border:1px solid var(--ui-border)!important;border-radius:4px!important}.color-value input::-webkit-inner-spin-button,.color-value input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.color-bottom-row{display:flex;gap:7px;align-items:center;margin-top:8px}.color-bottom-row .color-none-btn{width:46%;margin:0!important;min-height:30px}.hex-wrap{width:54%;display:flex;align-items:center;gap:5px}.hex-wrap input{width:100%!important;height:30px;box-shadow:none!important;border:1px solid var(--ui-border)!important;border-radius:5px!important;background:var(--ui-control)!important;padding:4px 7px!important;text-transform:uppercase}
+.shape-add-row{display:flex;gap:4px}.shape-add-row .mini{min-width:31px;font-size:16px}.option-shape{position:absolute;z-index:31;touch-action:none;user-select:none}.option-shape svg{width:100%;height:100%;overflow:visible;pointer-events:none}.option-shape.editable{outline:1px dashed rgba(0,180,210,.75);cursor:move}.option-shape .resize-handle{position:absolute;right:-5px;bottom:-5px;width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid #fff}.shape-editor{margin-top:7px;padding:8px;border:1px solid var(--ui-line);border-radius:7px;background:var(--ui-panel-2)}.shape-editor-head,.shape-editor-row{display:flex;align-items:center;gap:6px}.shape-editor-head{justify-content:space-between;margin-bottom:6px}.shape-editor-row{flex-wrap:wrap}.shape-editor .stroke-align-select{border:1px solid var(--ui-border);border-radius:5px}
+</style>
+
+<style id="v69Style">
+/* v69: controls in the same row share a common height and never clip their labels. */
+.tool-strip,.format-row,.frame-color-row,.shape-editor-row,.color-bottom-row{align-items:center}
+.stroke-width-select,.stroke-align-select{box-sizing:border-box!important;height:34px!important;min-height:34px!important;line-height:1.2!important;font-size:11px!important;white-space:nowrap!important}
+.stroke-width-select{width:84px!important;min-width:84px!important;flex:0 0 84px!important;padding:5px 24px 5px 9px!important}
+.stroke-align-select{width:88px!important;min-width:88px!important;flex:0 0 88px!important;padding:5px 25px 5px 10px!important}
+.tool-color,.tool-color input,.shape-add-row .mini{box-sizing:border-box}
+.shape-add-row{align-items:center;flex-wrap:wrap}
+.shape-add-row .mini{width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;padding:0!important;display:inline-flex;align-items:center;justify-content:center;line-height:1!important}
+.color-popup-row{align-items:center!important}
+.color-preview,.color-mode,.color-values input{box-sizing:border-box;min-height:34px!important;height:34px!important}
+.color-bottom-row{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:7px!important}
+.color-bottom-row .color-none-btn,.hex-wrap,.hex-wrap input{box-sizing:border-box;width:100%!important;height:34px!important;min-height:34px!important;margin:0!important}
+.hex-wrap{display:block!important}.hex-wrap input{padding:5px 9px!important;font-size:11px!important}
+.shape-editor-row>label{min-height:34px;display:inline-flex;align-items:center;gap:5px}
+.shape-editor-row .shape-points{box-sizing:border-box;height:34px!important;min-height:34px!important}
+.option-shape{aspect-ratio:1 / 1}
+.option-shape svg{display:block;width:100%;height:100%;aspect-ratio:1 / 1}
+@media(max-width:720px){.stroke-width-select,.stroke-align-select{font-size:13px!important}.stroke-align-select{width:96px!important;min-width:96px!important;flex-basis:96px!important}}
+</style>
+
+<style id="v70Style">
+/* v70 UI grammar: same function = same appearance. */
+/* Stroke width + alignment are two equal-height controls; never clip or overflow. */
+.stroke-width-control{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  height:34px!important;display:inline-flex!important;align-items:stretch!important;
+  overflow:visible!important;border:0!important;background:transparent!important;
+  border-radius:0!important;box-shadow:none!important;gap:6px!important;
+}
+.stroke-width-control .stroke-width-icon{display:none!important}
+.stroke-width-select,.stroke-align-select{
+  box-sizing:border-box!important;height:34px!important;min-height:34px!important;
+  border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;color:var(--ui-control-ink)!important;
+  box-shadow:none!important;line-height:1.2!important;white-space:nowrap!important;
+  flex:0 0 auto!important;
+}
+.stroke-width-select{width:88px!important;min-width:88px!important;padding:5px 25px 5px 10px!important}
+.stroke-align-select{width:96px!important;min-width:96px!important;padding:5px 28px 5px 11px!important}
+/* Fill/stroke color controls always use the same square-chip grammar. */
+.tool-color{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important}
+.tool-color .color-trigger{
+  box-sizing:border-box!important;width:34px!important;height:34px!important;min-width:34px!important;
+  padding:4px!important;border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;box-shadow:none!important;
+}
+.tool-color .color-trigger-fill-icon,.tool-color .color-trigger-stroke-icon{box-sizing:border-box!important;width:24px!important;height:24px!important}
+/* Editor inputs are flat: no inset/embossed treatment. */
+.shape-editor input[type="text"],.shape-editor input[type="number"],.shape-editor select,
+.frame-editor input[type="text"],.frame-editor input[type="number"]{
+  box-shadow:none!important;text-shadow:none!important;
+}
+.shape-editor .shape-points{
+  appearance:textfield!important;-moz-appearance:textfield!important;
+  border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;color:var(--ui-control-ink)!important;
+  padding:5px 8px!important;box-shadow:none!important;
+}
+.shape-editor .shape-points::-webkit-inner-spin-button,.shape-editor .shape-points::-webkit-outer-spin-button{
+  -webkit-appearance:none!important;margin:0!important;
+}
+/* Rows may wrap instead of crushing controls. */
+.tool-strip,.frame-color-row,.shape-editor-row{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important}
+.shape-editor-row>*{flex-shrink:0!important}
+/* Shape add buttons and shape canvas are square. */
+.shape-add-row .mini{box-sizing:border-box!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;aspect-ratio:1/1!important;box-shadow:none!important}
+.option-shape{aspect-ratio:1/1!important}
+.option-shape svg{width:100%!important;height:100%!important;aspect-ratio:1/1!important}
+@media(max-width:720px){
+  .stroke-width-select{width:92px!important;min-width:92px!important}
+  .stroke-align-select{width:102px!important;min-width:102px!important}
+}
+</style>
 </body>
 </html>
 <style>
