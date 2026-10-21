@@ -510,29 +510,41 @@ aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);display:
 .landscape-card .card-template .center-num{font-size:25mm}
 .landscape-card .card-template .card-text{left:16mm;right:16mm;bottom:7mm;font-size:3.2mm}
 
-/* TCG */
+/* TCG: three anchored frames. Sizes are percentages of the usable card height. */
 .tcg-card{
   position:absolute;inset:0;padding:4mm;z-index:1;
   color:var(--tcg-text,#222);background:transparent;
+  --tcg-pad:4mm;--tcg-gap:2.2%;--tcg-top:16%;--tcg-mid:50%;--tcg-bottom:28%;
 }
+.tcg-name,.tcg-image,.tcg-desc{box-sizing:border-box}
 .tcg-name{
-  height:9mm;border:0.4mm solid var(--tcg-border,#222);border-radius:1.2mm;
-  background:var(--tcg-panel,#fff);
-  display:flex;align-items:center;padding:0 3mm;font-size:4mm;font-weight:700;overflow:hidden;
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);top:var(--tcg-pad);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-top-p, .16));
+  border:var(--tcg-border-width,.4mm) solid var(--tcg-border,#222);border-radius:1.2mm;
+  background:var(--tcg-panel,#fff);display:flex;align-items:center;padding:0 3mm;font-size:4mm;font-weight:700;overflow:hidden;
 }
 .tcg-image{
-  position:absolute;left:4mm;right:4mm;top:16mm;height:42mm;
-  border:0.45mm solid var(--tcg-border,#222);border-radius:1.3mm;overflow:hidden;background:var(--tcg-panel,#fff);
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);
+  top:50%;transform:translateY(-50%);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-mid-p, .50));
+  border:var(--tcg-border-width,.45mm) solid var(--tcg-border,#222);border-radius:1.3mm;overflow:hidden;background:var(--tcg-panel,#fff);
   display:flex;align-items:center;justify-content:center;color:#999;font-size:3.4mm;
 }
 .tcg-image img{width:100%;height:100%;object-fit:cover}
 .tcg-desc{
-  position:absolute;left:4mm;right:4mm;bottom:4mm;height:22mm;
-  border:0.45mm solid var(--tcg-border,#222);border-radius:1.3mm;padding:2.5mm;background:var(--tcg-panel,#fff);
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);bottom:var(--tcg-pad);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-bottom-p, .28));
+  border:var(--tcg-border-width,.45mm) solid var(--tcg-border,#222);border-radius:1.3mm;padding:2.5mm;background:var(--tcg-panel,#fff);
   font-size:3.1mm;line-height:1.4;white-space:pre-wrap;overflow:hidden;
 }
+.card-size-half.portrait-card .tcg-card{--tcg-pad:2.7mm}
+.card-size-half.portrait-card .tcg-name{padding:0 2mm;font-size:3.2mm;border-radius:.8mm}
+.card-size-half.portrait-card .tcg-image{border-radius:.9mm;font-size:2.7mm}
+.card-size-half.portrait-card .tcg-desc{padding:1.6mm;border-radius:.9mm;font-size:2.6mm;line-height:1.3}
+.tcg-size-strip{display:grid!important;grid-template-columns:1fr;gap:6px!important}
+.tcg-size-control{display:grid!important;grid-template-columns:34px 1fr;align-items:center;gap:8px;margin:0!important;font-size:11px;color:#666}
+.tcg-size-control input[type="range"]{width:100%;min-width:0}
 
-/* Horizontal card layout 1: stacked */
 .landscape-card .tcg-card.layout1{padding:4mm}
 .landscape-card .tcg-card.layout1 .tcg-name{
   height:8mm;font-size:3.7mm;
@@ -1030,6 +1042,16 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
   .word-sub{border-color:transparent!important}
   .word-sub .resize-handle{display:none!important}
 }
+
+/* v72 layout / imposition */
+@media (min-width:721px){html,body{height:100%;overflow:hidden}.layout{height:calc(100vh - 58px);min-height:0;overflow:hidden}main,.workspace,.canvas-area,aside{min-height:0}.canvas-area{overflow:auto}aside{height:100%;overflow-y:auto;overflow-x:hidden}}
+.face{border-color:#111;border-width:.28mm}
+.fold.screen-guide{border-color:#55bde9!important;border-style:dashed!important;border-width:.28mm!important;opacity:.95}
+.face.selected[data-side-label]::before{content:attr(data-side-label);position:absolute;z-index:50;left:2mm;top:2mm;padding:1mm 1.6mm;border-radius:2mm;background:rgba(22,140,255,.88);color:#fff;font-size:2.6mm;font-weight:700;line-height:1;pointer-events:none}
+.single-mode .pair{width:var(--pair-w);height:var(--pair-h);display:block}
+.single-mode .face{width:var(--face-w);height:var(--face-h)}
+.copy-face-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}.copy-face-row button,.copy-wide{width:100%}.copy-wide+.copy-wide{margin-top:6px}
+@media print{.fold,.screen-guide,.face.selected[data-side-label]::before{display:none!important}.face{border-color:#111!important}}
 </style>
 <style id="dynamicPageStyle">@page{size:297mm 210mm;margin:0}
 /* v49: option images */
@@ -1682,6 +1704,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <option value="business">名刺 (55×91)</option><option value="yugioh">遊戯王サイズ (59×86)</option>
     <option value="credit">クレジット (54×86)</option><option value="half">ハーフ (44×63)</option>
   </select>
+  <select id="impositionMode" title="面付けモード"><option value="duplex">両面</option><option value="single">片面</option></select>
   <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
   <span class="toolbar-spacer header-action-gap"></span>
   <button id="editablePdfBtn">PDF保存</button>
@@ -1720,7 +1743,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <button id="mobileFaceTab" type="button"><span class="mq-icon">▣</span><span>面</span></button>
         <button id="mobileTemplateTab" type="button"><span class="mq-icon">A</span><span>テンプレ</span></button>
         <button id="mobileOptionsJump" type="button"><span class="mq-icon">＋</span><span>オプション</span></button>
-        <button id="mobileMore" type="button"><span class="mq-icon">•••</span><span>その他</span></button>
+        <button id="mobileMore" type="button"><span class="mq-icon">•••</span><span>メニュー</span></button>
       </div>
       
       <div id="mobileFacePanel" class="mobile-tool-panel" aria-hidden="true">
@@ -1736,7 +1759,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <div id="mobileOptionsPanelBody" class="mobile-panel-body"></div>
       </div>
       <div id="mobileMorePanel" class="mobile-tool-panel mobile-more-panel" aria-hidden="true">
-        <div class="mobile-panel-head"><strong>その他</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div class="mobile-panel-head"><strong>メニュー</strong><button type="button" class="mobile-panel-close">×</button></div>
         <div class="mobile-panel-body mobile-more-grid">
           <button id="mobileUndo" type="button">←<small>取り消し</small></button>
           <button id="mobileRedo" type="button">→<small>やり直し</small></button>
@@ -1768,7 +1791,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="section-title">面</div>
     <div id="selectedLabel" class="hint selected-face-label">カード1・表</div>
 
-    <label>面の内容</label>
     <select id="faceType">
       <option value="plain">無地</option>
       <option value="template">テンプレート</option>
@@ -1776,7 +1798,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     </select>
 
     <div class="tool-block face-bg-tool">
-      <div class="tool-block-title">背景</div>
       <div class="tool-strip">
         <div class="tool-color fill-color" title="面色">
           <input id="faceBgColor" class="palette-target" type="color" value="#ffffff" aria-label="背景の面色">
@@ -1799,6 +1820,11 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <button id="clearFaceBgImage" class="mini">削除</button>
       </div>
     </div>
+    <div class="copy-tools face-copy-tools">
+      <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
+      <button id="copyToPageSide" class="mini copy-wide">このページの同じ面にコピー</button>
+      <button id="copyToAllPagesSide" class="mini copy-wide">すべてのページの同じ面にコピー</button>
+    </div>
   </div>
 
   <div id="templateSelector" class="group template-section">
@@ -1814,7 +1840,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
   <div id="playingControls" class="group compact-template-controls">
     <div class="tool-block">
-      <div class="tool-block-title">数字</div>
       <div class="tool-strip">
         <input id="numInput" class="tool-main-input" type="text" value="7" aria-label="数字" title="数字">
         <div class="tool-number-wrap" title="文字サイズ">
@@ -1828,7 +1853,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     </div>
 
     <div class="tool-block">
-      <div class="tool-block-title">スート</div>
       <div class="tool-strip">
         <select id="suitInput" class="tool-symbol-select" aria-label="スート" title="スート">
           <option>●</option><option>▲</option><option>■</option><option>★</option>
@@ -1863,7 +1887,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
   <div id="tcgControls" class="group hidden compact-template-controls">
     <div class="tool-block">
-      <div class="tool-block-title">カード名</div>
       <div class="tool-strip">
         <input id="tcgName" class="tool-main-input" type="text" placeholder="カード名" aria-label="カード名">
         <div class="tool-number-wrap" title="文字サイズ">
@@ -1876,14 +1899,12 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     </div>
 
     <div class="tool-block">
-      <div class="tool-block-title">画像</div>
       <div class="tool-file-line">
         <input id="tcgImageInput" type="file" accept="image/*" aria-label="中段画像">
       </div>
     </div>
 
     <div class="tool-block">
-      <div class="tool-block-title">テキスト</div>
       <textarea id="tcgDesc" class="tool-textarea" placeholder="テキスト" aria-label="テキスト"></textarea>
       <div class="tool-strip tool-strip-secondary">
         <div class="tool-number-wrap" title="文字サイズ">
@@ -1897,7 +1918,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     </div>
 
     <div id="tcgLayoutControls" class="tool-block">
-      <div class="tool-block-title">レイアウト</div>
       <div class="layout-choice-wrap compact-layout-choice">
         <label class="layout-choice" title="上下3段">
           <input type="radio" name="tcgLayout" value="1" checked>
@@ -1910,8 +1930,15 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
       </div>
     </div>
 
+    <div class="tool-block tcg-frame-size-controls">
+      <div class="tool-strip tcg-size-strip">
+        <label class="tcg-size-control" title="上段の高さ">上段<input id="tcgTopHeight" type="range" min="10" max="28" step="1" value="16" aria-label="上段の高さ"></label>
+        <label class="tcg-size-control" title="中段の高さ">中段<input id="tcgMiddleHeight" type="range" min="25" max="65" step="1" value="50" aria-label="中段の高さ"></label>
+        <label class="tcg-size-control" title="下段の高さ">下段<input id="tcgBottomHeight" type="range" min="18" max="42" step="1" value="28" aria-label="下段の高さ"></label>
+      </div>
+    </div>
+
     <div class="tool-block">
-      <div class="tool-block-title">フレーム</div>
       <div class="tool-strip">
         <div class="tool-color fill-color" title="フレームの面色"><input id="tcgPanelColor" class="palette-target" type="color" value="#ffffff" aria-label="フレームの面色"></div>
         <div class="tool-color stroke-color" title="フレームの線色"><input id="tcgBorderColor" class="palette-target" type="color" value="#222222" aria-label="フレームの線色"></div>
@@ -1926,7 +1953,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
   <div id="wordControls" class="group hidden compact-template-controls">
     <div class="tool-block">
-      <div class="tool-block-title">メイン文字</div>
       <div class="tool-strip">
         <input id="wordMain" class="tool-main-input" type="text" placeholder="ことば" aria-label="メイン文字">
         <div class="tool-number-wrap" title="文字サイズ">
@@ -1942,7 +1968,6 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
 
   <div id="customControls" class="group hidden">
-    <div class="status">背景画像とテキストボックスを組み合わせて自由に作れます。</div>
   </div>
 
   <div id="imageControls" class="group hidden">
@@ -1957,36 +1982,27 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="section-title">オプション</div>
     <div class="option-tool-head">
       <strong>テキストボックス</strong>
-      <button id="addTextBox" class="mini">＋ 追加</button>
+      <button id="addTextBox" class="mini option-add-button" aria-label="追加">＋</button>
     </div>
-    <div class="status compact-help">最大5個まで。ドラッグで移動し、右下ハンドルで拡大・縮小できます。</div>
     <div id="textBoxList"></div>
 
     <div class="option-tool-head option-subtool">
       <strong>フレームテキスト</strong>
-      <button id="addFrameText" class="mini">＋ 追加</button>
+      <button id="addFrameText" class="mini option-add-button" aria-label="追加">＋</button>
     </div>
-    <div class="status compact-help">面と線を持つテキスト。位置・縦横比を自由に変更できます。</div>
     <div id="frameTextList"></div>
 
     <div class="option-tool-head option-subtool">
       <strong>画像</strong>
-      <button id="addOptionImage" class="mini">＋ 追加</button>
+      <button id="addOptionImage" class="mini option-add-button" aria-label="追加">＋</button>
       <input id="optionImageInput" type="file" accept="image/*" class="hidden">
     </div>
-    <div class="status compact-help">最大5個まで。ドラッグで移動、右下で拡大・縮小、上の丸で回転できます。</div>
     <div id="optionImageList"></div>
 
     <div class="option-tool-head option-subtool"><strong>図形</strong><div class="shape-add-row"><button type="button" class="mini add-shape" data-shape="circle">○</button><button type="button" class="mini add-shape" data-shape="triangle">△</button><button type="button" class="mini add-shape" data-shape="rect">□</button><button type="button" class="mini add-shape" data-shape="polygon">⬡</button><button type="button" class="mini add-shape" data-shape="star">★</button></div></div>
-    <div class="status compact-help">円・三角・四角・多角形・星。多角形と星は頂点数を変更できます。</div>
     <div id="shapeList"></div>
   </div>
 
-  <div class="group">
-    <button id="copyToPageSide" class="mini" style="width:100%">この面をこのページの表面へ複製</button>
-    <button id="copyToAllPagesSide" class="mini" style="width:100%;margin-top:6px">この面を全てのページの表面へ複製</button>
-
-  </div>
 
 
   <div class="public-beta-note">
@@ -2010,9 +2026,10 @@ const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●"
   numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
   numberStyle:{size:31,bold:true,italic:false},textStyle:{size:12,bold:false,italic:false}});
 const makeImageFace=()=>({type:"image",src:null,bgColor:"#ffffff",bgImage:null});
-const makePage=(n=4)=>Array.from({length:n*2},(_,i)=>i%2===0?makePlaying():makePlain());
+const makePage=(n=4,single=false)=>Array.from({length:n*(single?1:2)},(_,i)=>single?makePlaying():(i%2===0?makePlaying():makePlain()));
 
 let pages=[makePage()],currentPage=0,selected=0,sheetTitle="";
+queueMicrotask(()=>{if(el("impositionMode")){el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=(el("paperOrientation").value==="portrait")?"landscape":"portrait";}});
 
 const el=id=>document.getElementById(id);
 const paper=el("paper"),grid=el("sheetGrid");
@@ -2026,34 +2043,39 @@ const CARD_SIZES={
   half:{label:"ハーフ",w:44,h:63}
 };
 function cardMM(){return CARD_SIZES[el("cardSize")?.value]||CARD_SIZES.poker}
-function isLandscapeCard(){ return el("paperOrientation").value==="portrait"; }
+function isSingleMode(){return el("impositionMode")?.value==="single"}
+let cardOrientation="portrait";
+function isLandscapeCard(){ return cardOrientation==="landscape"; }
+function optimalPaperOrientationForMode(){ return isSingleMode()?(isLandscapeCard()?"landscape":"portrait"):(isLandscapeCard()?"portrait":"landscape"); }
 function paperMM(){const l=el("paperOrientation").value==="landscape",a3=el("paperSize")?.value==="a3";return a3?(l?{w:420,h:297}:{w:297,h:420}):(l?{w:297,h:210}:{w:210,h:297})}
-function pairMM(){const c=cardMM();return isLandscapeCard()?{w:c.h,h:c.w*2}:{w:c.w*2,h:c.h}}
+function faceMM(){const c=cardMM();return isLandscapeCard()?{w:c.h,h:c.w}:{w:c.w,h:c.h}}
+function pairMM(){const f=faceMM();if(isSingleMode())return f;return isLandscapeCard()?{w:f.w,h:f.h*2}:{w:f.w*2,h:f.h}}
 function gridRC(){const p=paperMM(),q=pairMM();return {cols:Math.max(1,Math.floor(p.w/q.w)),rows:Math.max(1,Math.floor(p.h/q.h))}}
 function cardsPerPage(){const g=gridRC();return g.cols*g.rows}
+function facesPerPage(){return cardsPerPage()*(isSingleMode()?1:2)}
 function blockMM(){const q=pairMM(),g=gridRC();return {w:q.w*g.cols,h:q.h*g.rows}}
-function resizePagesForLayout(){const n=cardsPerPage()*2;pages=pages.map(pg=>{const a=pg.slice(0,n);while(a.length<n)a.push(a.length%2===0?makePlaying():makePlain());return a});selected=Math.min(selected,n-1)}
+function resizePagesForLayout(oldMode){
+  const n=facesPerPage();
+  pages=pages.map(pg=>{
+    let a=[];
+    if(oldMode && oldMode!==el("impositionMode").value){
+      if(el("impositionMode").value==="single") a=pg.filter((_,i)=>i%2===0).slice(0,n);
+      else pg.forEach(f=>{a.push(deep(f),makePlain())});
+    }else a=pg.slice(0,n);
+    while(a.length<n)a.push(isSingleMode()?makePlaying():(a.length%2===0?makePlaying():makePlain()));
+    return a.slice(0,n);
+  });
+  selected=Math.min(selected,n-1);
+}
 function applyCardGeometry(container){
-  const c=cardMM(),g=gridRC();
-  let fw,fh,pw,ph,gw,gh,fold;
-  if(isLandscapeCard()){
-    fw=c.h; fh=c.w;
-    pw=c.h; ph=c.w*2;
-    gw=pw*g.cols; gh=ph*g.rows;
-    fold=c.w;
-  }else{
-    fw=c.w; fh=c.h;
-    pw=c.w*2; ph=c.h;
-    gw=pw*g.cols; gh=ph*g.rows;
-    fold=c.w;
-  }
-  container.style.setProperty("--face-w",fw+"mm");
-  container.style.setProperty("--face-h",fh+"mm");
-  container.style.setProperty("--pair-w",pw+"mm");
-  container.style.setProperty("--pair-h",ph+"mm");
-  container.style.setProperty("--grid-w",gw+"mm");
-  container.style.setProperty("--grid-h",gh+"mm");
-  container.style.setProperty("--fold-pos",fold+"mm");
+  const f=faceMM(),q=pairMM(),g=gridRC();
+  container.style.setProperty("--face-w",f.w+"mm");
+  container.style.setProperty("--face-h",f.h+"mm");
+  container.style.setProperty("--pair-w",q.w+"mm");
+  container.style.setProperty("--pair-h",q.h+"mm");
+  container.style.setProperty("--grid-w",q.w*g.cols+"mm");
+  container.style.setProperty("--grid-h",q.h*g.rows+"mm");
+  container.style.setProperty("--fold-pos",(isLandscapeCard()?f.h:f.w)+"mm");
   container.style.gridTemplateColumns=`repeat(${g.cols}, var(--pair-w))`;
   container.style.gridTemplateRows=`repeat(${g.rows}, var(--pair-h))`;
 }
@@ -2152,8 +2174,9 @@ function enableGenericTextBox(node,idx,itemId){
 }
 
 function faceName(i){
+  if(isSingleMode()){const card=i+1;return `カード${currentPage*cardsPerPage()+card}（ページ内${card}）`;}
   const card=Math.floor(i/2)+1;
-  return `カード${currentPage*cardsPerPage()+card}（ページ内${card}）・${i%2===0?"表":"裏"}`;
+  return `カード${currentPage*cardsPerPage()+card}（ページ内${card}）・${i%2===0?"オモテ":"ウラ"}`;
 }
 
 function setPaper(){
@@ -2161,7 +2184,7 @@ function setPaper(){
   paper.style.width=p.w*MM_TO_PX+"px";
   paper.style.height=p.h*MM_TO_PX+"px";
   paper.className="paper "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
-  grid.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
+  grid.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;
   updateFit();
   fitPaper();
   renderSheet();
@@ -2393,6 +2416,16 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     wrap.style.setProperty("--tcg-text",d.textColorNone?"transparent":(d.textColor||legacy));
     wrap.style.setProperty("--tcg-border",d.borderNone?"transparent":(d.borderColor||legacy));wrap.style.setProperty("--tcg-border-width",(Number(d.borderWidth)||1)+"mm");wrap.dataset.borderAlign=d.borderAlign||"inside";
     wrap.style.setProperty("--tcg-panel",d.panelNone?"transparent":(d.panelColor||"#ffffff"));
+    // Three independently sized zones. Clamp the requested values so adjacent frames
+    // always keep a proportional gap and can never collide, even on Half size.
+    let topP=(Number(d.tcgTopHeight)||16)/100, midP=(Number(d.tcgMiddleHeight)||50)/100, botP=(Number(d.tcgBottomHeight)||28)/100;
+    const gapP=0.035; // proportional minimum gap between neighbouring frames
+    const maxTop=Math.max(.10,.5-midP/2-gapP);
+    const maxBot=Math.max(.14,.5-midP/2-gapP);
+    topP=Math.min(topP,maxTop); botP=Math.min(botP,maxBot);
+    const maxMid=Math.max(.20,1-2*gapP-topP-botP);
+    midP=Math.min(midP,maxMid);
+    wrap.style.setProperty("--tcg-top-p",topP);wrap.style.setProperty("--tcg-mid-p",midP);wrap.style.setProperty("--tcg-bottom-p",botP);
 
     const ns=d.nameStyle||{size:15,bold:true,italic:false};
     const ds=d.descStyle||{size:12,bold:false,italic:false};
@@ -2515,7 +2548,9 @@ function historyState(){
     sheetTitle,
     paperSize:el("paperSize").value,
     paperOrientation:el("paperOrientation").value,
-    cardSize:el("cardSize").value
+    cardSize:el("cardSize").value,
+    impositionMode:el("impositionMode").value,
+    cardOrientation
   });
 }
 
@@ -2592,10 +2627,11 @@ function applyHistorySnapshot(snapshot){
   el("paperSize").value=st.paperSize||"a4";
   el("paperOrientation").value=st.paperOrientation||"landscape";
   el("cardSize").value=st.cardSize||"poker";
+  el("impositionMode").value=st.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=st.cardOrientation||((el("impositionMode").value==="single")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));
   el("sheetTitleInput").value=sheetTitle;
 
   currentPage=Math.min(currentPage,pages.length-1);
-  selected=Math.min(selected,7);
+  selected=Math.min(selected,facesPerPage()-1);
 
   setPaper();
   syncControls();
@@ -2628,18 +2664,20 @@ function redoHistory(){
 
 function buildSheet(container,faces,selectable=true){
   container.innerHTML="";
-  container.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card");
+  container.className="sheet-grid "+(isLandscapeCard()?"landscape-card":"portrait-card")+(isSingleMode()?" single-mode":" duplex-mode");
   applyCardGeometry(container);
   for(let c=0;c<cardsPerPage();c++){
     const pair=document.createElement("div");pair.className="pair";
-    for(let side=0;side<2;side++){
-      const idx=c*2+side,f=document.createElement("div");
+    const sides=isSingleMode()?1:2;
+    for(let side=0;side<sides;side++){
+      const idx=isSingleMode()?c:c*2+side,f=document.createElement("div");
       f.className="face"+(selectable&&idx===selected?" selected":"");
+      if(selectable&&!isSingleMode()&&idx===selected)f.dataset.sideLabel=side===0?"オモテ面":"ウラ面";
       renderFace(f,faces[idx],selectable&&idx===selected,idx);
       if(selectable) f.addEventListener("click",()=>{selected=idx;renderSheet();syncControls()});
       pair.appendChild(f);
     }
-    const fold=document.createElement("div");fold.className="fold";pair.appendChild(fold);
+    if(!isSingleMode()){const fold=document.createElement("div");fold.className="fold screen-guide";pair.appendChild(fold);}
     container.appendChild(pair);
   }
 }
@@ -2757,45 +2795,21 @@ function goToMobileCard(delta){
   const side=selected%2;
   let next=clamp(mobileCardIndex()+delta,0,total-1);
   const n=cardsPerPage(); currentPage=Math.floor(next/n);
-  selected=(next%n)*2+side;
+  selected=isSingleMode()?(next%n):(next%n)*2+side;
   renderSheet();
   syncControls();
 }
 function renderMobileCardPreview(){
-  const host=el("mobileCardPair");
-  if(!host)return;
-
-  const cardInPage=Math.floor(selected/2);
-  const frontIdx=cardInPage*2;
-  const faces=currentFaces();
-  const c=cardMM();
-  const landscape=isLandscapeCard();
-
-  host.innerHTML="";
-  host.className="mobile-card-pair "+(landscape?"mobile-landscape-card":"mobile-portrait-card");
-
-  [frontIdx,frontIdx+1].forEach(idx=>{
-    const f=document.createElement("div");
-    f.className="face"+(idx===selected?" selected":"");
-    f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);
-    renderFace(f,faces[idx],idx===selected,idx);
-    f.addEventListener("click",()=>{
-      selected=idx;
-      renderMobileCardPreview();
-      syncControls();
-    });
-    host.appendChild(f);
-  });
-
-  const absolute=mobileCardIndex();
+  const host=el("mobileCardPair");if(!host)return;
+  const faces=currentFaces(),c=cardMM(),landscape=isLandscapeCard();
+  host.innerHTML="";host.className="mobile-card-pair "+(landscape?"mobile-landscape-card":"mobile-portrait-card")+(isSingleMode()?" single-mode":"");
+  const indices=isSingleMode()?[selected]:[Math.floor(selected/2)*2,Math.floor(selected/2)*2+1];
+  indices.forEach(idx=>{const f=document.createElement("div");f.className="face"+(idx===selected?" selected":"");f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);renderFace(f,faces[idx],idx===selected,idx);f.addEventListener("click",()=>{selected=idx;renderMobileCardPreview();syncControls()});host.appendChild(f)});
+  const absolute=isSingleMode()?currentPage*cardsPerPage()+selected:mobileCardIndex();
   const total=pages.length*cardsPerPage();
-  el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;
-  if(el("mobilePageCount")) el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
-  el("mobilePrevCard").disabled=absolute<=0;
-  el("mobileNextCard").disabled=absolute>=total-1;
-
-  const labels=document.querySelector(".mobile-face-labels");
-  if(labels) labels.classList.toggle("stacked",landscape);
+  el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;if(el("mobilePageCount"))el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
+  el("mobilePrevCard").disabled=absolute<=0;el("mobileNextCard").disabled=absolute>=total-1;
+  const labels=document.querySelector(".mobile-face-labels");if(labels){labels.style.display=isSingleMode()?"none":"";labels.classList.toggle("stacked",landscape)}
 }
 
 function renderPageSidebar(){
@@ -3084,6 +3098,7 @@ function syncControls(){
       el("tcgBorderColor").value=d.borderColor||legacy;el("tcgBorderColor").dataset.none=d.borderNone?"1":"0";el("tcgBorderWidth").value=String(d.borderWidth??1);el("tcgBorderAlign").value=d.borderAlign||"inside";
             el("tcgPanelColor").value=d.panelColor||"#ffffff";el("tcgPanelColor").dataset.none=d.panelNone?"1":"0";
       document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.checked=String(d.horizontalLayout||1)===r.value);
+      el("tcgTopHeight").value=String(d.tcgTopHeight??16);el("tcgMiddleHeight").value=String(d.tcgMiddleHeight??50);el("tcgBottomHeight").value=String(d.tcgBottomHeight??28);
       const ns=d.nameStyle||{size:15,bold:true,italic:false},ds=d.descStyle||{size:12,bold:false,italic:false};
       el("tcgNameSize").value=ns.size;el("tcgNameBold").checked=!!ns.bold;el("tcgNameItalic").checked=!!ns.italic;el("tcgNameUnderline").checked=!!ns.underline;
       el("tcgDescSize").value=ds.size;el("tcgDescBold").checked=!!ds.bold;el("tcgDescItalic").checked=!!ds.italic;el("tcgDescUnderline").checked=!!ds.underline;
@@ -3151,8 +3166,9 @@ el("mobileDeletePage")?.addEventListener("click",()=>el("deletePage")?.click());
 el("mobilePrevCard")?.addEventListener("click",()=>goToMobileCard(-1));
 el("mobileNextCard")?.addEventListener("click",()=>goToMobileCard(1));
 el("paperSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
-el("paperOrientation").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
+el("paperOrientation").addEventListener("change",()=>{cardOrientation=(el("paperOrientation").value==="landscape")?(isSingleMode()?"landscape":"portrait"):(isSingleMode()?"portrait":"landscape");resizePagesForLayout();setPaper();syncControls()});
 el("cardSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
+el("impositionMode").addEventListener("change",e=>{const old=e.target.dataset.prev||"duplex";el("paperOrientation").value=optimalPaperOrientationForMode();resizePagesForLayout(old);e.target.dataset.prev=e.target.value;setPaper();syncControls()});
 window.addEventListener("resize",fitPaper);
 
 el("faceType").addEventListener("change",e=>{
@@ -3178,10 +3194,11 @@ el("templateType").addEventListener("change",e=>{
   const keepOptionImages=deep(ensureOptionImages(currentFaces()[selected]));
   if(t==="playing")currentFaces()[selected]={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};
   if(t==="tcg")currentFaces()[selected]={type:"template",template:"tcg",name:"カード名",desc:"テキスト",image:null,bgColor:keepBg,bgImage:keepBgImage,
-    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
+    bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,
+    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
     nameStyle:{size:15,bold:true,italic:false},descStyle:{size:12,bold:false,italic:false}};
-  if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:53,bold:true,italic:false}};
-  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,textBoxes:boxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};}
+  if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:53,bold:true,italic:false}};
+  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:boxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};}
   renderSheet();syncControls();
 });
 
@@ -3219,6 +3236,9 @@ document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.addEventListen
     nameStyle:{size:Number(el("tcgNameSize").value)||15,bold:el("tcgNameBold").checked,italic:el("tcgNameItalic").checked,underline:el("tcgNameUnderline").checked},
     descStyle:{size:Number(el("tcgDescSize").value)||12,bold:el("tcgDescBold").checked,italic:el("tcgDescItalic").checked,underline:el("tcgDescUnderline").checked}
   })
+}));
+["tcgTopHeight","tcgMiddleHeight","tcgBottomHeight"].forEach(id=>el(id).addEventListener("input",()=>{
+  updateSelected({tcgTopHeight:Number(el("tcgTopHeight").value)||16,tcgMiddleHeight:Number(el("tcgMiddleHeight").value)||50,tcgBottomHeight:Number(el("tcgBottomHeight").value)||28});
 }));
 el("tcgImageInput").addEventListener("change",e=>{
   const file=e.target.files[0];if(!file)return;const r=new FileReader();
@@ -3269,34 +3289,39 @@ el("clearFaceBgImage").addEventListener("click",()=>{
   el("faceBgImageInput").value="";
 });
 
+let faceClipboard=null;
 function refreshCopyButtonLabels(){
-  const side=selected%2===0?"表面":"裏面";
-  el("copyToPageSide").textContent=`この面をこのページの${side}へ複製`;
-  el("copyToAllPagesSide").textContent=`この面を全てのページの${side}へ複製`;
+  if(isSingleMode()){
+    el("copyToPageSide").textContent="このページのすべての面にコピー";
+    el("copyToAllPagesSide").textContent="すべてのページのすべての面にコピー";
+  }else{
+    el("copyToPageSide").textContent="この面をこのページの同じ面にコピー";
+    el("copyToAllPagesSide").textContent="この面をすべてのページの同じ面にコピー";
+  }
+  el("pasteFace").disabled=!faceClipboard;
 }
-
+el("copyFace").addEventListener("click",()=>{faceClipboard=deep(currentFaces()[selected]);refreshCopyButtonLabels()});
+el("pasteFace").addEventListener("click",()=>{if(!faceClipboard)return;currentFaces()[selected]=deep(faceClipboard);renderSheet();syncControls()});
 el("copyToPageSide").addEventListener("click",()=>{
-  const src=deep(currentFaces()[selected]),side=selected%2;
-  for(let i=side;i<cardsPerPage()*2;i+=2) currentFaces()[i]=deep(src);
+  const src=deep(currentFaces()[selected]);
+  if(isSingleMode()) for(let i=0;i<facesPerPage();i++)currentFaces()[i]=deep(src);
+  else{const side=selected%2;for(let i=side;i<facesPerPage();i+=2)currentFaces()[i]=deep(src)}
   renderSheet();syncControls();
 });
-
 el("copyToAllPagesSide").addEventListener("click",()=>{
-  const src=deep(currentFaces()[selected]),side=selected%2;
-  pages.forEach(pg=>{
-    for(let i=side;i<cardsPerPage()*2;i+=2) pg[i]=deep(src);
-  });
+  const src=deep(currentFaces()[selected]);
+  pages.forEach(pg=>{if(isSingleMode())for(let i=0;i<facesPerPage();i++)pg[i]=deep(src);else{const side=selected%2;for(let i=side;i<facesPerPage();i+=2)pg[i]=deep(src)}});
   renderSheet();syncControls();
 });
 
 document.addEventListener("click",()=>document.querySelectorAll(".page-thumb-menu").forEach(m=>m.remove()));
 
-el("addPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.push(makePage(cardsPerPage()));currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
+el("addPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.push(makePage(cardsPerPage(),isSingleMode()));currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 el("dupPage").addEventListener("click",()=>{if(pages.length>=25)return;pages.splice(currentPage+1,0,deep(currentFaces()));currentPage++;selected=0;renderSheet();syncControls()});
 el("deletePage").addEventListener("click",()=>{if(pages.length<=1)return;pages.splice(currentPage,1);if(currentPage>=pages.length)currentPage=pages.length-1;selected=0;renderSheet();syncControls()});
 
 function getProject(){
-  return {app:"card-mock-maker-prototype",version:71,paperSize:el("paperSize").value,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,sheetTitle,recentColors,pages};
+  return {app:"card-mock-maker-prototype",version:78,paperSize:el("paperSize").value,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,impositionMode:el("impositionMode").value,cardOrientation,sheetTitle,recentColors,pages};
 }
 
 function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(!Array.isArray(d.optionImages))d.optionImages=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
@@ -3325,7 +3350,7 @@ function restoreProject(p){
   p=migrateGenericTextBoxes(p);
   p=migrateBgBorders(p);
   pages=p.pages.slice(0,25);sheetTitle=p.sheetTitle||"";recentColors=(p.recentColors||[]).slice(0,12);
-  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("sheetTitleInput").value=sheetTitle;
+  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value==="single")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;setupAllColorInputs();
 document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
 setPaper();renderSheet();syncControls();
@@ -3434,6 +3459,8 @@ async function buildEditablePdf(){
     sheet.style.minHeight=p.h+"mm";sheet.style.maxHeight=p.h+"mm";sheet.style.background="#fff";sheet.style.overflow="hidden";
       const title=document.createElement("div");title.className="sheet-title";title.textContent=sheetTitle;sheet.appendChild(title);
       const sg=document.createElement("div");buildSheet(sg,pg,false);sheet.appendChild(sg);
+      // Editing-only fold guides must never be rasterized into exported PDFs.
+      sheet.querySelectorAll(".fold,.screen-guide").forEach(node=>node.remove());
       staging.appendChild(sheet);
 
       const canvas=await html2canvas(sheet,{backgroundColor:"#ffffff",scale:2,useCORS:true,logging:false});
@@ -3533,8 +3560,8 @@ function preparePrintPages(){
     const sg=document.createElement("div");buildSheet(sg,pg,false);sheet.appendChild(sg);wrap.appendChild(sheet);
   });
 }
-function setExactPrintPage(){const p=paperMM();el("dynamicPageStyle").textContent=`@page{size:${p.w}mm ${p.h}mm;margin:0}`}
-el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPages();setTimeout(()=>window.print(),80)});
+function setExactPrintPage(){const p=paperMM(),paperName=el("paperSize").value==="a3"?"A3":"A4",orientation=el("paperOrientation").value;el("dynamicPageStyle").textContent=`@page{size:${paperName} ${orientation};margin:0}\n@media print{.print-sheet{width:${p.w}mm!important;height:${p.h}mm!important;min-width:${p.w}mm!important;max-width:${p.w}mm!important;min-height:${p.h}mm!important;max-height:${p.h}mm!important}}`}
+el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPages();requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
 
 
 
@@ -3625,6 +3652,53 @@ initHistory();renderSwatches();
   .stroke-width-select{width:92px!important;min-width:92px!important}
   .stroke-align-select{width:102px!important;min-width:102px!important}
 }
+</style>
+
+<style id="v76-print-only-output">
+/* v76: printing always uses the prepared imposition sheets, never the editor/mobile UI. */
+@media print{
+  html,body{margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important;background:#fff!important}
+  body>header{display:none!important}
+  .layout{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  .layout>aside{display:none!important}
+  main{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  main>.workspace{display:none!important}
+  #printPages.print-pages{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  #printPages .print-sheet{display:block!important;margin:0!important;padding:0!important;box-shadow:none!important;overflow:hidden!important;break-after:page!important;page-break-after:always!important}
+  #printPages .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+  #printPages .fold,#printPages .screen-guide,#printPages [data-side-label]::before{display:none!important}
+  #printPages .mobile-quick-bar,#printPages .mobile-card-nav,#printPages .mobile-face-labels,#printPages .mobile-tool-panel{display:none!important}
+}
+</style>
+
+<style id="v77-ui-audit">
+/* v77 UI/UX normalization: same concepts, same visual grammar. */
+.face-copy-tools{margin-top:12px;padding-top:10px;border-top:1px solid var(--ui-border)}
+.face-copy-tools .tool-block-title{margin-bottom:7px}
+.option-tool-head{min-height:34px;align-items:center}
+.option-add-button{width:34px!important;min-width:34px!important;height:34px!important;padding:0!important;font-size:17px!important;line-height:1!important}
+.option-section .option-subtool{margin-top:12px}
+/* Phone keeps one physical card in focus, but uses the same cut/fold grammar as desktop. */
+@media(max-width:720px){
+  header #paperSize{display:block!important;grid-column:2/3;grid-row:2;width:100%!important}
+  header .history-controls{grid-column:1/2;grid-row:2}
+  header #paperOrientation{grid-column:3/4;grid-row:2}
+  header #cardSize{grid-column:1/3;grid-row:3}
+  header #impositionMode{display:block!important;grid-column:3/4;grid-row:3;width:100%!important}
+  header #sheetTitleInput{grid-column:1/-1;grid-row:4;width:100%!important}
+  header #editablePdfBtn{grid-row:5}
+  header #loadPdfBtn{grid-row:5}
+  header #printBtn{grid-row:5}
+  .mobile-card-pair{position:relative;gap:0!important;padding:0!important;background:#fff;box-sizing:border-box;border:.28mm solid #111;overflow:visible}
+  .mobile-card-pair .face{box-shadow:none!important;border:0!important}
+  .mobile-card-pair:not(.single-mode)::after{content:"";position:absolute;z-index:46;pointer-events:none}
+  .mobile-card-pair.mobile-portrait-card:not(.single-mode)::after{left:50%;top:0;bottom:0;border-left:.28mm dashed #62c9f2;transform:translateX(-.14mm)}
+  .mobile-card-pair.mobile-landscape-card:not(.single-mode)::after{left:0;right:0;top:50%;border-top:.28mm dashed #62c9f2;transform:translateY(-.14mm)}
+  .mobile-card-pair.mobile-portrait-card{width:fit-content!important;max-width:100%;margin:0 auto}
+  .mobile-card-pair.mobile-landscape-card{width:fit-content!important;max-width:100%;margin:0 auto}
+  .mobile-face-labels{margin-top:7px}
+}
+@media print{.mobile-card-pair::after{display:none!important}}
 </style>
 </body>
 </html>
@@ -3821,5 +3895,16 @@ header .app-brand > .beta-badge{display:inline-flex}
 }
 .textbox-editor .checkline,.frame-editor .checkline{
   font-size:10px;
+}
+</style>
+<style id="v74-cutline-fix">
+/* v74: cut lines are drawn inside each physical piece so sheet-edge lines never clip. */
+.face{border:0!important}
+.pair::after{content:"";position:absolute;inset:0;box-sizing:border-box;border:.28mm solid #111;pointer-events:none;z-index:45}
+/* Duplex: the centre is a fold guide only, never a cut line. */
+.duplex-mode .fold.screen-guide{border-color:#62c9f2!important;border-style:dashed!important;border-width:.28mm!important;opacity:1;z-index:46}
+@media print{
+  .pair::after{border-color:#111!important}
+  .duplex-mode .fold,.duplex-mode .screen-guide{display:none!important}
 }
 </style>
