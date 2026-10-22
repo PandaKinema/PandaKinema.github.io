@@ -73,17 +73,22 @@ def date(v):
 def genre(g):
     return L('ジャンル:', 'Genre: ') + L(g.get('genre_ja'), g.get('genre_en'))
 
+def vid(v):   # バナーで流す動画(音なし・くり返し)
+    return '<video class="b-vid" src="img/%s" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>' % img(v) if v else ''
+
 def banner(key):
+    """(クラス, スタイル, 絵, 文字, ボタン, 動画)"""
     if key == 'moji':
-        art = '<span class="tupa b-tupa"><img class="tb" src="img/b_tupa_body.webp" alt="トゥーパ"><img class="to" src="img/b_tupa_orb.webp" alt=""></span>'
-        txt = '<p class="b-series">PLAY &amp; TOOLS</p><h2 class="b-name"><img class="b-mtitle" src="img/moji_title.png" alt="ビビル文字ジェネレーター"></h2><p class="b-copy">%s</p>' % L('ことばをビビル文字に変換して遊べます。', 'Turn your words into Bibilu script.')
-        return 'b-moji', 'background:#163f53', art, txt, '<a class="wb" href="%s" target="_blank" rel="noopener">%s%s</a>' % (e(SITE['moji']), AR, L('あそぶ', 'Play'))
+        art = '<span class="tupa"><img class="tb" src="img/b_tupa_body.webp" alt="トゥーパ"><img class="to" src="img/b_tupa_orb.webp" alt=""></span>'
+        txt = '<p class="b-series">PLAY &amp; TOOLS</p><h2 class="b-name"><img class="b-mtitle" src="img/moji_title.png" alt="ビビル文字ジェネレーター"></h2><p class="b-intro">%s</p>' % L('ことばをビビル文字に変換して遊べます。', 'Turn your words into Bibilu script.')
+        return 'b-moji', 'background:#163f53', art, txt, '<a class="wb" href="%s" target="_blank" rel="noopener">%s%s</a>' % (e(SITE['moji']), AR, L('あそぶ', 'Play')), ''
     for i, m in enumerate(MINIS):
         if m['key'] == key:
             art = '<img class="b-mini" src="img/%s" alt="%s">' % (img(m['pkg']), e(m['name']))
-            txt = '<p class="b-series">MINI THEATER SERIES %02d</p><h2 class="b-name"><img class="b-mlogo" src="img/%s" alt="%s"></h2><p class="b-meta">%s</p><p class="b-copy">%s</p>' % (
-                i + 1, img(m['logo']), e(m['name']), meta(m), L(m.get('copy_ja'), m.get('copy_en')))
-            return 'b-minis', 'background:%s' % m['color_face'], art, txt, btns(m)
+            intro = L(m.get('intro_ja'), m.get('intro_en')) if m.get('intro_ja') else L(m.get('copy_ja'), m.get('copy_en'))
+            txt = '<p class="b-series">MINI THEATER SERIES %02d</p><h2 class="b-name"><img class="b-mlogo" src="img/%s" alt="%s"></h2><p class="b-meta">%s</p><p class="b-intro">%s</p>' % (
+                i + 1, img(m['logo']), e(m['name']), meta(m), intro)
+            return 'b-minis', 'background:%s;--fg:%s' % (m['color_face'], m.get('text_color') or '#fff'), '' if m.get('video') else art, txt, btns(m), vid(m.get('video'))
     g = [x for x in GAMES if x['key'] == key][0]
     bn = g.get('banner') or {}
     bg = bn.get('bg') or g['color_face']
@@ -94,9 +99,12 @@ def banner(key):
         art = ''
     else:
         art = '<img class="b-pkg" src="img/%s" alt="%sのパッケージ">' % (img(g['pkg']), e(g['name']))
-    txt = '%s%s<p class="b-meta">%s</p>' % (
-        '<p class="b-new">%s</p>' % L('新作', 'NEW') if g.get('new') else '', tlogo(g, 'b-logo', bn.get('logo_color')), meta(g))
-    return 'b-' + key, 'background:' + bg, art, txt, btns(g)
+    if bn.get('video'):
+        art = ''
+    intro = '<p class="b-intro">%s</p>' % L(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
+    txt = '%s%s<p class="b-meta">%s</p>%s' % (
+        '<p class="b-new">%s</p>' % L('新作', 'NEW') if g.get('new') else '', tlogo(g, 'b-logo', bn.get('logo_color')), meta(g), intro)
+    return 'b-' + key, 'background:%s;--fg:%s' % (bg, bn.get('text_color') or '#fff'), art, txt, btns(g), vid(bn.get('video'))
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
@@ -104,14 +112,15 @@ def render():
     radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
     slides = []
     for i, b in enumerate(BANNERS):
-        if b.get('image'):   # 自分で作ったバナー画像(1200×630)をそのまま出す。枠の外は bg の色
+        if b.get('image') or b.get('video'):   # 自分で作ったバナー画像・動画をそのまま出す(画面いっぱいに広げる)
             alt = e(b.get('alt') or '')
-            pic = '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
-            inner = '<a class="b-link" href="%s"%s>%s</a>' % (e(b['link']), ext(b['link']), pic) if b.get('link') else pic
-            slides.append('      <article class="slide s%d b-custom" style="--d:%ds;background:%s"><div class="frame">%s</div></article>' % (i + 1, i * slide, e(b.get('bg') or '#000'), inner))
+            pic = vid(b.get('video')) if b.get('video') else '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
+            link = '<a class="b-link" href="%s"%s aria-label="%s"></a>' % (e(b['link']), ext(b['link']), alt) if b.get('link') else ''
+            slides.append('      <article class="slide s%d b-custom" style="--d:%ds;background:%s">%s%s</article>' % (i + 1, i * slide, e(b.get('bg') or '#000'), pic, link))
             continue
-        cls, bg, art, txt, bt = banner(b['key'])
-        slides.append('      <article class="slide s%d %s" style="--d:%ds;%s"><div class="frame">%s<div class="b-txt">%s<div class="b-btns">%s</div></div></div></article>' % (i + 1, cls, i * slide, bg, art, txt, bt))
+        cls, bg, art, txt, bt, vd = banner(b['key'])
+        slides.append('      <article class="slide s%d %s%s" style="--d:%ds;%s">%s<div class="b-art">%s</div><div class="b-in">%s<div class="b-btns">%s</div></div></article>' % (
+            i + 1, cls, ' has-vid' if vd else '', i * slide, e(bg), vd, art, txt, bt))
     bars = ''.join('<label for="br%d" style="--d:%ds" aria-label="%d枚目"><i></i></label>' % (i + 1, i * slide, i + 1) for i in range(n))
     w = 100.0 / n; fd = 0.8 / total * 100
     cyc = ('    @keyframes cyc{0%%{opacity:0;visibility:hidden;z-index:1}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:0;visibility:hidden;z-index:1}100%%{opacity:0;visibility:hidden;z-index:1}}\n'
@@ -133,10 +142,10 @@ def render():
         cid = 'c-%s' % m['key']
         bt = btns(m, more=bool(m.get('page')))
         cards.append(('        <li class="card mini" style="--c1:%s;--c2:%s"><input class="sr" type="radio" name="board" id="%s">'
-                      '<label class="c-face m-face" for="%s"><span class="m-top">MINI THEATER SERIES %02d</span><span class="m-mid"><img class="m-chara" src="img/%s" alt="" loading="lazy"><img class="m-logo" src="img/%s" alt="%s" loading="lazy"></span><span class="m-bot">%s</span></label>'
+                      '<label class="c-face m-face" for="%s"><span class="m-top">MINI THEATER SERIES %02d</span><span class="m-mid"><img class="m-chara" src="img/%s" alt="" loading="lazy"><img class="m-logo" src="img/%s" alt="%s" loading="lazy"></span></label>'
                       '<div class="c-open m-open"><img class="m-pkg" src="img/%s" alt="%sのパッケージ" loading="lazy"><div class="m-info"><div class="m-l"><img class="m-ologo" src="img/%s" alt="">%s</div><div class="m-r"><p class="o-genre">%s</p><p class="o-copy">%s</p>%s</div></div>'
                       '<label class="o-x" for="board-x" aria-label="とじる"></label></div></li>')
-                     % (m['color_band'], m['color_face'], cid, cid, i + 1, img(m['chara']), img(m['logo']), e(m['name']), spec_line(spec(m)), img(m['pkg']), e(m['name']), img(m['logo']),
+                     % (m['color_band'], m['color_face'], cid, cid, i + 1, img(m['chara']), img(m['logo']), e(m['name']), img(m['pkg']), e(m['name']), img(m['logo']),
                         spec_pill(spec(m), m['color_band'], m['color_face']), genre(m), L(m.get('copy_ja'), m.get('copy_en')), '<div class="o-btns">%s</div>' % bt))
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
                      % (e(str(v.get('youtube') or '').strip()), e(v['title']), img(v['poster']), e(v['title']), L(v.get('kind_ja'), v.get('kind_en')),

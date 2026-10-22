@@ -3,7 +3,7 @@
 media:
   input: new/img
   output: img
-  categories: [image]
+  categories: [image, video]
 
 content:
   - name: news
@@ -41,9 +41,10 @@ content:
     list: true
     fields:
       - { name: key, label: 作品の key, type: string, description: "作品のバナーを出すとき:ボードゲーム・ミニシアターの key(trico, bibilu, koikoi など)か、moji(ビビル文字ジェネレータ)" }
-      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "画像だけのバナーを出すとき。1200×630(できれば2400×1260)。入れると key より優先" }
+      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上。入れると key より優先" }
+      - { name: video, label: バナー動画(自分で作ったもの), type: file, description: "動画だけのバナーを出すとき(mp4・音なしでくり返し)。10MB以下くらいに" }
       - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
-      - { name: bg, label: バナー画像の外側の色, type: string, description: "横に広い画面で、画像の左右を塗る色。例:#173f54。空なら黒" }
+      - { name: bg, label: 読み込み中の色, type: string, description: "画像や動画が出るまでの背景色。例:#173f54。空なら黒" }
       - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
 
   - name: games
@@ -67,6 +68,8 @@ content:
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
       - { name: genre_ja, label: ジャンル(日本語), type: string }
       - { name: genre_en, label: ジャンル(英語), type: string }
+      - { name: intro_ja, label: 紹介文(日本語), type: text, description: "トップのバナーに出る短い紹介。1〜2文" }
+      - { name: intro_en, label: 紹介文(英語), type: text, description: "空なら日本語をそのまま表示" }
       - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
       - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
       - name: banner
@@ -75,8 +78,10 @@ content:
         fields:
           - { name: bg, label: 背景色, type: string, description: "空ならキーカラー2" }
           - { name: pattern, label: 背景の模様, type: string, description: "tri(トリコの三角)か、空" }
-          - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。2400×1260、文字なし。左半分と下の3割は文字やボタンが重なります" }
+          - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
           - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色" }
+          - { name: text_color, label: 文字の色, type: string, description: "人数〜ジャンルと紹介文の色。例:#ffffff" }
+          - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
 
   - name: minis
     label: ミニシアター
@@ -99,6 +104,10 @@ content:
       - { name: genre_en, label: ジャンル(英語), type: string }
       - { name: copy_ja, label: ひとこと(日本語), type: string }
       - { name: copy_en, label: ひとこと(英語), type: string }
+      - { name: intro_ja, label: 紹介文(日本語), type: text, description: "バナーに出る紹介。空ならひとことを出す" }
+      - { name: intro_en, label: 紹介文(英語), type: text }
+      - { name: text_color, label: バナーの文字の色, type: string, description: "例:#ffffff" }
+      - { name: video, label: バナーの動画, type: file, description: "背景で流す動画(mp4・音なし)。10MB以下くらいに" }
       - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "作品ページ。空ならバナーの「詳しく見る」でカードが開く" }
       - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
 

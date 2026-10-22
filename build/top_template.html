@@ -42,53 +42,48 @@
     #lang-ja:checked~* .lang label[for="lang-ja"],#lang-en:checked~* .lang label[for="lang-en"]{background:var(--text);color:var(--bg)}
     #lang-ja:focus-visible~* .lang label[for="lang-ja"],#lang-en:focus-visible~* .lang label[for="lang-en"]{outline:2px solid #fff}
 
-    /* 1. バナー:X共有画像と同じ 1200×630 の枠。枠の外は同じ色で塗る。下のバーで次までの時間がわかる */
-    .hero{position:relative;height:min(630px,calc(100vw * 630 / 1200));overflow:hidden;background:#000}
-    .slide{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;animation:cyc var(--total) infinite both;animation-delay:var(--d)}
-    .frame{position:relative;width:min(1200px,100%);height:100%;margin-inline:auto;container-type:inline-size}
+    /* 1. バナー:画面いっぱいの特集(ネトフリ風)。下のバーが満ちたら次へ。X共有画像とは別 */
+    .hero{position:relative;height:clamp(500px,76svh,760px);overflow:hidden;background:#000}
+    .slide{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;color:var(--fg,#fff);animation:cyc var(--total) infinite both;animation-delay:var(--d)}
 {{cyc}}
-    .b-link{position:absolute;inset:0;display:block}
-    .b-img{width:100%;height:100%;object-fit:cover}
-    .b-txt{position:absolute;left:6cqw;top:47%;translate:0 -50%;display:flex;flex-direction:column;align-items:center;gap:1.6cqw;width:48cqw;z-index:2;text-align:center}
-    .b-logo{display:block;width:40cqw;background:var(--lc);-webkit-mask:var(--lg) center/contain no-repeat;mask:var(--lg) center/contain no-repeat}
-    img.b-logo{background:none;filter:drop-shadow(0 .4cqw 1.2cqw rgba(0,0,0,.35))}
-    .b-new{margin:0;padding:.3cqw 1.2cqw;border-radius:.4cqw;background:#e8343d;color:#fff;font-size:max(10px,1.4cqw);font-weight:800;letter-spacing:.1em}
-    .b-meta{margin:0;font-size:max(10px,1.55cqw);font-weight:800;letter-spacing:.02em;opacity:.92}
-    .b-series{margin:0;font-family:var(--cond);font-size:max(11px,1.9cqw);font-weight:700;letter-spacing:.06em;opacity:.85}
-    .b-name{margin:0;font-size:max(18px,4.2cqw);font-weight:900;line-height:1.15;word-break:auto-phrase}
-    .b-copy{margin:0;font-size:max(11px,1.8cqw);font-weight:800}
-    .b-btns{display:flex;gap:1cqw;margin-top:.6cqw}
-    .wb{display:inline-flex;align-items:center;justify-content:center;min-width:max(64px,10cqw);padding:max(5px,.75cqw) max(10px,1.5cqw);border-radius:max(5px,.7cqw);background:#fff;color:#16181a;font-size:max(11px,1.45cqw);font-weight:900;letter-spacing:.04em;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.18);transition:translate .15s ease}
-    .wb:hover{translate:0 -2px}
-    .wb{cursor:pointer;gap:.45em;white-space:nowrap}
-    .wb .ar{font-size:.72em;line-height:1}
-    .pill{display:inline-block;padding:.2em .9em;border-radius:999px;background:var(--pc);color:var(--pt,#fff);font-weight:800;white-space:nowrap}
-    .b-pkg{position:absolute;right:7cqw;top:6%;height:90%;width:auto;filter:drop-shadow(0 1.6cqw 1.8cqw rgba(0,0,0,.3))}
-    .b-trico,.b-moko{color:#2d1f57}
-    .b-ikatako,.b-bibilu,.b-minis,.b-moji{color:#fff}
-    .b-minis .b-mini{position:absolute;right:6cqw;top:50%;translate:0 -50%;width:46cqw;border-radius:.6cqw;box-shadow:0 1.6cqw 2.4cqw -.8cqw rgba(0,0,0,.45),0 .3cqw .6cqw rgba(0,0,0,.2)}
-    .b-moji .b-tupa{position:absolute;right:16cqw;top:50%;translate:0 -46%;width:22cqw}
-    .b-minis .b-txt{left:4.5cqw;width:40cqw}
-    .b-minis .b-mini{right:4cqw;width:47cqw}
-    .b-mlogo{width:34cqw;filter:drop-shadow(0 .4cqw 1cqw rgba(0,0,0,.25))}
+    .b-art{position:absolute;right:max(20px,6vw);top:7%;bottom:11%;width:46vw;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .b-pkg{height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(0,0,0,.3))}
+    .b-mini{width:100%;height:auto;border-radius:8px;box-shadow:0 18px 30px -10px rgba(0,0,0,.45),0 3px 8px rgba(0,0,0,.2)}
+    .b-art .tupa{height:78%;width:auto}
     .tupa{position:relative;aspect-ratio:1164/1562}
     .tupa .tb{position:absolute;left:0;bottom:0;width:100%}
-    .tupa .to{position:absolute;left:50%;top:0;width:30.4%;translate:-50% 0;filter:drop-shadow(0 0 1.2cqw rgba(27,185,238,.7));animation:orbf 2.6s ease-in-out infinite alternate}
+    .tupa .to{position:absolute;left:50%;top:0;width:30.4%;translate:-50% 0;filter:drop-shadow(0 0 14px rgba(27,185,238,.7));animation:orbf 2.6s ease-in-out infinite alternate}
     @keyframes orbf{to{translate:-50% -14%}}
-    .b-mtitle{width:44cqw;filter:drop-shadow(0 .3cqw .8cqw rgba(0,0,0,.3))}
-    .slide::after{content:"";position:absolute;inset:auto 0 0;height:26%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.45) 60%,var(--bg))}
-    .b-pkg,.b-mini,.b-tupa{animation:kb var(--total) linear infinite both;animation-delay:var(--d)}
-    .hero:has(.br:checked) :is(.b-pkg,.b-mini,.b-tupa){animation:none}
-    .hero.jsc :is(.b-pkg,.b-mini,.b-tupa){animation:none;scale:1;transition:scale 0s linear .8s}
-    .hero.jsc .slide.cur :is(.b-pkg,.b-mini,.b-tupa){scale:1.04;transition:scale var(--dur) linear}
-    .hero.jsc .slide:not(.cur) .b-txt>*{animation:none}
+    .b-vid,.b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .b-link{position:absolute;inset:0;display:block;z-index:2}
+    .slide.has-vid::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 62%)}
+    .slide::after{content:"";position:absolute;inset:auto 0 0;height:22%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.5) 60%,var(--bg))}
+    .b-in{position:absolute;left:max(20px,6vw);top:50%;translate:0 -54%;z-index:2;width:min(540px,42vw);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+    .b-logo{display:block;width:min(440px,100%);background:var(--lc);-webkit-mask:var(--lg) left center/contain no-repeat;mask:var(--lg) left center/contain no-repeat}
+    .b-mlogo{width:min(400px,100%);filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+    .b-mtitle{width:min(460px,100%);filter:drop-shadow(0 3px 8px rgba(0,0,0,.3))}
+    .b-name{margin:0}
+    .b-new{margin:0;padding:3px 10px;border-radius:4px;background:#e8343d;color:#fff;font-size:12px;font-weight:800;letter-spacing:.1em}
+    .b-series{margin:0;font-family:var(--cond);font-size:clamp(12px,1.2vw,15px);font-weight:700;letter-spacing:.06em;opacity:.85}
+    .b-meta{margin:0;font-size:clamp(11px,1vw,13px);font-weight:800;letter-spacing:.02em;opacity:.85}
+    .b-intro{margin:0;max-width:30em;font-size:clamp(12.5px,1.15vw,15.5px);font-weight:600;line-height:1.8}
+    .b-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+    .wb{display:inline-flex;align-items:center;justify-content:center;gap:.45em;padding:8px 15px;border-radius:7px;background:#fff;color:#16181a;font-size:13px;font-weight:900;letter-spacing:.04em;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;transition:translate .15s ease}
+    .wb:hover{translate:0 -2px}
+    .wb .ar{font-size:.72em;line-height:1}
+    .pill{display:inline-block;padding:.2em .9em;border-radius:999px;background:var(--pc);color:var(--pt,#fff);font-weight:800;white-space:nowrap}
+    .b-art{animation:kb var(--total) linear infinite both;animation-delay:var(--d)}
+    .hero:has(.br:checked) .b-art{animation:none}
+    .hero.jsc .b-art{animation:none;scale:1;transition:scale 0s linear .8s}
+    .hero.jsc .slide.cur .b-art{scale:1.04;transition:scale var(--dur) linear}
+    .slide .b-in>*{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+    .slide .b-in>:nth-child(2){animation-delay:.08s}.slide .b-in>:nth-child(3){animation-delay:.16s}.slide .b-in>:nth-child(4){animation-delay:.24s}.slide .b-in>:nth-child(5){animation-delay:.32s}.slide .b-in>:nth-child(6){animation-delay:.4s}
+    .hero.jsc .slide:not(.cur) .b-in>*{animation:none}
     /* 下のバー:今のバナーのバーが左から白くなり、満ちたら次へ */
-    .b-uiw{position:absolute;left:0;right:0;bottom:0;z-index:5;pointer-events:none}
-    .b-uiw .in{width:min(1200px,100%);margin-inline:auto;container-type:inline-size}
-    .b-ui{pointer-events:auto;display:flex;align-items:center;justify-content:center;gap:max(4px,.6cqw);width:48cqw;margin-left:6cqw;padding-bottom:max(8px,2.4cqw)}
-    .bars{display:flex;gap:max(5px,.7cqw)}
-    .bars label{position:relative;display:block;width:max(20px,3.6cqw);padding:6px 0;cursor:pointer}
-    .bars label::before,.bars i{content:"";position:absolute;left:0;top:50%;height:max(3px,.32cqw);translate:0 -50%;border-radius:1px}
+    .b-ui{position:absolute;left:max(20px,6vw);bottom:20px;z-index:5;display:flex}
+    .bars{display:flex;gap:8px}
+    .bars label{position:relative;display:block;width:36px;padding:7px 0;cursor:pointer}
+    .bars label::before,.bars i{content:"";position:absolute;left:0;top:50%;height:3px;translate:0 -50%;border-radius:1px}
     .bars label::before{right:0;background:rgba(255,255,255,.35)}
     .bars i{width:0;background:#fff;animation:fill var(--total) linear infinite both;animation-delay:var(--d)}
     .hero:has(.br:checked) .slide{animation:none;opacity:0;visibility:hidden}
@@ -100,7 +95,6 @@
     .hero.jsc .bars .on i{animation:jfill var(--dur) linear forwards !important}
     .hero.jsc.hold .bars .on i{animation-play-state:paused !important}
     @keyframes jfill{from{width:0}to{width:100%}}
-    .b-ui .tri{width:18px;height:18px;filter:drop-shadow(0 0 2px rgba(0,0,0,.35))}
     /* ◀ ● ● ▶(各列。点は並んでいる数だけ出る) */
     .pager{justify-content:center;align-items:center;gap:6px;margin:10px 0 0}
     .pager .pd{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
@@ -111,8 +105,6 @@
     .tri.prev::before{border-width:5px 7px 5px 0;border-right-color:#fff}
     .tri.next::before{border-width:5px 0 5px 7px;border-left-color:#fff}
     .tri[disabled]{opacity:.25;cursor:default}
-    .slide .b-txt>*{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
-    .slide .b-txt>:nth-child(2){animation-delay:.08s}.slide .b-txt>:nth-child(3){animation-delay:.16s}.slide .b-txt>:nth-child(4){animation-delay:.24s}.slide .b-txt>:nth-child(5){animation-delay:.32s}
     @keyframes rise{from{opacity:0;translate:0 12px}}
 
     /* セクション共通 */
@@ -279,17 +271,18 @@
       .m-r .o-genre{font-size:10.5px}.m-r .o-copy{font-size:12px}
       .m-top{font-size:11.5px}.m-bot{font-size:10.5px}
     }
-    @media (max-width:600px){
-      .b-txt{left:5cqw;top:50%;gap:max(5px,1.4cqw);width:52cqw}
-      .b-meta{font-size:9.5px}
-      .b-new{font-size:9px;padding:1px 6px}
-      .b-copy{display:none}
-      .b-series{font-size:9px}
-      .b-name{font-size:17px}
-      .b-txt{left:3cqw;width:57cqw}
-      .b-btns{gap:6px}
-      .wb{min-width:0;padding:4px 8px;font-size:10px;border-radius:5px;gap:.3em}
-      .b-ui{width:57cqw;margin-left:3cqw;padding-bottom:6px}
+    @media (max-width:700px){
+      .hero{height:clamp(540px,84svh,720px)}
+      .b-art{left:6vw;right:6vw;top:5%;bottom:auto;height:42%;width:auto}
+      .b-in{left:20px;right:20px;width:auto;top:auto;bottom:48px;translate:none;gap:9px}
+      .b-logo{width:min(320px,84%)}
+      .b-mlogo,.b-mtitle{width:min(300px,80%)}
+      .b-intro{font-size:12.5px;line-height:1.7}
+      .wb{padding:7px 12px;font-size:12px;border-radius:6px}
+      .b-ui{left:20px;bottom:16px}
+      .bars label{width:28px}
+      .slide::after{height:9%}
+      .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,0) 30%,rgba(0,0,0,.6))}
     }
     @media (max-width:520px){
       .row{--h:240px;--ow:92vw}
@@ -319,7 +312,7 @@
   <section class="hero" id="hero" style="--total:{{total}}s;--dur:{{slide}}s" aria-roledescription="カルーセル" aria-label="特集">
     {{radios}}
 {{slides}}
-    <div class="b-uiw"><div class="in"><div class="b-ui"><button class="tri prev js-only" type="button" aria-label="前へ"></button><div class="bars">{{bars}}</div><button class="tri next js-only" type="button" aria-label="次へ"></button></div></div></div>
+    <div class="b-ui"><div class="bars">{{bars}}</div></div>
   </section>
 
   <section class="news" id="news" aria-labelledby="news-title">
@@ -389,9 +382,8 @@
   /* バナー:バーが満ちたら次へ。◀▶・バー・スワイプでも動かせる。マウスを乗せている間は止まる */
   var hero=$("#hero"), slides=$$(".slide",hero), bars=$$(".bars label",hero), cur=0, n=slides.length;
   hero.classList.add("jsc");
-  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur) }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
+  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var v=$("video",s); if(v){ if(k===cur){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
   bars.forEach(function(b,k){ b.addEventListener("click",function(e){ e.preventDefault(); show(k) }); $("i",b).addEventListener("animationend",function(){ if(k===cur && n>1) show(cur+1) }) });
-  $(".tri.prev",hero).addEventListener("click",function(){ show(cur-1) }); $(".tri.next",hero).addEventListener("click",function(){ show(cur+1) });
   hero.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") hero.classList.add("hold") }); hero.addEventListener("pointerleave",function(){ hero.classList.remove("hold") });
   var tx=null; hero.addEventListener("touchstart",function(e){ tx=e.touches[0].clientX },{passive:true});
   hero.addEventListener("touchend",function(e){ if(tx===null) return; var dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) show(cur+(dx<0?1:-1)); tx=null });
