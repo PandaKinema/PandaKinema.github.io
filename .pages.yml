@@ -13,7 +13,7 @@ content:
     format: yaml
     list: true
     fields:
-      - { name: date, label: 日付, type: string, required: true, description: "例:2026.10.18(上にあるものから順に表示)" }
+      - { name: date, label: 日付, type: date, required: true, description: "カレンダーから選ぶ。サイトには 2026.10.18 の形で出ます(上にあるものから順に表示)" }
       - { name: cat_ja, label: カテゴリ(日本語), type: string, description: "例:お知らせ / 新作 / 出展" }
       - { name: cat_en, label: カテゴリ(英語), type: string, description: "例:News / New / Event" }
       - { name: text_ja, label: 本文(日本語), type: string, required: true }
@@ -43,6 +43,7 @@ content:
       - { name: key, label: 作品の key, type: string, description: "作品のバナーを出すとき:ボードゲーム・ミニシアターの key(trico, bibilu, koikoi など)か、moji(ビビル文字ジェネレータ)" }
       - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "画像だけのバナーを出すとき。1200×630(できれば2400×1260)。入れると key より優先" }
       - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
+      - { name: bg, label: バナー画像の外側の色, type: string, description: "横に広い画面で、画像の左右を塗る色。例:#173f54。空なら黒" }
       - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
 
   - name: games
@@ -67,7 +68,7 @@ content:
       - { name: genre_ja, label: ジャンル(日本語), type: string }
       - { name: genre_en, label: ジャンル(英語), type: string }
       - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
-      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "空ならボタンを出さない" }
+      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
       - name: banner
         label: バナー
         type: object
@@ -76,8 +77,6 @@ content:
           - { name: pattern, label: 背景の模様, type: string, description: "tri(トリコの三角)か、空" }
           - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。2400×1260、文字なし。左半分と下の3割は文字やボタンが重なります" }
           - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色" }
-          - { name: pill_bg, label: 人数〜年齢の下地, type: string, description: "空ならキーカラー1" }
-          - { name: pill_text, label: 人数〜年齢の文字, type: string, description: "空ならキーカラー2" }
 
   - name: minis
     label: ミニシアター
@@ -100,8 +99,8 @@ content:
       - { name: genre_en, label: ジャンル(英語), type: string }
       - { name: copy_ja, label: ひとこと(日本語), type: string }
       - { name: copy_en, label: ひとこと(英語), type: string }
-      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "空ならボタンなし" }
-      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "空ならボタンなし" }
+      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "作品ページ。空ならバナーの「詳しく見る」でカードが開く" }
+      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
 
   - name: site
     label: サイト全体

@@ -37,8 +37,6 @@
   banner:
     bg: '#173f54'
     logo_color: '#fef4d6'
-    pill_bg: '#7ebda9'
-    pill_text: '#173f54'
 - key: ikatako
   name: イカタコ
   new: false
