@@ -1,16 +1,28 @@
+- date: 2026-10-19
+  cat_ja: 公開
+  cat_en: Launch
+  text_ja: 『カードモックツクール』を公開しました。
+  text_en: “Card Mock Maker” is now available.
+  link: https://pandakinema.github.io/card-mock-maker/
 - date: 2026-10-18
   cat_ja: お知らせ
   cat_en: News
   text_ja: ゲームマーケット2026秋、お疲れ様でした!
   text_en: Thank you for visiting us at Game Market 2026 Autumn!
   link: ''
-- date: '2026.10'
+- date: 2026-10-17
   cat_ja: 新作
   cat_en: New
   text_ja: 『ビビルの塔』を発売しました。
   text_en: “The Tower of Bibilu” is out now.
   link: games/bibilu/
-- date: '2025.11'
+- date: 2026-05-23
+  cat_ja: 発売
+  cat_en: Release
+  text_ja: 『モコチャカ』を発売しました。
+  text_en: “MOKOCHAKA” is out now.
+  link: https://gamemarket.jp/game/187698
+- date: 2025-11-22
   cat_ja: 発売
   cat_en: Release
   text_ja: 『TRICO!』を発売しました。

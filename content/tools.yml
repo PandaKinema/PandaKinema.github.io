@@ -1,0 +1,25 @@
+# PLAY&TOOLS に並ぶツール。key はバナーの順番で使う名前
+- key: moji
+  name: ビビル文字ジェネレータ
+  url: https://pandakinema.github.io/bibilu-moji/
+  title_image: img/moji_title.png
+  image: ''
+  thumb: ''
+  intro_ja: ことばをビビル文字に変換して遊べます。
+  intro_en: Turn your words into Bibilu script.
+  button_ja: あそぶ
+  button_en: Play
+  bg: '#163f53'
+  text_color: '#ffffff'
+- key: mockmaker
+  name: カードモックツクール β
+  url: https://pandakinema.github.io/card-mock-maker/
+  title_image: ''
+  image: img/tool_cmm_screen.webp
+  thumb: img/tool_cmm_thumb.webp
+  intro_ja: カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。
+  intro_en: A tool for easily making and printing card game mockups in your browser.
+  button_ja: つかう
+  button_en: Open
+  bg: '#2a3138'
+  text_color: '#ffffff'

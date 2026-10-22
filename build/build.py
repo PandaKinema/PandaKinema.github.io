@@ -43,6 +43,7 @@ GAMES = load('games')
 MINIS = load('minis')
 NEWS = load('news')
 VIDEOS = load('videos')
+TOOLS = load('tools')
 BANNERS = [b if isinstance(b, dict) else {'key': b} for b in load('banners')]
 
 def spec(g):
@@ -73,22 +74,49 @@ def date(v):
 def genre(g):
     return L('ジャンル:', 'Genre: ') + L(g.get('genre_ja'), g.get('genre_en'))
 
-def vid(v):   # バナーで流す動画(音なし・くり返し)
-    return '<video class="b-vid" src="img/%s" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>' % img(v) if v else ''
+def yt_id(v):   # YouTube のURLでもIDでもOK
+    v = str(v or '').strip()
+    m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/|live/)([\w-]{11})', v)
+    return m.group(1) if m else v
+def vid(v, yt=None):   # バナーで流す動画(音なし・くり返し)。mp4 か YouTube
+    if v:
+        return '<video class="b-vid" src="img/%s" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>' % img(v)
+    if yt:
+        return '<div class="b-yt" data-yt="%s" aria-hidden="true"></div>' % e(yt_id(yt))
+    return ''
+
+def tool_art(t, where):
+    if t.get('image') or t.get('thumb'):
+        src = t.get('image') if where == 'b' else (t.get('thumb') or t.get('image'))
+        return '<img class="%s-shot" src="img/%s" alt="%sの画面">' % (where, img(src), e(t['name']))
+    if t['key'] == 'moji':   # トゥーパ(体と玉)
+        return '<span class="tupa%s"><img class="tb" src="img/b_tupa_body.webp" alt="トゥーパ"><img class="to" src="img/b_tupa_orb.webp" alt=""></span>' % ('' if where == 'b' else ' tl-tupa')
+    return ''
+def tool_title(t, cls):
+    if t.get('title_image'):
+        return '<img class="%s" src="img/%s" alt="%s">' % (cls, img(t['title_image']), e(t['name']))
+    return '<span class="tool-name">%s</span>' % e(t['name'])
+def tool_btn(t, tag='a'):
+    lab = AR + L(t.get('button_ja') or 'あそぶ', t.get('button_en') or 'Play')
+    if tag == 'span':
+        return '<span class="wb">%s</span>' % lab
+    return '<a class="wb" href="%s"%s>%s</a>' % (e(t['url']), ext(t['url']), lab)
 
 def banner(key):
     """(クラス, スタイル, 絵, 文字, ボタン, 動画)"""
-    if key == 'moji':
-        art = '<span class="tupa"><img class="tb" src="img/b_tupa_body.webp" alt="トゥーパ"><img class="to" src="img/b_tupa_orb.webp" alt=""></span>'
-        txt = '<p class="b-series">PLAY &amp; TOOLS</p><h2 class="b-name"><img class="b-mtitle" src="img/moji_title.png" alt="ビビル文字ジェネレーター"></h2><p class="b-intro">%s</p>' % L('ことばをビビル文字に変換して遊べます。', 'Turn your words into Bibilu script.')
-        return 'b-moji', 'background:#163f53', art, txt, '<a class="wb" href="%s" target="_blank" rel="noopener">%s%s</a>' % (e(SITE['moji']), AR, L('あそぶ', 'Play')), ''
+    for t in TOOLS:
+        if t['key'] == key:
+            v = vid(t.get('video'), t.get('youtube'))
+            art = tool_art(t, 'b') if not v else ''
+            txt = '<p class="b-series">PLAY &amp; TOOLS</p><h2 class="b-name">%s</h2><p class="b-intro">%s</p>' % (tool_title(t, 'b-mtitle'), L(t.get('intro_ja'), t.get('intro_en')))
+            return 'b-tool b-' + key, 'background:%s;--fg:%s' % (t.get('bg') or '#163f53', t.get('text_color') or '#fff'), art, txt, tool_btn(t), v
     for i, m in enumerate(MINIS):
         if m['key'] == key:
             art = '<img class="b-mini" src="img/%s" alt="%s">' % (img(m['pkg']), e(m['name']))
             intro = L(m.get('intro_ja'), m.get('intro_en')) if m.get('intro_ja') else L(m.get('copy_ja'), m.get('copy_en'))
             txt = '<p class="b-series">MINI THEATER SERIES %02d</p><h2 class="b-name"><img class="b-mlogo" src="img/%s" alt="%s"></h2><p class="b-meta">%s</p><p class="b-intro">%s</p>' % (
                 i + 1, img(m['logo']), e(m['name']), meta(m), intro)
-            return 'b-minis', 'background:%s;--fg:%s' % (m['color_face'], m.get('text_color') or '#fff'), '' if m.get('video') else art, txt, btns(m), vid(m.get('video'))
+            return 'b-minis', 'background:%s;--fg:%s' % (m['color_face'], m.get('text_color') or '#fff'), '' if (m.get('video') or m.get('youtube')) else art, txt, btns(m), vid(m.get('video'), m.get('youtube'))
     g = [x for x in GAMES if x['key'] == key][0]
     bn = g.get('banner') or {}
     bg = bn.get('bg') or g['color_face']
@@ -99,12 +127,12 @@ def banner(key):
         art = ''
     else:
         art = '<img class="b-pkg" src="img/%s" alt="%sのパッケージ">' % (img(g['pkg']), e(g['name']))
-    if bn.get('video'):
+    if bn.get('video') or bn.get('youtube'):
         art = ''
     intro = '<p class="b-intro">%s</p>' % L(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
     txt = '%s%s<p class="b-meta">%s</p>%s' % (
         '<p class="b-new">%s</p>' % L('新作', 'NEW') if g.get('new') else '', tlogo(g, 'b-logo', bn.get('logo_color')), meta(g), intro)
-    return 'b-' + key, 'background:%s;--fg:%s' % (bg, bn.get('text_color') or '#fff'), art, txt, btns(g), vid(bn.get('video'))
+    return 'b-' + key, 'background:%s;--fg:%s' % (bg, bn.get('text_color') or '#fff'), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
@@ -112,9 +140,9 @@ def render():
     radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
     slides = []
     for i, b in enumerate(BANNERS):
-        if b.get('image') or b.get('video'):   # 自分で作ったバナー画像・動画をそのまま出す(画面いっぱいに広げる)
+        if b.get('image') or b.get('video') or b.get('youtube'):   # 自分で作ったバナー画像・動画をそのまま出す(画面いっぱいに広げる)
             alt = e(b.get('alt') or '')
-            pic = vid(b.get('video')) if b.get('video') else '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
+            pic = vid(b.get('video'), b.get('youtube')) if (b.get('video') or b.get('youtube')) else '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
             link = '<a class="b-link" href="%s"%s aria-label="%s"></a>' % (e(b['link']), ext(b['link']), alt) if b.get('link') else ''
             slides.append('      <article class="slide s%d b-custom" style="--d:%ds;background:%s">%s%s</article>' % (i + 1, i * slide, e(b.get('bg') or '#000'), pic, link))
             continue
@@ -148,11 +176,12 @@ def render():
                      % (m['color_band'], m['color_face'], cid, cid, i + 1, img(m['chara']), img(m['logo']), e(m['name']), img(m['pkg']), e(m['name']), img(m['logo']),
                         spec_pill(spec(m), m['color_band'], m['color_face']), genre(m), L(m.get('copy_ja'), m.get('copy_en')), '<div class="o-btns">%s</div>' % bt))
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
-                     % (e(str(v.get('youtube') or '').strip()), e(v['title']), img(v['poster']), e(v['title']), L(v.get('kind_ja'), v.get('kind_en')),
+                     % (e(yt_id(v.get('youtube'))), e(v['title']), img(v['poster']), e(v['title']), L(v.get('kind_ja'), v.get('kind_en')),
                         '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS)
-    tools = ('        <li><a class="tool t-moji" href="%s" target="_blank" rel="noopener"><span class="tupa tl-tupa"><img class="tb" src="img/b_tupa_body.webp" alt="トゥーパ"><img class="to" src="img/b_tupa_orb.webp" alt=""></span>'
-             '<span class="tl-t"><img class="tl-title" src="img/moji_title.png" alt="ビビル文字ジェネレーター"><span class="wb">%s%s</span></span></a></li>\n'
-             '        <li><div class="tool soon"><span>COMING SOON</span></div></li>') % (e(SITE['moji']), AR, L('あそぶ', 'Play'))
+    tools = '\n'.join('        <li><a class="tool t-%s" href="%s"%s style="background:%s;color:%s">%s<span class="tl-t">%s%s</span></a></li>' % (
+        t['key'], e(t['url']), ext(t['url']), t.get('bg') or '#163f53', t.get('text_color') or '#fff', tool_art(t, 'tl'), tool_title(t, 'tl-title'), tool_btn(t, 'span')) for t in TOOLS)
+    tools += '\n        <li><div class="tool soon"><span>COMING SOON</span></div></li>'
+
     ogp = ''
     if SITE.get('ogp_image'):
         ogp = '  <meta property="og:url" content="%s">\n  <meta property="og:image" content="%simg/%s">' % (SITE_URL, SITE_URL, img(SITE['ogp_image']))

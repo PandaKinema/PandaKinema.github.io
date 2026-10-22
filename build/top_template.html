@@ -55,6 +55,10 @@
     .tupa .to{position:absolute;left:50%;top:0;width:30.4%;translate:-50% 0;filter:drop-shadow(0 0 14px rgba(27,185,238,.7));animation:orbf 2.6s ease-in-out infinite alternate}
     @keyframes orbf{to{translate:-50% -14%}}
     .b-vid,.b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .b-yt{position:absolute;inset:0;overflow:hidden;pointer-events:none;container-type:size}
+    .b-yt iframe{position:absolute;left:50%;top:50%;width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw);translate:-50% -50%;border:0}
+    .b-shot{width:100%;height:auto;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 22px 40px -14px rgba(0,0,0,.6),0 3px 10px rgba(0,0,0,.25)}
+    .b-name .tool-name{display:block;font-size:clamp(28px,3.4vw,46px);font-weight:900;line-height:1.2}
     .b-link{position:absolute;inset:0;display:block;z-index:2}
     .slide.has-vid::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 62%)}
     .slide::after{content:"";position:absolute;inset:auto 0 0;height:22%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.5) 60%,var(--bg))}
@@ -211,8 +215,8 @@
     /* 5. PLAY & TOOLS */
     .trow{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
     .trow::-webkit-scrollbar{display:none}
-    .trow li{flex:0 0 200px}
-    .tool{position:relative;display:flex;flex-direction:column;aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#163f53}
+    .trow li{flex:0 0 200px;display:flex}
+    .tool{position:relative;flex:1;display:flex;flex-direction:column;min-height:300px;border-radius:12px;overflow:hidden;background:#163f53}
     .tool>img{width:100%;aspect-ratio:1;object-fit:cover}
     .t-moji{background:#163f53}
     .t-moji .tl-tupa{display:block;width:52%;margin:16% auto 6%}
@@ -220,11 +224,12 @@
     .t-moji .tl-tupa .to{filter:drop-shadow(0 0 6px rgba(27,185,238,.7))}
     .t-moji .tl-title{width:100%;margin-bottom:2px}
     .t-moji .tl-t{align-items:center}
-    .tl-t{display:flex;flex-direction:column;gap:4px;padding:12px 14px}
+    .tl-t{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:auto;padding:12px 14px;text-align:center}
+    .tool .tl-shot{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+    .tl-t .tool-name{font-size:14px;font-weight:900;line-height:1.35}
     .tl-t b{font-size:15px}.tl-t small{font-size:10.5px;letter-spacing:.12em;opacity:.75}
     .tl-t .wb{align-self:center;min-width:0;margin:6px 0 4px;padding:5px 14px;font-size:12px;border-radius:6px}
     .tool:hover .wb{translate:0 -2px}
-    .tool:hover img{opacity:.85}
     .tool.soon{display:grid;place-items:center;text-align:center;background:var(--bg2);border:1.5px dashed var(--line);color:var(--muted);font-family:var(--cond);font-size:18px;letter-spacing:.08em}
 
     /* 6. ABOUT */
@@ -292,6 +297,9 @@
       .news li a{gap:8px;font-size:12.5px}
       .news time{font-size:11.5px}
       .trow li{flex-basis:150px}
+      .tool{min-height:240px}
+      .tl-t{padding:10px}
+      .tl-t .tool-name{font-size:12.5px}
       .site-footer{grid-template-columns:1fr;justify-items:center;text-align:center}
       .site-footer a{justify-self:center}
       .site-footer img{order:-1}
@@ -382,7 +390,7 @@
   /* バナー:バーが満ちたら次へ。◀▶・バー・スワイプでも動かせる。マウスを乗せている間は止まる */
   var hero=$("#hero"), slides=$$(".slide",hero), bars=$$(".bars label",hero), cur=0, n=slides.length;
   hero.classList.add("jsc");
-  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var v=$("video",s); if(v){ if(k===cur){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
+  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var y=$(".b-yt",s); if(y){ if(k===cur){ if(!$("iframe",y)){ var id=y.getAttribute("data-yt"), f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&mute=1&loop=1&playlist="+id+"&controls=0&playsinline=1&rel=0&iv_load_policy=3&disablekb=1"; f.allow="autoplay; encrypted-media"; f.tabIndex=-1; f.title=""; y.appendChild(f) } } else y.innerHTML="" } var v=$("video",s); if(v){ if(k===cur){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
   bars.forEach(function(b,k){ b.addEventListener("click",function(e){ e.preventDefault(); show(k) }); $("i",b).addEventListener("animationend",function(){ if(k===cur && n>1) show(cur+1) }) });
   hero.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") hero.classList.add("hold") }); hero.addEventListener("pointerleave",function(){ hero.classList.remove("hold") });
   var tx=null; hero.addEventListener("touchstart",function(e){ tx=e.touches[0].clientX },{passive:true});
