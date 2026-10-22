@@ -1,0 +1,75 @@
+# BOARD GAME の列に並ぶ順。color_band = パッケージ下の帯の色、color_face = パッケージの面の色
+- key: trico
+  name: TRICO!
+  new: false
+  front: img/front_trico.webp
+  pkg: img/pkg_trico.webp
+  logo: img/logo_trico.png
+  logo_color: '#664498'
+  color_band: '#664498'
+  color_face: '#fdd000'
+  players: 2〜3
+  time: 10〜15
+  age: 6
+  genre_ja: セットコレクション・バッティング
+  genre_en: Set collection / Simultaneous play
+  page: games/trico/
+  booth: https://pandakinema.booth.pm/
+  banner:
+    bg: '#fdd000'
+    pattern: tri
+- key: bibilu
+  name: ビビルの塔
+  new: true
+  front: img/front_bibilu.webp
+  pkg: img/pkg_bibilu.webp
+  logo: img/logo_bibilu.png
+  logo_color: '#173f54'
+  color_band: '#173f54'
+  color_face: '#7ebda9'
+  players: 2〜4
+  time: 10〜15
+  age: 6
+  genre_ja: バッティング・ハンドマネジメント
+  genre_en: Simultaneous play / Hand management
+  page: games/bibilu/
+  booth: https://pandakinema.booth.pm/
+  banner:
+    bg: '#173f54'
+    logo_color: '#fef4d6'
+    pill_bg: '#7ebda9'
+    pill_text: '#173f54'
+- key: ikatako
+  name: イカタコ
+  new: false
+  front: img/front_ikatako.webp
+  pkg: img/pkg_ikatako.webp
+  logo: img/logo_ikatako.png
+  logo_color: '#ffffff'
+  color_band: '#01215e'
+  color_face: '#0279c3'
+  players: 1〜6
+  time: 5〜15
+  age: 8
+  genre_ja: アクション
+  genre_en: Action
+  page: https://gamemarket.jp/game/186696
+  booth: https://pandakinema.booth.pm/
+  banner: {}
+- key: moko
+  name: モコチャカ
+  new: false
+  front: img/front_moko.webp
+  pkg: img/pkg_moko.webp
+  logo: img/logo_moko.png
+  logo_color: '#38278b'
+  color_band: '#38278b'
+  color_face: '#f19ebb'
+  players: 2〜4
+  time: 10〜15
+  age: 6
+  genre_ja: パターン認識・アクション
+  genre_en: Pattern recognition / Action
+  page: https://gamemarket.jp/game/187698
+  booth: https://pandakinema.booth.pm/
+  banner: {}

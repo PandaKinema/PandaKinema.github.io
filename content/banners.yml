@@ -1,0 +1,8 @@
+# 一番上のバナーに出す順番。key には games / minis の key か、moji(ビビル文字ジェネレータ)を入れます
+- key: bibilu
+- key: trico
+- key: ikatako
+- key: moko
+- key: koikoi
+- key: bash
+- key: moji

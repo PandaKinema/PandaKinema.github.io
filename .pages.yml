@@ -1,0 +1,119 @@
+# Pages CMS(https://app.pagescms.org)の編集画面の設定
+# 保存すると GitHub Actions が new/index.html を自動で作り直します(1〜2分)
+media:
+  input: new/img
+  output: img
+  categories: [image]
+
+content:
+  - name: news
+    label: ニュース
+    type: file
+    path: content/news.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: date, label: 日付, type: string, required: true, description: "例:2026.10.18(上にあるものから順に表示)" }
+      - { name: cat_ja, label: カテゴリ(日本語), type: string, description: "例:お知らせ / 新作 / 出展" }
+      - { name: cat_en, label: カテゴリ(英語), type: string, description: "例:News / New / Event" }
+      - { name: text_ja, label: 本文(日本語), type: string, required: true }
+      - { name: text_en, label: 本文(英語), type: string, description: "空なら日本語をそのまま表示" }
+      - { name: link, label: リンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ。空ならリンクなし" }
+
+  - name: videos
+    label: 動画(MOVIE)
+    type: file
+    path: content/videos.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: title, label: 作品名, type: string, required: true }
+      - { name: kind_ja, label: 種類(日本語), type: string, description: "例:遊び方動画 / 予告編" }
+      - { name: kind_en, label: 種類(英語), type: string, description: "例:How to play / Trailer" }
+      - { name: poster, label: サムネイル, type: image, description: "16:9 の画像" }
+      - { name: youtube, label: YouTube の動画ID, type: string, description: "https://youtu.be/XXXX の XXXX の部分。空なら「準備中」" }
+
+  - name: banners
+    label: バナーの順番
+    type: file
+    path: content/banners.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: key, label: 作品の key, type: string, required: true, description: "ボードゲーム・ミニシアターの key(trico, bibilu, koikoi など)か、moji(ビビル文字ジェネレータ)" }
+
+  - name: games
+    label: ボードゲーム
+    type: file
+    path: content/games.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前。あとから変えない" }
+      - { name: name, label: 作品名, type: string, required: true }
+      - { name: new, label: 新作マークを付ける, type: boolean }
+      - { name: front, label: カード(パッケージ正面), type: image, description: "閉じたカードの画像。比率は約 1:1.41" }
+      - { name: pkg, label: パッケージ(立体), type: image, description: "背景が透明なPNG/WebP" }
+      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG。色はロゴの色で塗られます" }
+      - { name: logo_color, label: ロゴの色, type: string, description: "例:#664498" }
+      - { name: color_band, label: キーカラー1(帯), type: string, description: "人数〜年齢の下地の色" }
+      - { name: color_face, label: キーカラー2(面), type: string, description: "カードの背景と、人数〜年齢の文字の色" }
+      - { name: players, label: 人数, type: string, description: "例:2〜4" }
+      - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
+      - { name: age, label: 対象年齢, type: string, description: "例:6" }
+      - { name: genre_ja, label: ジャンル(日本語), type: string }
+      - { name: genre_en, label: ジャンル(英語), type: string }
+      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
+      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "空ならボタンを出さない" }
+      - name: banner
+        label: バナー
+        type: object
+        fields:
+          - { name: bg, label: 背景色, type: string, description: "空ならキーカラー2" }
+          - { name: pattern, label: 背景の模様, type: string, description: "tri(トリコの三角)か、空" }
+          - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。2400×1260、文字なし。左半分と下の3割は文字やボタンが重なります" }
+          - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色" }
+          - { name: pill_bg, label: 人数〜年齢の下地, type: string, description: "空ならキーカラー1" }
+          - { name: pill_text, label: 人数〜年齢の文字, type: string, description: "空ならキーカラー2" }
+
+  - name: minis
+    label: ミニシアター
+    type: file
+    path: content/minis.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: key, label: key(英小文字), type: string, required: true }
+      - { name: name, label: 作品名, type: string, required: true }
+      - { name: pkg, label: パッケージ(横長), type: image }
+      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
+      - { name: chara, label: キャラクター, type: image, description: "背景が透明なPNG" }
+      - { name: color_band, label: キーカラー1(帯), type: string }
+      - { name: color_face, label: キーカラー2(面), type: string }
+      - { name: players, label: 人数, type: string }
+      - { name: time, label: 時間(分), type: string }
+      - { name: age, label: 対象年齢, type: string }
+      - { name: genre_ja, label: ジャンル(日本語), type: string }
+      - { name: genre_en, label: ジャンル(英語), type: string }
+      - { name: copy_ja, label: ひとこと(日本語), type: string }
+      - { name: copy_en, label: ひとこと(英語), type: string }
+      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "空ならボタンなし" }
+      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "空ならボタンなし" }
+
+  - name: site
+    label: サイト全体
+    type: file
+    path: content/site.yml
+    format: yaml
+    fields:
+      - { name: slide_seconds, label: バナーが切り替わる秒数, type: number }
+      - { name: booth, label: BOOTH のURL, type: string }
+      - { name: x, label: パンダキネマの X, type: string }
+      - { name: gamemarket, label: ゲームマーケットのURL, type: string }
+      - { name: note, label: note のURL, type: string }
+      - { name: member_x, label: ゐするぎの X, type: string }
+      - { name: mail, label: 連絡先メール, type: string }
+      - { name: moji, label: ビビル文字ジェネレータのURL, type: string }
+      - { name: ogp_image, label: X共有画像(トップ), type: image, description: "1200×630" }
+      - { name: about_ja, label: ABOUT の文(日本語), type: text }
+      - { name: about_en, label: ABOUT の文(英語), type: text }
