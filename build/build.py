@@ -43,7 +43,7 @@ GAMES = load('games')
 MINIS = load('minis')
 NEWS = load('news')
 VIDEOS = load('videos')
-BANNERS = [b['key'] if isinstance(b, dict) else b for b in load('banners')]
+BANNERS = [b if isinstance(b, dict) else {'key': b} for b in load('banners')]
 
 def spec(g):
     return (str(g.get('players', '')), str(g.get('time', '')), str(g.get('age', '')))
@@ -93,18 +93,16 @@ def banner(key):
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
-    n = len(BANNERS); total = n * slide
-    radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
     slides = []
-    for i, k in enumerate(BANNERS):
-        cls, bg, art, txt, bt = banner(k)
-        slides.append('      <article class="slide s%d %s" style="--d:%ds;%s"><div class="frame">%s<div class="b-txt">%s<div class="b-btns">%s</div></div></div></article>' % (i + 1, cls, i * slide, bg, art, txt, bt))
-    dots = ''.join('<label for="br%d" style="--d:%ds" aria-label="%d枚目"></label>' % (i + 1, i * slide, i + 1) for i in range(n))
-    w = 100.0 / n; fd = 0.8 / total * 100
-    cyc = ('    @keyframes cyc{0%%{opacity:0;visibility:hidden;z-index:1}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:0;visibility:hidden;z-index:1}100%%{opacity:0;visibility:hidden;z-index:1}}\n'
-           '    @keyframes dcyc{0%%,%.3f%%{background:#fff;scale:1.25}%.3f%%,100%%{background:rgba(255,255,255,.45);scale:1}}\n'
-           '    @keyframes kb{0%%{scale:1}%.3f%%{scale:1.05}100%%{scale:1.05}}') % (fd, w, w + fd, w, w + .001, w + fd)
-    pick = '\n'.join('    .hero:has(#br%d:checked) .s%d{opacity:1;visibility:visible;z-index:2}\n    .hero:has(#br%d:checked) .dots label:nth-child(%d){background:#fff;scale:1.25}' % (i + 1, i + 1, i + 1, i + 1) for i in range(n))
+    for i, b in enumerate(BANNERS):
+        if b.get('image'):   # 自分で作ったバナー画像(1200×630)をそのまま出す
+            alt = e(b.get('alt') or '')
+            pic = '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
+            inner = '<a class="b-link" href="%s"%s>%s</a>' % (e(b['link']), ext(b['link']), pic) if b.get('link') else pic
+            slides.append('      <article class="slide b-custom">%s</article>' % inner)
+            continue
+        cls, bg, art, txt, bt = banner(b['key'])
+        slides.append('      <article class="slide %s" style="%s"><div class="frame">%s<div class="b-txt">%s<div class="b-btns">%s</div></div></div></article>' % (cls, bg, art, txt, bt))
     news = '\n'.join('        <li><a href="%s"%s><time>%s</time><span class="cat">%s</span><span class="t">%s</span></a></li>' % (
         e(x.get('link') or '#news'), ext(x.get('link')), e(str(x['date'])), L(x.get('cat_ja'), x.get('cat_en')), L(x.get('text_ja'), x.get('text_en'))) for x in NEWS)
     cards = []
@@ -134,7 +132,7 @@ def render():
     ogp = ''
     if SITE.get('ogp_image'):
         ogp = '  <meta property="og:url" content="%s">\n  <meta property="og:image" content="%simg/%s">' % (SITE_URL, SITE_URL, img(SITE['ogp_image']))
-    v = dict(total=total, radios=radios, slides='\n'.join(slides), dots=dots, cyc=cyc, pick=pick, slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
+    v = dict(slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
              about=L(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp)
     s = open(os.path.join(ROOT, 'build', 'top_template.html'), encoding='utf-8').read()

@@ -40,7 +40,10 @@ content:
     format: yaml
     list: true
     fields:
-      - { name: key, label: 作品の key, type: string, required: true, description: "ボードゲーム・ミニシアターの key(trico, bibilu, koikoi など)か、moji(ビビル文字ジェネレータ)" }
+      - { name: key, label: 作品の key, type: string, description: "作品のバナーを出すとき:ボードゲーム・ミニシアターの key(trico, bibilu, koikoi など)か、moji(ビビル文字ジェネレータ)" }
+      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "画像だけのバナーを出すとき。1200×630(できれば2400×1260)。入れると key より優先" }
+      - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
+      - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
 
   - name: games
     label: ボードゲーム

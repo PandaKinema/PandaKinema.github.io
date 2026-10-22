@@ -42,11 +42,15 @@
     #lang-ja:checked~* .lang label[for="lang-ja"],#lang-en:checked~* .lang label[for="lang-en"]{background:var(--text);color:var(--bg)}
     #lang-ja:focus-visible~* .lang label[for="lang-ja"],#lang-en:focus-visible~* .lang label[for="lang-en"]{outline:2px solid #fff}
 
-    /* 1. バナー:X共有画像と同じ 1200×630 の枠。枠の外は同じ色で塗る */
-    .hero{position:relative;height:min(630px,calc(100vw * 630 / 1200));overflow:hidden;background:#000}
-    .slide{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;animation:cyc var(--total) infinite both;animation-delay:var(--d)}
-    .frame{position:relative;width:min(1200px,100%);height:100%;margin-inline:auto;container-type:inline-size}
-{{cyc}}
+    /* 1. バナー:X共有画像と同じ 1200×630 の長方形が横に並ぶ。自動で次へ進み、指やボタンでも動かせる */
+    .hero{position:relative;padding-top:18px}
+    .bn-track{--bw:min(1100px,86vw);position:relative;display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-inline:calc((100% - var(--bw)) / 2);overscroll-behavior-x:contain}
+    .bn-track::-webkit-scrollbar{display:none}
+    .slide{position:relative;flex:0 0 var(--bw);aspect-ratio:1200/630;border-radius:14px;overflow:hidden;scroll-snap-align:center;transition:opacity .5s ease}
+    .hero.jsc .slide:not(.cur){opacity:.4}
+    .frame{position:relative;width:100%;height:100%;container-type:inline-size}
+    .b-link{position:absolute;inset:0;display:block}
+    .b-img{width:100%;height:100%;object-fit:cover}
     .b-txt{position:absolute;left:6cqw;top:47%;translate:0 -50%;display:flex;flex-direction:column;align-items:center;gap:1.6cqw;width:48cqw;z-index:2;text-align:center}
     .b-logo{display:block;width:40cqw;background:var(--lc);-webkit-mask:var(--lg) center/contain no-repeat;mask:var(--lg) center/contain no-repeat}
     img.b-logo{background:none;filter:drop-shadow(0 .4cqw 1.2cqw rgba(0,0,0,.35))}
@@ -55,8 +59,8 @@
     .b-series{margin:0;font-family:var(--cond);font-size:max(11px,1.9cqw);font-weight:700;letter-spacing:.06em;opacity:.85}
     .b-name{margin:0;font-size:max(18px,4.2cqw);font-weight:900;line-height:1.15;word-break:auto-phrase}
     .b-copy{margin:0;font-size:max(11px,1.8cqw);font-weight:800}
-    .b-btns{display:flex;gap:1.2cqw;margin-top:.8cqw}
-    .wb{display:inline-flex;align-items:center;justify-content:center;min-width:max(84px,14cqw);padding:max(6px,1.1cqw) max(12px,2cqw);border-radius:max(6px,1cqw);background:#fff;color:#16181a;font-size:max(12px,2cqw);font-weight:900;letter-spacing:.04em;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.18);transition:translate .15s ease}
+    .b-btns{display:flex;gap:1cqw;margin-top:.6cqw}
+    .wb{display:inline-flex;align-items:center;justify-content:center;min-width:max(64px,10cqw);padding:max(5px,.75cqw) max(10px,1.5cqw);border-radius:max(5px,.7cqw);background:#fff;color:#16181a;font-size:max(11px,1.45cqw);font-weight:900;letter-spacing:.04em;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.18);transition:translate .15s ease}
     .wb:hover{translate:0 -2px}
     .wb{cursor:pointer;gap:.45em;white-space:nowrap}
     .wb .ar{font-size:.72em;line-height:1}
@@ -74,27 +78,19 @@
     .tupa .to{position:absolute;left:50%;top:0;width:30.4%;translate:-50% 0;filter:drop-shadow(0 0 1.2cqw rgba(27,185,238,.7));animation:orbf 2.6s ease-in-out infinite alternate}
     @keyframes orbf{to{translate:-50% -14%}}
     .b-mtitle{width:44cqw;filter:drop-shadow(0 .3cqw .8cqw rgba(0,0,0,.3))}
-    .slide::after{content:"";position:absolute;inset:auto 0 0;height:30%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.55) 55%,var(--bg))}
-    .b-pkg,.b-mini,.b-tupa{animation:kb var(--total) linear infinite both;animation-delay:var(--d)}
-    .hero:has(.br:checked) :is(.b-pkg,.b-mini,.b-tupa){animation:none}
-    .hero.jsc :is(.b-pkg,.b-mini,.b-tupa){animation:none;scale:1;transition:scale 0s linear .8s}
-    .hero.jsc .slide.cur :is(.b-pkg,.b-mini,.b-tupa){scale:1.05;transition:scale {{slide}}.8s linear}
+    .hero.jsc :is(.b-pkg,.b-mini,.b-tupa){scale:1;transition:scale .5s ease}
+    .hero.jsc .slide.cur :is(.b-pkg,.b-mini,.b-tupa){scale:1.04;transition:scale {{slide}}s linear}
     .hero.jsc .slide:not(.cur) .b-txt>*{animation:none}
-    .b-ui{position:absolute;left:50%;bottom:max(8px,2.4%);translate:-50% 0;z-index:5;display:flex;align-items:center;gap:12px}
-    .dots{display:flex;gap:10px}
-    .dots label{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.45);box-shadow:0 0 0 1px rgba(0,0,0,.15);cursor:pointer;animation:dcyc var(--total) infinite both;animation-delay:var(--d)}
-    .tri{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:none;cursor:pointer}
+    /* ◀ ● ● ▶(バナーと各列で共通。点は並んでいる数だけ出る) */
+    .b-ui,.pager{justify-content:center;align-items:center;gap:6px;margin:10px 0 0}
+    .dots,.pager .pd{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+    .dots button,.pager .pd button{width:6px;height:6px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:background .2s,scale .2s}
+    .dots button[aria-current="true"],.pager .pd button[aria-current="true"]{background:#fff;scale:1.3}
+    .tri{display:grid;place-items:center;width:20px;height:20px;padding:0;border:0;background:none;cursor:pointer}
     .tri::before{content:"";border-style:solid;border-color:transparent}
-    .tri.prev::before{border-width:9px 13px 9px 0;border-right-color:#fff}
-    .tri.next::before{border-width:9px 0 9px 13px;border-left-color:#fff}
-    .tri{filter:drop-shadow(0 0 2px rgba(0,0,0,.35))}
-    .hero:has(.br:checked) .slide{animation:none;opacity:0;visibility:hidden}
-    .hero:has(.br:checked) .dots label{animation:none}
-{{pick}}
-    .hero.jsc .slide{animation:none !important;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility 0s linear .8s}
-    .hero.jsc .slide.cur{opacity:1 !important;visibility:visible !important;z-index:2;transition:opacity .8s ease,visibility 0s}
-    .hero.jsc .dots label{animation:none !important;background:rgba(255,255,255,.45);scale:1}
-    .hero.jsc .dots label.on{background:#fff;scale:1.25}
+    .tri.prev::before{border-width:5px 7px 5px 0;border-right-color:#fff}
+    .tri.next::before{border-width:5px 0 5px 7px;border-left-color:#fff}
+    .tri[disabled]{opacity:.25;cursor:default}
     .slide .b-txt>*{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
     .slide .b-txt>:nth-child(2){animation-delay:.08s}.slide .b-txt>:nth-child(3){animation-delay:.16s}.slide .b-txt>:nth-child(4){animation-delay:.24s}.slide .b-txt>:nth-child(5){animation-delay:.32s}
     @keyframes rise{from{opacity:0;translate:0 12px}}
@@ -111,11 +107,6 @@
     .shuf input:checked+i{background:var(--text)}
     .shuf input:checked+i::after{content:"";width:5px;height:10px;margin-top:-3px;border:solid var(--bg);border-width:0 2.5px 2.5px 0;rotate:45deg}
     .shuf input:focus-visible+i{outline:2px solid #fff;outline-offset:2px}
-    .pager{justify-content:center;align-items:center;gap:12px;margin:14px 0 0}
-    .pager .pd{display:flex;gap:10px}
-    .pager .pd button{width:10px;height:10px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer}
-    .pager .pd button[aria-current="true"]{background:#fff;scale:1.25}
-    .pager .tri[disabled]{opacity:.25;cursor:default}
 
     /* 2. NEWS */
     .news{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;margin:22px var(--side) 0;padding:14px 16px 12px 18px;border:1.5px solid var(--line)}
@@ -135,7 +126,7 @@
     .nscroll .dn::before{border-width:14px 10px 0;border-top-color:var(--text)}
 
     /* 3. BOARD GAME:パッケージの正面 → 触ると横長 */
-    .row{--h:300px;--cw:calc(var(--h) * 560 / 790);--ow:calc(var(--h) * 1.7);list-style:none;margin:0;padding:0 0 4px;display:flex;gap:16px;height:var(--h);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-behavior:smooth}
+    .row{position:relative;--h:300px;--cw:calc(var(--h) * 560 / 790);--ow:calc(var(--h) * 1.7);list-style:none;margin:0;padding:0 0 4px;display:flex;gap:16px;height:var(--h);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-behavior:smooth}
     .row::-webkit-scrollbar{display:none}
     .card{position:relative;flex:0 0 var(--cw);height:var(--h);border-radius:12px;overflow:hidden;background:var(--c2);transition:flex-basis .45s cubic-bezier(.2,.8,.2,1)}
     .c-face{position:absolute;inset:0;cursor:pointer;transition:opacity .25s ease}
@@ -172,7 +163,7 @@
     .mini .o-genre,.mini .o-copy{color:#fff}
     .o-copy{margin:0;font-size:14px;font-weight:800}
     .o-btns{display:flex;gap:8px}
-    .o-btns .wb{min-width:0;padding:8px 16px;font-size:13.5px;border-radius:8px}
+    .o-btns .wb{min-width:0;padding:6px 12px;font-size:12px;border-radius:6px}
     .o-x{position:absolute;right:10px;top:10px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.18) linear-gradient(#fff,#fff) center/12px 2px no-repeat;cursor:pointer}
     .card:has(> .sr:checked){flex-basis:var(--ow)}
     .card:has(> .sr:checked) .c-face{opacity:0;pointer-events:none}
@@ -188,7 +179,7 @@
     }
 
     /* 4. MOVIE:サムネが見えている列 */
-    .vrow{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+    .vrow{position:relative;list-style:none;margin:0;padding:0 0 4px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;scroll-behavior:smooth}
     .vrow::-webkit-scrollbar{display:none}
     .vrow li{flex:0 0 min(560px,82vw);scroll-snap-align:start}
     .vid{all:unset;box-sizing:border-box;position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;cursor:pointer}
@@ -219,7 +210,7 @@
     .t-moji .tl-t{align-items:center}
     .tl-t{display:flex;flex-direction:column;gap:4px;padding:12px 14px}
     .tl-t b{font-size:15px}.tl-t small{font-size:10.5px;letter-spacing:.12em;opacity:.75}
-    .tl-t .wb{align-self:center;min-width:0;margin:6px 0 4px;padding:7px 18px;font-size:13.5px;border-radius:8px}
+    .tl-t .wb{align-self:center;min-width:0;margin:6px 0 4px;padding:5px 14px;font-size:12px;border-radius:6px}
     .tool:hover .wb{translate:0 -2px}
     .tool:hover img{opacity:.85}
     .tool.soon{display:grid;place-items:center;text-align:center;background:var(--bg2);border:1.5px dashed var(--line);color:var(--muted);font-family:var(--cond);font-size:18px;letter-spacing:.08em}
@@ -261,7 +252,7 @@
       .o-txt .pill{font-size:10.5px;padding:.2em .7em}
       .o-genre{font-size:10.5px;line-height:1.5}
       .o-btns{gap:6px}
-      .o-btns .wb{padding:6px 10px;font-size:11.5px;border-radius:6px}
+      .o-btns .wb{padding:5px 8px;font-size:10.5px;border-radius:5px}
       .c-open.m-open{padding:12px 12px 10px;gap:8px}
       .m-info{padding:8px 10px;gap:10px}
       .m-l .pill{font-size:10px}
@@ -278,8 +269,8 @@
       .b-name{font-size:17px}
       .b-txt{left:3cqw;width:57cqw}
       .b-btns{gap:6px}
-      .wb{min-width:0;padding:6px 9px;font-size:11px;border-radius:6px;gap:.35em}
-      .b-ui{bottom:4px;gap:6px}.dots{gap:7px}.dots label{width:7px;height:7px}.tri{width:22px;height:22px}
+      .wb{min-width:0;padding:4px 8px;font-size:10px;border-radius:5px;gap:.3em}
+      .bn-track{--bw:88vw;gap:10px}
     }
     @media (max-width:520px){
       .row{--h:240px;--ow:92vw}
@@ -306,10 +297,11 @@
 </header>
 
 <main id="top">
-  <section class="hero" id="hero" style="--total:{{total}}s" aria-roledescription="カルーセル" aria-label="特集">
-    {{radios}}
+  <section class="hero" id="hero" aria-roledescription="カルーセル" aria-label="特集">
+    <div class="bn-track" id="bntrack">
 {{slides}}
-    <div class="b-ui"><button class="tri prev js-only" type="button" aria-label="前へ"></button><div class="dots">{{dots}}</div><button class="tri next js-only" type="button" aria-label="次へ"></button></div>
+    </div>
+    <div class="b-ui js-only"><button class="tri prev" type="button" aria-label="前へ"></button><div class="dots"></div><button class="tri next" type="button" aria-label="次へ"></button></div>
   </section>
 
   <section class="news" id="news" aria-labelledby="news-title">
@@ -377,31 +369,34 @@
   var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem("pk-lang") }catch(e){}
   var l0=q||saved; if(l0){ document.getElementById("lang-"+l0).checked=true; root.lang=l0 }
   ["ja","en"].forEach(function(l){ document.getElementById("lang-"+l).addEventListener("change",function(){ root.lang=l; try{ localStorage.setItem("pk-lang",l) }catch(e){} }) });
-  /* バナー */
-  var hero=$("#hero"), slides=$$(".slide",hero), dots=$$(".dots label",hero), cur=0, timer=null, DUR={{slide}}*1000, hover=false;
+  /* バナー:自動で次へ。指で動かしたり、◀▶や点でも選べる */
+  var hero=$("#hero"), track=$("#bntrack"), slides=$$(".slide",track), dotsEl=$(".dots",hero), cur=0, timer=null, DUR={{slide}}*1000, hold=false, n=slides.length;
   hero.classList.add("jsc");
-  function show(i){ cur=(i+slides.length)%slides.length; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur) }); dots.forEach(function(d,k){ d.classList.toggle("on",k===cur) }); restart() }
-  function restart(){ clearTimeout(timer); if(!hover && !document.hidden) timer=setTimeout(function(){ show(cur+1) },DUR) }
-  dots.forEach(function(d,k){ d.addEventListener("click",function(e){ e.preventDefault(); show(k) }) });
-  $(".tri.prev",hero).addEventListener("click",function(){ show(cur-1) }); $(".tri.next",hero).addEventListener("click",function(){ show(cur+1) });
-  hero.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse"){ hover=true; restart() } }); hero.addEventListener("pointerleave",function(){ hover=false; restart() });
+  var dots=slides.map(function(s,k){ var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(k+1)+"枚目"); b.addEventListener("click",function(){ go(k) }); dotsEl.appendChild(b); return b });
+  function pos(k){ var s=slides[k]; return s.offsetLeft-(track.clientWidth-s.offsetWidth)/2 }
+  function mark(){ slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur) }); dots.forEach(function(d,k){ d.setAttribute("aria-current",k===cur?"true":"false") }) }
+  function go(k){ cur=(k+n)%n; track.scrollTo({left:pos(cur),behavior:"smooth"}); mark(); restart() }
+  function restart(){ clearTimeout(timer); if(!hold && !document.hidden && n>1) timer=setTimeout(function(){ go(cur+1) },DUR) }
+  var st=null; track.addEventListener("scroll",function(){ clearTimeout(st); st=setTimeout(function(){ var best=0,bd=1e9; slides.forEach(function(s,k){ var d=Math.abs(pos(k)-track.scrollLeft); if(d<bd){ bd=d; best=k } }); if(best!==cur){ cur=best; mark(); restart() } },120) },{passive:true});
+  $(".tri.prev",hero).addEventListener("click",function(){ go(cur-1) }); $(".tri.next",hero).addEventListener("click",function(){ go(cur+1) });
+  hero.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse"){ hold=true; restart() } }); hero.addEventListener("pointerleave",function(){ hold=false; restart() });
+  track.addEventListener("touchstart",function(){ hold=true; clearTimeout(timer) },{passive:true}); track.addEventListener("touchend",function(){ hold=false; restart() });
   document.addEventListener("visibilitychange",restart);
-  var tx=null; hero.addEventListener("touchstart",function(e){ tx=e.touches[0].clientX },{passive:true});
-  hero.addEventListener("touchend",function(e){ if(tx===null) return; var dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) show(cur+(dx<0?1:-1)); tx=null });
-  show(0);
+  if(n<2) $(".b-ui",hero).style.setProperty("display","none","important");
+  mark(); restart();
   /* NEWS ▲▼ */
   var nl=$("#newslist"); $(".nscroll .up").addEventListener("click",function(){ nl.scrollBy({top:-32,behavior:"smooth"}) }); $(".nscroll .dn").addEventListener("click",function(){ nl.scrollBy({top:32,behavior:"smooth"}) });
   /* 列の ◀ ● ▶ */
-  $$(".pager").forEach(function(pg){ var row=document.getElementById(pg.getAttribute("data-for")), pd=$(".pd",pg), prev=$(".prev",pg), next=$(".next",pg);
-    function pages(){ return Math.max(1,Math.ceil((row.scrollWidth-4)/row.clientWidth)) }
-    function build(){ var n=pages(); pd.innerHTML=""; for(var i=0;i<n;i++){ (function(i){ var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(i+1)+"ページ"); b.addEventListener("click",function(){ row.scrollTo({left:i*row.clientWidth}) }); pd.appendChild(b) })(i) } sync() }
-    function sync(){ var n=pages(), i=Math.round(row.scrollLeft/row.clientWidth); if(row.scrollLeft+row.clientWidth>=row.scrollWidth-4) i=n-1;
-      $$("button",pd).forEach(function(b,k){ b.setAttribute("aria-current",k===i?"true":"false") }); prev.disabled=row.scrollLeft<4; next.disabled=row.scrollLeft+row.clientWidth>=row.scrollWidth-4;
-      pg.style.visibility=n>1?"visible":"hidden" }
-    prev.addEventListener("click",function(){ row.scrollBy({left:-row.clientWidth*.9}) }); next.addEventListener("click",function(){ row.scrollBy({left:row.clientWidth*.9}) });
-    row.addEventListener("scroll",function(){ requestAnimationFrame(sync) },{passive:true}); window.addEventListener("resize",build);
-    row.addEventListener("transitionend",function(e){ if(e.propertyName==="flex-basis") build() });
-    build() });
+  $$(".pager").forEach(function(pg){ var row=document.getElementById(pg.getAttribute("data-for")), pd=$(".pd",pg), prev=$(".prev",pg), next=$(".next",pg), items=[].slice.call(row.children), at=0;
+    function go(k){ k=Math.max(0,Math.min(items.length-1,k)); row.scrollTo({left:items[k].offsetLeft,behavior:"smooth"}) }
+    items.forEach(function(it,k){ var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(k+1)+"番目"); b.addEventListener("click",function(){ go(k) }); pd.appendChild(b) });
+    function sync(){ var end=row.scrollLeft+row.clientWidth>=row.scrollWidth-4; at=0; items.forEach(function(it,k){ if(it.offsetLeft<=row.scrollLeft+8) at=k }); if(end && row.scrollLeft>4) at=items.length-1;
+      $$("button",pd).forEach(function(b,k){ b.setAttribute("aria-current",k===at?"true":"false") }); prev.disabled=row.scrollLeft<4; next.disabled=end;
+      pg.style.visibility=row.scrollWidth>row.clientWidth+4?"visible":"hidden" }
+    prev.addEventListener("click",function(){ go(at-1) }); next.addEventListener("click",function(){ go(at+1) });
+    row.addEventListener("scroll",function(){ requestAnimationFrame(sync) },{passive:true}); window.addEventListener("resize",sync);
+    row.addEventListener("transitionend",function(e){ if(e.propertyName==="flex-basis") sync() });
+    sync() });
   /* カード:開いたら見える位置へ */
   var brow=$("#boardrow");
   $$("#boardrow .card .sr").forEach(function(r){ r.addEventListener("change",function(){ var c=r.parentNode; setTimeout(function(){ var a=c.getBoundingClientRect(), b=brow.getBoundingClientRect(); if(a.left<b.left||a.right>b.right) brow.scrollBy({left:a.left-b.left}) },470) }) });
