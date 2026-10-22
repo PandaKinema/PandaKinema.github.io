@@ -32,9 +32,14 @@
     .cond{font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.01em;font-stretch:condensed}
 
     /* ヘッダー */
-    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid #11161a}
+    /* ヘッダー:バナーの上に透けて重なる。下へ進むと半透明の板になる */
+    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .3s ease}
+    .jsc .site-header{background:linear-gradient(rgba(12,15,18,.55),rgba(12,15,18,0));-webkit-backdrop-filter:none;backdrop-filter:none}
+    .jsc .site-header.solid{background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+    .hero{margin-top:calc(-56px - env(safe-area-inset-top,0px))}
     .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:var(--side)}
-    .home{flex:none;display:block;width:30px;height:30px;background:var(--text);-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+    .home{flex:none;display:block}
+    .home img{height:24px;width:auto}
     .nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;font-size:clamp(14px,1.6vw,19px)}
     .nav::-webkit-scrollbar{display:none}
     .nav a{white-space:nowrap;padding:8px 0;opacity:.9}.nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
@@ -49,7 +54,7 @@
     @keyframes cyc{0%{opacity:0;visibility:hidden;z-index:1}2.286%{opacity:1;visibility:visible;z-index:2}20.000%{opacity:1;visibility:visible;z-index:2}22.286%{opacity:0;visibility:hidden;z-index:1}100%{opacity:0;visibility:hidden;z-index:1}}
     @keyframes fill{0%{width:0}20.000%{width:100%}20.001%,100%{width:0}}
     @keyframes kb{0%{scale:1}22.286%{scale:1.04}100%{scale:1.04}}
-    .b-art{position:absolute;right:max(20px,6vw);top:7%;bottom:11%;width:46vw;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .b-art{position:absolute;right:max(20px,6vw);top:calc(56px + 4%);bottom:11%;width:46vw;display:flex;align-items:center;justify-content:center;pointer-events:none}
     .b-pkg{height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(0,0,0,.3))}
     .b-mini{width:100%;height:auto;border-radius:8px;box-shadow:0 18px 30px -10px rgba(0,0,0,.45),0 3px 8px rgba(0,0,0,.2)}
     .b-art .tupa{height:78%;width:auto}
@@ -148,10 +153,10 @@
     .news .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .news li a:hover .t{text-decoration:underline}
     .nscroll{flex-direction:column;justify-content:space-between}
-    .nscroll button{width:28px;height:24px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+    .nscroll button{width:22px;height:18px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
     .nscroll button::before{content:"";border-style:solid;border-color:transparent}
-    .nscroll .up::before{border-width:0 10px 14px;border-bottom-color:var(--text)}
-    .nscroll .dn::before{border-width:14px 10px 0;border-top-color:var(--text)}
+    .nscroll .up::before{border-width:0 6px 8px;border-bottom-color:var(--text)}
+    .nscroll .dn::before{border-width:8px 6px 0;border-top-color:var(--text)}
 
     /* 3. BOARD GAME:パッケージの正面 → 触ると横長 */
     .row{position:relative;--h:300px;--cw:calc(var(--h) * 560 / 790);--ow:calc(var(--h) * 1.7);list-style:none;margin:0;padding:0 0 4px;display:flex;gap:16px;height:var(--h);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-behavior:smooth}
@@ -269,9 +274,8 @@
     .mail a{font-size:clamp(18px,2vw,24px);font-weight:600;word-break:break-all;user-select:all}
     .mail a:hover{text-decoration:underline}
     .copy{padding:5px 10px;border:1.5px solid var(--text);border-radius:4px;background:none;font-size:12px;font-weight:800;cursor:pointer}
-    .site-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:48px var(--side) 0;padding:20px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1.5px solid var(--line);font-size:12px;color:var(--soft)}
-    .site-footer img{width:180px}
-    .site-footer a{justify-self:end;font-family:var(--cond);font-size:14px;letter-spacing:.08em}
+    .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:48px var(--side) 0;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,var(--soft) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:var(--soft)}
+    .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
     @media (max-width:760px){
       .about{grid-template-columns:1fr;gap:26px}
@@ -290,7 +294,7 @@
     }
     @media (max-width:700px){
       .hero{height:clamp(540px,84svh,720px)}
-      .b-art{left:6vw;right:6vw;top:5%;bottom:auto;height:42%;width:auto}
+      .b-art{left:6vw;right:6vw;top:calc(56px + 2%);bottom:auto;height:38%;width:auto}
       .b-in{left:20px;right:20px;width:auto;top:auto;bottom:48px;translate:none;gap:9px}
       .b-logo{width:min(320px,84%)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
@@ -304,7 +308,7 @@
     @media (max-width:520px){
       .row{--h:240px;--ow:92vw}
       .nav{font-size:14px;gap:12px}
-      .home{width:26px;height:26px}
+      .home img{height:18px}
       .news{padding:12px}
       .news li a{gap:8px;font-size:12.5px}
       .news time{font-size:11.5px}
@@ -312,9 +316,7 @@
       .tool{min-height:240px}
       .tl-t{padding:10px}
       .tl-t .tool-name{font-size:12.5px}
-      .site-footer{grid-template-columns:1fr;justify-items:center;text-align:center}
-      .site-footer a{justify-self:center}
-      .site-footer img{order:-1}
+      .site-footer{flex-direction:column;gap:10px;text-align:center}
     }
   </style>
 </head>
@@ -322,7 +324,7 @@
 <input class="sr" type="radio" name="lang" id="lang-ja" checked aria-label="日本語"><input class="sr" type="radio" name="lang" id="lang-en" aria-label="English">
 <header class="site-header">
   <div class="bar">
-    <a class="home" href="#top" aria-label="PANDA KINEMA トップ"></a>
+    <a class="home" href="#top"><img src="img/brand.png" alt="PANDA KINEMA" width="365" height="66"></a>
     <nav class="nav cond" aria-label="サイト"><a href="#news">NEWS</a><a href="#board">BOARD GAME</a><a href="#movie">MOVIE</a><a href="#tools">PLAY&amp;TOOLS</a><a href="#about">ABOUT</a></nav>
     <div class="lang cond" role="group" aria-label="言語 / Language"><label for="lang-ja">JA</label><label for="lang-en">EN</label></div>
   </div>
@@ -405,12 +407,14 @@
   </section>
 </main>
 
-<footer class="site-footer"><span>©2015-2026 Panda Kinema</span><img src="img/brand.png" alt="PANDA KINEMA" width="365" height="66"><a href="#top">BACK TO TOP ↑</a></footer>
+<footer class="site-footer"><span>©2015-2026 Panda Kinema</span><a href="#top">BACK TO TOP ↑</a></footer>
 
 <script>
 (function(){
   var root=document.documentElement, $=function(s,c){ return (c||document).querySelector(s) }, $$=function(s,c){ return [].slice.call((c||document).querySelectorAll(s)) };
   root.classList.add("jsc");
+  /* ヘッダー:バナーを過ぎたら板を敷く */
+  var hd=$(".site-header"); function hs(){ hd.classList.toggle("solid", scrollY > ($("#hero").offsetHeight-80)) } addEventListener("scroll",hs,{passive:true}); hs();
   /* 言語 */
   /* 言語:選んだ方を覚えておく(?lang=en でも開ける) */
   var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem("pk-lang") }catch(e){}
