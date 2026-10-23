@@ -25,8 +25,8 @@
   logo: img/logo_trico.png
   key1: "#fdd000"
   key2: "#664498"
-  bg: key1
-  logo_color: key2
+  bg: key2
+  logo_color: key1
   players: 2〜3
   time: 10〜15
   age: "6"
