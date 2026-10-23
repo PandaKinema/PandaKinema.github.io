@@ -57,8 +57,8 @@
   front: img/front_ikatako.webp
   pkg: img/pkg_ikatako.webp
   logo: img/logo_ikatako.png
-  key1: "#01215e"
-  key2: "#0279c3"
+  key1: "#ffffff"
+  key2: "#0073bd"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
@@ -66,7 +66,7 @@
   players: 1〜6
   time: 5〜15
   age: "8"
-  genre_ja: アクション
+  genre_ja: リアクション・反射神経
   genre_en: Action
   intro_ja: イカだ！タコだ！手を挙げろ！
   intro_en: Squid! Octopus! Hands up!
@@ -82,8 +82,8 @@
   front: img/front_moko.webp
   pkg: img/pkg_moko.webp
   logo: img/logo_moko.png
-  key1: "#38278b"
-  key2: "#f19ebb"
+  key1: "#f19ebc"
+  key2: "#39278b"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
@@ -103,7 +103,7 @@
     text_color: key1
 - key: koikoi
   name: こいこいのぼり 真打
-  series: MINI THEATER SERIES 01
+  series: MINI THEATER SERIES
   new: false
   front: img/front_koikoi.webp
   pkg: img/mini_koikoi.webp
@@ -141,7 +141,7 @@
   players: "2"
   time: 5〜10
   age: "6"
-  genre_ja: 対戦格闘ゲーム風読み合い
+  genre_ja: 対戦格闘風読み合いゲーム
   genre_en: Fighting-game-style mind games
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
