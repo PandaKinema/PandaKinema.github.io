@@ -60,7 +60,7 @@ def lum(c):   # 色の明るさ(読みやすさの判定用)
 def contrast(a, b):
     la, lb = lum(a), lum(b)
     return (max(la, lb) + .05) / (min(la, lb) + .05)
-def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つのキーカラーで読めればそれ、だめなら白か濃い色
+def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つの色(メイン/アクセント)で読めればそれ、だめなら白か濃い色
     if other and contrast(bg, other) >= 4.5:
         return other
     return '#ffffff' if contrast(bg, '#ffffff') >= contrast(bg, '#1b2228') else '#1b2228'
@@ -329,7 +329,7 @@ GAMES['trico'] = dict(
     title='TRICO!',
     description='TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。',
     theme='''
-      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      /* 色はトップ(ボードゲーム)のメインカラー・アクセントカラーから自動(build の apply) */
       --glow:255,236,150;
       --band:url({{img:t_band.png}}); --band-h:22px;          /* 帯の模様:パッケージの三角 */
       --tex-c:url({{img:t_tex_c.png}}); --tex-size:92px 160px;
@@ -449,7 +449,7 @@ GAMES['bibilu'] = dict(
     hl_fixed='#f2d756',   # 強調は取説の金色のまま
     description='ビビルの塔:数字カードを同時に出し、高い塔を建てて得点を競う2〜4人用のカードゲーム。パンダキネマ。',
     theme='''
-      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      /* 色はトップ(ボードゲーム)のメインカラー・アクセントカラーから自動(build の apply) */
       --glow:170,215,225;
       --band:url({{img:b_band.png}}); --band-h:24px;          /* 帯の境目:塔の模様(ビビル文字) */
       --tex-c:url({{img:b_tex_c.png}}); --tex-size:525px 175px; --tex-a:rgba(255,241,207,.035);
@@ -509,7 +509,7 @@ TEMPLATE = r'''<!doctype html>
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
       --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans)}
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
-    /* ===== 作品ごとの色(パッケージ下部のツートンがキーカラー) ===== */
+    /* ===== 作品ごとの色(メインカラー・アクセントカラーから自動) ===== */
     .key{{{theme}}}
 
     *{box-sizing:border-box}
@@ -555,7 +555,7 @@ TEMPLATE = r'''<!doctype html>
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
     .panel{background:#fff;color:var(--p-ink);border-radius:20px;padding:28px 30px}
     .panel .btn{background:var(--p-ink);color:#fff}
-    /* BOOTHで購入:土台がキーカラー2、文字がキーカラー1。枠線はメインビジュアルの上のときだけ */
+    /* BOOTHで購入:土台がメインカラー、文字がアクセントカラー。枠線はメインビジュアルの上のときだけ */
     .btn.buy,.panel .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent))}
     .hero .btn.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
@@ -640,7 +640,7 @@ TEMPLATE = r'''<!doctype html>
       .js .cinema.on .vposter img{filter:none}
     }
 
-    /* ===== 帯:キーカラー2色を交互に(パッケージ下部のツートン) ===== */
+    /* ===== 帯:背景の色と帯・見出しの色を交互に ===== */
     .band{position:relative;padding:68px 0 72px}
     .band.tex{padding:86px 0 90px}
     .band>.wrap{position:relative;z-index:1}

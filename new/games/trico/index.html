@@ -17,9 +17,9 @@
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
       --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans)}
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
-    /* ===== 作品ごとの色(パッケージ下部のツートンがキーカラー) ===== */
+    /* ===== 作品ごとの色(メインカラー・アクセントカラーから自動) ===== */
     .key{
-      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      /* 色はトップ(ボードゲーム)のメインカラー・アクセントカラーから自動(build の apply) */
       --glow:255,236,150;
       --band:url(../../img/page/t_band.png?v=6d898a9a); --band-h:22px;          /* 帯の模様:パッケージの三角 */
       --tex-c:url(../../img/page/t_tex_c.png?v=38936893); --tex-size:92px 160px;
@@ -71,7 +71,7 @@
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
     .panel{background:#fff;color:var(--p-ink);border-radius:20px;padding:28px 30px}
     .panel .btn{background:var(--p-ink);color:#fff}
-    /* BOOTHで購入:土台がキーカラー2、文字がキーカラー1。枠線はメインビジュアルの上のときだけ */
+    /* BOOTHで購入:土台がメインカラー、文字がアクセントカラー。枠線はメインビジュアルの上のときだけ */
     .btn.buy,.panel .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent))}
     .hero .btn.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
@@ -218,7 +218,7 @@
       .js .cinema.on .vposter img{filter:none}
     }
 
-    /* ===== 帯:キーカラー2色を交互に(パッケージ下部のツートン) ===== */
+    /* ===== 帯:背景の色と帯・見出しの色を交互に ===== */
     .band{position:relative;padding:68px 0 72px}
     .band.tex{padding:86px 0 90px}
     .band>.wrap{position:relative;z-index:1}

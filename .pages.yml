@@ -138,9 +138,9 @@ content:
                   - { name: width, label: 幅, type: number }
                   - { name: rotate, label: 傾き, type: number }
                   - { name: motion, label: 動き, type: string }
-          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/page }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/page }, description: "空なら色だけ" }
-          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
+          - { name: bg1_image, label: 背景の模様, type: image, options: { path: new/img/page }, description: "「背景の色」の上に敷き詰める模様(動画・遊び方・購入のところ)。2倍の大きさで作った画像。空なら色だけ" }
+          - { name: bg2_image, label: 帯の色の模様, type: image, options: { path: new/img/page }, description: "「帯・見出しの色」の上に敷き詰める模様(ストーリー・ギャラリーのところ)。空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - { name: catch_ja, label: キャッチコピー, type: string }
@@ -249,9 +249,9 @@ content:
                   - { name: width, label: 幅, type: number }
                   - { name: rotate, label: 傾き, type: number }
                   - { name: motion, label: 動き, type: string }
-          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/page }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/page }, description: "空なら色だけ" }
-          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
+          - { name: bg1_image, label: 背景の模様, type: image, options: { path: new/img/page }, description: "「背景の色」の上に敷き詰める模様(動画・遊び方・購入のところ)。2倍の大きさで作った画像。空なら色だけ" }
+          - { name: bg2_image, label: 帯の色の模様, type: image, options: { path: new/img/page }, description: "「帯・見出しの色」の上に敷き詰める模様(ストーリー・ギャラリーのところ)。空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - { name: catch_ja, label: キャッチコピー, type: string }
