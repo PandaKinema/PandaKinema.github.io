@@ -242,6 +242,9 @@ def apply(key):
             f, w, h = tile(d['band_image']); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
         else:
             css.append('--band-d:none')
+    for k, var in (('step_num_x', '--snum-x'), ('step_num_y', '--snum-y')):   # 遊び方の番号の位置(px)
+        if d.get(k) not in (None, ''):
+            css.append('%s:%gpx' % (var, num(d[k], 0)))
     for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
         if d.get(k):
             css.append('%s:url(../../img/%s)' % (var, imgname(d[k])))
@@ -716,8 +719,9 @@ TEMPLATE = r'''<!doctype html>
     .step{counter-increment:step;position:relative;flex:0 0 var(--card);scroll-snap-align:start;display:flex;flex-direction:column;gap:12px;padding:16px 16px 16px;border-radius:20px;background:#fff;color:var(--p-ink)}
     .step:not(:last-child)::after{content:"";position:absolute;left:calc(100% + (var(--gap) - 14px) / 2);top:calc(50% - 10px);border-style:solid;border-width:10px 0 10px 14px;border-color:transparent transparent transparent var(--k-ink)}
     .step-head{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
-    .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:4px;background:var(--p-ink);color:#fff;
+    .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:0;background:var(--p-ink);color:#fff;
       -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;font:900 22px/1 Georgia,"Times New Roman",serif}
+    .snum b{font:inherit;translate:var(--snum-x,0px) var(--snum-y,0px)}   /* 番号の位置(編集画面で微調整) */
     .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
@@ -1462,7 +1466,7 @@ def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
     steps = '\n'.join('''          <li class="step reveal %s">
-            <div class="step-head"><span class="snum" aria-label="ステップ%d">%d</span><p class="step-lead"><span>%s</span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ%d"><b>%d</b></span><p class="step-lead"><span>%s</span></p></div>
             <div class="viz">%s</div>
           </li>''' % (st.get('cls', ''), n + 1, n + 1, rich_L(st['b']), st['v']) for n, st in enumerate(g['steps']))
     credits = '\n'.join('    <div style="--i:%d"><dt>%s</dt><dd>%s</dd></div>' % (i, e(a), e(b)) for i, (a, b) in enumerate(g['credits']))

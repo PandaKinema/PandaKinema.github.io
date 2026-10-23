@@ -39,6 +39,7 @@ hero:
 bg1_image: img/page/t_tex_c.png
 heading_icon: img/page/trico_icon.png
 step_icon: img/page/dia.png
+step_num_y: -4
 catch_ja: あのコをとりこにするために
 catch_en: To win her heart
 intro_ja: |-

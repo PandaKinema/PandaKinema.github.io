@@ -143,6 +143,8 @@ content:
           - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: step_num_x, label: 番号の左右(px), type: number, description: "番号を少しずらしたいとき。プラスで右、マイナスで左。0.5きざみもOK。空なら真ん中" }
+          - { name: step_num_y, label: 番号の上下(px), type: number, description: "プラスで下、マイナスで上。0.5きざみもOK。空なら真ん中" }
           - { name: catch_ja, label: キャッチコピー, type: string }
           - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
           - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -254,6 +256,8 @@ content:
           - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: step_num_x, label: 番号の左右(px), type: number, description: "番号を少しずらしたいとき。プラスで右、マイナスで左。0.5きざみもOK。空なら真ん中" }
+          - { name: step_num_y, label: 番号の上下(px), type: number, description: "プラスで下、マイナスで上。0.5きざみもOK。空なら真ん中" }
           - { name: catch_ja, label: キャッチコピー, type: string }
           - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
           - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
