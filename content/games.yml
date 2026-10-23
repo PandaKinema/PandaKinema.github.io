@@ -1,21 +1,19 @@
-# BOARD GAME の列に並ぶ作品(編集画面でドラッグして並べ替えできます)
-# key1 / key2 = 作品のキーカラー2色。ほかの色の欄はこの2色(と白・黒など)から選びます
 - key: bibilu
   name: ビビルの塔
   new: true
   front: img/front_bibilu.webp
   pkg: img/pkg_bibilu.webp
   logo: img/logo_bibilu.png
-  key1: '#173f54'
-  key2: '#7ebda9'
-  extra_color: '#fef4d6'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
-  logo_color: key1
+  key1: "#153e53"
+  key2: "#fff5d7"
+  extra_color: "#fef4d6"
+  card_bg: key1
+  pill_bg: key2
+  pill_text: key1
+  logo_color: key2
   players: 2〜4
   time: 10〜15
-  age: '6'
+  age: "6"
   genre_ja: バッティング・ハンドマネジメント
   genre_en: Simultaneous play / Hand management
   intro_ja: 数字カードを同時に出し、高い塔を建てて得点を競うゲームです。
@@ -24,51 +22,50 @@
   booth: https://pandakinema.booth.pm/
   banner:
     bg: key1
+    logo_color: key2
     text_color: white
-    logo_color: extra
 - key: trico
   name: TRICO!
   new: false
   front: img/front_trico.webp
   pkg: img/pkg_trico.webp
   logo: img/logo_trico.png
-  key1: '#664498'
-  key2: '#fdd000'
-  extra_color: ''
+  key1: "#664498"
+  key2: "#fdd000"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
   logo_color: key1
   players: 2〜3
   time: 10〜15
-  age: '6'
+  age: "6"
   genre_ja: セットコレクション・バッティング
   genre_en: Set collection / Simultaneous play
   intro_ja: 場に出た色の数で勝敗が決まる「アピール」をくり返し、3色そろえて「トリコ!」。
-  intro_en: Repeat “Appeals” decided by the number of colors, and collect 3 colors to call “Trico!”
+  intro_en: Repeat “Appeals” decided by the number of colors, and collect 3 colors
+    to call “Trico!”
   page: games/trico/
   booth: https://pandakinema.booth.pm/
   banner:
     bg: key2
-    text_color: key1
-    logo_color: key1
     pattern: tri
+    logo_color: key1
+    text_color: key1
 - key: ikatako
   name: イカタコ
   new: false
   front: img/front_ikatako.webp
   pkg: img/pkg_ikatako.webp
   logo: img/logo_ikatako.png
-  key1: '#01215e'
-  key2: '#0279c3'
-  extra_color: ''
+  key1: "#01215e"
+  key2: "#0279c3"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
   logo_color: white
   players: 1〜6
   time: 5〜15
-  age: '8'
+  age: "8"
   genre_ja: アクション
   genre_en: Action
   intro_ja: イカだ！タコだ！手を挙げろ！
@@ -77,24 +74,23 @@
   booth: https://pandakinema.booth.pm/
   banner:
     bg: key2
-    text_color: white
     logo_color: white
+    text_color: white
 - key: moko
   name: モコチャカ
   new: false
   front: img/front_moko.webp
   pkg: img/pkg_moko.webp
   logo: img/logo_moko.png
-  key1: '#38278b'
-  key2: '#f19ebb'
-  extra_color: ''
+  key1: "#38278b"
+  key2: "#f19ebb"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
   logo_color: key1
   players: 2〜4
   time: 10〜15
-  age: '6'
+  age: "6"
   genre_ja: パターン認識・アクション
   genre_en: Pattern recognition / Action
   intro_ja: ねむりは競争だ。
@@ -103,8 +99,8 @@
   booth: https://pandakinema.booth.pm/
   banner:
     bg: key2
-    text_color: key1
     logo_color: key1
+    text_color: key1
 - key: koikoi
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES 01
@@ -112,24 +108,23 @@
   front: img/front_koikoi.webp
   pkg: img/mini_koikoi.webp
   logo: img/mini_koikoi_logo.png
-  key1: '#ffffff'
-  key2: '#48b0e5'
-  extra_color: ''
+  key1: "#ffffff"
+  key2: "#48b0e5"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
   logo_color: original
-  players: '2'
+  players: "2"
   time: 5〜10
-  age: '6'
+  age: "6"
   genre_ja: 花札風セットコレクション
   genre_en: Hanafuda-style set collection
   intro_ja: あげろ！こいのぼり！
   intro_en: Raise the carp streamers!
   banner:
     bg: key2
-    text_color: key1
     logo_color: original
+    text_color: key1
 - key: bash
   name: BASH&SMASH
   series: MINI THEATER SERIES 02
@@ -137,21 +132,20 @@
   front: img/front_bash.webp
   pkg: img/mini_bash.webp
   logo: img/mini_bash_logo.png
-  key1: '#ffffff'
-  key2: '#e60039'
-  extra_color: ''
+  key1: "#ffffff"
+  key2: "#e60039"
   card_bg: key2
   pill_bg: key1
   pill_text: key2
   logo_color: original
-  players: '2'
+  players: "2"
   time: 5〜10
-  age: '6'
+  age: "6"
   genre_ja: 対戦格闘ゲーム風読み合い
   genre_en: Fighting-game-style mind games
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
   banner:
     bg: key2
-    text_color: key1
     logo_color: original
+    text_color: key1
