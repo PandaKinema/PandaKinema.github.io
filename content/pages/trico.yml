@@ -37,7 +37,6 @@ hero:
       motion: pop
   art: img/card/trico_bdg.png
 bg1_image: img/page/t_tex_c.png
-band_image: img/page/trico_line.png
 heading_icon: img/page/trico_icon.png
 step_icon: img/page/dia.png
 catch_ja: あのコをとりこにするために
