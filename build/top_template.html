@@ -15,7 +15,7 @@
     :root{--bg:#1b2228;--bg2:#222b32;--line:#3a464f;--text:#f3f2ee;--muted:#9aa3a9;--soft:#cdd2d4;
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
       --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
-      --side:max(16px,3vw); --icon:url({{img:pk_icon.png}})}
+      --side:max(16px,3vw); --icon:url(img/{{icon}})}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:64px}
     body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
@@ -258,6 +258,9 @@
     .a-card .lbl{margin:0 0 12px;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
     .member{display:flex;align-items:center;gap:14px}
     .who{min-width:0}
+    .a-btns{display:flex;align-items:center;gap:10px;margin-top:16px}
+    .a-btns .soc,.a-btns .wb{height:36px}
+    .a-btns .soc{min-width:36px;padding:0 10px;font-size:15px;border-radius:7px}
     .a-div{height:4px;margin:18px 0;background:radial-gradient(circle,var(--line) 1.4px,transparent 1.8px) 0 50%/12px 4px repeat-x}
     .ava{flex:none;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid var(--text)}
     .ava i{width:34px;height:34px;background:var(--text);-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
@@ -335,7 +338,7 @@
 <input class="sr" type="radio" name="lang" id="lang-ja" checked aria-label="日本語"><input class="sr" type="radio" name="lang" id="lang-en" aria-label="English">
 <header class="site-header">
   <div class="bar">
-    <a class="home" href="#top"><img src="{{img:brand.png}}" alt="PANDA KINEMA" width="365" height="66"></a>
+    <a class="home" href="#top"><img src="img/{{header_logo}}" alt="PANDA KINEMA"></a>
     <nav class="nav cond" aria-label="サイト"><a href="#news"><span class="cap">NEWS</span></a><a href="#board"><span class="cap">BOARD GAME</span></a><a href="#movie"><span class="cap">MOVIE</span></a><a href="#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="#about"><span class="cap">ABOUT</span></a></nav>
     <div class="lang cond" role="group" aria-label="言語 / Language"><label for="lang-ja"><span class="cap">JA</span></label><label for="lang-en"><span class="cap">EN</span></label></div>
   </div>
@@ -384,7 +387,7 @@
   <section class="sec" id="about" aria-label="ABOUT">
     <div class="about">
       <div>
-        <img class="a-logo" src="{{img:logo_pk_kana.png}}" alt="パンダキネマ PandaKinema" width="769" height="165" loading="lazy">
+        <img class="a-logo" src="img/{{about_logo}}" alt="パンダキネマ PandaKinema" loading="lazy">
         <p class="a-text">{{about}}</p>
         <div class="socials">
           <a class="soc x" href="{{x}}" target="_blank" rel="noopener" aria-label="X"><span class="cap">X</span></a>
@@ -394,8 +397,8 @@
         </div>
       </div>
       <div class="a-side">
-        <div class="a-card"><p class="lbl"><span class="cap">MEMBER</span></p><div class="member"><span class="ava"><i></i></span><div class="who"><b>{{L:ゐするぎ|Isurugi}}</b><small>Game Design / Artwork</small></div><a class="soc x mx" href="{{member_x}}" target="_blank" rel="noopener" aria-label="ゐするぎのX"><span class="cap">X</span></a></div>
-          <div class="a-div" aria-hidden="true"></div><p class="lbl"><span class="cap">CONTACT</span></p><p class="m-lead">{{L:お問い合わせ、ご連絡はこちら|For inquiries, contact us at}}</p><div class="mail"><a class="wb" href="mailto:{{mail}}"><b class="ar" aria-hidden="true">▶︎</b>{{L:メールを送る|Send email}}</a><span class="addr">{{mail}}</span><button class="copy js-only" type="button" id="copy">{{L:コピー|Copy}}</button></div></div>
+        <div class="a-card"><p class="lbl"><span class="cap">MEMBER</span></p><div class="member"><span class="ava"><i></i></span><div class="who"><b>{{L:ゐするぎ|Isurugi}}</b><small>Game Design / Artwork</small></div></div>
+          <div class="a-btns"><a class="soc x" href="{{member_x}}" target="_blank" rel="noopener" aria-label="ゐするぎのX"><span class="cap">X</span></a><a class="wb" href="mailto:{{mail}}"><b class="ar" aria-hidden="true">▶︎</b>{{L:メールを送る|Send email}}</a></div></div>
       </div>
     </div>
   </section>
@@ -462,7 +465,7 @@
   /* バナーの「詳しく見る」(ミニシアター):カードを開いて見える位置へ */
   $$("label.wb[for^='c-']",hero).forEach(function(b){ b.addEventListener("click",function(){ setTimeout(function(){ $("#board").scrollIntoView({behavior:"smooth"}) },30) }) });
   /* メールのコピー */
-  var cp=$("#copy"); cp.addEventListener("click",function(){ var t="{{mail}}"; var done=function(){ var o=cp.innerHTML; cp.textContent="✓"; setTimeout(function(){ cp.innerHTML=o },1400) };
+  var cp=$("#copy"); if(cp) cp.addEventListener("click",function(){ var t="{{mail}}"; var done=function(){ var o=cp.innerHTML; cp.textContent="✓"; setTimeout(function(){ cp.innerHTML=o },1400) };
     if(navigator.clipboard) navigator.clipboard.writeText(t).then(done,function(){}); });
 })();
 </script>

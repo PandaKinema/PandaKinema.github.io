@@ -50,6 +50,15 @@ VIDEOS = load('videos')
 TOOLS = load('tools')
 BANNERS = [b if isinstance(b, dict) else {'key': b} for b in load('banners')]
 
+COLOR_NAMES = {'key1': 'キーカラー1', 'key2': 'キーカラー2', 'extra': 'その他の色', 'white': '白', 'black': '黒', 'original': 'ロゴ画像の色のまま'}
+def col(g, sel, default='key1'):
+    """色の欄(キーカラー1・2・その他・白・黒)を色コードに。'original' は空(画像の色のまま)"""
+    sel = str(sel or default).strip()
+    if sel.startswith('#'):
+        return sel
+    return {'key1': g.get('key1'), 'key2': g.get('key2'), 'extra': g.get('extra_color') or g.get('key1'),
+            'white': '#ffffff', 'black': '#000000', 'original': ''}.get(sel, g.get('key1')) or ''
+
 def spec(g):
     return (str(g.get('players', '')), str(g.get('time', '')), str(g.get('age', '')))
 def spec_pill(s, bg, fg):
@@ -58,9 +67,10 @@ def spec_line(s):
     return '%s{{L:人| players}} / %s{{L:分| min}} / %s{{L:歳から|+}}' % s
 def tlogo(g, cls, lc=None):   # ロゴを好きな色に塗る(マスク)。色が空ならロゴ画像の色のまま
     w, h = size(g['logo'])
-    if not (lc or g.get('logo_color')):
+    lc = col(g, g.get('logo_color'), 'key1') if lc is None else lc
+    if not lc:
         return '<img class="%s" src="img/%s" alt="%s" width="%d" height="%d">' % (cls, img(g['logo']), e(g['name']), w, h)
-    return '<span class="%s" role="img" aria-label="%s" style="--lg:url(img/%s);aspect-ratio:%d/%d;--lc:%s"></span>' % (cls, e(g['name']), img(g['logo']), w, h, lc or g['logo_color'])
+    return '<span class="%s" role="img" aria-label="%s" style="--lg:url(img/%s);aspect-ratio:%d/%d;--lc:%s"></span>' % (cls, e(g['name']), img(g['logo']), w, h, lc)
 def btns(g, card=False):
     """▶詳しく見る ▶BOOTHで購入。作品ページが空なら、バナーではカードを開き、カードでは薄く表示。BOOTHが空ならサークルのBOOTH"""
     b = ''
@@ -120,11 +130,11 @@ def banner(key):
             return 'b-tool b-' + key, 'background:%s;--fg:%s' % (t.get('bg') or '#163f53', t.get('text_color') or '#fff'), art, txt, tool_btn(t), v
     g = [x for x in GAMES if x['key'] == key][0]
     bn = g.get('banner') or {}
-    bg = bn.get('bg') or g['color_face']
+    bg = col(g, bn.get('bg'), 'key2')
     if bn.get('pattern') == 'tri':
         bg += ' ' + TRI
     if bn.get('image'):   # 背景を画像で作ったとき:パッケージは出さない
-        bg = "%s url(img/%s) center/cover no-repeat" % (bn.get('bg') or g['color_face'], img(bn['image']))
+        bg = "%s url(img/%s) center/cover no-repeat" % (col(g, bn.get('bg'), 'key2'), img(bn['image']))
         art = ''
     else:
         w, h = size(g['pkg'])   # 横長のパッケージ(ミニシアター)は横長の置き方に
@@ -134,8 +144,8 @@ def banner(key):
     intro = '<p class="b-intro">%s</p>' % T(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
     # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
     label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
-    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo', bn.get('logo_color')), meta(g), intro)
-    return 'b-' + key, 'background:%s;--fg:%s' % (bg, bn.get('text_color') or '#fff'), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
+    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo', col(g, bn.get('logo_color'), 'key1')), meta(g), intro)
+    return 'b-' + key, 'background:%s;--fg:%s' % (bg, col(g, bn.get('text_color'), 'white')), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
@@ -177,8 +187,8 @@ def render():
                       '<label class="c-face" for="%s"><img src="img/%s" alt="%s" loading="lazy">%s</label>'
                       '<div class="c-open"><img class="o-pkg%s" src="img/%s" alt="" loading="lazy"><div class="o-txt">%s%s<p class="o-genre">%s</p><div class="o-btns">%s</div></div>'
                       '<label class="o-x" for="board-x" aria-label="とじる"></label></div></li>')
-                     % (g['color_band'], g['color_face'], cid, cid, img(g['front']), e(g['name']), '<span class="c-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '',
-                        ' wide' if w > h else '', img(g['pkg']), tlogo(g, 'o-logo'), spec_pill(spec(g), g['color_band'], g['color_face']), genre(g), btns(g, card=True)))
+                     % (col(g, g.get('pill_bg'), 'key1'), col(g, g.get('card_bg'), 'key2'), cid, cid, img(g['front']), e(g['name']), '<span class="c-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '',
+                        ' wide' if w > h else '', img(g['pkg']), tlogo(g, 'o-logo'), spec_pill(spec(g), col(g, g.get('pill_bg'), 'key1'), col(g, g.get('pill_text'), 'key2')), genre(g), btns(g, card=True)))
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
                      % (e(yt_id(v.get('youtube'))), e(v['title']), img(v['poster']), e(v['title']), T(v.get('kind_ja'), v.get('kind_en')),
                         '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS)
@@ -191,7 +201,8 @@ def render():
         ogp = '  <meta property="og:url" content="%s">\n  <meta property="og:image" content="%simg/%s">' % (SITE_URL, SITE_URL, img(SITE['ogp_image']))
     v = dict(total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
-             about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals)
+             about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals,
+             header_logo=img(SITE.get('header_logo') or 'brand.png'), about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'))
     s = open(os.path.join(ROOT, 'build', 'top_template.html'), encoding='utf-8').read()
     for _ in range(2):
         s = re.sub(r'\{\{(?!img:|L:)(\w+)\}\}', lambda m: str(v[m.group(1)]), s)
@@ -214,11 +225,16 @@ def colors():
     rows = []
     for g in GAMES:
         bn = g.get('banner') or {}
+        c = lambda v, d: col(g, v, d)
+        name = lambda v, d: COLOR_NAMES.get(str(v or d), str(v or d))
         prev = '<div class="pv" style="background:%s"><span style="background:%s;color:%s">%s人 / %s分 / %s歳から</span><small style="color:%s">ジャンル:%s</small></div>' % (
-            e(g['color_face']), e(g['color_band']), e(g['color_face']), *map(e, spec(g)), e(g['color_band']), e(g.get('genre_ja') or ''))
-        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s%s%s%s%s</div><p class="lbl">開いたカードの見え方</p>%s</section>' % (
-            e(g['name']), e(g['key']), sw('開いたカードの背景色', g['color_face']), sw('人数〜年齢の下地の色', g['color_band']), sw('ロゴの色', g.get('logo_color')),
-            sw('バナーの背景色', bn.get('bg') or g['color_face']), sw('バナーの文字の色', bn.get('text_color') or '#ffffff'), sw('バナーのロゴの色', bn.get('logo_color') or g.get('logo_color')), prev))
+            e(c(g.get('card_bg'), 'key2')), e(c(g.get('pill_bg'), 'key1')), e(c(g.get('pill_text'), 'key2')), *map(e, spec(g)), e(c(g.get('pill_bg'), 'key1')), e(g.get('genre_ja') or ''))
+        keys = sw('キーカラー1', g.get('key1')) + sw('キーカラー2', g.get('key2')) + (sw('その他の色', g.get('extra_color')) if g.get('extra_color') else '')
+        uses = ''.join(sw('%s(%s)' % (lab, name(v, d)), c(v, d)) for lab, v, d in [
+            ('開いたカードの背景', g.get('card_bg'), 'key2'), ('人数〜年齢の下地', g.get('pill_bg'), 'key1'), ('人数〜年齢の文字', g.get('pill_text'), 'key2'), ('ロゴ', g.get('logo_color'), 'key1'),
+            ('バナーの背景', bn.get('bg'), 'key2'), ('バナーの文字', bn.get('text_color'), 'white'), ('バナーのロゴ', bn.get('logo_color'), 'key1')])
+        rows.append('<section><h2>%s <small>%s</small></h2><p class="lbl">キーカラー</p><div class="grid">%s</div><p class="lbl">使われている色</p><div class="grid">%s</div><p class="lbl">開いたカードの見え方</p>%s</section>' % (
+            e(g['name']), e(g['key']), keys, uses, prev))
     for t in TOOLS:
         rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div></section>' % (e(t['name']), e(t['key']), sw('背景色', t.get('bg')), sw('文字の色', t.get('text_color'))))
     return """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>色見本 | PANDA KINEMA</title>

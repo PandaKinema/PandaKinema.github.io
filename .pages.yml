@@ -65,9 +65,13 @@ content:
       - { name: front, label: 閉じたカードの画像, type: image, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
       - { name: pkg, label: パッケージ, type: image, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
-      - { name: logo_color, label: ロゴの色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "例:#664498。空ならロゴ画像の色のまま。色見本 → https://pandakinema.github.io/new/colors.html" }
-      - { name: color_face, label: 開いたカードの背景色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#fdd000 のような6けたの色コードで" }, description: "人数〜年齢の文字の色にもなります。例:#fdd000。色見本 → https://pandakinema.github.io/new/colors.html" }
-      - { name: color_band, label: 人数〜年齢の下地の色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "ジャンルの文字の色にもなります。例:#664498。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: key1, label: キーカラー1, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その1(例:パッケージの帯の色)。ほかの色の欄はここから選びます。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: key2, label: キーカラー2, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その2(例:パッケージの面の色)。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: extra_color, label: その他の色(必要なときだけ), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#fef4d6 のような6けたの色コードで" }, description: "キーカラー2色と白・黒以外の色を使いたいときだけ。各欄で「その他の色」を選ぶと使われます" }
+      - { name: card_bg, label: 開いたカードの背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2" }
+      - { name: pill_bg, label: 人数〜年齢の下地, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ジャンルの文字もこの色。ふつうはキーカラー1" }
+      - { name: pill_text, label: 人数〜年齢の文字, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2" }
+      - { name: logo_color, label: カードのロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "ロゴが単色なら塗る色、多色なら「ロゴ画像の色のまま」" }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
@@ -81,11 +85,11 @@ content:
         label: バナー
         type: object
         fields:
-          - { name: bg, label: 背景色, type: string, description: "空ならキーカラー2。色見本 → https://pandakinema.github.io/new/colors.html" }
-          - { name: pattern, label: 背景の模様, type: string, description: "tri(トリコの三角)か、空" }
+          - { name: bg, label: 背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "" }
+          - { name: pattern, label: 背景の模様, type: select, options: { values: [ { value: none, label: "なし" }, { value: tri, label: "トリコの三角" } ] } }
           - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
-          - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色。色見本 → https://pandakinema.github.io/new/colors.html" }
-          - { name: text_color, label: 文字の色, type: string, description: "人数〜ジャンルと紹介文の色。例:#ffffff。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: logo_color, label: ロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "" }
+          - { name: text_color, label: 文字の色, type: select, default: white, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "人数〜ジャンルと紹介文の色" }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
@@ -125,5 +129,8 @@ content:
       - { name: member_x, label: ゐするぎの X, type: string }
       - { name: mail, label: 連絡先メール, type: string }
       - { name: ogp_image, label: X共有画像(トップ), type: image, description: "1200×630" }
+      - { name: header_logo, label: ヘッダーのロゴ, type: image, description: "白い文字のロゴ(背景透明)。高さ24pxで表示" }
+      - { name: about_logo, label: ABOUT のロゴ, type: image, description: "白いロゴ(背景透明)" }
+      - { name: icon, label: アイコン, type: image, description: "MEMBER の丸の中に出るマーク(背景透明・単色)" }
       - { name: about_ja, label: ABOUT の文(日本語), type: text }
       - { name: about_en, label: ABOUT の文(英語), type: text }
