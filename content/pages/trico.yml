@@ -34,6 +34,7 @@ hero:
       width: 20
       rotate: -6
       motion: pop
+  art: img/trico_bdg.png
 bg1_image: img/t_tex_c.png
 band_image: img/t_band.png
 heading_icon: img/t_bird_sten.png
