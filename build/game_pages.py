@@ -310,7 +310,9 @@ def apply(key):
         hl_want = HLC.get(str(d.get('hl_color') or 'red')) or RED
         def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ。色を変える(基本は赤)。読みにくければほかの決めた色
             fg = ink(bg, fg_pref)
-            for c in [fixed, hl_want, RED]:   # 選んだ色か赤。どちらも読みにくければ太字だけ
+            if fixed and contrast(fixed, bg) >= 3:   # 取説で決まっている強調の色(ビビルの金など)はそのまま
+                return fg, fixed
+            for c in [hl_want, RED]:   # 選んだ色か赤。どちらも読みにくければ太字だけ
                 if c and contrast(c, fg) >= 1.8 and contrast(c, bg) >= 3:   # 地で読めて、文字の色ともはっきり違う
                     return fg, c
             return fg, fg
