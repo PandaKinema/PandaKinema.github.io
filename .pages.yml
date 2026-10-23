@@ -117,6 +117,15 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字" }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages } }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages } }
+          - { name: bg1_color, label: 背景1の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー以外の帯(遊び方・購入など)の背景" }
+          - { name: bg1_text, label: 背景1の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" } }
+          - { name: bg1_image, label: 背景1の模様, type: image, options: { media: pages }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
+          - { name: bg2_color, label: 背景2の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー・ギャラリー・おまけの帯の背景。帯の模様もこの色になります" }
+          - { name: bg2_text, label: 背景2の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" } }
+          - { name: bg2_image, label: 背景2の模様, type: image, options: { media: pages }, description: "空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { media: pages }, description: "背景1の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { media: pages }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { media: pages }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - name: videos
             label: 紹介動画
             type: object
@@ -134,6 +143,16 @@ content:
           - { name: chara_name_en, label: キャラクター名(英語), type: string }
           - { name: chara_note_ja, label: キャラクター紹介(日本語), type: text }
           - { name: chara_note_en, label: キャラクター紹介(英語), type: text }
+          - name: chara_images
+            label: キャラクターの画像
+            description: "左から順に横に並びます(背景透明)。大きさは並びの幅に対する%。空なら等分"
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { media: pages } }
+              - { name: alt, label: 説明, type: string, description: "読み上げ用。例:赤のトリコ" }
+              - { name: size, label: "大きさ(%)", type: number }
+          - { name: chara_float, label: 浮かぶ部品, type: image, options: { media: pages }, description: "キャラクターが1つのとき、その上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
           - { name: summary_ja, label: "どんなゲーム?(日本語)", type: text, description: "[[ ]] で囲んだところが赤字(強調)になります" }
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text }
           - name: steps
@@ -173,8 +192,45 @@ content:
           - { name: extra_kicker_en, label: おまけの小見出し(英語), type: string }
           - { name: extra_title_ja, label: おまけのタイトル(日本語), type: string }
           - { name: extra_title_en, label: おまけのタイトル(英語), type: string }
-          - { name: extra_text_ja, label: おまけの文(日本語), type: text }
-          - { name: extra_text_en, label: おまけの文(英語), type: text }
+          - name: extra_blocks
+            label: おまけの中身
+            description: "上から順に並びます。「追加」で 文 / 画像 / ボタン / 紹介カード を選べます"
+            type: block
+            list: true
+            blockKey: type
+            blocks:
+              - name: text
+                label: 文
+                fields:
+                  - { name: text_ja, label: 文(日本語), type: text, description: "[[ ]] で囲んだところが赤字" }
+                  - { name: text_en, label: 文(英語), type: text }
+              - name: image
+                label: 画像
+                fields:
+                  - { name: image, label: 画像, type: image, options: { media: pages } }
+                  - { name: alt, label: 説明, type: text, description: "画像に書いてある内容(読み上げ用)" }
+              - name: button
+                label: ボタン
+                fields:
+                  - { name: label_ja, label: ボタンの文字(日本語), type: string }
+                  - { name: label_en, label: ボタンの文字(英語), type: string }
+                  - { name: url, label: リンク先, type: string }
+              - name: box
+                label: 紹介カード
+                fields:
+                  - { name: title_ja, label: タイトル(日本語), type: string }
+                  - { name: title_en, label: タイトル(英語), type: string }
+                  - { name: sub, label: 小さい文字, type: string }
+                  - { name: demo_text, label: 見本の文字, type: string, description: "入れると「文字 → 画像」の形で見本を出します" }
+                  - { name: image, label: 画像, type: image, options: { media: pages } }
+                  - { name: alt, label: 画像の説明, type: string }
+                  - { name: note_ja, label: 説明(日本語), type: string }
+                  - { name: note_en, label: 説明(英語), type: string }
+                  - { name: button_ja, label: ボタンの文字(日本語), type: string }
+                  - { name: button_en, label: ボタンの文字(英語), type: string }
+                  - { name: url, label: リンク先, type: string }
+          - { name: extra_side_image, label: おまけの横の画像, type: image, options: { media: pages }, description: "中身の右に置く画像(例:碑文)。空ならなし" }
+          - { name: extra_side_alt, label: 横の画像の説明, type: string }
           - name: credits
             label: クレジット
             type: object

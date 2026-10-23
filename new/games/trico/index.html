@@ -26,7 +26,8 @@
       --hl:#fdd000;                               /* 強調色(取説の赤字の代わり。紫の上で読める黄) */
       --orn:url(../img/t_bird_sten.png); --snum:url(../img/t_bird_sil.png);   /* 見出しの飾り:トリコのシルエット。反転しない */
       --scoop-bg:#ffffff; --scoop-ink:#3a2366;
-    }
+    
+      --k-bg:#7b59a3;--k-ink:#ffffff;--b2-bg:#fdd000;--b2-ink:#3a2366;--tex-c:url(../img/t_tex_c.png);--tex-size:92px 160px;--band:url(../img/t_band.png);--band-h:24px;--band-d:block;--orn:url(../img/t_bird_sten.png);--snum:url(../img/t_bird_sil.png);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -221,6 +222,12 @@
     .gband.top{top:18px}
     .gband.bottom{bottom:18px;-webkit-mask-position:calc(var(--sx,0) * -1px) 0;mask-position:calc(var(--sx,0) * -1px) 0}
     .tex{background-image:var(--tex-c);background-size:var(--tex-size)}
+    .band-c{background-image:var(--b2-img,none);background-size:var(--b2-size,auto)}
+    .gband{display:var(--band-d,block)}
+    .cast{display:flex;align-items:flex-end;justify-content:center;gap:4px;width:min(520px,90vw)}
+    .cast img{animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite;animation-delay:calc(var(--i) * -.9s)}
+    .fig-wrap:has(.cast){width:auto}
+    @media (max-width:650px){ .cast{width:min(360px,88vw)} }
 
     /* ===== 3. キャラクター+取説の導入文 ===== */
     .chara-in{display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
@@ -416,17 +423,16 @@
     .roll dd{margin:0;text-align:left;font-size:15px;font-weight:700}
 
     /* ===== 6. ほかの作品 ===== */
-    .lineup-sec{padding-top:64px}
-    .section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .section-head h2{margin:0;font-size:13px;letter-spacing:.2em}
-    .section-head span{font-size:11px;letter-spacing:.12em;color:#8d8d8d}
-    .lineup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
-    .lineup a{display:flex;flex-direction:column;align-items:center;gap:18px;padding:30px 20px 26px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background-color .2s ease}
-    .lineup a:hover{background:#101010}
-    .lineup .lp{height:190px;width:auto;filter:drop-shadow(0 14px 16px rgba(0,0,0,.4))}
-    .lineup .ll{height:44px;width:auto;max-width:90%;object-fit:contain}
-    .lineup span{font-size:12px;color:var(--muted)}
-    .sub-link{display:inline-block;margin-top:20px;padding-bottom:2px;font-size:12px;letter-spacing:.06em;color:var(--soft-text);border-bottom:1px solid #444}
+    .dotline{height:4px;margin-top:56px;background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 50%/16px 4px repeat-x}
+    .lineup-sec{padding-top:34px}
+    .lineup-h{margin:0 0 14px;font-family:var(--cond);font-size:clamp(26px,3vw,36px);font-weight:700;letter-spacing:.01em;text-transform:uppercase}
+    .bg-row{list-style:none;margin:0;padding:0 0 6px;display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
+    .bg-row::-webkit-scrollbar{display:none}
+    .bg-row li{flex:none}
+    .bg-card{position:relative;display:block;height:230px;aspect-ratio:560/790;border-radius:10px;overflow:hidden;transition:translate .2s ease}
+    .bg-card:hover{translate:0 -4px}
+    .bg-card img{width:100%;height:100%;object-fit:cover}
+    .bg-new{position:absolute;left:50%;bottom:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
@@ -601,10 +607,7 @@
       .roll{gap:14px}
       .roll div{grid-template-columns:1fr;gap:2px}
       .roll dt,.roll dd{text-align:center}
-      .lineup a{padding:20px 8px 18px;gap:12px}
-      .lineup .lp{height:112px}
-      .lineup .ll{height:26px}
-      .lineup span{display:none}
+      .bg-card{height:180px}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -672,7 +675,7 @@
         <p><span lang="ja">どこかに生息するカラフルな鳥、トリコ。3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!</span><span lang="en">Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”</span></p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="fig-wrap"><div class="cast"><img style="--i:0" src="../img/t_tricoR.webp" alt="赤のトリコ"><img style="--i:1" src="../img/t_tricoY.webp" alt="黄のトリコ"><img class="cast-nico" style="--i:2" src="../img/t_nico.webp" alt="ニコ"><img style="--i:3" src="../img/t_tricoP.webp" alt="紫のトリコ"></div></div>
+        <div class="fig-wrap"><div class="cast"><img style="--i:0;width:24%" src="../img/t_tricoR.webp" alt="赤のトリコ"><img style="--i:1;width:24%" src="../img/t_tricoY.webp" alt="黄のトリコ"><img style="--i:2;width:27%" src="../img/t_nico.webp" alt="ニコ"><img style="--i:3;width:24%" src="../img/t_tricoP.webp" alt="紫のトリコ"></div></div>
         <figcaption><span class="chara-name"><span lang="ja">トリコ と ニコ</span><span lang="en">Trico &amp; Nico</span></span><span class="chara-note"></span></figcaption>
       </figure>
     </div>
@@ -746,7 +749,7 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">EXTRA</p><div class="sec-row"><h2 class="pill sec-h" id="extra-title"><span lang="ja">おまけ</span><span lang="en">Extras</span></h2></div></header>
       <article class="scoop reveal" aria-labelledby="scoop-title">
-        <div class="scoop-text"><p class="extra-kicker"><span lang="ja">みんなでかこう!</span><span lang="en">Let’s draw!</span></p><h3 class="extra-title" id="scoop-title"><span lang="ja">TRICO! えかきうた</span><span lang="en">TRICO! drawing song</span></h3><img class="extra-img" src="../img/t_ekaki.webp" alt="トリコのえかきうた。西からのぼったおひさまが、ずれてはんしゃしているよ、今日もいい日だにじゅうまる!、ここはくちばしいっぽんせん、足としっぽをかいたなら、あっというまにトリコだね!" width="1286" height="511" loading="lazy"><p class="extra-text"><span lang="ja">キミもかいてみよう!!</span><span lang="en">Try drawing one yourself!</span></p></div>
+        <div class="scoop-text"><p class="extra-kicker"><span lang="ja">みんなでかこう!</span><span lang="en">Let’s draw!</span></p><h3 class="extra-title" id="scoop-title"><span lang="ja">TRICO! えかきうた</span><span lang="en">TRICO! drawing song</span></h3><img class="extra-img" src="../img/t_ekaki.webp" alt="トリコのえかきうた。西からのぼったおひさまが、ずれてはんしゃしているよ、今日もいい日だにじゅうまる!、ここはくちばしいっぽんせん、足としっぽをかいたなら、あっというまにトリコだね!" loading="lazy"><p class="extra-text"><span lang="ja">キミもかいてみよう!!</span><span lang="en">Try drawing one yourself!</span></p></div>
         
       </article>
     </div>
@@ -770,16 +773,18 @@
   </dl>
 </section>
 
-<!-- 6. ほかの作品 -->
-<section class="lineup-sec" id="lineup">
+<!-- 6. ほかの作品:トップと同じカード(少し小さめ) -->
+<div class="wrap"><div class="dotline" aria-hidden="true"></div></div>
+<section class="lineup-sec" id="lineup" aria-labelledby="lineup-title">
   <div class="wrap">
-    <div class="section-head"><h2>LINEUP</h2><span><span lang="ja">ほかの上映作品</span><span lang="en">More titles</span></span></div>
-    <div class="lineup">
-      <a href="../bibilu/"><img class="lp" src="../img/bibilu_pkg_sm.webp" alt="" loading="lazy"><img class="ll" src="../img/b_logo_white.png" alt="ビビルの塔" loading="lazy"><span><span lang="ja">ビビっている場合じゃない</span><span lang="en">No time to be scared!</span></span></a>
-      <a href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img class="lp" src="../img/ikatako_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/ikatako_logo_white.png" alt="イカタコ" loading="lazy"><span><span lang="ja">イカだ！タコだ！手を挙げろ！</span><span lang="en">Squid! Octopus! Hands up!</span></span></a>
-      <a href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img class="lp" src="../img/moko_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/moko_logo_white.png" alt="モコチャカ" loading="lazy"><span><span lang="ja">ねむりは競争だ。</span><span lang="en">Sleep is a race.</span></span></a>
-    </div>
-    <a class="sub-link" href="../../#board"><span lang="ja">ミニシアターシリーズを見る</span><span lang="en">See the Mini Theater series</span></a>
+    <h2 class="lineup-h" id="lineup-title"><span class="cap">BOARD GAME</span></h2>
+    <ul class="bg-row">
+      <li><a class="bg-card" href="../bibilu/"><img src="../../img/front_bibilu.webp" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span lang="ja">新作</span><span lang="en">NEW</span></span></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/front_ikatako.webp" alt="イカタコ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/front_moko.webp" alt="モコチャカ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/front_koikoi.webp" alt="こいこいのぼり 真打" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/front_bash.webp" alt="BASH&amp;SMASH" loading="lazy"></a></li>
+    </ul>
   </div>
 </section>
 

@@ -6,6 +6,14 @@ logo: img/trico_logo_purple.png
 logo_alt: TRICO!(トリコ)
 logo_buy: img/trico_logo_purple.png
 logo_credits: img/trico_logo_white.png
+bg1_color: '#7b59a3'
+bg1_text: '#ffffff'
+bg1_image: img/t_tex_c.png
+bg2_color: '#fdd000'
+bg2_text: '#3a2366'
+band_image: img/t_band.png
+heading_icon: img/t_bird_sten.png
+step_icon: img/t_bird_sil.png
 catch_ja: あのコをとりこにするために
 catch_en: To win her heart
 intro_ja: どこかに生息するカラフルな鳥、トリコ。3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!
@@ -16,6 +24,20 @@ chara_name_ja: トリコ と ニコ
 chara_name_en: Trico & Nico
 chara_note_ja: ''
 chara_note_en: ''
+chara_images:
+- image: img/t_tricoR.webp
+  alt: 赤のトリコ
+  size: 24
+- image: img/t_tricoY.webp
+  alt: 黄のトリコ
+  size: 24
+- image: img/t_nico.webp
+  alt: ニコ
+  size: 27
+- image: img/t_tricoP.webp
+  alt: 紫のトリコ
+  size: 24
+chara_float: ''
 contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマーカー1枚、サマリー1枚、トリコマーカー3個、遊び方説明書1枚
 contents_en: 30 game cards (10 per color), lead player marker, summary card, 3 Trico markers, rulebook
 price_ja: ''
@@ -24,8 +46,15 @@ extra_kicker_ja: みんなでかこう!
 extra_kicker_en: Let’s draw!
 extra_title_ja: TRICO! えかきうた
 extra_title_en: TRICO! drawing song
-extra_text_ja: キミもかいてみよう!!
-extra_text_en: Try drawing one yourself!
+extra_blocks:
+- type: image
+  image: img/t_ekaki.webp
+  alt: トリコのえかきうた。西からのぼったおひさまが、ずれてはんしゃしているよ、今日もいい日だにじゅうまる!、ここはくちばしいっぽんせん、足としっぽをかいたなら、あっというまにトリコだね!
+- type: text
+  text_ja: キミもかいてみよう!!
+  text_en: Try drawing one yourself!
+extra_side_image: ''
+extra_side_alt: ''
 steps:
 - text_ja: リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、[[同時に表向きに公開します。]]
   text_en: The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then [[reveal them at the same time.]]

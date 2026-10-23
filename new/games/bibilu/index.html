@@ -25,7 +25,8 @@
       --orb-glow:27,185,238;
       --hl:#f2d756;                               /* 強調色(取説の赤字の代わり。紺の上で読める金色) */
       --orn:url(../img/b_tupa_sten.png); --snum:url(../img/b_tupa_sil.png);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
-    }
+    
+      --k-bg:#163f53;--k-ink:#fff7df;--b2-bg:#fff1cf;--b2-ink:#163f53;--tex-c:url(../img/b_tex_c.png);--tex-size:525px 175px;--band:url(../img/b_band.png);--band-h:24px;--band-d:block;--orn:url(../img/b_tupa_sten.png);--snum:url(../img/b_tupa_sil.png);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -148,6 +149,12 @@
     .gband.top{top:18px}
     .gband.bottom{bottom:18px;-webkit-mask-position:calc(var(--sx,0) * -1px) 0;mask-position:calc(var(--sx,0) * -1px) 0}
     .tex{background-image:var(--tex-c);background-size:var(--tex-size)}
+    .band-c{background-image:var(--b2-img,none);background-size:var(--b2-size,auto)}
+    .gband{display:var(--band-d,block)}
+    .cast{display:flex;align-items:flex-end;justify-content:center;gap:4px;width:min(520px,90vw)}
+    .cast img{animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite;animation-delay:calc(var(--i) * -.9s)}
+    .fig-wrap:has(.cast){width:auto}
+    @media (max-width:650px){ .cast{width:min(360px,88vw)} }
 
     /* ===== 3. キャラクター+取説の導入文 ===== */
     .chara-in{display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
@@ -343,17 +350,16 @@
     .roll dd{margin:0;text-align:left;font-size:15px;font-weight:700}
 
     /* ===== 6. ほかの作品 ===== */
-    .lineup-sec{padding-top:64px}
-    .section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .section-head h2{margin:0;font-size:13px;letter-spacing:.2em}
-    .section-head span{font-size:11px;letter-spacing:.12em;color:#8d8d8d}
-    .lineup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
-    .lineup a{display:flex;flex-direction:column;align-items:center;gap:18px;padding:30px 20px 26px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background-color .2s ease}
-    .lineup a:hover{background:#101010}
-    .lineup .lp{height:190px;width:auto;filter:drop-shadow(0 14px 16px rgba(0,0,0,.4))}
-    .lineup .ll{height:44px;width:auto;max-width:90%;object-fit:contain}
-    .lineup span{font-size:12px;color:var(--muted)}
-    .sub-link{display:inline-block;margin-top:20px;padding-bottom:2px;font-size:12px;letter-spacing:.06em;color:var(--soft-text);border-bottom:1px solid #444}
+    .dotline{height:4px;margin-top:56px;background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 50%/16px 4px repeat-x}
+    .lineup-sec{padding-top:34px}
+    .lineup-h{margin:0 0 14px;font-family:var(--cond);font-size:clamp(26px,3vw,36px);font-weight:700;letter-spacing:.01em;text-transform:uppercase}
+    .bg-row{list-style:none;margin:0;padding:0 0 6px;display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
+    .bg-row::-webkit-scrollbar{display:none}
+    .bg-row li{flex:none}
+    .bg-card{position:relative;display:block;height:230px;aspect-ratio:560/790;border-radius:10px;overflow:hidden;transition:translate .2s ease}
+    .bg-card:hover{translate:0 -4px}
+    .bg-card img{width:100%;height:100%;object-fit:cover}
+    .bg-new{position:absolute;left:50%;bottom:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
@@ -528,10 +534,7 @@
       .roll{gap:14px}
       .roll div{grid-template-columns:1fr;gap:2px}
       .roll dt,.roll dd{text-align:center}
-      .lineup a{padding:20px 8px 18px;gap:12px}
-      .lineup .lp{height:112px}
-      .lineup .ll{height:26px}
-      .lineup span{display:none}
+      .bg-card{height:180px}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -596,7 +599,7 @@
         <p><span lang="ja">遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!</span><span lang="en">In the distant future, on a planet somewhere, lived beings called Tupa. To them, nothing mattered more than building towers. The taller the tower, the grander it is, but build it too high and divine punishment strikes, bringing it crashing down. Become a Tupa and, sometimes careful and sometimes bold, finish the grandest tower of all!</span></p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="fig-wrap"><div class="tupa"><span class="orb"><img src="../img/b_tupa_orb.webp" alt=""></span><img class="body" src="../img/b_tupa_body.webp" alt="トゥーパ" width="560" height="526" loading="lazy"></div></div>
+        <div class="fig-wrap"><div class="tupa" style="aspect-ratio:1164/1562"><span class="orb"><img src="../img/b_tupa_orb.webp" alt=""></span><img class="body" src="../img/b_tupa_body.webp" alt="トゥーパ" loading="lazy"></div></div>
         <figcaption><span class="chara-name"><span lang="ja">トゥーパ [túpa]</span><span lang="en">Tupa [túpa]</span></span><span class="chara-note"><span lang="ja">遠い未来のどこかの惑星にいる生命体。<br>塔を建てる力を持つ。<br>古代の言い伝えを信じ、塔を建てることを大事にしている。</span><span lang="en">A lifeform on a planet somewhere in the distant future.<br>It has the power to build towers.<br>It believes in ancient legends and holds tower building dear.</span></span></figcaption>
       </figure>
     </div>
@@ -671,8 +674,8 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">EXTRA</p><div class="sec-row"><h2 class="pill sec-h" id="extra-title"><span lang="ja">おまけ</span><span lang="en">Extras</span></h2></div></header>
       <article class="scoop reveal" aria-labelledby="scoop-title">
-        <div class="scoop-text"><p class="extra-kicker"><span lang="ja">スクープ!</span><span lang="en">Scoop!</span></p><h3 class="extra-title" id="scoop-title"><span lang="ja">古代の碑文を独占入手!</span><span lang="en">Exclusive: an ancient stele!</span></h3><p class="extra-text"><span lang="ja">トゥーパたちは、この碑文を<em>「ビビル」</em>という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!</span><span lang="en">The Tupa seem to believe this stele is a message from a god called <em>“Bibilu.”</em> But even they cannot read all of it. What does it say? Stay tuned!</span></p><div class="moji"><p class="moji-h"><span lang="ja">ビビル文字ジェネレータ</span><span lang="en">Bibilu Script Generator</span><small>ことばつむぎ　みらいつなぐ</small></p><div class="moji-demo"><span class="moji-in">びびるのとう</span><span class="moji-arrow" aria-hidden="true">→</span><img class="moji-out" src="../img/g_moji_sample.webp" alt="「びびるのとう」をビビル文字にした画像" width="504" height="504" loading="lazy"></div><p class="moji-note"><span lang="ja">ひらがなを入れると、ビビル文字の碑文ができあがる。</span><span lang="en">Type in hiragana to make your own Bibilu stele.</span></p><a class="btn" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener"><span lang="ja">ビビル文字を書いてみる</span><span lang="en">Write in Bibilu</span> <span aria-hidden="true">↗</span></a></div></div>
-        <img class="stele" src="../img/b_stele.webp" alt="古代の碑文。ビビル文字がびっしりと刻まれている" width="396" height="639" loading="lazy">
+        <div class="scoop-text"><p class="extra-kicker"><span lang="ja">スクープ!</span><span lang="en">Scoop!</span></p><h3 class="extra-title" id="scoop-title"><span lang="ja">古代の碑文を独占入手!</span><span lang="en">Exclusive: an ancient stele!</span></h3><p class="extra-text"><span lang="ja">トゥーパたちは、この碑文を<em>「ビビル」</em>という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!</span><span lang="en">The Tupa seem to believe this stele is a message from a god called <em>“Bibilu.”</em> But even they cannot read all of it. What does it say? Stay tuned!</span></p><div class="moji"><p class="moji-h"><span lang="ja">ビビル文字ジェネレータ</span><span lang="en">Bibilu Script Generator</span><small>ことばつむぎ　みらいつなぐ</small></p><div class="moji-demo"><span class="moji-in">びびるのとう</span><span class="moji-arrow" aria-hidden="true">→</span><img class="moji-out" src="../img/g_moji_sample.webp" alt="「びびるのとう」をビビル文字にした画像" loading="lazy"></div><p class="moji-note"><span lang="ja">ひらがなを入れると、ビビル文字の碑文ができあがる。</span><span lang="en">Type in hiragana to make your own Bibilu stele.</span></p><a class="btn" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener"><span lang="ja">ビビル文字を書いてみる</span><span lang="en">Write in Bibilu</span> <span aria-hidden="true">↗</span></a></div></div>
+        <img class="stele" src="../img/b_stele.webp" alt="古代の碑文。ビビル文字がびっしりと刻まれている" loading="lazy">
       </article>
     </div>
   </section>
@@ -694,16 +697,18 @@
   </dl>
 </section>
 
-<!-- 6. ほかの作品 -->
-<section class="lineup-sec" id="lineup">
+<!-- 6. ほかの作品:トップと同じカード(少し小さめ) -->
+<div class="wrap"><div class="dotline" aria-hidden="true"></div></div>
+<section class="lineup-sec" id="lineup" aria-labelledby="lineup-title">
   <div class="wrap">
-    <div class="section-head"><h2>LINEUP</h2><span><span lang="ja">ほかの上映作品</span><span lang="en">More titles</span></span></div>
-    <div class="lineup">
-      <a href="../trico/"><img class="lp" src="../img/trico_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/trico_logo_white.png" alt="TRICO!" loading="lazy"><span><span lang="ja">あのコをトリコにするために</span><span lang="en">To win her heart</span></span></a>
-      <a href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img class="lp" src="../img/ikatako_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/ikatako_logo_white.png" alt="イカタコ" loading="lazy"><span><span lang="ja">イカだ！タコだ！手を挙げろ！</span><span lang="en">Squid! Octopus! Hands up!</span></span></a>
-      <a href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img class="lp" src="../img/moko_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/moko_logo_white.png" alt="モコチャカ" loading="lazy"><span><span lang="ja">ねむりは競争だ。</span><span lang="en">Sleep is a race.</span></span></a>
-    </div>
-    <a class="sub-link" href="../../#board"><span lang="ja">ミニシアターシリーズを見る</span><span lang="en">See the Mini Theater series</span></a>
+    <h2 class="lineup-h" id="lineup-title"><span class="cap">BOARD GAME</span></h2>
+    <ul class="bg-row">
+      <li><a class="bg-card" href="../trico/"><img src="../../img/front_trico.webp" alt="TRICO!" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/front_ikatako.webp" alt="イカタコ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/front_moko.webp" alt="モコチャカ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/front_koikoi.webp" alt="こいこいのぼり 真打" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/front_bash.webp" alt="BASH&amp;SMASH" loading="lazy"></a></li>
+    </ul>
   </div>
 </section>
 

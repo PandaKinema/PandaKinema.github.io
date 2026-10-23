@@ -6,6 +6,14 @@ logo: img/b_logo_cream.png
 logo_alt: ビビルの塔 THE TOWER OF BIBILU
 logo_buy: img/b_logo_navy.png
 logo_credits: img/b_logo_white.png
+bg1_color: '#163f53'
+bg1_text: '#fff7df'
+bg1_image: img/b_tex_c.png
+bg2_color: '#fff1cf'
+bg2_text: '#163f53'
+band_image: img/b_band.png
+heading_icon: img/b_tupa_sten.png
+step_icon: img/b_tupa_sil.png
 catch_ja: ビビっている場合じゃない
 catch_en: No time to be scared!
 intro_ja: 遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!
@@ -24,6 +32,10 @@ chara_note_en: 'A lifeform on a planet somewhere in the distant future.
   It has the power to build towers.
 
   It believes in ancient legends and holds tower building dear.'
+chara_images:
+- image: img/b_tupa_body.webp
+  alt: トゥーパ
+chara_float: img/b_tupa_orb.webp
 contents_ja: カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚
 contents_en: 40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)
 price_ja: 3,300円
@@ -32,8 +44,24 @@ extra_kicker_ja: スクープ!
 extra_kicker_en: Scoop!
 extra_title_ja: 古代の碑文を独占入手!
 extra_title_en: 'Exclusive: an ancient stele!'
-extra_text_ja: トゥーパたちは、この碑文を[[「ビビル」]]という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!
-extra_text_en: The Tupa seem to believe this stele is a message from a god called [[“Bibilu.”]] But even they cannot read all of it. What does it say? Stay tuned!
+extra_blocks:
+- type: text
+  text_ja: トゥーパたちは、この碑文を[[「ビビル」]]という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!
+  text_en: The Tupa seem to believe this stele is a message from a god called [[“Bibilu.”]] But even they cannot read all of it. What does it say? Stay tuned!
+- type: box
+  title_ja: ビビル文字ジェネレータ
+  title_en: Bibilu Script Generator
+  sub: ことばつむぎ　みらいつなぐ
+  demo_text: びびるのとう
+  image: img/g_moji_sample.webp
+  alt: 「びびるのとう」をビビル文字にした画像
+  note_ja: ひらがなを入れると、ビビル文字の碑文ができあがる。
+  note_en: Type in hiragana to make your own Bibilu stele.
+  button_ja: ビビル文字を書いてみる
+  button_en: Write in Bibilu
+  url: https://pandakinema.github.io/bibilu-moji/
+extra_side_image: img/b_stele.webp
+extra_side_alt: 古代の碑文。ビビル文字がびっしりと刻まれている
 steps:
 - text_ja: 全員がせーので手札からカードを出し、数字の大きさが[[1位と2位の人]]が出したカードを獲得し、[[手元に塔を建てられる!]]
   text_en: Everyone plays a card at once. The players with the [[1st and 2nd highest numbers]] take their cards and [[build a tower!]]

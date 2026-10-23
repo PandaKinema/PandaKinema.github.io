@@ -93,9 +93,77 @@ def apply(key):
     g['manual_ja'] = d.get('manual_ja') or '#'
     g['manual_en'] = d.get('manual_en') or g['manual_ja']
     g['site'] = site
+    g['games'] = games
+    # 背景2色(色か画像)と帯・見出しの飾り:編集画面の値を CSS の変数で上書き
+    def tile(v):   # 2倍の大きさで作った画像を半分の大きさで敷き詰める
+        f = imgname(v)
+        with Image.open(os.path.join(WEB, f)) as im:
+            w, h = im.size
+        return f, w // 2, h // 2
+    from PIL import Image
+    css = []
+    for k, var in (('bg1_color', '--k-bg'), ('bg1_text', '--k-ink'), ('bg2_color', '--b2-bg'), ('bg2_text', '--b2-ink')):
+        if d.get(k):
+            css.append('%s:%s' % (var, d[k]))
+    if 'bg1_image' in d:
+        if d.get('bg1_image'):
+            f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
+        else:
+            css.append('--tex-c:none')
+    if d.get('bg2_image'):
+        f, w, h = tile(d['bg2_image']); css.append('--b2-img:url(../img/%s);--b2-size:%dpx %dpx' % (f, w, h))
+    if 'band_image' in d:
+        if d.get('band_image'):
+            f, w, h = tile(d['band_image']); css.append('--band:url(../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
+        else:
+            css.append('--band-d:none')
+    for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
+        if d.get(k):
+            css.append('%s:url(../img/%s)' % (var, imgname(d[k])))
+    if css:
+        g['theme'] += '\n      ' + ';'.join(css) + ';'
+    # STORY のキャラクター:画像を横に並べる。「浮かぶ部品」があれば1枚目の上に浮かせる
+    ch = [x for x in (d.get('chara_images') or []) if x.get('image')]
+    if ch:
+        if d.get('chara_float') and len(ch) == 1:
+            f = imgname(ch[0]['image'])
+            with Image.open(os.path.join(WEB, f)) as im:
+                w, h = im.size
+            # 元のトゥーパ(本体 560×526)の枠は 1164:1562。本体の上に玉が浮く分だけ縦に余白をとる
+            g['chara_fig'] = '<div class="tupa" style="aspect-ratio:%d/%d"><span class="orb"><img src="{{img:%s}}" alt=""></span><img class="body" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
+                1164, round(1164 * h / w * 1562 / (1164 * 526 / 560)), imgname(d['chara_float']), f, H.escape(str(ch[0].get('alt') or '')))
+        else:
+            n = len(ch)
+            g['chara_fig'] = '<div class="cast">%s</div>' % ''.join('<img style="--i:%d;width:%s%%" src="{{img:%s}}" alt="%s">' % (
+                i, x.get('size') or round(96 / n, 1), imgname(x['image']), H.escape(str(x.get('alt') or ''))) for i, x in enumerate(ch))
+    # おまけ:ブロックを上から順に。横に置く画像は別の欄
+    blocks = d.get('extra_blocks')
+    if blocks is not None:
+        out = []
+        for b in blocks:
+            t = b.get('type')
+            if t == 'text':
+                out.append('<p class="extra-text">%s</p>' % LL(b, 'text'))
+            elif t == 'image' and b.get('image'):
+                out.append('<img class="extra-img" src="{{img:%s}}" alt="%s" loading="lazy">' % (imgname(b['image']), H.escape(str(b.get('alt') or ''))))
+            elif t == 'button' and b.get('url'):
+                out.append('<a class="btn" href="%s" target="_blank" rel="noopener">%s <span aria-hidden="true">↗</span></a>' % (H.escape(b['url']), LL(b, 'label')))
+            elif t == 'box':
+                demo = ''
+                if b.get('image'):
+                    demo = '<div class="moji-demo">%s<img class="moji-out" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
+                        ('<span class="moji-in">%s</span><span class="moji-arrow" aria-hidden="true">→</span>' % H.escape(str(b['demo_text']))) if b.get('demo_text') else '',
+                        imgname(b['image']), H.escape(str(b.get('alt') or '')))
+                out.append('<div class="moji"><p class="moji-h">%s%s</p>%s%s%s</div>' % (
+                    LL(b, 'title'), ('<small>%s</small>' % H.escape(str(b['sub']))) if b.get('sub') else '', demo,
+                    ('<p class="moji-note">%s</p>' % LL(b, 'note')) if b.get('note_ja') else '',
+                    ('<a class="btn" href="%s" target="_blank" rel="noopener">%s <span aria-hidden="true">↗</span></a>' % (H.escape(b['url']), LL(b, 'button'))) if b.get('url') else ''))
+        g['extra_html'] = ''.join(out)
+        side = d.get('extra_side_image')
+        g['extra_img'] = ('<img class="stele" src="{{img:%s}}" alt="%s" loading="lazy">' % (imgname(side), H.escape(str(d.get('extra_side_alt') or '')))) if side else ''
     return g
 
-LINEUP = [
+LINEUP_OLD = [
     dict(key='bibilu',  logo='b_logo_white.png',       copy=L('ビビっている場合じゃない', 'No time to be scared!'),     pkg='bibilu_pkg_sm.webp', url='https://gamemarket.jp/game/188751', alt='ビビルの塔'),
     dict(key='trico',   logo='trico_logo_white.png',   copy=L('あのコをトリコにするために', 'To win her heart'),   pkg='trico_pkg.webp',     url='https://gamemarket.jp/game/186182', alt='TRICO!'),
     dict(key='ikatako', logo='ikatako_logo_white.png', copy=L('イカだ！タコだ！手を挙げろ！', 'Squid! Octopus! Hands up!'), pkg='ikatako_pkg.webp',   url='https://gamemarket.jp/game/186696', alt='イカタコ'),
@@ -512,6 +580,12 @@ TEMPLATE = r'''<!doctype html>
     .gband.top{top:18px}
     .gband.bottom{bottom:18px;-webkit-mask-position:calc(var(--sx,0) * -1px) 0;mask-position:calc(var(--sx,0) * -1px) 0}
     .tex{background-image:var(--tex-c);background-size:var(--tex-size)}
+    .band-c{background-image:var(--b2-img,none);background-size:var(--b2-size,auto)}
+    .gband{display:var(--band-d,block)}
+    .cast{display:flex;align-items:flex-end;justify-content:center;gap:4px;width:min(520px,90vw)}
+    .cast img{animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite;animation-delay:calc(var(--i) * -.9s)}
+    .fig-wrap:has(.cast){width:auto}
+    @media (max-width:650px){ .cast{width:min(360px,88vw)} }
 
     /* ===== 3. キャラクター+取説の導入文 ===== */
     .chara-in{display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
@@ -707,17 +781,16 @@ TEMPLATE = r'''<!doctype html>
     .roll dd{margin:0;text-align:left;font-size:15px;font-weight:700}
 
     /* ===== 6. ほかの作品 ===== */
-    .lineup-sec{padding-top:64px}
-    .section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .section-head h2{margin:0;font-size:13px;letter-spacing:.2em}
-    .section-head span{font-size:11px;letter-spacing:.12em;color:#8d8d8d}
-    .lineup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
-    .lineup a{display:flex;flex-direction:column;align-items:center;gap:18px;padding:30px 20px 26px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background-color .2s ease}
-    .lineup a:hover{background:#101010}
-    .lineup .lp{height:190px;width:auto;filter:drop-shadow(0 14px 16px rgba(0,0,0,.4))}
-    .lineup .ll{height:44px;width:auto;max-width:90%;object-fit:contain}
-    .lineup span{font-size:12px;color:var(--muted)}
-    .sub-link{display:inline-block;margin-top:20px;padding-bottom:2px;font-size:12px;letter-spacing:.06em;color:var(--soft-text);border-bottom:1px solid #444}
+    .dotline{height:4px;margin-top:56px;background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 50%/16px 4px repeat-x}
+    .lineup-sec{padding-top:34px}
+    .lineup-h{margin:0 0 14px;font-family:var(--cond);font-size:clamp(26px,3vw,36px);font-weight:700;letter-spacing:.01em;text-transform:uppercase}
+    .bg-row{list-style:none;margin:0;padding:0 0 6px;display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
+    .bg-row::-webkit-scrollbar{display:none}
+    .bg-row li{flex:none}
+    .bg-card{position:relative;display:block;height:230px;aspect-ratio:560/790;border-radius:10px;overflow:hidden;transition:translate .2s ease}
+    .bg-card:hover{translate:0 -4px}
+    .bg-card img{width:100%;height:100%;object-fit:cover}
+    .bg-new{position:absolute;left:50%;bottom:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
@@ -892,10 +965,7 @@ TEMPLATE = r'''<!doctype html>
       .roll{gap:14px}
       .roll div{grid-template-columns:1fr;gap:2px}
       .roll dt,.roll dd{text-align:center}
-      .lineup a{padding:20px 8px 18px;gap:12px}
-      .lineup .lp{height:112px}
-      .lineup .ll{height:26px}
-      .lineup span{display:none}
+      .bg-card{height:180px}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -1030,14 +1100,14 @@ TEMPLATE = r'''<!doctype html>
   </dl>
 </section>
 
-<!-- 6. ほかの作品 -->
-<section class="lineup-sec" id="lineup">
+<!-- 6. ほかの作品:トップと同じカード(少し小さめ) -->
+<div class="wrap"><div class="dotline" aria-hidden="true"></div></div>
+<section class="lineup-sec" id="lineup" aria-labelledby="lineup-title">
   <div class="wrap">
-    <div class="section-head"><h2>LINEUP</h2><span>{{L:ほかの上映作品|More titles}}</span></div>
-    <div class="lineup">
+    <h2 class="lineup-h" id="lineup-title"><span class="cap">BOARD GAME</span></h2>
+    <ul class="bg-row">
 {{lineup_html}}
-    </div>
-    <a class="sub-link" href="../../#board">{{L:ミニシアターシリーズを見る|See the Mini Theater series}}</a>
+    </ul>
   </div>
 </section>
 
@@ -1169,6 +1239,14 @@ def yt(v):   # YouTube のURLでもIDでもOK
     m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/|live/)([\w-]{11})', v)
     return m.group(1) if m else v
 
+def card_href(x):   # トップのカードのリンク先を、作品ページから見た場所に
+    u = str(x.get('page') or '')
+    if u.startswith('http'):
+        return u
+    if u.startswith('games/'):
+        return '../' + u[len('games/'):]
+    return u or '../../#board'
+
 def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
@@ -1202,8 +1280,9 @@ def render(key):
             e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), imgname(v.get('poster')) or g['poster'], LL(v, 'kind'), '' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>') for v in g['videos']),
         vdots_html=''.join('<button type="button"%s>%s</button>' % (' aria-current="true"' if i == 0 else '', LL(v, 'kind')) for i, v in enumerate(g['videos'])),
         lineup_html='\n'.join(
-            '      <a href="%s"%s><img class="lp" src="{{img:%s}}" alt="" loading="lazy"><img class="ll" src="{{img:%s}}" alt="%s" loading="lazy"><span>%s</span></a>'
-            % ((('../%s/' % x['key'], '') if x['key'] in GAMES else (x['url'], ' target="_blank" rel="noopener"')) + (x['pkg'], x['logo'], e(x['alt']), e(x['copy']))) for x in LINEUP if x['key'] != key),
+            '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (
+                card_href(x), ' target="_blank" rel="noopener"' if str(x.get('page') or '').startswith('http') else '', imgname(x['front']), e(x['name']),
+                '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '') for x in g['games'].values() if x['key'] != key),
     )
     s = TEMPLATE
     for _ in range(3):
