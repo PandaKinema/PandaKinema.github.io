@@ -73,9 +73,10 @@ def btns(g, card=False):
     booth = g.get('booth') or SITE['booth']
     b += '<a class="wb" href="%s" target="_blank" rel="noopener">%s%s</a>' % (e(booth), AR, L('BOOTHで購入', 'Buy on BOOTH'))
     return b
-def meta(g):   # バナー用:2〜3人・10〜15分・6歳から・ジャンル(下地なし)
+def meta(g):   # バナー用:「2〜3人・10〜15分・6歳から　ジャンル:〜」を1行。狭いときはジャンルから次の行へ
     s = spec(g)
-    return '%s{{L:人| players}}・%s{{L:分| min}}・%s{{L:歳から|+}}・%s' % (s[0], s[1], s[2], T(g.get('genre_ja'), g.get('genre_en')))
+    return '<span class="m-spec">%s{{L:人| players}}・%s{{L:分| min}}・%s{{L:歳から|+}}</span><span class="m-gen">%s%s</span>' % (
+        s[0], s[1], s[2], L('ジャンル：', 'Genre: '), T(g.get('genre_ja'), g.get('genre_en')))
 def date(v):
     return str(v or '').strip().replace('-', '.').replace('/', '.')
 def genre(g):
