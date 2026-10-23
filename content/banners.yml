@@ -1,5 +1,5 @@
-# 一番上のバナー(ピックアップ)に出す順番。key には games / minis / tools の key を入れます
 - key: bibilu
+  youtube: https://www.youtube.com/watch?v=y-kmQJgl9Dg
 - key: moji
 - key: trico
 - key: mockmaker
