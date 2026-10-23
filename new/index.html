@@ -270,7 +270,9 @@
     .a-card .lbl{margin:0 0 12px;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
     .member{display:flex;align-items:center;gap:14px}
     .who{min-width:0}
-    .a-btns{display:flex;align-items:center;gap:10px;margin-top:16px}
+    .a-btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+    .a-lead{margin-right:4px;font-size:12.5px;font-weight:600;color:var(--soft)}
+    @media (max-width:520px){ .a-lead{flex-basis:100%} }
     .a-btns .soc,.a-btns .wb{height:36px}
     .a-btns .soc{min-width:36px;padding:0 10px;font-size:15px;border-radius:7px}
     .a-div{height:4px;margin:18px 0;background:radial-gradient(circle,var(--line) 1.4px,transparent 1.8px) 0 50%/12px 4px repeat-x}
@@ -427,7 +429,7 @@
       </div>
       <div class="a-side">
         <div class="a-card"><p class="lbl"><span class="cap">MEMBER</span></p><div class="member"><span class="ava"><i></i></span><div class="who"><b><span lang="ja">ゐするぎ</span><span lang="en">Isurugi</span></b><small>Game Design / Artwork</small></div></div>
-          <div class="a-btns"><a class="soc x" href="https://x.com/panda_kinema" target="_blank" rel="noopener" aria-label="ゐするぎのX"><span class="cap">X</span></a><a class="wb" href="mailto:pandak11415@gmail.com"><b class="ar" aria-hidden="true">▶︎</b><span lang="ja">メールを送る</span><span lang="en">Send email</span></a></div></div>
+          <div class="a-btns"><span class="a-lead"><span lang="ja">お問い合わせ、ご連絡はこちら</span><span lang="en">For inquiries and contact</span></span><a class="soc x" href="https://x.com/panda_kinema" target="_blank" rel="noopener" aria-label="ゐするぎのX"><span class="cap">X</span></a><a class="wb" href="mailto:pandak11415@gmail.com"><b class="ar" aria-hidden="true">▶︎</b><span lang="ja">メールを送る</span><span lang="en">Send email</span></a></div></div>
       </div>
     </div>
   </section>
