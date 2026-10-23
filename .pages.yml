@@ -41,7 +41,7 @@ content:
       - { name: title, label: 作品名, type: string, hidden: true }
       - { name: kind_ja, label: 種類, type: string, description: "例:遊び方動画 / 予告編" }
       - { name: kind_en, label: 種類(英語), type: string, description: "例:How to play / Trailer", hidden: true }
-      - { name: poster, label: サムネイル, type: image, description: "16:9 の画像" }
+      - { name: poster, label: サムネイル, type: image, options: { path: new/img/video }, description: "16:9 の画像" }
       - { name: youtube, label: YouTube の動画ID, type: string, description: "YouTubeのURL(またはID)。空なら「準備中」" }
 
   - name: banners
@@ -53,10 +53,10 @@ content:
     fields:
       - { name: key, label: 作品・ツール, type: select, options: { values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "バナーに出す作品かツール。自分で作った画像だけのバナーなら空のまま" }  # AUTO:works
       - { name: youtube, label: 背景で流すYouTube, type: string, description: "YouTubeのURL。key と一緒に入れると、ロゴやボタンはそのままで背景に音なしで流れます" }
-      - { name: video, label: 背景で流す動画(mp4), type: file, description: "mp4 の動画。key と一緒に入れると背景で流れます(YouTubeより優先)。10MB以下くらいに" }
+      - { name: video, label: 背景で流す動画(mp4), type: file, options: { path: new/img/video }, description: "mp4 の動画。key と一緒に入れると背景で流れます(YouTubeより優先)。10MB以下くらいに" }
       - { name: start, label: 動画の開始(秒), type: string, description: "動画のどこから流すか。例:30 / 1:05。空なら最初から" }
       - { name: end, label: 動画の終了(秒), type: string, description: "ここまで流したら次のバナーへ(開始〜終了の間だけ表示)。空ならいつもの秒数で切り替え" }
-      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "key を空にして、画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上" }
+      - { name: image, label: バナー画像(自分で作ったもの), type: image, options: { path: new/img/page }, description: "key を空にして、画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上" }
       - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
       - { name: bg, label: 読み込み中の色, type: string, description: "画像や動画が出るまでの背景色。例:#173f54。空なら黒" }
       - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
@@ -73,9 +73,9 @@ content:
       - { name: name, label: 作品名, type: string, required: true }
       - { name: series, label: シリーズ名, type: string, description: "例:MINI THEATER SERIES 01。バナーのロゴの上に出ます。空でOK" }
       - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの上の中央とバナーに「新作」が出ます" }
-      - { name: front, label: 閉じたカードの画像, type: image, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
-      - { name: pkg, label: パッケージ, type: image, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
-      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
+      - { name: front, label: 閉じたカードの画像, type: image, options: { path: new/img/card }, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
+      - { name: pkg, label: パッケージ, type: image, options: { path: new/img/package }, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
+      - { name: logo, label: ロゴ, type: image, options: { path: new/img/logo }, description: "背景が透明なPNG" }
       - { name: main, label: メインカラー, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "背景の色(カード・バナー・作品ページ)。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: accent, label: アクセントカラー, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "帯・人数〜年齢の下地・文字の色。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: bg, label: 背景の色, type: select, default: main, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "カード・バナーの背景。帯と文字はもう一方の色で自動(白・黒なら読みやすい方)" }
@@ -94,8 +94,8 @@ content:
         type: object
         fields:
           - { name: pattern, label: 背景の模様, type: select, options: { values: [ { value: none, label: "なし" }, { value: tri, label: "トリコの三角" } ] } }
-          - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
-          - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
+          - { name: image, label: 背景画像, type: image, options: { path: new/img/page }, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
+          - { name: video, label: 動画, type: file, options: { path: new/img/video }, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
   - name: pages
@@ -110,18 +110,18 @@ content:
         fields:
           - { name: title, label: 作品名, type: string, hidden: true }
           - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
-          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/bibilu }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
-          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/bibilu } }
+          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/share }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/logo } }
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
-          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/bibilu }, hidden: true }
-          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/bibilu }, hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
             fields:
-              - { name: art, label: トップ画像, type: image, options: { path: new/img/bibilu }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
+              - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
@@ -132,17 +132,17 @@ content:
                 list: true
                 hidden: true
                 fields:
-                  - { name: image, label: 画像, type: image, options: { path: new/img/bibilu } }
+                  - { name: image, label: 画像, type: image, options: { path: new/img/page } }
                   - { name: x, label: 横, type: number }
                   - { name: y, label: 縦, type: number }
                   - { name: width, label: 幅, type: number }
                   - { name: rotate, label: 傾き, type: number }
                   - { name: motion, label: 動き, type: string }
-          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/bibilu }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/bibilu }, description: "空なら色だけ" }
-          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/bibilu }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
-          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/bibilu }, description: "見出しの左右に出るシルエット(背景透明)" }
-          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/bibilu }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/page }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
+          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/page }, description: "空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - { name: catch_ja, label: キャッチコピー, type: string }
           - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
           - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -153,8 +153,8 @@ content:
             type: object
             list: true
             fields:
-              - { name: image, label: 画像, type: image, options: { path: new/img/bibilu }, description: "背景透明" }
-              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/bibilu }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
@@ -176,7 +176,7 @@ content:
             type: object
             list: true
             fields:
-              - { name: image, label: 画像, type: image, options: { path: new/img/bibilu } }
+              - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
               - { name: wide, label: 横長で大きく出す, type: boolean }
@@ -187,8 +187,8 @@ content:
             fields:
               - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
-          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/bibilu }, hidden: true }
-          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/bibilu }, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/package }, hidden: true }
           - { name: contents_ja, label: 内容物, type: text }
           - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
@@ -203,7 +203,7 @@ content:
             fields:
               - { name: url, label: URL, type: string, required: true }
               - { name: title, label: タイトル(変えたいときだけ), type: string, description: "空ならページのタイトルを自動で" }
-              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/bibilu }, description: "空ならページの画像を自動で" }
+              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/page }, description: "空ならページの画像を自動で" }
           - name: credits
             label: クレジット
             type: object
@@ -221,18 +221,18 @@ content:
         fields:
           - { name: title, label: 作品名, type: string, hidden: true }
           - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
-          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/trico }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
-          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/trico } }
+          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/share }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/logo } }
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
-          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/trico }, hidden: true }
-          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/trico }, hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
             fields:
-              - { name: art, label: トップ画像, type: image, options: { path: new/img/trico }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
+              - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
@@ -243,17 +243,17 @@ content:
                 list: true
                 hidden: true
                 fields:
-                  - { name: image, label: 画像, type: image, options: { path: new/img/trico } }
+                  - { name: image, label: 画像, type: image, options: { path: new/img/page } }
                   - { name: x, label: 横, type: number }
                   - { name: y, label: 縦, type: number }
                   - { name: width, label: 幅, type: number }
                   - { name: rotate, label: 傾き, type: number }
                   - { name: motion, label: 動き, type: string }
-          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/trico }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/trico }, description: "空なら色だけ" }
-          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/trico }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
-          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/trico }, description: "見出しの左右に出るシルエット(背景透明)" }
-          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/trico }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { path: new/img/page }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
+          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { path: new/img/page }, description: "空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - { name: catch_ja, label: キャッチコピー, type: string }
           - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
           - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -264,8 +264,8 @@ content:
             type: object
             list: true
             fields:
-              - { name: image, label: 画像, type: image, options: { path: new/img/trico }, description: "背景透明" }
-              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/trico }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
@@ -287,7 +287,7 @@ content:
             type: object
             list: true
             fields:
-              - { name: image, label: 画像, type: image, options: { path: new/img/trico } }
+              - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
               - { name: wide, label: 横長で大きく出す, type: boolean }
@@ -298,8 +298,8 @@ content:
             fields:
               - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
-          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/trico }, hidden: true }
-          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/trico }, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/package }, hidden: true }
           - { name: contents_ja, label: 内容物, type: text }
           - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
@@ -314,7 +314,7 @@ content:
             fields:
               - { name: url, label: URL, type: string, required: true }
               - { name: title, label: タイトル(変えたいときだけ), type: string, description: "空ならページのタイトルを自動で" }
-              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/trico }, description: "空ならページの画像を自動で" }
+              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/page }, description: "空ならページの画像を自動で" }
           - name: credits
             label: クレジット
             type: object
@@ -336,17 +336,17 @@ content:
       - { name: name, label: ツール名, type: string, required: true }
       - { name: url, label: ツールのURL, type: string, required: true }
       - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの上の中央に「新作」が出ます" }
-      - { name: front, label: 閉じたカードの画像, type: image, description: "ボードゲームと同じ 840×1185。空なら一覧の絵とタイトルで作ります" }
-      - { name: title_image, label: ロゴ(タイトル画像), type: image, description: "背景透明。空ならツール名を文字で出す" }
+      - { name: front, label: 閉じたカードの画像, type: image, options: { path: new/img/card }, description: "ボードゲームと同じ 840×1185。空なら一覧の絵とタイトルで作ります" }
+      - { name: title_image, label: ロゴ(タイトル画像), type: image, options: { path: new/img/logo }, description: "背景透明。空ならツール名を文字で出す" }
       - { name: logo_color, label: ロゴの色, type: select, default: original, options: { values: [ { value: original, label: "ロゴ画像の色のまま" }, { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
-      - { name: image, label: 開いたカードとバナーの絵(画面写真など), type: image }
-      - { name: thumb, label: 一覧の絵(正方形), type: image, description: "閉じたカードの画像がないときに使う絵。空ならバナーの絵", hidden: true }
+      - { name: image, label: 開いたカードとバナーの絵(画面写真など), type: image, options: { path: new/img/tools } }
+      - { name: thumb, label: 一覧の絵(正方形), type: image, options: { path: new/img/tools }, description: "閉じたカードの画像がないときに使う絵。空ならバナーの絵", hidden: true }
       - { name: intro_ja, label: 紹介文, type: text }
       - { name: intro_en, label: 紹介文(英語), type: text, hidden: true }
       - { name: main, label: メインカラー, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "背景の色" }
       - { name: accent, label: アクセントカラー, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "文字の色" }
       - { name: bg, label: 背景の色, type: select, default: main, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "カード・バナーの背景。帯と文字はもう一方の色で自動(白・黒なら読みやすい方)" }
-      - { name: video, label: バナーの動画, type: file, description: "mp4・音なし。10MB以下くらいに" }
+      - { name: video, label: バナーの動画, type: file, options: { path: new/img/video }, description: "mp4・音なし。10MB以下くらいに" }
       - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
   - name: categories
@@ -382,16 +382,16 @@ content:
       - { name: note, label: note のURL, type: string }
       - { name: member_x, label: ゐするぎの X, type: string }
       - { name: mail, label: 連絡先メール, type: string }
-      - { name: ogp_image, label: X共有画像(トップ), type: image, description: "1200×630" }
-      - { name: header_logo, label: ヘッダーのロゴ, type: image, description: "白い文字のロゴ(背景透明)。高さ24pxで表示" }
-      - { name: about_logo, label: ABOUT のロゴ, type: image, description: "白いロゴ(背景透明)" }
+      - { name: ogp_image, label: X共有画像(トップ), type: image, options: { path: new/img/share }, description: "1200×630" }
+      - { name: header_logo, label: ヘッダーのロゴ, type: image, options: { path: new/img/site }, description: "白い文字のロゴ(背景透明)。高さ24pxで表示" }
+      - { name: about_logo, label: ABOUT のロゴ, type: image, options: { path: new/img/site }, description: "白いロゴ(背景透明)" }
       - { name: member_label, label: メンバー欄の見出し, type: string, description: "例:MEMBER / DIRECTOR / FOUNDER" }
       - { name: member_name_ja, label: 名前, type: string }
       - { name: member_name_en, label: 名前(英語), type: string, hidden: true }
       - { name: member_role, label: 担当, type: string, description: "例:Game Design / Artwork" }
       - { name: member_bio_ja, label: プロフィール, type: text, description: "名前の下に出る2行くらいの紹介。改行もそのまま出ます" }
       - { name: member_bio_en, label: プロフィール(英語), type: text, hidden: true }
-      - { name: member_icon, label: メンバーのアイコン, type: image, description: "丸く切り抜いて表示します(正方形がおすすめ)。空ならサークルのマーク" }
-      - { name: icon, label: サークルのマーク, type: image, description: "アイコンが空のときに丸の中に出るマーク(背景透明・単色)" }
+      - { name: member_icon, label: メンバーのアイコン, type: image, options: { path: new/img/site }, description: "丸く切り抜いて表示します(正方形がおすすめ)。空ならサークルのマーク" }
+      - { name: icon, label: サークルのマーク, type: image, options: { path: new/img/site }, description: "アイコンが空のときに丸の中に出るマーク(背景透明・単色)" }
       - { name: about_ja, label: ABOUT の文, type: text }
       - { name: about_en, label: ABOUT の文(英語), type: text, hidden: true }

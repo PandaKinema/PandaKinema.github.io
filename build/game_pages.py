@@ -819,7 +819,7 @@ TEMPLATE = r'''<!doctype html>
     .tokens img{width:34px}
 
     /* 関連コンテンツ */
-    .rel-row{justify-content:center;gap:18px}
+    .rel-row{justify-content:safe center;gap:18px}
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
     /* リンクのカード(OGPの画像+タイトル+サイト名) */
     .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
@@ -828,6 +828,19 @@ TEMPLATE = r'''<!doctype html>
     .bl-t{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:12px 14px 14px}
     .bl-t b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:14px;line-height:1.55}
     .bl-t small{font-size:11.5px;font-weight:700;opacity:.55}
+    /* 関連コンテンツの作品・ツール:開いたカードの中身を、リンクのカードと同じ形に */
+    .rel-row .bg-card,.rel-row .bg-link{height:auto;min-height:260px;aspect-ratio:auto}
+    .rel-row li{display:flex}   /* 横に並ぶカードの高さをそろえる */
+    .ro-vis{display:flex;align-items:center;justify-content:center;gap:6%;width:100%;aspect-ratio:1.91/1;padding:12px 16px;overflow:hidden}
+    .ro-pkg{width:auto;height:88%;max-width:42%;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+    .ro-logo{display:block;width:48%;max-height:70%;object-fit:contain;-webkit-mask:var(--lg) center/contain no-repeat;mask:var(--lg) center/contain no-repeat}
+    img.ro-logo{-webkit-mask:none;mask:none}
+    .ro-name{font-size:17px;font-weight:900;line-height:1.3}
+    .ro-tool .ro-shot{width:44%;height:auto;max-height:86%;object-fit:contain;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.3)}
+    .ro-tool .bt-tupa{width:22%;margin:0}
+    .ro-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:-2px;font-size:12px;font-weight:600;line-height:1.6;opacity:.8}
+    .rel-open .bl-t{justify-content:flex-start}
+    .rel-open .bl-t small{margin-top:auto}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -1378,9 +1391,46 @@ def link_card(x):   # リンク(note の記事など):ページのOGPからタ�
     return '      <li><a class="bg-card bg-link" href="%s" target="_blank" rel="noopener">%s<span class="bl-t"><b>%s</b><small>%s ↗</small></span></a></li>' % (
         e(url), ('<img class="bl-img" src="%s" alt="" loading="lazy">' % e(src)) if src else '<span class="bl-img bl-none"></span>', e(title), e(site))
 
+def card_colors(x):   # カードの(背景, 文字):「背景の色」がメインならアクセント、アクセントならメイン、白・黒なら読みやすい方
+    c = {'main': x.get('main') or '#163f53', 'accent': x.get('accent') or '#ffffff', 'white': '#ffffff', 'black': '#000000'}
+    sel = str(x.get('bg') or 'main')
+    bg = c.get(sel, c['main'])
+    fg = c['accent'] if sel == 'main' else (c['main'] if sel == 'accent' else max((c['main'], c['accent']), key=lambda v: contrast(v, bg)))
+    return bg, fg, c
+
+def open_card(x, tool=False):
+    """関連コンテンツのカード:トップの「開いたカード」と同じ中身(色・パッケージ・ロゴ)を、noteなどのリンクのカードと同じ形で"""
+    e = H.escape
+    bg, fg, c = card_colors(x)
+    logo = x.get('title_image') if tool else x.get('logo')
+    lsel = str(x.get('logo_color') or ('original' if tool else 'accent'))
+    lc = '' if lsel == 'original' else c.get(lsel, fg)
+    if logo:
+        from PIL import Image
+        with Image.open(os.path.join(WEB, imgname(logo))) as im:
+            lw, lh = im.size
+        lg = ('<span class="ro-logo" role="img" aria-label="%s" style="--lg:url(../../img/%s);aspect-ratio:%d/%d;background:%s"></span>' % (e(x['name']), imgname(logo), lw, lh, lc)) if lc else \
+             '<img class="ro-logo" src="../../img/%s" alt="%s">' % (imgname(logo), e(x['name']))
+    else:
+        lg = '<span class="ro-name">%s</span>' % e(x['name'])
+    if tool:
+        shot = x.get('image') or x.get('thumb')
+        art = ('<img class="ro-shot" src="../../img/%s" alt="">' % imgname(shot)) if shot else tool_art(x)
+        href, label, extra = x['url'], 'PLAY&amp;TOOLS ↗', ' target="_blank" rel="noopener"'
+        intro = x.get('intro_ja') or ''
+    else:
+        art = '<img class="ro-pkg" src="../../img/%s" alt="">' % imgname(x['pkg'])
+        href = card_href(x); label = 'BOARD GAME'
+        extra = ' target="_blank" rel="noopener"' if href.startswith('http') else ''
+        intro = x.get('intro_ja') or ''
+    intro = L(e(str(intro)).replace('\n', ''), e(str(x.get('intro_en') or intro)).replace('\n', ' '))
+    return ('      <li><a class="bg-card bg-link rel-open" href="%s"%s><span class="ro-vis%s" style="background:%s;color:%s">%s%s</span>'
+            '<span class="bl-t"><b>%s</b><span class="ro-intro">%s</span><small>%s</small></span></a></li>') % (
+        e(href), extra, ' ro-tool' if tool else '', e(bg), e(fg), art, lg, e(x['name']), intro, label)
+
 def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツールのカード。なければ何も出さない
     tools = {t['key']: t for t in g['tools']}
-    cards = [tool_card(tools[k]) if k in tools else game_card(g['games'][k]) for k in g['related'] if k != key and (k in tools or k in g['games'])]
+    cards = [open_card(tools[k], True) if k in tools else open_card(g['games'][k]) for k in g['related'] if k != key and (k in tools or k in g['games'])]
     cards += [link_card(x) for x in g['related_links']]
     if not cards:
         return ''
@@ -1433,6 +1483,7 @@ def render(key):
         s = re.sub(r'\{\{(?!img:)(\w+)\}\}', lambda m: str(v[m.group(1)]), s)
     s = re.sub(r'\{\{L:(.*?)\|(.*?)\}\}', r'<span lang="ja">\1</span><span lang="en">\2</span>', s)
     s = re.sub(r'\{\{img:([\w.\-/]+)\}\}', lambda m: uri(m.group(1)), s)
+    s = re.sub(r'\.\./\.\./img/([\w.\-/]+\.(?:png|webp|jpg|jpeg|gif|svg|mp4))', lambda m: '../../img/' + media.path(m.group(1)), s)   # 名前だけで書いた画像をフォルダの中の場所に
     assert '{{' not in s, re.findall(r'\{\{[^}]*\}\}', s)[:5]
     return s
 

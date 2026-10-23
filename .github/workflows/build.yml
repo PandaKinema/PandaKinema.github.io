@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches: [main]
-    paths: ['content/**', 'new/img/**', 'new/games/img/**', 'build/**']
+    paths: ['content/**', 'new/img/**', 'build/**', '.github/workflows/build.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,19 +16,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0   # 画像がいつ追加されたかを見るため
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: pip install pyyaml pillow
-      - run: python build/replace_media.py   # 同じ名前でアップし直した画像(foo-1.png)を元の名前に差し替え
-      - run: python build/build.py
-      - run: python build/game_pages.py
-      - run: python build/sync_cms.py   # 編集画面の選択肢(カテゴリ・役割・作品)を最新に
-      - name: commit
+      - name: build and commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
-          git add -A new/img new/games/img content build/ogp_cache.json
-          git add new/index.html new/colors.html new/games/*/index.html .pages.yml
-          if git diff --cached --quiet; then echo "変更なし"; else git commit -m "ページを組み立て直し" && git pull --rebase && git push; fi
+          # 編集画面で続けて保存すると、組み立て中に新しい保存が入ることがある → いちばん新しい状態から作り直して、もう一度
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python build/replace_media.py   # 同じ名前でアップし直した画像(foo-1.png など)を元の画像に上書き
+            python build/build.py
+            python build/game_pages.py
+            python build/sync_cms.py        # 編集画面の選択肢(カテゴリ・役割・作品)を最新に
+            git add -A new content build/ogp_cache.json .pages.yml
+            if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
+            git commit -q -m "ページを組み立て直し"
+            if git push -q origin HEAD:main; then exit 0; fi
+            echo "ほかの保存と重なったので、やり直します($i)"; sleep $((i * 4))
+          done
+          exit 1

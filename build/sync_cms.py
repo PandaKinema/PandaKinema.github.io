@@ -17,19 +17,19 @@ sets = {
 p = os.path.join(ROOT, '.pages.yml')
 s = open(p, encoding='utf-8').read()
 
-# 作品ページ:content/pages/<key>.yml ごとに1つずつ。画像を選ぶときは、その作品のフォルダ(new/img/<key>)が最初に開く
+# 作品ページ:content/pages/<key>.yml ごとに1つずつ(欄は最初のページと同じ)
 def pages_block(s):
     a = s.index('      - name: page_')
     b = s.index('\n  - name: tools')
     items = s[a:b]
     m = re.search(r'        fields:[^\n]*\n(.*?)(?=\n      - name: page_|\Z)', items, flags=re.S)
-    fields = re.sub(r', options: \{ path: new/img/[\w-]+ \}', '', m.group(1).rstrip('\n'))
+    fields = m.group(1).rstrip('\n')
     names = {g['key']: g['name'] for g in games}
     keys = sorted((f[:-4] for f in os.listdir(os.path.join(ROOT, 'content', 'pages')) if f.endswith('.yml')),
                   key=lambda k: list(names).index(k) if k in names else 99)
     out = []
     for k in keys:
-        fk = re.sub(r'type: image(?=[,} ])', 'type: image, options: { path: new/img/%s }' % k, fields)
+        fk = fields
         out.append('      - name: page_%s\n        label: %s\n        type: file\n        path: content/pages/%s.yml\n        format: yaml\n        fields:\n%s\n' % (k, q(names.get(k, k)), k, fk))
     return s[:a] + ''.join(out) + s[b:]
 s0 = s

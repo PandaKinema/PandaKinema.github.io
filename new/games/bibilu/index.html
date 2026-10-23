@@ -11,7 +11,7 @@
   <meta property="og:description" content="ビビルの塔:数字カードを同時に出し、高い塔を建てて得点を競う2〜4人用のカードゲーム。パンダキネマ。">
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:url" content="https://pandakinema.github.io/new/games/bibilu/">
-  <meta property="og:image" content="https://pandakinema.github.io/new/img/bibilu/ogp_bibilu.png">
+  <meta property="og:image" content="https://pandakinema.github.io/new/img/share/ogp_bibilu.png">
   <style>
     :root{--bg:#090909;--line:#2a2a2a;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
@@ -21,12 +21,12 @@
     .key{
       /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
       --glow:170,215,225;
-      --band:url(../../img/bibilu/b_band.png?v=2fbc6c74); --band-h:24px;          /* 帯の境目:塔の模様(ビビル文字) */
-      --tex-c:url(../../img/bibilu/b_tex_c.png?v=5818d645); --tex-size:525px 175px; --tex-a:rgba(255,241,207,.035);
+      --band:url(../../img/page/b_band.png?v=2fbc6c74); --band-h:24px;          /* 帯の境目:塔の模様(ビビル文字) */
+      --tex-c:url(../../img/page/b_tex_c.png?v=5818d645); --tex-size:525px 175px; --tex-a:rgba(255,241,207,.035);
       --orb-glow:27,185,238;
-      --orn:url(../../img/bibilu/b_tupa_sten.png?v=7bd22fa3); --snum:url(../../img/bibilu/b_tupa_sil.png?v=977f04c4);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
+      --orn:url(../../img/page/b_tupa_sten.png?v=7bd22fa3); --snum:url(../../img/page/b_tupa_sil.png?v=977f04c4);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
     
-      --k-bg:#153e53;--k-ink:#fff5d7;--hl:#f2d756;--b2-bg:#fff5d7;--b2-ink:#153e53;--hl2:#d4242b;--sec-bg:#fff5d7;--sec-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--p-ink:#153e53;--soft:#fff5d7;--pan-bg:#153e53;--pan-ink:#fff;--lt:#fff5d7;--on-lt:#153e53;--dk:#153e53;--on-dk:#fff5d7;--tex-c:url(../../img/bibilu/b_tex_c.png?v=5818d645);--tex-size:525px 175px;--band:url(../../img/bibilu/b_band.png?v=2fbc6c74);--band-h:24px;--band-d:block;--orn:url(../../img/bibilu/b_tupa_sten.png?v=7bd22fa3);--snum:url(../../img/bibilu/b_tupa_sil.png?v=977f04c4);}
+      --k-bg:#153e53;--k-ink:#fff5d7;--hl:#f2d756;--b2-bg:#fff5d7;--b2-ink:#153e53;--hl2:#d4242b;--sec-bg:#fff5d7;--sec-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--p-ink:#153e53;--soft:#fff5d7;--pan-bg:#153e53;--pan-ink:#fff;--lt:#fff5d7;--on-lt:#153e53;--dk:#153e53;--on-dk:#fff5d7;--tex-c:url(../../img/page/b_tex_c.png?v=5818d645);--tex-size:525px 175px;--band:url(../../img/page/b_band.png?v=2fbc6c74);--band-h:24px;--band-d:block;--orn:url(../../img/page/b_tupa_sten.png?v=7bd22fa3);--snum:url(../../img/page/b_tupa_sil.png?v=977f04c4);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -350,7 +350,7 @@
     .tokens img{width:34px}
 
     /* 関連コンテンツ */
-    .rel-row{justify-content:center;gap:18px}
+    .rel-row{justify-content:safe center;gap:18px}
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
     /* リンクのカード(OGPの画像+タイトル+サイト名) */
     .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
@@ -359,6 +359,19 @@
     .bl-t{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:12px 14px 14px}
     .bl-t b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:14px;line-height:1.55}
     .bl-t small{font-size:11.5px;font-weight:700;opacity:.55}
+    /* 関連コンテンツの作品・ツール:開いたカードの中身を、リンクのカードと同じ形に */
+    .rel-row .bg-card,.rel-row .bg-link{height:auto;min-height:260px;aspect-ratio:auto}
+    .rel-row li{display:flex}   /* 横に並ぶカードの高さをそろえる */
+    .ro-vis{display:flex;align-items:center;justify-content:center;gap:6%;width:100%;aspect-ratio:1.91/1;padding:12px 16px;overflow:hidden}
+    .ro-pkg{width:auto;height:88%;max-width:42%;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+    .ro-logo{display:block;width:48%;max-height:70%;object-fit:contain;-webkit-mask:var(--lg) center/contain no-repeat;mask:var(--lg) center/contain no-repeat}
+    img.ro-logo{-webkit-mask:none;mask:none}
+    .ro-name{font-size:17px;font-weight:900;line-height:1.3}
+    .ro-tool .ro-shot{width:44%;height:auto;max-height:86%;object-fit:contain;border-radius:4px;box-shadow:0 6px 12px rgba(0,0,0,.3)}
+    .ro-tool .bt-tupa{width:22%;margin:0}
+    .ro-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:-2px;font-size:12px;font-weight:600;line-height:1.6;opacity:.8}
+    .rel-open .bl-t{justify-content:flex-start}
+    .rel-open .bl-t small{margin-top:auto}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -589,11 +602,11 @@
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
   <section class="hero hero-cover" style="--lw:600px;--art-pos:45% 64%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/bibilu/b_art.jpg?v=c3244d4a" alt="" fetchpriority="high"></div>
+    <div class="hero-art"><img class="art" src="../../img/page/b_art.jpg?v=c3244d4a" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
         
-        <h1 id="title"><img class="logo" src="../../img/bibilu/b_logo_cream.png?v=8a726d8d" alt="ビビルの塔 THE TOWER OF BIBILU" width="1100" height="305"></h1>
+        <h1 id="title"><img class="logo" src="../../img/logo/b_logo_cream.png?v=8a726d8d" alt="ビビルの塔 THE TOWER OF BIBILU" width="1100" height="305"></h1>
         <div class="billing">
           <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">2〜4人</span><span lang="en">2–4</span></dd></div>
@@ -615,8 +628,8 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-          <figure class="vslide" data-yt="y-kmQJgl9Dg" data-title="PV"><button class="vposter" type="button"><img src="../../img/bibilu/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">PV</span><span lang="en">Promo video</span></span></button></figure>
-          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/bibilu/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
+          <figure class="vslide" data-yt="y-kmQJgl9Dg" data-title="PV"><button class="vposter" type="button"><img src="../../img/video/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">PV</span><span lang="en">Promo video</span></span></button></figure>
+          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
@@ -635,7 +648,7 @@
         <p><span lang="ja">遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!</span><span lang="en">In the distant future, on a planet somewhere, lived beings called Tupa. To them, nothing mattered more than building towers. The taller the tower, the grander it is, but build it too high and divine punishment strikes, bringing it crashing down. Become a Tupa and, sometimes careful and sometimes bold, finish the grandest tower of all!</span></p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap"><div class="tupa" style="aspect-ratio:1164/1562"><span class="orb"><img src="../../img/bibilu/b_tupa_orb.webp?v=3f820354" alt=""></span><img class="body" src="../../img/bibilu/b_tupa_body.webp?v=f35a06f0" alt="トゥーパ [túpa]" loading="lazy"></div></div><figcaption><span class="chara-name"><span lang="ja">トゥーパ [túpa]</span><span lang="en">Tupa [túpa]</span></span><span class="chara-note"><span lang="ja">遠い未来のどこかの惑星にいる生命体。<br>塔を建てる力を持つ。<br>古代の言い伝えを信じ、塔を建てることを大事にしている。</span><span lang="en">A lifeform on a planet somewhere in the distant future.<br>It has the power to build towers.<br>It believes in ancient legends and holds tower building dear.</span></span></figcaption></div></div>
+        <div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap"><div class="tupa" style="aspect-ratio:1164/1562"><span class="orb"><img src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""></span><img class="body" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt="トゥーパ [túpa]" loading="lazy"></div></div><figcaption><span class="chara-name"><span lang="ja">トゥーパ [túpa]</span><span lang="en">Tupa [túpa]</span></span><span class="chara-note"><span lang="ja">遠い未来のどこかの惑星にいる生命体。<br>塔を建てる力を持つ。<br>古代の言い伝えを信じ、塔を建てることを大事にしている。</span><span lang="en">A lifeform on a planet somewhere in the distant future.<br>It has the power to build towers.<br>It believes in ancient legends and holds tower building dear.</span></span></figcaption></div></div>
       </figure>
     </div>
   </section>
@@ -650,19 +663,19 @@
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
           <li class="step reveal s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1">1</span><p class="step-lead"><span><span lang="ja">全員がせーので手札からカードを出し、数字の大きさが<em>1位と2位の人</em>が出したカードを獲得し、<em>手元に塔を建てられる!</em></span><span lang="en">Everyone plays a card at once. The players with the <em>1st and 2nd highest numbers</em> take their cards and <em>build a tower!</em></span></span></p></div>
-            <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"></span><b class="crown" aria-label="2位">2</b></span><span class="pk" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_5.webp?v=b948c317" alt="5のカード"></span></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span></span><span class="pk sel" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_8.webp?v=f9211e57" alt="8のカード"></span><b class="crown" aria-label="1位">1</b></span></div></div>
+            <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"></span><b class="crown" aria-label="2位">2</b></span><span class="pk" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"></span></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span></span><span class="pk sel" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></span><b class="crown" aria-label="1位">1</b></span></div></div>
           </li>
           <li class="step reveal s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2">2</span><p class="step-lead"><span><span lang="ja">もし同じ数字を出した人がいたら<em>バッティング。バッティングした人だけが塔を建てる!</em></span><span lang="en">If anyone played the same number, it is a <em>clash.</em> <em>Only the clashing players build!</em></span></span></p></div>
-            <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk sel" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_10.webp?v=0edc613f" alt="10のカード"></span></span><span class="pk" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/bibilu/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/bibilu/parts/bc_2.webp?v=0b5747b7" alt="2のカード"></span></span></div></div>
+            <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk sel" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_10.webp?v=0edc613f" alt="10のカード"></span></span><span class="pk" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"></span></span></div></div>
           </li>
           <li class="step reveal s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3">3</span><p class="step-lead"><span><span lang="ja">塔はどんどん上に重ねていく。ただし、6枚を超えると、<em>天罰マークの数だけ下から崩れる!</em></span><span lang="en">Towers keep growing upward. But past 6 cards, <em>they crumble from the bottom by the number of punishment marks!</em></span></span></p></div>
-            <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:6;--fall:4"><img class="lt fall" style="--i:0" src="../../img/bibilu/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt fall" style="--i:1" src="../../img/bibilu/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt fall" style="--i:2" src="../../img/bibilu/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt fall" style="--i:3" src="../../img/bibilu/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt stay" style="--i:4" src="../../img/bibilu/parts/bc_1.webp?v=eb8ef767" alt="1のカード"><img class="lt stay" style="--i:5" src="../../img/bibilu/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lnotes"><p class="n1"><span lang="ja"><em>6枚目に8を獲得!</em><br>8の天罰マークは<br>4つなので…</span><span lang="en"><em>6th card: an 8!</em><br>The 8 has 4<br>marks, so…</span></p><p class="n2"><span lang="ja"><em>下から4枚<br>捨てる!</em></span><span lang="en"><em>Discard 4<br>from the bottom!</em></span></p><p class="n3"><span lang="ja">上の2枚は残る</span><span lang="en">The top 2 stay</span></p></div></div></div>
+            <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:6;--fall:4"><img class="lt fall" style="--i:0" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt fall" style="--i:1" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt fall" style="--i:2" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt fall" style="--i:3" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt stay" style="--i:4" src="../../img/parts/bc_1.webp?v=eb8ef767" alt="1のカード"><img class="lt stay" style="--i:5" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lnotes"><p class="n1"><span lang="ja"><em>6枚目に8を獲得!</em><br>8の天罰マークは<br>4つなので…</span><span lang="en"><em>6th card: an 8!</em><br>The 8 has 4<br>marks, so…</span></p><p class="n2"><span lang="ja"><em>下から4枚<br>捨てる!</em></span><span lang="en"><em>Discard 4<br>from the bottom!</em></span></p><p class="n3"><span lang="ja">上の2枚は残る</span><span lang="en">The top 2 stay</span></p></div></div></div>
           </li>
           <li class="step reveal s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4">4</span><p class="step-lead"><span><span lang="ja">手札がなくなったらゲーム終了! <em>「塔の1番上の数字×高さ」が最も大きい人が勝ち!</em></span><span lang="en">When hands run out, the game ends! <em>Highest “top number × height” wins!</em></span></span></p></div>
-            <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:5;--fall:0"><img class="lt" style="--i:0" src="../../img/bibilu/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt" style="--i:1" src="../../img/bibilu/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt" style="--i:2" src="../../img/bibilu/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt" style="--i:3" src="../../img/bibilu/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt" style="--i:4" src="../../img/bibilu/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lscore"><p><span lang="ja">8×5=<b>40点!</b></span><span lang="en">8×5=<b>40 pts!</b></span></p><span class="hop"><img class="hop-orb" src="../../img/bibilu/b_tupa_orb.webp?v=3f820354" alt=""><img class="hop-tok" src="../../img/bibilu/b_tupa_body.webp?v=f35a06f0" alt="トゥーパ"></span></div></div></div>
+            <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:5;--fall:0"><img class="lt" style="--i:0" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt" style="--i:1" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt" style="--i:2" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt" style="--i:3" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt" style="--i:4" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lscore"><p><span lang="ja">8×5=<b>40点!</b></span><span lang="en">8×5=<b>40 pts!</b></span></p><span class="hop"><img class="hop-orb" src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""><img class="hop-tok" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt="トゥーパ"></span></div></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
@@ -675,9 +688,9 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title"><span lang="ja">ギャラリー</span><span lang="en">Gallery</span></h2></div></header>
       <div class="gallery reveal">
-        <figure class="wide"><button class="gitem" type="button" aria-label="説明シート「ビビルの塔はこんなゲーム!」を大きく見る"><img src="../../img/bibilu/g_rule.webp?v=7bdc0b8c" alt="説明シート「ビビルの塔はこんなゲーム!」" loading="lazy"></button></figure>
-        <figure class=""><button class="gitem" type="button" aria-label="パッケージ(表)を大きく見る"><img src="../../img/bibilu/g_pkg_front.webp?v=337b4208" alt="パッケージ(表)" loading="lazy"></button></figure>
-        <figure class=""><button class="gitem" type="button" aria-label="パッケージ(裏)を大きく見る"><img src="../../img/bibilu/g_pkg_back.webp?v=5ae805fc" alt="パッケージ(裏)" loading="lazy"></button></figure>
+        <figure class="wide"><button class="gitem" type="button" aria-label="説明シート「ビビルの塔はこんなゲーム!」を大きく見る"><img src="../../img/gallery/g_rule.webp?v=7bdc0b8c" alt="説明シート「ビビルの塔はこんなゲーム!」" loading="lazy"></button></figure>
+        <figure class=""><button class="gitem" type="button" aria-label="パッケージ(表)を大きく見る"><img src="../../img/package/g_pkg_front.webp?v=337b4208" alt="パッケージ(表)" loading="lazy"></button></figure>
+        <figure class=""><button class="gitem" type="button" aria-label="パッケージ(裏)を大きく見る"><img src="../../img/package/g_pkg_back.webp?v=5ae805fc" alt="パッケージ(裏)" loading="lazy"></button></figure>
         <div class="gph"><span lang="ja">プレイ中の写真(準備中)</span><span lang="en">Gameplay photos (coming soon)</span></div>
         <div class="gph"><span lang="ja">内容物の写真(準備中)</span><span lang="en">Components photo (coming soon)</span></div>
       </div>
@@ -688,9 +701,9 @@
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
     <div class="panel buy-box reveal">
-      <img class="pkg" src="../../img/bibilu/b_pkg.webp?v=6415acb1" alt="ビビルの塔のパッケージ" width="498" height="760" loading="lazy">
+      <img class="pkg" src="../../img/package/b_pkg.webp?v=6415acb1" alt="ビビルの塔のパッケージ" width="498" height="760" loading="lazy">
       <div>
-        <img class="buy-logo" src="../../img/bibilu/b_logo_navy.png?v=70e9a992" alt="ビビルの塔 THE TOWER OF BIBILU" loading="lazy">
+        <img class="buy-logo" src="../../img/logo/b_logo_navy.png?v=70e9a992" alt="ビビルの塔 THE TOWER OF BIBILU" loading="lazy">
         <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">2〜4人</span><span lang="en">2–4</span></dd></div>
             <div><dt><span lang="ja">時間</span><span lang="en">Time</span></dt><dd><span lang="ja">10〜15分</span><span lang="en">10–15 min</span></dd></div>
@@ -709,18 +722,18 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">RELATED</p><div class="sec-row"><h2 class="pill sec-h" id="related-title"><span lang="ja">関連コンテンツ</span><span lang="en">Related</span></h2></div></header>
       <ul class="bg-row rel-row reveal">
-      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp" alt=""><img class="to" src="../../img/b_tupa_orb.webp" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/tools/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
+      <li><a class="bg-card bg-link rel-open" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener"><span class="ro-vis ro-tool" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt=""><img class="to" src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""></span><img class="ro-logo" src="../../img/logo/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ"></span><span class="bl-t"><b>ビビル文字ジェネレータ</b><span class="ro-intro"><span lang="ja">ことばをビビル文字に変換して遊べます。</span><span lang="en">Turn your words into Bibilu script.</span></span><small>PLAY&amp;TOOLS ↗</small></span></a></li>
       </ul>
     </div>
   </section>
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
-  <a class="fab buy" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../../img/bibilu/bibilu_pkg_sm.webp?v=5ef215fd" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+  <a class="fab buy" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../../img/package/bibilu_pkg_sm.webp?v=5ef215fd" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
 </main>
 
 <!-- 5. クレジット -->
 <section class="credits wrap reveal-credits" aria-label="クレジット">
-  <img class="credits-logo" src="../../img/bibilu/b_logo_white.png?v=97190466" alt="ビビルの塔 THE TOWER OF BIBILU" loading="lazy">
+  <img class="credits-logo" src="../../img/logo/b_logo_white.png?v=97190466" alt="ビビルの塔 THE TOWER OF BIBILU" loading="lazy">
   <dl class="roll">
     <div style="--i:0"><dt><span lang="ja">ゲームデザイン・アートワーク</span><span lang="en">Game Design &amp; Artwork</span></dt><dd><span lang="ja">ゐするぎ</span><span lang="en">Isurugi</span></dd></div>
     <div style="--i:1"><dt><span lang="ja">印刷</span><span lang="en">Printing</span></dt><dd><span lang="ja">萬印堂 様</span><span lang="en">萬印堂</span></dd></div>
@@ -736,12 +749,12 @@
   <div class="wrap">
     <h2 class="lineup-h" id="lineup-title"><span class="cap">CONTENTS</span></h2>
     <ul class="bg-row">
-      <li><a class="bg-card" href="../trico/"><img src="../../img/trico/trico_bdg.png?v=f8773036" alt="TRICO!" loading="lazy"></a></li>
-      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/ikatako/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
-      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/moko/mocochaka_bdg.png?v=5e4e8348" alt="モコチャカ" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/koikoi/koikoi_bdg.png?v=7c92af56" alt="こいこいのぼり 真打" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/bash/bash_bdg.png?v=d4d42c16" alt="BASH&amp;SMASH" loading="lazy"></a></li>
-      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp" alt=""><img class="to" src="../../img/b_tupa_orb.webp" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/tools/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
+      <li><a class="bg-card" href="../trico/"><img src="../../img/card/trico_bdg.png?v=f8773036" alt="TRICO!" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/card/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/card/mocochaka_bdg.png?v=5e4e8348" alt="モコチャカ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/card/koikoi_bdg.png?v=7c92af56" alt="こいこいのぼり 真打" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/card/bash_bdg.png?v=492ce9bd" alt="BASH&amp;SMASH" loading="lazy"></a></li>
+      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt=""><img class="to" src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/logo/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
       <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/card-mock-maker/" target="_blank" rel="noopener" style="background:#2a3138;color:#ffffff"><img class="bt-shot" src="../../img/tools/tool_cmm_thumb.webp?v=cb45d90f" alt="" loading="lazy"><span class="bt-name">カードモックツクール β</span></a></li>
     </ul>
   </div>

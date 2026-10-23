@@ -2,15 +2,15 @@
   title: ビビルの塔
   kind_ja: PV
   kind_en: Promo video
-  poster: img/bibilu/bibilu_poster.jpg
+  poster: img/video/bibilu_poster.jpg
   youtube: https://www.youtube.com/watch?v=y-kmQJgl9Dg
 - work: bibilu
   title: ビビルの塔
   kind_ja: 遊び方動画
   kind_en: How to play
-  poster: img/bibilu/bibilu_poster.jpg
+  poster: img/video/bibilu_poster.jpg
 - work: trico
   title: TRICO!
   kind_ja: 遊び方動画
   kind_en: How to play
-  poster: img/trico/trico_poster.webp
+  poster: img/video/trico_poster.webp

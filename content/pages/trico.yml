@@ -1,45 +1,45 @@
 title: TRICO!
 description: TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。
-ogp_image: img/trico/ogp_trico.png
-logo: img/trico/trico_logo_purple.png
+ogp_image: img/share/ogp_trico.png
+logo: img/logo/trico_logo_purple.png
 logo_alt: TRICO!(トリコ)
-logo_buy: img/trico/trico_logo_purple.png
-logo_credits: img/trico/trico_logo_white.png
+logo_buy: img/logo/trico_logo_purple.png
+logo_credits: img/logo/trico_logo_white.png
 bg_color: main
 accent_color: accent
 hero:
   pattern: tri
   width: 380
   layers:
-    - image: img/trico/trico_bird.webp
+    - image: img/page/trico_bird.webp
       x: 0
       y: 0
       width: 100
       rotate: 0
       motion: rise
-    - image: img/trico/gem_red.webp
+    - image: img/page/gem_red.webp
       x: -11
       y: -36
       width: 22
       rotate: -14
       motion: pop
-    - image: img/trico/gem_purple.webp
+    - image: img/page/gem_purple.webp
       x: 78
       y: -32
       width: 30
       rotate: 8
       motion: pop
-    - image: img/trico/gem_yellow.webp
+    - image: img/page/gem_yellow.webp
       x: -11
       y: 71
       width: 23
       rotate: -6
       motion: pop
-  art: img/trico/trico_bdg.png
-bg1_image: img/trico/t_tex_c.png
-band_image: img/trico/t_band.png
-heading_icon: img/trico/t_bird_sten.png
-step_icon: img/trico/t_bird_sil.png
+  art: img/card/trico_bdg.png
+bg1_image: img/page/t_tex_c.png
+band_image: img/page/t_band.png
+heading_icon: img/page/t_bird_sten.png
+step_icon: img/page/t_bird_sil.png
 catch_ja: あのコをとりこにするために
 catch_en: To win her heart
 intro_ja: |-
@@ -62,16 +62,16 @@ summary_en: Players play cards from their hands in an **“Appeal,”** where th
   declare “Trico!” to win the round.** The first player to win **2** rounds wins
   the game.
 characters:
-  - image: img/trico/t_tricoP.webp
+  - image: img/chara/t_tricoP.webp
     name_ja: ティガ（紫トリコ）
     name_en: Purple Trico
-  - image: img/trico/t_tricoR.webp
+  - image: img/chara/t_tricoR.webp
     name_ja: トロワ（赤トリコ）
     name_en: Red Trico
-  - image: img/trico/t_tricoY.webp
+  - image: img/chara/t_tricoY.webp
     name_ja: サン（黄トリコ）
     name_en: Yellow Trico
-  - image: img/trico/t_nico.webp
+  - image: img/chara/t_nico.webp
     name_ja: ニコ
     name_en: Nico
 contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマーカー1枚、サマリー1枚、トリコマーカー3個、遊び方説明書1枚
@@ -91,24 +91,24 @@ steps:
     text_en: Declare **“Nico!”** when your cards hold 2 colors, and **“Trico!”** at
       3 colors. Collect 2 Trico markers to win the game!
 gallery:
-  - image: img/trico/tg_manual1.webp
+  - image: img/gallery/tg_manual1.webp
     caption_ja: 遊び方説明書(表)
     caption_en: Rulebook (front)
     wide: true
-  - image: img/trico/trico_pkg_lg.webp
+  - image: img/package/trico_pkg_lg.webp
     caption_ja: パッケージ
     caption_en: Box
     wide: false
-  - image: img/trico/tg_summary.webp
+  - image: img/gallery/tg_summary.webp
     caption_ja: サマリー
     caption_en: Summary card
     wide: false
-  - image: img/trico/tg_manual2.webp
+  - image: img/gallery/tg_manual2.webp
     caption_ja: 遊び方説明書(裏)
     caption_en: Rulebook (back)
     wide: true
-pkg: img/trico/trico_pkg_lg.webp
-fab_pkg: img/trico/trico_pkg.webp
+pkg: img/package/trico_pkg_lg.webp
+fab_pkg: img/package/trico_pkg.webp
 credits:
   - role_ja: デザイン・アートワーク
     role_en: Design & Artwork

@@ -2,7 +2,7 @@
 - key: moji
   name: ビビル文字ジェネレータ
   url: https://pandakinema.github.io/bibilu-moji/
-  title_image: img/tools/moji_title.png
+  title_image: img/logo/moji_title.png
   image: ''
   thumb: ''
   intro_ja: ことばをビビル文字に変換して遊べます。
