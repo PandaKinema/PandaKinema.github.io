@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v23
+# パンダキネマ 作品ページ 共通フォーマット v24
+#     v24: イカタコ・こいこいのぼり・BASH&SMASH(トップはカード)/名前が空のキャラは名札を出さない
 #     v23: モコチャカ(かんたんルールの4コマ・方眼のトップ・モコのシルエット)。トップの模様に grid(方眼)を追加
 #     v22: TRICO を現フォーマットで(キャラ=トリコとニコ、帯=三角、アイコン=トリコのシルエット、4コマ=取説のアピールの流れ)
 #     v21: スクリーンの光の広がりを小さく(ぼんやりはそのまま)
@@ -540,9 +541,8 @@ GAMES['moko'] = dict(
     .mdeck .mcd{position:absolute;left:0;top:0}
     .mdeck .mcd:nth-child(2){top:-3px}.mdeck .mcd:nth-child(3){top:-6px}
     .mcap{position:absolute;left:28px;top:132px;translate:-50% 0;padding:2px 10px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
-    .mmove{position:absolute;left:6px;top:52px;width:44px;transform-style:preserve-3d}
-    .mmove .mcd{backface-visibility:hidden;-webkit-backface-visibility:hidden}
-    .mmove .back{position:absolute;inset:0;transform:rotateY(180deg)}
+    .mmove{position:absolute;left:6px;top:52px;width:44px}
+    .mmove .back{position:absolute;inset:0}
     .mbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
     .mbub::after{content:"";position:absolute;left:14px;bottom:-6px;border:6px solid transparent;border-top-color:#e8467a;border-bottom:0}
     /* 2. コール:数えて、多い順に呼ぶ */
@@ -569,7 +569,10 @@ GAMES['moko'] = dict(
     .s4 .mbub::after{left:auto;right:18px}
     @media all{
       .s1 .mmove{animation:m1move 6s cubic-bezier(.4,0,.2,1) infinite}
-      @keyframes m1move{0%,12%{opacity:1;translate:0 0;transform:perspective(500px) rotateY(180deg)}38%,84%{opacity:1;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}92%,100%{opacity:0;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}}
+      @keyframes m1move{0%,10%{opacity:1;translate:0 0;scale:1 1}18%{translate:0 -6px;scale:0 1}26%{translate:0 -6px;scale:1 1}44%,84%{opacity:1;translate:92px 56px;scale:1 1}92%,100%{opacity:0;translate:92px 56px}}
+      .s1 .mmove .back{animation:kback 6s linear infinite;animation-name:mback}.s1 .mmove .mcd:not(.back){animation:mfront 6s linear infinite}
+      @keyframes mback{0%,17.9%{opacity:1}18%,100%{opacity:0}}
+      @keyframes mfront{0%,17.9%{opacity:0}18%,100%{opacity:1}}
       .m2 .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
       @keyframes mdrop{0%{opacity:0;translate:0 -24px}7%{opacity:1;translate:0 0}86%{opacity:1;translate:0 0}93%,100%{opacity:0;translate:0 0}}
       .mtally span{animation:mtal 7s ease infinite;animation-delay:calc(var(--i) * .35s)}
@@ -631,6 +634,267 @@ GAMES['moko'] = dict(
     contents=L('カード32枚(モコ10枚、パカ10枚、ポメ6枚、ガブ6枚)、アクリルトークン1個、遊び方説明書1枚', '32 cards (Moko 10, Paka 10, Pome 6, Gabu 6), acrylic token, rulebook'),
     price='',
     credits=[(L('ゲームデザイン・アートワーク', 'Game Design & Artwork'), L('ゐするぎ', 'Isurugi'))],
+)
+
+# ---- 共通:画像1枚
+def pic(name, cls='', st='', alt=''):
+    return '<img class="%s" style="%s" src="{{img:%s}}" alt="%s">' % (cls, st, name, alt)
+def burst(text, cls='', st=''):   # ギザギザの吹き出し(取説の「3!」「タコ!」と同じ役目)
+    return '<span class="burst %s" style="%s"><span>%s</span></span>' % (cls, st, text)
+BURST_CSS = '''
+    .burst{position:absolute;display:grid;place-items:center;width:62px;height:62px;background:var(--bc,#e8343d);color:#fff;font-size:14px;font-weight:900;line-height:1;white-space:nowrap;
+      clip-path:polygon(50% 0,61% 18%,82% 8%,80% 30%,100% 35%,86% 52%,100% 68%,79% 72%,82% 93%,61% 84%,50% 100%,39% 84%,18% 93%,21% 72%,0 68%,14% 52%,0 35%,20% 30%,18% 8%,39% 18%)}
+    .burst span{rotate:-8deg}
+'''
+
+# ===== イカタコ =====
+IKN = {'2': '2', '3': '3', '4': '4', '5': '5', '8': 'タコ(8)', '10': 'イカ(10)', '18': 'イカタコ(18)'}
+def icd(k, cls='', st=''):
+    return pic('ic_%s.webp' % k, 'icd ' + cls, st, '%sのカード' % IKN.get(k, k))
+def iring(n=14, r=64):   # ドーナツ状に並べた山札
+    out = []
+    for i in range(n):
+        a = 360 * i / n
+        out.append('<img class="irc" style="--a:%gdeg;--r:%dpx" src="{{img:ic_ura.webp}}" alt="">' % (a, r))
+    return '<div class="iring" aria-hidden="true">%s</div>' % ''.join(out)
+
+GAMES['ikatako'] = dict(
+    title='イカタコ',
+    description='イカタコ:めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す潜水系リアクションゲーム。1〜6人。パンダキネマ。',
+    theme='''
+      --glow:150,210,255;
+      --band:url({{img:i_band.png}}); --band-h:20px;              /* 帯の模様:泡 */
+      --tex-c:url({{img:i_tex_c.png}}); --tex-size:80px 48px;     /* 背景:海溝の石壁 */
+      --orb-glow:150,210,255;
+      --orn:url({{img:i_squid_sten.png}}); --snum:url({{img:i_squid_sil.png}});   /* 見出しの飾り:ロゴのイカ */
+    ''',
+    hero_css=BURST_CSS + '''
+    .cast img{width:30%;border-radius:6px;box-shadow:0 8px 16px rgba(0,0,0,.25)}
+    /* ===== イカタコ:遊び方の図 ===== */
+    .icd{display:block;width:46px;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+    .ia{position:relative;flex:none;width:240px;height:180px}
+    .iring{position:absolute;left:50%;top:50%}
+    .irc{position:absolute;max-width:none;left:-10px;top:-14px;width:20px;border-radius:2px;transform:rotate(var(--a)) translateY(calc(var(--r) * -1));box-shadow:0 1px 2px rgba(0,0,0,.2)}
+    .ia .lf{position:absolute;left:99px;top:61px;--card-w:42px}
+    .ia .lf .c{border-radius:4px}
+    .s1 .burst{left:var(--x);top:var(--y);width:50px;height:50px;font-size:17px;--bc:#0a4fa0}
+    .idg{display:flex;gap:10px;align-items:flex-start;justify-content:center}
+    .idg figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+    .idg .icd{width:56px}
+    .idg figcaption{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:800;line-height:1.2;text-align:center;white-space:nowrap}
+    .idg figcaption b{padding:2px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px}
+    .idg figcaption em{font-style:normal;color:#e8343d;font-size:13px;font-weight:900}
+    .irow{position:absolute;left:0;right:0;bottom:6px;display:flex;justify-content:center;gap:5px}
+    .irow .icd{width:40px}
+    .ilabel{position:absolute;left:50%;bottom:-2px;translate:-50% 0;font-size:10px;font-weight:800;opacity:.7;white-space:nowrap}
+    .itake{position:absolute;left:99px;top:4px;width:42px}
+    .itake .icd{width:42px}
+    .s3 .burst{left:150px;top:0;width:52px;height:52px;font-size:17px;--bc:#0a4fa0}
+    .iflip{display:block;transform-origin:50% 50%}
+    .s4 .burst{left:8px;top:6px;width:64px;height:64px;font-size:15px}
+    .itag{position:absolute;left:50%;top:-22px;translate:-50% 0;padding:1px 8px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
+    .s4 .irow{bottom:30px}
+    .s4 .irow .icd{width:48px}
+    .iminus{position:relative;display:block}
+    @media all{
+      .s1 .burst{animation:lmark 6s ease infinite;animation-delay:calc(var(--d) * .12s)}
+      .idg figure{animation:idrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .5s)}
+      @keyframes idrop{0%{opacity:0;translate:0 -20px}6%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
+      .idg figcaption{animation:icap 7s ease infinite;animation-delay:calc(var(--i) * .5s)}
+      @keyframes icap{0%,12%{opacity:0;scale:.4}17%{opacity:1;scale:1.12}20%,84%{opacity:1;scale:1}92%,100%{opacity:0}}
+      .itake{animation:itake 6s cubic-bezier(.5,0,.3,1) infinite}
+      @keyframes itake{0%{opacity:0;translate:0 -16px}8%,40%{opacity:1;translate:0 0}62%,86%{opacity:1;translate:46px 114px}94%,100%{opacity:0;translate:46px 114px}}
+      .s3 .burst{animation:lmark 6s ease infinite;animation-delay:-1.3s}
+      .s4 .burst{animation:lmark 6s ease infinite;animation-delay:-1.5s}
+      .iflip{animation:iflip 6s cubic-bezier(.4,1.5,.5,1) infinite}
+      @keyframes iflip{0%,34%{rotate:0deg}46%,86%{rotate:180deg}94%,100%{rotate:0deg}}
+      .itag{animation:lmark 6s ease infinite;animation-delay:.9s}
+    }''',
+    logo='logo_ikatako.png', logo_size=(1270, 340), logo_alt='イカタコ IKATAKO',
+    logo_buy='logo_ikatako.png', logo_credits='logo_ikatako.png',
+    chara_name=L('巨大なイカとタコ', 'Giant squid & octopus'),
+    chara_fig='<div class="cast">' + ''.join('<img style="--i:%d" src="{{img:ic_%s.webp}}" alt="%s">' % (i, k, a) for i, (k, a) in enumerate([('8', 'タコ'), ('18', 'イカタコ'), ('10', 'イカ')])) + '</div>',
+    piece_img='ic_ura.webp', piece_alt='',
+    chara_note='',
+    catch=L('反射神経で生還せよ', 'Survive on reflexes'),
+    intro=L('めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す潜水系リアクションゲーム!', 'A deep-sea reaction game.'),
+    intro_img=('ic_8.webp', '', ''),
+    summary=L('イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。', 'Flip cards and react.'),
+    spec=[], poster='ic_ura.webp',
+    # 遊び方:取説の「対戦ルール」から(文は取説のまま、[[ ]] = 赤字)
+    steps=[
+        dict(cls='s1', b=L('手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。', 'The active player flips the top card and reveals it. Everyone reacts to the card.'),
+             v='<div class="ia">' + iring() + '<span class="lf" style="--i:0"><img class="c back" src="{{img:ic_ura.webp}}" alt=""><img class="c front" src="{{img:ic_3.webp}}" alt="3のカード"></span>'
+               + burst('3!', '', '--x:2px;--y:14px;--d:0') + burst('3!', '', '--x:188px;--y:10px;--d:1') + burst('3!', '', '--x:6px;--y:118px;--d:2') + burst('3!', '', '--x:184px;--y:120px;--d:3') + '</div>'),
+        dict(cls='s2', b=L('危険カードは上の方にあるライトがあげる腕と対応しています。[[タコは左手、イカは右手、イカタコは両手]]です。', 'The lights on a danger card show which arm to raise: [[Octopus = left, Squid = right, Ikatako = both]].'),
+             v='<div class="idg">' + ''.join('<figure style="--i:%d">%s<figcaption><b>%s</b><em>%s</em></figcaption></figure>' % (i, icd(k), h, c) for i, (k, h, c) in enumerate([
+                 ('8', L('左手', 'Left'), L('タコ!', 'Tako!')), ('10', L('右手', 'Right'), L('イカ!', 'Ika!')), ('18', L('両手', 'Both'), L('イカタコ!', 'Ikatako!'))])) + '</div>'),
+        dict(cls='s3', b=L('一番リアクションが早かった人は[[得点としてカードを獲得]]し、手元に並べます。', 'The fastest player [[takes the card as points]] and lines it up in front of them.'),
+             v='<div class="ia"><span class="itake">' + icd('5') + '</span>' + burst('5!') + '<div class="irow">' + icd('2') + icd('4') + '<span style="width:40px"></span></div><span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
+        dict(cls='s4', b=L('間違えた、反応できなかった人は自分の得点のうち任意の1枚を[[減点(上下逆さま)]]にします。', 'Anyone who got it wrong or didn’t react turns one of their point cards [[upside down as a penalty]].'),
+             v='<div class="ia">' + burst(L('ミス!', 'Miss!')) + '<div class="irow">' + icd('2') + '<span class="iminus"><span class="iflip">' + icd('4') + '</span><b class="itag">' + L('減点', 'Penalty') + '</b></span>' + icd('5') + '</div></div>'),
+    ],
+    gallery=[], gallery_todo=[],
+    fab_pkg='pkg_ikatako.webp', pkg='pkg_ikatako.webp', pkg_size=(520, 825),
+    contents=L('', ''), price='', credits=[],
+)
+
+# ===== こいこいのぼり 真打 =====
+KCN = {'b': '青', 'g': '緑', 'r': '赤', 'k': '黒'}
+def kcd(k, cls='', st=''):
+    return pic('kc_%s.webp' % k, 'kcd ' + cls, st, ('%sの%s' % (KCN[k[0]], k[1:])) if k[0] in KCN and k != 'ura' else '')
+FISH = '<svg class="kfish" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg>'
+
+GAMES['koikoi'] = dict(
+    title='こいこいのぼり 真打',
+    description='こいこいのぼり 真打:花札の「こいこい」をもとにした、鯉のぼりのカードゲーム。2人用。パンダキネマ。',
+    theme='''
+      --glow:255,255,255;
+      --band:url({{img:k_band.png}}); --band-h:16px;            /* 帯の模様:青海波 */
+      --tex-c:url({{img:k_tex_c.png}}); --tex-size:64px 32px;    /* 背景:青海波 */
+      --orb-glow:255,255,255;
+      --orn:url({{img:k_koi_sten.png}}); --snum:url({{img:k_koi_sil.png}});   /* 見出しの飾り:こいのぼり */
+    ''',
+    hero_css='''
+
+    .buy-box{grid-template-columns:minmax(200px,340px) minmax(0,1fr)}   /* 横長のパッケージ */
+    /* ===== こいこいのぼり:遊び方の図 ===== */
+    .kcd{display:block;width:38px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .ka{position:relative;flex:none;width:240px;height:180px}
+    .kfield{position:absolute;left:0;right:0;top:4px;display:flex;justify-content:center;gap:6px}
+    .kcap{position:absolute;padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800;white-space:nowrap}
+    .kmove{position:absolute;left:var(--x0);top:var(--y0)}
+    .kdeck{position:absolute;left:14px;top:104px;width:38px}
+    .kdeck .kcd{position:absolute;left:0;top:0}
+    .kdeck .kcd:nth-child(2){top:-3px}.kdeck .kcd:nth-child(3){top:-6px}
+    .kbub{position:absolute;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900;white-space:nowrap}
+    .kyaku{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .kyaku .row{display:flex;gap:6px}
+    .kyaku .kcd{width:48px}
+    .kyaku p{margin:0;padding:3px 12px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900}
+    .ksora{position:relative;display:flex;gap:2px}
+    .ksora img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .kfish{position:absolute;left:107px;top:28px;width:30px}
+    .k4{display:flex;flex-direction:column;align-items:center;gap:20px}
+    .k4 .kbub{position:relative;font-size:14px}
+    @media all{
+      .s1 .kmove{animation:k1 6s cubic-bezier(.5,0,.3,1) infinite}
+      @keyframes k1{0%{opacity:0;translate:0 20px}8%,30%{opacity:1;translate:0 0}50%,86%{opacity:1;translate:var(--dx) var(--dy)}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
+      .s1 .kbub,.s2 .kbub{animation:lmark 6s ease infinite;animation-delay:.9s}
+      .s1 .kpair{outline:3px solid transparent;outline-offset:1px;animation:kring 6s ease infinite}
+      @keyframes kring{0%,46%{outline-color:transparent}52%,86%{outline-color:#e8343d}94%,100%{outline-color:transparent}}
+      .s2 .kmove{animation:k2 6s cubic-bezier(.5,0,.3,1) infinite}
+      .s2 .kmove .back{position:absolute;inset:0;animation:kback 6s linear infinite}
+      .s2 .kmove .front{animation:kfront 6s linear infinite}
+      @keyframes k2{0%,10%{opacity:1;translate:0 0;scale:1 1}20%{scale:0 1}30%{translate:0 -10px;scale:1 1}50%,86%{opacity:1;translate:var(--dx) var(--dy);scale:1 1}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
+      @keyframes kback{0%,19.9%{opacity:1}20%,100%{opacity:0}}
+      @keyframes kfront{0%,19.9%{opacity:0}20%,100%{opacity:1}}
+      .kyaku .kcd{animation:kdrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .3s)}
+      @keyframes kdrop{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
+      .kyaku p{animation:lmark 6s ease infinite;animation-delay:.4s}
+      .k4 .kbub{animation:lmark 7s ease infinite;animation-delay:-1.6s}
+      .kfish{animation:kfish 7s cubic-bezier(.5,0,.3,1) infinite}
+      @keyframes kfish{0%,40%{translate:0 0}60%,86%{translate:57px 0}94%,100%{translate:0 0}}
+    }''',
+    logo='koikoilogo.png', logo_size=(1009, 522), logo_alt='こいこいのぼり 真打 KOIKOINOBORI SHINUCHI',
+    logo_buy='koikoilogo.png', logo_credits='koikoilogo.png',
+    chara_name='', chara_fig='<img class="solo" src="{{img:k_koi.webp}}" alt="">', piece_img='kc_ura.webp', piece_alt='', chara_note='',
+    catch=L('あげろ!こいのぼり', 'Raise the carp streamers!'),
+    intro=L('花札の『こいこい』をもとにした、鯉のぼりのカードゲーム。', 'A carp-streamer card game based on the hanafuda game Koi-Koi.'),
+    intro_img=('k_koi.webp', '', ''),
+    summary=L('このゲームでは以下の手順を交互に行います。', 'Players take turns.'),
+    spec=[], poster='kc_ura.webp',
+    # 遊び方:取説の表(1・2)と「ゲームの進め方」から(文は取説のまま、[[ ]] = 赤字・見出し)
+    steps=[
+        dict(cls='s1', b=L('[[カードは同じ色のペアで取る!]]\n場札に同じ色があれば、ペアにして獲得できる!', '[[Take cards in pairs of the same color!]]\nIf the table has the same color, pair them up and take them!'),
+             v='<div class="ka"><div class="kfield">' + kcd('b1') + kcd('k5') + kcd('g3') + kcd('r1', 'kpair') + '</div><span class="kcap" style="left:200px;top:24px">' + L('場札', 'Table') + '</span>'
+               + '<span class="kmove" style="--x0:101px;--y0:104px;--dx:48px;--dy:-86px">' + kcd('r3') + '</span><span class="kcap" style="left:96px;top:166px">' + L('手札から', 'From hand') + '</span>'
+               + '<span class="kbub" style="left:150px;top:78px">' + L('ペア!', 'Pair!') + '</span></div>'),
+        dict(cls='s2', b=L('山札を上から1枚めくります。場に同じ色があれば、ペアで獲得します。\n[[※同じ色のカードが場になければそのまま場に置いておきます。]]', 'Flip the top card of the deck. If the table has the same color, take the pair.\n[[If not, leave it on the table.]]'),
+             v='<div class="ka"><div class="kfield" style="justify-content:flex-start;padding-left:58px">' + kcd('b1') + kcd('k5') + kcd('g3') + '</div>'
+               + '<div class="kdeck">' + kcd('ura') + kcd('ura') + kcd('ura') + '</div><span class="kcap" style="left:14px;top:172px">' + L('山札', 'Deck') + '</span>'
+               + '<span class="kmove" style="--x0:14px;--y0:98px;--dx:174px;--dy:-94px"><img class="kcd back" src="{{img:kc_ura.webp}}" alt=""><img class="kcd front" src="{{img:kc_r5.webp}}" alt="赤の5"></span>'
+               + '<span class="kbub" style="left:118px;top:96px;background:var(--p-ink)">' + L('そのまま場に', 'Stays on table') + '</span></div>'),
+        dict(cls='s3', b=L('[[同じ数字を揃えると役になる!]]\n同じ数字を複数枚獲得すると役になる!', '[[Match the same number to make a set!]]\nCollect several cards of the same number to score a set!'),
+             v='<div class="kyaku"><div class="row">' + kcd('b5', '', '--i:0') + kcd('r5', '', '--i:1') + kcd('k5', '', '--i:2') + '</div><p>' + L('5:色の異なる3枚(5点)', '5: three different colors (5 pts)') + '</p></div>'),
+        dict(cls='s4', b=L('成立していた場合は[[「あがり」か「こいこい」]]を宣言します。\nあがり:得点を確定し、トークンの移動を行い局を終了します。', 'If a set is made, declare [[“Agari” or “Koi-Koi.”]]\nAgari: lock in your points, move the token, and end the hand.'),
+             v='<div class="k4"><span class="kbub">' + L('あがり!', 'Agari!') + '</span><div class="ksora"><img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">' + FISH + '</div></div>'),
+    ],
+    gallery=[], gallery_todo=[],
+    fab_pkg='mini_koikoi.webp', pkg='mini_koikoi.webp', pkg_size=(900, 529),
+    contents=L('', ''), price='', credits=[],
+)
+
+# ===== BASH&SMASH =====
+def scd(k, cls='', st=''):
+    alt = '' if 'back' in k else ('%sの%s' % ('赤' if k[0] == 'r' else '青', k[1:]))
+    return pic('bc2_%s.webp' % k, 'scd ' + cls, st, alt)
+def sduel(a, b, ta='', tb='', extra=''):
+    return '<div class="sduel"><span class="sside a">%s%s</span><b class="svs">VS</b><span class="sside b">%s%s</span>%s</div>' % (scd(a), ta, scd(b), tb, extra)
+
+GAMES['bash'] = dict(
+    title='BASH&SMASH',
+    description='BASH&SMASH(バッシュ&スマッシュ):手札から1枚出すだけの、格闘ゲーム風の読み合いゲーム。2人用。パンダキネマ。',
+    theme='''
+      --glow:255,220,120;
+      --band:url({{img:s_band.png}}); --band-h:20px;            /* 帯の模様:星(星トークン) */
+      --tex-c:url({{img:s_tex_c.png}}); --tex-size:24px 24px;    /* 背景:取説の市松 */
+      --orb-glow:255,220,120;
+      --orn:url({{img:s_star_sten.png}}); --snum:url({{img:s_star_sil.png}});   /* 見出しの飾り:星 */
+    ''',
+    hero_css=BURST_CSS + '''
+
+    .buy-box{grid-template-columns:minmax(200px,340px) minmax(0,1fr)}   /* 横長のパッケージ */
+    /* ===== BASH&SMASH:遊び方の図 ===== */
+    .scd{display:block;width:56px;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.22)}
+    .sduel{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding-top:18px}
+    .sside{position:relative;display:block}
+    .svs{font-size:22px;font-style:italic;font-weight:900;color:var(--p-ink)}
+    .shit{position:absolute;left:50%;top:-24px;translate:-50% 0;padding:1px 8px;border-radius:4px;background:#e8343d;color:#fff;font-size:13px;font-weight:900;font-style:italic;white-space:nowrap}
+    .shit.parry{background:#1574c4}
+    .srush{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:4px 14px;rotate:-6deg;background:#ffd23f;color:#1b2228;font-size:20px;font-weight:900;font-style:italic;box-shadow:0 3px 0 #1b2228;white-space:nowrap}
+    .s3 .sside .scd+.scd{position:absolute;left:0;top:0}
+    .swin{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .swin img{width:200px;border-radius:6px;box-shadow:0 3px 8px rgba(0,0,0,.22)}
+    .swin b{font-size:24px;font-style:italic;font-weight:900;color:#f2a51a;-webkit-text-stroke:1.5px #1b2228;letter-spacing:.04em}
+    @media all{
+      .s1 .sside,.s2 .sside{animation:sslam 6s cubic-bezier(.3,1.4,.5,1) infinite}
+      .sside.a{--sx:-40px}.sside.b{--sx:40px}
+      @keyframes sslam{0%{opacity:0;translate:var(--sx) 0}10%,86%{opacity:1;translate:0 0}94%,100%{opacity:0;translate:0 0}}
+      .s1 .shit,.s2 .shit{animation:lmark 6s ease infinite;animation-delay:-.9s}
+      .s3 .sside{animation:sslam 8s cubic-bezier(.3,1.4,.5,1) infinite}
+      .s3 .scd+.scd{animation:s3b 8s cubic-bezier(.3,1.4,.5,1) infinite}
+      @keyframes s3b{0%,50%{opacity:0;translate:0 -30px}58%,86%{opacity:1;translate:0 0}94%,100%{opacity:0}}
+      .srush{animation:srush 8s ease infinite}
+      @keyframes srush{0%,14%{opacity:0;scale:.3}20%{opacity:1;scale:1.2}24%,44%{opacity:1;scale:1}50%,100%{opacity:0;scale:.6}}
+      .s3 .shit{animation:s3hit 8s ease infinite}
+      @keyframes s3hit{0%,60%{opacity:0;scale:.3}66%{opacity:1;scale:1.15}70%,86%{opacity:1;scale:1}94%,100%{opacity:0}}
+      .swin img{animation:kdrop2 6s cubic-bezier(.3,1.4,.5,1) infinite}
+      @keyframes kdrop2{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
+      .swin b{animation:lmark 6s ease infinite;animation-delay:-.6s}
+    }''',
+    logo='bashlogo_4C.png', logo_size=(620, 490), logo_alt='BASH&SMASH! バッシュ&スマッシュ',
+    logo_buy='bashlogo_4C.png', logo_credits='bashlogo_4C.png',
+    chara_name=L('バッシュ', 'Bash'), chara_fig='<img class="solo" src="{{img:s_pbash.webp}}" alt="バッシュ">', piece_img='', piece_alt='', chara_note='',
+    catch=L('読みきれ。叩き込め!', 'Read them. Strike hard!'),
+    intro=L('大都市、グリッドシティでは至るところでバトルが行われていた。', 'In the metropolis of Grid City, battles were everywhere.'),
+    intro_img=('s_pbash.webp', '', ''),
+    summary=L('やることはただ1つ。手札から1枚出すだけ。', 'There is only one thing to do: play one card.'),
+    spec=[], poster='sc_wbash.webp',
+    # 遊び方:取説の表(1・2)と「4. ラッシュの発生」「ラウンド、ゲームの終了」から(文は取説のまま、[[ ]] = 赤字・見出し)
+    steps=[
+        dict(cls='s1', b=L('[[同時にカードを出し合う!]]\n数の大きい方がヒットになる!勝った数字が得点。', '[[Play cards at the same time!]]\nThe bigger number is a hit! The winning number is your score.'),
+             v=sduel('r3', 'b5', '', '<b class="shit">HIT!</b>')),
+        dict(cls='s2', b=L('[[裏向きで出すとパリィ!]]\n相手の出した数字に関係なく得点を奪うことができる!', '[[Play face down to Parry!]]\nYou take the points no matter what number your opponent played!'),
+             v=sduel('rback', 'b4', '<b class="shit parry">Parry!</b>')),
+        dict(cls='s3', b=L('お互いがヒット(攻め)で出した[[カードの合計が10になったとき、ラッシュが発生します。]]ラッシュ中はルールが反転し、小さい数字がヒット成功となります!', 'When both players attack and [[the cards add up to 10, a Rush begins.]] During a Rush the rule flips, and the smaller number hits!'),
+             v='<div class="sduel"><span class="sside a">' + scd('r6') + scd('r1') + '<b class="shit">HIT!</b></span><b class="svs">VS</b><span class="sside b">' + scd('b4') + scd('b2') + '</span><span class="srush">RUSH!</span></div>'),
+        dict(cls='s4', b=L('手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。[[先に2ラウンド先取したプレイヤーがゲームの勝者です。]]', 'When hands run out, the round ends. Add up your points; the higher score wins the round. [[The first player to win 2 rounds wins the game.]]'),
+             v='<div class="swin"><img src="{{img:sc_wbash.webp}}" alt="勝利セリフ(バッシュ)"><b>YOU WIN!</b></div>'),
+    ],
+    gallery=[], gallery_todo=[],
+    fab_pkg='mini_bash.webp', pkg='mini_bash.webp', pkg_size=(900, 529),
+    contents=L('', ''), price='', credits=[],
 )
 
 SEATS = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='64'%3E%3Cpath d='M8 64V20a14 14 0 0 1 14-14h32a14 14 0 0 1 14 14v44z' fill='black'/%3E%3C/svg%3E\")"
@@ -842,6 +1106,7 @@ TEMPLATE = r'''<!doctype html>
     .js .js-only.cnav{display:grid !important}
     .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
+    .chara-name:empty{display:none}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
     .story>p:not(.en){margin:0;font-size:15.5px;line-height:2.05;max-width:34em;font-weight:500;word-break:auto-phrase}

@@ -1,0 +1,101 @@
+title: こいこいのぼり 真打
+description: こいこいのぼり 真打:花札の『こいこい』をもとにした、鯉のぼりのカードゲーム。2人用。パンダキネマ。
+ogp_image: img/share/ogp_koikoinobori.png
+logo: img/logo/koikoilogo.png
+logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
+logo_buy: img/logo/koikoilogo.png
+logo_credits: img/logo/koikoilogo.png
+bg_color: main
+accent_color: accent
+bg1_image: img/page/k_tex_c.png
+band_image: img/page/k_band.png
+heading_icon: img/page/k_koi_sten.png
+step_icon: img/page/k_koi_sil.png
+catch_ja: あげろ!こいのぼり
+catch_en: Raise the carp streamers!
+intro_ja: |-
+  花札の**『こいこい』**をもとにした、鯉のぼりのカードゲーム。  
+  同じ色のこいのぼりをペアで取って役を作り、こいのぼりを高く上げましょう。  
+  勝負を決めるか、**『こいこい』**でさらに点を伸ばすか。  
+  3局を終えたとき、相手より高くこいのぼりを上げていた方が勝ちです。
+intro_en: A carp-streamer card game based on the hanafuda game **“Koi-Koi.”**
+  Take carp streamers of the same color in pairs to make sets, and raise your
+  streamer high. Settle the hand, or call **“Koi-Koi”** to push your score
+  even higher? After 3 hands, whoever raised their streamer higher wins.
+characters:
+  - image: img/chara/k_koi.webp
+summary_ja: |-
+  このゲームでは以下の手順を交互に行います。  
+  そして、得点が確定してトークンを移動するまでを1局とし、これを**3局**行います。  
+  3局終了時、**トークンが自分側にあるプレイヤーの勝利**です。
+summary_en: Players take turns doing the steps below. One hand lasts until the
+  score is settled and the token moves, and you play **3 hands**. After 3
+  hands, **the player with the token on their side wins.**
+steps:
+  - text_ja: |-
+      **カードは同じ色のペアで取る!**
+
+      場札に同じ色があれば、ペアにして獲得できる!
+    text_en: |-
+      **Take cards in same-color pairs!**
+
+      If the table has a card of the same color, pair it up and take it!
+  - text_ja: |-
+      山札を上から1枚めくります。場に同じ色があれば、ペアで獲得します。
+
+      **※同じ色のカードが場になければそのまま場に置いておきます。**
+    text_en: |-
+      Flip the top card of the deck. If the table has the same color, take the pair.
+
+      **If there is no card of that color, leave it on the table.**
+  - text_ja: |-
+      **同じ数字を揃えると役になる!**
+
+      同じ数字を複数枚獲得すると役になる!
+    text_en: |-
+      **Match numbers to make a set!**
+
+      Collect several cards of the same number to make a set!
+  - text_ja: |-
+      成立していた場合は**「あがり」か「こいこい」**を宣言します。
+
+      あがり:得点を確定し、トークンの移動を行い局を終了します。
+    text_en: |-
+      If you made a set, declare **“Agari” or “Koi-Koi.”**
+
+      Agari: lock in your score, move the token, and end the hand.
+gallery:
+  - image: img/gallery/kg_manual1.webp
+    caption_ja: 遊び方説明書(表)
+    caption_en: Rulebook (front)
+    wide: true
+  - image: img/package/mini_koikoi.webp
+    caption_ja: パッケージ
+    caption_en: Box
+    wide: false
+  - image: img/gallery/kg_manual2.webp
+    caption_ja: 遊び方説明書(裏)
+    caption_en: Rulebook (back)
+    wide: true
+  - image: img/gallery/kg_summary1.webp
+    caption_ja: サマリー
+    caption_en: Summary card
+    wide: false
+pkg: img/package/mini_koikoi.webp
+fab_pkg: img/package/mini_koikoi.webp
+contents_ja: こいのぼりカード25枚、そらカード2枚、サマリー1枚、遊び方説明書1枚、おさかなトークン1個
+contents_en: 25 carp-streamer cards, 2 sky cards, summary card, rulebook, fish token
+credits:
+  - role_ja: ゲームデザイン・アートワーク
+    name_ja: ゐするぎ
+    name_en: Isurugi
+  - role_ja: イラスト
+    name_ja: アンザイミユキ
+  - role_ja: カード印刷
+    name_ja: アドプリント
+  - role_ja: Special Thanks
+    name_ja: テストプレイをしてくれた皆さん
+    name_en: Everyone who playtested
+  - role_ja: 発行
+    name_ja: 2026年5月
+    name_en: May 2026

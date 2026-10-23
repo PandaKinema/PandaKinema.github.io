@@ -1,0 +1,91 @@
+title: イカタコ
+description: イカタコ:めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す潜水系リアクションゲーム。1〜6人。パンダキネマ。
+ogp_image: img/share/ogp_ikatako.png
+logo: img/logo/logo_ikatako.png
+logo_alt: イカタコ IKATAKO
+logo_buy: img/logo/logo_ikatako.png
+logo_credits: img/logo/logo_ikatako.png
+bg_color: main
+accent_color: accent
+bg1_image: img/page/i_tex_c.png
+band_image: img/page/i_band.png
+heading_icon: img/page/i_squid_sten.png
+step_icon: img/page/i_squid_sil.png
+catch_ja: 反射神経で生還せよ
+catch_en: Survive on your reflexes
+intro_ja: |-
+  めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す**潜水系リアクションゲーム**!  
+  謎に包まれた「イカタコ海溝」。小型潜水艇「トリトーン号」で深海へ挑むあなたを待ちうけているのは、**巨大なイカとタコ**!  
+  しかし、この潜水艇にはジェスチャーコントロール機能が搭載されています!  
+  対応するいずれかの手をあげれば危機を回避することができるのです。  
+  様々な困難に対処し、深海からの生還を目指しましょう!
+intro_en: React correctly to each card, collect as many points as you can, and
+  make it back alive in this **deep-sea reaction game**! In the mysterious
+  “Ikatako Trench,” what awaits you in the small submarine “Triton” is a
+  **giant squid and octopus**! But this sub has gesture controls! Raise the
+  right hand and you can escape danger. Overcome every trouble and make it back
+  from the deep!
+summary_ja: |-
+  イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。  
+  得点を奪い合う**「対戦ルール」**、力を合わせてクリアを目指す**「協力ルール」**、ひとりでじっくり挑む**「ソロルール」**の3つの遊び方があります。
+
+  めくったカードの数字を最も早く叫んだ人が獲得できる争奪戦!ただし「イカ」や「タコ」が出たら名前を叫んでいずれかの手をあげなければいけない!
+summary_en: Ikatako is a game where you flip cards from the deck and react to
+  them. There are 3 ways to play — compete for points in the **“Versus
+  rules,”** work together in the **“Co-op rules,”** or take it on alone in the
+  **“Solo rules.”** In Versus, the first to shout the number takes the card!
+  But if a squid or octopus shows up, you must shout its name and raise a hand!
+steps:
+  - text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
+    text_en: The active player flips one card from the deck and reveals it.
+      Everyone reacts to the card.
+  - text_ja: 危険カードは上の方にあるライトがあげる腕と対応しています。**タコは左手、イカは右手、イカタコは両手**です。
+    text_en: The lights at the top of a danger card show which arm to raise.
+      **Octopus = left hand, squid = right hand, Ikatako = both hands.**
+  - text_ja: 一番リアクションが早かった人は**得点としてカードを獲得**し、手元に並べます。
+    text_en: The fastest player **takes the card as points** and lines it up in
+      front of them.
+  - text_ja: 間違えた、反応できなかった人は自分の得点のうち任意の1枚を**減点(上下逆さま)**にします。
+    text_en: Anyone who got it wrong or didn’t react turns one of their point
+      cards **upside down as a penalty**.
+gallery:
+  - image: img/gallery/ig_sheet.webp
+    caption_ja: 説明シート「反射神経で生還せよ」
+    caption_en: Rules summary sheet
+    wide: true
+  - image: img/package/pkg_ikatako.webp
+    caption_ja: パッケージ
+    caption_en: Box
+    wide: false
+  - image: img/gallery/ig_manual1.webp
+    caption_ja: 遊び方説明書(表)
+    caption_en: Rulebook (front)
+    wide: true
+  - image: img/gallery/ig_summary1.webp
+    caption_ja: サマリー
+    caption_en: Summary card
+    wide: false
+  - image: img/gallery/ig_manual2.webp
+    caption_ja: 遊び方説明書(裏)
+    caption_en: Rulebook (back)
+    wide: true
+  - image: img/gallery/ig_summary3.webp
+    caption_ja: サマリー(ソロルール)
+    caption_en: Summary card (solo)
+    wide: false
+pkg: img/package/pkg_ikatako.webp
+fab_pkg: img/package/pkg_ikatako.webp
+contents_ja: ノーマルカード14枚、特殊カード4枚、危険カード9枚、トラブルカード3枚、サマリー2枚、遊び方説明書1枚
+contents_en: 14 normal cards, 4 special cards, 9 danger cards, 3 trouble cards, 2 summary cards, rulebook
+credits:
+  - role_ja: デザイン・アートワーク
+    name_ja: ゐするぎ
+    name_en: Isurugi
+  - role_ja: 印刷
+    name_ja: グラフィック
+  - role_ja: Special Thanks
+    name_ja: テストプレイをしてくれた皆さん
+    name_en: Everyone who playtested
+  - role_ja: 発行
+    name_ja: 2025年11月
+    name_en: November 2025

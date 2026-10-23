@@ -138,9 +138,8 @@
     .mdeck .mcd{position:absolute;left:0;top:0}
     .mdeck .mcd:nth-child(2){top:-3px}.mdeck .mcd:nth-child(3){top:-6px}
     .mcap{position:absolute;left:28px;top:132px;translate:-50% 0;padding:2px 10px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
-    .mmove{position:absolute;left:6px;top:52px;width:44px;transform-style:preserve-3d}
-    .mmove .mcd{backface-visibility:hidden;-webkit-backface-visibility:hidden}
-    .mmove .back{position:absolute;inset:0;transform:rotateY(180deg)}
+    .mmove{position:absolute;left:6px;top:52px;width:44px}
+    .mmove .back{position:absolute;inset:0}
     .mbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
     .mbub::after{content:"";position:absolute;left:14px;bottom:-6px;border:6px solid transparent;border-top-color:#e8467a;border-bottom:0}
     /* 2. コール:数えて、多い順に呼ぶ */
@@ -167,7 +166,10 @@
     .s4 .mbub::after{left:auto;right:18px}
     @media all{
       .s1 .mmove{animation:m1move 6s cubic-bezier(.4,0,.2,1) infinite}
-      @keyframes m1move{0%,12%{opacity:1;translate:0 0;transform:perspective(500px) rotateY(180deg)}38%,84%{opacity:1;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}92%,100%{opacity:0;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}}
+      @keyframes m1move{0%,10%{opacity:1;translate:0 0;scale:1 1}18%{translate:0 -6px;scale:0 1}26%{translate:0 -6px;scale:1 1}44%,84%{opacity:1;translate:92px 56px;scale:1 1}92%,100%{opacity:0;translate:92px 56px}}
+      .s1 .mmove .back{animation:kback 6s linear infinite;animation-name:mback}.s1 .mmove .mcd:not(.back){animation:mfront 6s linear infinite}
+      @keyframes mback{0%,17.9%{opacity:1}18%,100%{opacity:0}}
+      @keyframes mfront{0%,17.9%{opacity:0}18%,100%{opacity:1}}
       .m2 .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
       @keyframes mdrop{0%{opacity:0;translate:0 -24px}7%{opacity:1;translate:0 0}86%{opacity:1;translate:0 0}93%,100%{opacity:0;translate:0 0}}
       .mtally span{animation:mtal 7s ease infinite;animation-delay:calc(var(--i) * .35s)}
@@ -283,6 +285,7 @@
     .js .js-only.cnav{display:grid !important}
     .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
+    .chara-name:empty{display:none}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
     .story>p:not(.en){margin:0;font-size:15.5px;line-height:2.05;max-width:34em;font-weight:500;word-break:auto-phrase}
@@ -813,9 +816,9 @@
     <ul class="bg-row">
       <li><a class="bg-card" href="../bibilu/"><img src="../../img/card/bibilu_bdg.png?v=39be0d75" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span class="cap">NEW</span></span></a></li>
       <li><a class="bg-card" href="../trico/"><img src="../../img/card/trico_bdg.png?v=f8773036" alt="TRICO!" loading="lazy"></a></li>
-      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/card/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/card/koikoi_bdg.png?v=a1377913" alt="こいこいのぼり 真打" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/card/bash_bdg.png?v=492ce9bd" alt="BASH&amp;SMASH" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../ikatako/"><img src="../../img/card/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../koikoi/"><img src="../../img/card/koikoi_bdg.png?v=a1377913" alt="こいこいのぼり 真打" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../bash/"><img src="../../img/card/bash_bdg.png?v=492ce9bd" alt="BASH&amp;SMASH" loading="lazy"></a></li>
       <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt=""><img class="to" src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/logo/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
       <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/card-mock-maker/" target="_blank" rel="noopener" style="background:#2a3138;color:#ffffff"><img class="bt-shot" src="../../img/tools/tool_cmm_thumb.webp?v=cb45d90f" alt="" loading="lazy"><span class="bt-name">カードモックツクール β</span></a></li>
     </ul>

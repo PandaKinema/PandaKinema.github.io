@@ -1,0 +1,112 @@
+title: BASH&SMASH
+description: BASH&SMASH(バッシュ&スマッシュ):手札から1枚出すだけの、格闘ゲーム風の読み合いゲーム。2人用。パンダキネマ。
+ogp_image: img/share/ogp_bash.png
+logo: img/logo/bashlogo_4C.png
+logo_alt: BASH&SMASH! バッシュ&スマッシュ
+logo_buy: img/logo/bashlogo_4C.png
+logo_credits: img/logo/bashlogo_4C.png
+bg_color: main
+accent_color: accent
+bg1_image: img/page/s_tex_c.png
+band_image: img/page/s_band.png
+heading_icon: img/page/s_star_sten.png
+step_icon: img/page/s_star_sil.png
+catch_ja: 読みきれ。叩き込め!
+catch_en: Read them. Strike hard!
+intro_ja: |-
+  大都市、グリッドシティでは至るところでバトルが行われていた。  
+  全てのバトルはショーとして配信され、勝者はポイントを手にする。  
+  この街で頂点に立てば願いが叶うという噂を信じてファイターたちは戦い続ける。
+intro_en: In the metropolis of Grid City, battles broke out everywhere. Every
+  battle was streamed as a show, and the winner earned points. Believing the
+  rumor that whoever reaches the top of this city gets their wish, the fighters
+  keep on battling.
+characters:
+  - image: img/chara/s_pbash.webp
+    name_ja: バッシュ
+    name_en: Bash
+    note_ja: |-
+      行方不明になった兄“スマッシュ”を追ってグリッドシティにたどり着いた少年。
+
+      まっすぐな性格で曲がったことが大嫌い。
+    note_en: |-
+      A boy who came to Grid City chasing his missing brother, “Smash.”
+
+      Honest and straightforward — he hates anything crooked.
+  - image: img/chara/s_plin.webp
+    name_ja: リンリン
+    name_en: Linlin
+    note_ja: |-
+      グリッドシティのチャイナタウン育ちの少女。
+
+      足技を使いこなすスピードファイター。勝気な性格で卑怯者が嫌い。
+    note_en: |-
+      A girl raised in Grid City’s Chinatown.
+
+      A speed fighter who masters kicks. Strong-willed, she hates cowards.
+summary_ja: |-
+  やることはただ1つ。手札から1枚出すだけ。  
+  相手より大きい数字を出せば得点ゲット!しかし、相手のカードが裏向きだった場合は**「パリィ」**が発動し、得点を奪われてしまう。  
+  さらに、カードの合計が10になると**「ラッシュ」**突入!ラッシュ中はルールが反転し、小さい数字が勝利する。  
+  攻めるか受けるか。この一手を見切り、勝つのはどっちだ!?
+summary_en: There’s only one thing to do — play one card from your hand. Play a
+  bigger number than your opponent to score! But if their card is face down,
+  a **“Parry”** triggers and they steal the points. And when the cards add up
+  to 10, it’s a **“Rush”**! During a Rush the rule flips and the smaller
+  number wins. Attack or defend? Read this one move — who will win!?
+steps:
+  - text_ja: |-
+      **同時にカードを出し合う!**
+
+      数の大きい方がヒットになる!勝った数字が得点。
+    text_en: |-
+      **Play cards at the same time!**
+
+      The bigger number is a hit! The winning number is your score.
+  - text_ja: |-
+      **裏向きで出すとパリィ!**
+
+      相手の出した数字に関係なく得点を奪うことができる!
+    text_en: |-
+      **Play face down to Parry!**
+
+      You steal the points no matter what number your opponent played!
+  - text_ja: お互いがヒット(攻め)で出した**カードの合計が10になったとき、ラッシュが発生します。**ラッシュ中はルールが反転し、小さい数字がヒット成功となります!
+    text_en: When both players attack and **the cards add up to 10, a Rush
+      begins.** During a Rush the rule flips, and the smaller number hits!
+  - text_ja: 手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。**先に2ラウンド先取したプレイヤーがゲームの勝者です。**
+    text_en: When your hands run out, the round ends. Add up the points you
+      took; the higher score wins the round. **The first player to win 2 rounds
+      wins the game.**
+gallery:
+  - image: img/gallery/sg_manual1.webp
+    caption_ja: 遊び方説明書(表)
+    caption_en: Rulebook (front)
+    wide: true
+  - image: img/package/mini_bash.webp
+    caption_ja: パッケージ
+    caption_en: Box
+    wide: false
+  - image: img/gallery/sg_manual2.webp
+    caption_ja: 遊び方説明書(裏)
+    caption_en: Rulebook (back)
+    wide: true
+pkg: img/package/mini_bash.webp
+fab_pkg: img/package/mini_bash.webp
+contents_ja: 数字カード2セット(1〜10が1枚ずつ)、プレイヤーカード2枚、星トークン2個、遊び方説明書1枚
+contents_en: 2 sets of number cards (1–10), 2 player cards, 2 star tokens, rulebook
+credits:
+  - role_ja: ゲームデザイン・アートワーク
+    name_ja: ゐするぎ
+    name_en: Isurugi
+  - role_ja: イラスト
+    name_ja: ゐするぎ
+    name_en: Isurugi
+  - role_ja: カード印刷
+    name_ja: アドプリント
+  - role_ja: Special Thanks
+    name_ja: テストプレイをしてくれた皆さん
+    name_en: Everyone who playtested
+  - role_ja: 発行
+    name_ja: 2026年5月
+    name_en: May 2026

@@ -59,7 +59,7 @@
   genre_en: Reaction / Reflexes
   intro_ja: イカだ！タコだ！手を挙げろ！
   intro_en: Squid! Octopus! Hands up!
-  page: https://gamemarket.jp/game/186696
+  page: games/ikatako/
   booth: https://pandakinema.booth.pm/
 - key: moko
   name: モコチャカ
@@ -98,6 +98,7 @@
   genre_en: Hanafuda-style set collection
   intro_ja: あげろ！こいのぼり！
   intro_en: Raise the carp streamers!
+  page: games/koikoi/
 - key: bash
   name: BASH&SMASH
   series: "MINI THEATER SERIES "
@@ -116,3 +117,4 @@
   genre_en: Fighting-game-style mind game
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
+  page: games/bash/

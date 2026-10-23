@@ -211,7 +211,7 @@ content:
             type: object
             list: true
             fields:
-              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
               - { name: role_en, label: 役割(英語), type: string, hidden: true }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
@@ -324,7 +324,120 @@ content:
             type: object
             list: true
             fields:
-              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_en, label: 役割(英語), type: string, hidden: true }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+      - name: page_ikatako
+        label: "イカタコ"
+        type: file
+        path: content/pages/ikatako.yml
+        format: yaml
+        fields:
+          - { name: title, label: 作品名, type: string, hidden: true }
+          - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
+          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/share }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/logo } }
+          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - name: hero
+            label: トップ画像
+            type: object
+            fields:
+              - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
+              - { name: art_pos, label: 見せる位置, type: string, hidden: true }
+              - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: pattern, label: 模様, type: string, hidden: true }
+              - { name: width, label: 大きさ, type: number, hidden: true }
+              - name: layers
+                label: 部品(Claudeが設定)
+                type: object
+                list: true
+                hidden: true
+                fields:
+                  - { name: image, label: 画像, type: image, options: { path: new/img/page } }
+                  - { name: x, label: 横, type: number }
+                  - { name: y, label: 縦, type: number }
+                  - { name: width, label: 幅, type: number }
+                  - { name: rotate, label: 傾き, type: number }
+                  - { name: motion, label: 動き, type: string }
+          - { name: bg1_image, label: 背景の模様, type: image, options: { path: new/img/page }, description: "「背景の色」の上に敷き詰める模様(動画・遊び方・購入のところ)。2倍の大きさで作った画像。空なら色だけ" }
+          - { name: bg2_image, label: 帯の色の模様, type: image, options: { path: new/img/page }, description: "「帯・見出しの色」の上に敷き詰める模様(ストーリー・ギャラリーのところ)。空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: step_num_x, label: 番号の左右(px), type: number, description: "番号を少しずらしたいとき。プラスで右、マイナスで左。0.5きざみもOK。空なら真ん中" }
+          - { name: step_num_y, label: 番号の上下(px), type: number, description: "プラスで下、マイナスで上。0.5きざみもOK。空なら真ん中" }
+          - { name: catch_ja, label: キャッチコピー, type: string }
+          - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
+          - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: intro_en, label: ストーリー(英語), type: text, hidden: true }
+          - name: characters
+            label: キャラクター
+            description: "1体ずつ表示。2体以上いると左右の ◀▶ で切り替えられます"
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
+              - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
+          - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
+          - name: steps
+            label: 遊び方の流れ
+            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 説明, type: rich-text, description: "太字(B)にしたところが赤字(強調)" }
+              - { name: text_en, label: 説明(英語), type: text, hidden: true }
+          - { name: manual_ja, label: 遊び方説明書のURL, type: string }
+          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
+          - name: gallery
+            label: ギャラリー
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
+              - { name: caption_ja, label: 説明, type: string }
+              - { name: caption_en, label: 説明(英語), type: string, hidden: true }
+              - { name: wide, label: 横長で大きく出す, type: boolean }
+          - name: gallery_todo
+            label: ギャラリーの準備中の枠
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
+              - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: contents_ja, label: 内容物, type: text }
+          - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
+          - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
+          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
+          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - name: related_links
+            label: 関連リンク
+            description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
+            type: object
+            list: true
+            fields:
+              - { name: url, label: URL, type: string, required: true }
+              - { name: title, label: タイトル(変えたいときだけ), type: string, description: "空ならページのタイトルを自動で" }
+              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/page }, description: "空ならページの画像を自動で" }
+          - name: credits
+            label: クレジット
+            type: object
+            list: true
+            fields:
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
               - { name: role_en, label: 役割(英語), type: string, hidden: true }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
@@ -437,7 +550,233 @@ content:
             type: object
             list: true
             fields:
-              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_en, label: 役割(英語), type: string, hidden: true }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+      - name: page_koikoi
+        label: "こいこいのぼり 真打"
+        type: file
+        path: content/pages/koikoi.yml
+        format: yaml
+        fields:
+          - { name: title, label: 作品名, type: string, hidden: true }
+          - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
+          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/share }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/logo } }
+          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - name: hero
+            label: トップ画像
+            type: object
+            fields:
+              - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
+              - { name: art_pos, label: 見せる位置, type: string, hidden: true }
+              - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: pattern, label: 模様, type: string, hidden: true }
+              - { name: width, label: 大きさ, type: number, hidden: true }
+              - name: layers
+                label: 部品(Claudeが設定)
+                type: object
+                list: true
+                hidden: true
+                fields:
+                  - { name: image, label: 画像, type: image, options: { path: new/img/page } }
+                  - { name: x, label: 横, type: number }
+                  - { name: y, label: 縦, type: number }
+                  - { name: width, label: 幅, type: number }
+                  - { name: rotate, label: 傾き, type: number }
+                  - { name: motion, label: 動き, type: string }
+          - { name: bg1_image, label: 背景の模様, type: image, options: { path: new/img/page }, description: "「背景の色」の上に敷き詰める模様(動画・遊び方・購入のところ)。2倍の大きさで作った画像。空なら色だけ" }
+          - { name: bg2_image, label: 帯の色の模様, type: image, options: { path: new/img/page }, description: "「帯・見出しの色」の上に敷き詰める模様(ストーリー・ギャラリーのところ)。空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: step_num_x, label: 番号の左右(px), type: number, description: "番号を少しずらしたいとき。プラスで右、マイナスで左。0.5きざみもOK。空なら真ん中" }
+          - { name: step_num_y, label: 番号の上下(px), type: number, description: "プラスで下、マイナスで上。0.5きざみもOK。空なら真ん中" }
+          - { name: catch_ja, label: キャッチコピー, type: string }
+          - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
+          - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: intro_en, label: ストーリー(英語), type: text, hidden: true }
+          - name: characters
+            label: キャラクター
+            description: "1体ずつ表示。2体以上いると左右の ◀▶ で切り替えられます"
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
+              - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
+          - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
+          - name: steps
+            label: 遊び方の流れ
+            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 説明, type: rich-text, description: "太字(B)にしたところが赤字(強調)" }
+              - { name: text_en, label: 説明(英語), type: text, hidden: true }
+          - { name: manual_ja, label: 遊び方説明書のURL, type: string }
+          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
+          - name: gallery
+            label: ギャラリー
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
+              - { name: caption_ja, label: 説明, type: string }
+              - { name: caption_en, label: 説明(英語), type: string, hidden: true }
+              - { name: wide, label: 横長で大きく出す, type: boolean }
+          - name: gallery_todo
+            label: ギャラリーの準備中の枠
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
+              - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: contents_ja, label: 内容物, type: text }
+          - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
+          - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
+          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
+          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - name: related_links
+            label: 関連リンク
+            description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
+            type: object
+            list: true
+            fields:
+              - { name: url, label: URL, type: string, required: true }
+              - { name: title, label: タイトル(変えたいときだけ), type: string, description: "空ならページのタイトルを自動で" }
+              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/page }, description: "空ならページの画像を自動で" }
+          - name: credits
+            label: クレジット
+            type: object
+            list: true
+            fields:
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
+              - { name: role_en, label: 役割(英語), type: string, hidden: true }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+      - name: page_bash
+        label: "BASH&SMASH"
+        type: file
+        path: content/pages/bash.yml
+        format: yaml
+        fields:
+          - { name: title, label: 作品名, type: string, hidden: true }
+          - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
+          - { name: ogp_image, label: X共有画像, type: image, options: { path: new/img/share }, description: "このページをXなどで共有したときに出る画像(1200×630)" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { path: new/img/logo } }
+          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - name: hero
+            label: トップ画像
+            type: object
+            fields:
+              - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
+              - { name: art_pos, label: 見せる位置, type: string, hidden: true }
+              - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: pattern, label: 模様, type: string, hidden: true }
+              - { name: width, label: 大きさ, type: number, hidden: true }
+              - name: layers
+                label: 部品(Claudeが設定)
+                type: object
+                list: true
+                hidden: true
+                fields:
+                  - { name: image, label: 画像, type: image, options: { path: new/img/page } }
+                  - { name: x, label: 横, type: number }
+                  - { name: y, label: 縦, type: number }
+                  - { name: width, label: 幅, type: number }
+                  - { name: rotate, label: 傾き, type: number }
+                  - { name: motion, label: 動き, type: string }
+          - { name: bg1_image, label: 背景の模様, type: image, options: { path: new/img/page }, description: "「背景の色」の上に敷き詰める模様(動画・遊び方・購入のところ)。2倍の大きさで作った画像。空なら色だけ" }
+          - { name: bg2_image, label: 帯の色の模様, type: image, options: { path: new/img/page }, description: "「帯・見出しの色」の上に敷き詰める模様(ストーリー・ギャラリーのところ)。空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { path: new/img/page }, description: "背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色は「帯・見出しの色」。空なら帯なし" }
+          - { name: heading_icon, label: 見出しの飾り, type: image, options: { path: new/img/page }, description: "見出しの左右に出るシルエット(背景透明)" }
+          - { name: step_icon, label: 遊び方の番号の形, type: image, options: { path: new/img/page }, description: "遊び方1〜4の番号が入る形(背景透明)" }
+          - { name: step_num_x, label: 番号の左右(px), type: number, description: "番号を少しずらしたいとき。プラスで右、マイナスで左。0.5きざみもOK。空なら真ん中" }
+          - { name: step_num_y, label: 番号の上下(px), type: number, description: "プラスで下、マイナスで上。0.5きざみもOK。空なら真ん中" }
+          - { name: catch_ja, label: キャッチコピー, type: string }
+          - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
+          - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: intro_en, label: ストーリー(英語), type: text, hidden: true }
+          - name: characters
+            label: キャラクター
+            description: "1体ずつ表示。2体以上いると左右の ◀▶ で切り替えられます"
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
+              - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
+          - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
+          - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
+          - name: steps
+            label: 遊び方の流れ
+            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 説明, type: rich-text, description: "太字(B)にしたところが赤字(強調)" }
+              - { name: text_en, label: 説明(英語), type: text, hidden: true }
+          - { name: manual_ja, label: 遊び方説明書のURL, type: string }
+          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
+          - name: gallery
+            label: ギャラリー
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
+              - { name: caption_ja, label: 説明, type: string }
+              - { name: caption_en, label: 説明(英語), type: string, hidden: true }
+              - { name: wide, label: 横長で大きく出す, type: boolean }
+          - name: gallery_todo
+            label: ギャラリーの準備中の枠
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
+              - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { path: new/img/package }, hidden: true }
+          - { name: contents_ja, label: 内容物, type: text }
+          - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
+          - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
+          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
+          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - name: related_links
+            label: 関連リンク
+            description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
+            type: object
+            list: true
+            fields:
+              - { name: url, label: URL, type: string, required: true }
+              - { name: title, label: タイトル(変えたいときだけ), type: string, description: "空ならページのタイトルを自動で" }
+              - { name: image, label: 画像(変えたいときだけ), type: image, options: { path: new/img/page }, description: "空ならページの画像を自動で" }
+          - name: credits
+            label: クレジット
+            type: object
+            list: true
+            fields:
+              - { name: role_ja, label: 役割, type: select, options: { values: [ { value: "ゲームデザイン・アートワーク", label: "ゲームデザイン・アートワーク" }, { value: "デザイン・アートワーク", label: "デザイン・アートワーク" }, { value: "印刷", label: "印刷" }, { value: "トークン製造", label: "トークン製造" }, { value: "Special Thanks", label: "Special Thanks" }, { value: "発行", label: "発行" }, { value: "イラスト", label: "イラスト" }, { value: "カード印刷", label: "カード印刷" } ] }, description: "一覧にない役割は「スタッフロールの役割」に足すと選べるようになります" }  # AUTO:roles
               - { name: role_en, label: 役割(英語), type: string, hidden: true }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
