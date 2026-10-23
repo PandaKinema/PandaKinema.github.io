@@ -8,7 +8,7 @@ logo_credits: img/logo/logo_moko.png
 bg_color: main
 accent_color: accent
 hero:
-  art: img/page/moko_top.png
+  art: img/page/moco_wide.png
   fit: cover
   art_pos: 50% 50%
 bg1_image: img/page/m_tex_c.png
