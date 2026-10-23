@@ -9,8 +9,8 @@ bg_color: main
 accent_color: accent
 hero:
   art: img/page/moco_wide.png
+  art_pos: 50% 15%
   fit: cover
-  art_pos: 50% 50%
 bg1_image: img/page/m_tex_c.png
 band_image: img/page/saku.png
 heading_icon: img/page/m_moko_sten.png
@@ -30,7 +30,7 @@ intro_en: You were counting Moko in the shallows of sleep. The more accurately
   sleep grows deeper. But **Gabu** stands in the way. Who will slip past Gabu
   and reach the deepest sleep?
 characters:
-  - image: img/chara/moco-1.png
+  - image: img/chara/moco.png
     name_ja: モコ
     name_en: Moko
   - image: img/chara/paka.png

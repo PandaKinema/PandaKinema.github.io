@@ -2,7 +2,7 @@
 #   site/ … サイト全体(ヘッダーのロゴなど)   bibilu/ trico/ … 作品ごと(parts/ は遊び方の図の部品)
 #   tools/ … ツール   links/ … 関連リンクのカード画像(自動)   unused/ … 今は使っていない画像
 # 画像の欄の値は「img/trico/foo.png」の形。名前だけ(foo.png)でも、どのフォルダにあっても見つけます
-import os
+import os, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMG = os.path.join(ROOT, 'new', 'img')
@@ -28,7 +28,12 @@ def path(v):
             break
     if not v or os.path.isfile(os.path.join(IMG, v)):
         return v
-    return index().get(os.path.basename(v), v)
+    b = os.path.basename(v)
+    if b not in index():   # 「foo-1.png」(同じ名前で上げ直した画像)が元の「foo.png」にまとめられたあとでも見つける
+        m = re.match(r'^(.*)-\d+(\.[A-Za-z0-9]+)$', b)
+        if m and (m.group(1) + m.group(2)) in index():
+            b = m.group(1) + m.group(2)
+    return index().get(b, v)
 
 def full(v):
     return os.path.join(IMG, path(v))

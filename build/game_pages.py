@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v30
+# パンダキネマ 作品ページ 共通フォーマット v31
+#     v31: トップ画像の下からのぼかしをなくす
 #     v30: トップ画像(横長)を全作品に。明るい絵は下をぼかさない/絵の拡大(zoom)
 #     v29: ギャラリーはスクロールではなく1枚ずつ動かす(途中で止まらない)/アクセントカラー2の帯にも模様
 #     v28: 遊び方のカードはまとめて表示(横スクロールで上下に揺れない)
@@ -127,10 +128,7 @@ def hero(g, d, t):
             px = [im.getpixel((x, y)) for x in range(0, bw, max(1, bw // 40)) for y in range(int(bh * .7), bh, max(1, bh // 30))]
         bot = '#%02x%02x%02x' % tuple(sum(p[c] for p in px) // len(px) for c in range(3))
         M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
-        if lum(bot) > .18:
-            g['hero_cls'] += ' light'
-        else:   # 下を暗くぼかすので、ぼかした色(背景の色)の上で読める色
-            bot = g.get('_D') or bot
+        g['hero_cls'] += ' light'   # 下からのぼかしはなし。文字は絵の下の方の色の上で読める色
         fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, bot) >= 4.5, x in (M, A), contrast(x, bot)))
         style.append('--hero-ink:%s' % fg)
         if h.get('zoom'):
