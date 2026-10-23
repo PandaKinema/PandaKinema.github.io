@@ -135,6 +135,8 @@ content:
       - { name: member_name_ja, label: 名前(日本語), type: string }
       - { name: member_name_en, label: 名前(英語), type: string }
       - { name: member_role, label: 担当, type: string, description: "例:Game Design / Artwork" }
+      - { name: member_bio_ja, label: プロフィール(日本語), type: text, description: "名前の下に出る2行くらいの紹介。改行もそのまま出ます" }
+      - { name: member_bio_en, label: プロフィール(英語), type: text }
       - { name: member_icon, label: メンバーのアイコン, type: image, description: "丸く切り抜いて表示します(正方形がおすすめ)。空ならサークルのマーク" }
       - { name: icon, label: サークルのマーク, type: image, description: "アイコンが空のときに丸の中に出るマーク(背景透明・単色)" }
       - { name: about_ja, label: ABOUT の文(日本語), type: text }
