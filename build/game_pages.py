@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v28
+# パンダキネマ 作品ページ 共通フォーマット v29
+#     v29: ギャラリーはスクロールではなく1枚ずつ動かす(途中で止まらない)/アクセントカラー2の帯にも模様
 #     v28: 遊び方のカードはまとめて表示(横スクロールで上下に揺れない)
 #     v27: 4コマをゲームの終わりまで(モコチャカ・イカタコ・こいこいのぼり)
 #     v26: 作品ページでアクセントカラー2を選べる(背景・帯/見出し)/トップの絵のパララックスをやめる(ロゴが絵にかぶらない)
@@ -1220,9 +1221,10 @@ TEMPLATE = r'''<!doctype html>
     /* フォトギャラリー */
     /* ギャラリー:1枚ずつ。◀▶・点・横スワイプで切り替え、押すと大きく */
     .gal{position:relative;max-width:920px;margin:0 auto}
-    .gtrack{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:18px}
-    .gtrack::-webkit-scrollbar{display:none}
-    .gslide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .gtrack{overflow:hidden;border-radius:18px;touch-action:pan-y}
+    .grail{display:flex;transform:translate3d(calc(var(--gi,0) * -100% + var(--gdx,0px)),0,0);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+    .grail.drag{transition:none}
+    .gslide{flex:0 0 100%;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
     .gitem{display:block;width:100%;height:min(62vh,560px);padding:18px;border:0;border-radius:18px;background:#fff;cursor:zoom-in}
     .gitem img{width:100%;height:100%;object-fit:contain}
     .gph{display:grid;place-items:center;width:100%;height:min(62vh,560px);border:2px dashed color-mix(in srgb,var(--b2-ink) 35%,transparent);border-radius:18px;font-size:14px;font-weight:700;opacity:.8}
@@ -1641,9 +1643,9 @@ TEMPLATE = r'''<!doctype html>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title">{{L:ギャラリー|Gallery}}</h2></div></header>
       <div class="gal reveal">
-        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)">
+        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)"><div class="grail">
 {{gallery_html}}
-        </div>
+        </div></div>
         <button class="gnav prev" type="button" aria-label="前の写真"></button><button class="gnav next" type="button" aria-label="次の写真"></button>
       </div>
       <div class="gdots">{{gdots_html}}</div>
@@ -1783,17 +1785,30 @@ TEMPLATE = r'''<!doctype html>
     flow.addEventListener("dragstart",function(e){ e.preventDefault() });
   }
 
-  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー) */
+  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー)。かならず1枚ぶんずつ止まる */
   var gt=document.querySelector(".gtrack");
   if(gt){
-    var gs=[].slice.call(gt.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
-    function ggo(i){ i=Math.max(0,Math.min(gs.length-1,i)); gt.scrollTo({left:gs[i].offsetLeft-gt.offsetLeft*0-gs[0].offsetLeft,behavior:"smooth"}) }
-    function gsync(){ gc=Math.round(gt.scrollLeft/gt.clientWidth); gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1 }
+    var gr=gt.querySelector(".grail"), gs=[].slice.call(gr.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
+    function ggo(i){ gc=Math.max(0,Math.min(gs.length-1,i)); gr.style.setProperty("--gi",gc); gr.style.setProperty("--gdx","0px");
+      gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1;
+      gs.forEach(function(sl,k){ if(k===gc) sl.removeAttribute("aria-hidden"); else sl.setAttribute("aria-hidden","true") }) }
     gp.addEventListener("click",function(){ ggo(gc-1) }); gn.addEventListener("click",function(){ ggo(gc+1) });
     gd.forEach(function(d,k){ d.addEventListener("click",function(){ ggo(k) }) });
-    gt.addEventListener("scroll",function(){ requestAnimationFrame(gsync) },{passive:true});
     gt.addEventListener("keydown",function(e){ if(e.key==="ArrowRight"){ e.preventDefault(); ggo(gc+1) } if(e.key==="ArrowLeft"){ e.preventDefault(); ggo(gc-1) } });
-    gsync();
+    var gx=null, gy=0, gdx=0, gmode=0, gmoved=false;
+    gt.addEventListener("pointerdown",function(e){ if(e.pointerType==="mouse"&&e.button!==0) return; gx=e.clientX; gy=e.clientY; gdx=0; gmode=0; gmoved=false });
+    window.addEventListener("pointermove",function(e){ if(gx===null) return; var dx=e.clientX-gx, dy=e.clientY-gy;
+      if(!gmode){ if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){ gmode=1; gr.classList.add("drag") } else if(Math.abs(dy)>8){ gmode=2 } }
+      if(gmode===1){ gdx=dx; if((gc===0&&dx>0)||(gc===gs.length-1&&dx<0)) gdx=dx/3; gr.style.setProperty("--gdx",gdx+"px"); gmoved=true } });
+    function gend(){ if(gx===null) return; gx=null; gr.classList.remove("drag"); if(gmode===1){ var th=Math.min(80,gt.clientWidth*.18); ggo(gdx<-th?gc+1:(gdx>th?gc-1:gc)) } gmode=0 }
+    window.addEventListener("pointerup",gend); window.addEventListener("pointercancel",gend);
+    gt.addEventListener("click",function(e){ if(gmoved){ e.preventDefault(); e.stopPropagation(); gmoved=false } },true);
+    gt.addEventListener("dragstart",function(e){ e.preventDefault() });
+    /* トラックパッドの横スクロール:ひと区切りで1枚 */
+    var gw=0, gwt=null;
+    gt.addEventListener("wheel",function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return; e.preventDefault(); if(gwt) return; gw+=e.deltaX;
+      if(Math.abs(gw)>30){ ggo(gc+(gw>0?1:-1)); gw=0; gwt=setTimeout(function(){ gwt=null },500) } },{passive:false});
+    ggo(0);
   }
   /* ギャラリー:クリックで大きく */
   var lb=document.querySelector(".lb");

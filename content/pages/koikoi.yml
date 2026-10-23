@@ -3,11 +3,12 @@ description: こいこいのぼり 真打:花札の『こいこい』をもと�
 ogp_image: img/share/ogp_koikoinobori.png
 logo: img/logo/koikoilogo.png
 logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
-logo_buy: img/logo/koikoilogo.png
+logo_buy: img/logo/k_logo_blue.png
 logo_credits: img/logo/koikoilogo.png
 bg_color: main
-accent_color: accent
+accent_color: black
 bg1_image: img/page/k_tex_c.png
+bg2_image: img/page/k_tex_c.png
 band_image: img/page/k_band.png
 heading_icon: img/page/k_koi_sten.png
 step_icon: img/page/k_koi_sil.png

@@ -3,10 +3,11 @@ description: イカタコ:めくられたカードに正しく反応し、でき
 ogp_image: img/share/ogp_ikatako.png
 logo: img/logo/logo_ikatako.png
 logo_alt: イカタコ IKATAKO
-logo_buy: img/logo/logo_ikatako.png
+logo_buy: img/logo/i_logo_blue.png
 logo_credits: img/logo/logo_ikatako.png
 bg_color: main
-accent_color: accent
+color3: "#001f5c"
+accent_color: third
 bg1_image: img/page/i_tex_c.png
 band_image: img/page/i_band.png
 heading_icon: img/page/i_squid_sten.png

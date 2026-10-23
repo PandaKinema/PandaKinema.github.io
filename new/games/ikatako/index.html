@@ -25,7 +25,7 @@
       --orb-glow:150,210,255;
       --orn:url(../../img/page/i_squid_sten.png?v=c2c3394e); --snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);   /* 見出しの飾り:ロゴのイカ */
     
-      --k-bg:#0073bd;--k-ink:#ffffff;--hl:#ffffff;--b2-bg:#ffffff;--b2-ink:#0073bd;--hl2:#d4242b;--sec-bg:#ffffff;--sec-ink:#0073bd;--accent:#ffffff;--on-accent:#0073bd;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#0073bd;--soft:#edf5fa;--pan-bg:#0073bd;--pan-ink:#fff;--lt:#ffffff;--on-lt:#0073bd;--dk:#0073bd;--on-dk:#ffffff;--tex-c:url(../../img/page/i_tex_c.png?v=57cfa8f8);--tex-size:80px 48px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn:url(../../img/page/i_squid_sten.png?v=c2c3394e);--snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);}
+      --k-bg:#0073bd;--k-ink:#ffffff;--hl:#001f5c;--b2-bg:#001f5c;--b2-ink:#ffffff;--hl2:#0073bd;--sec-bg:#001f5c;--sec-ink:#ffffff;--accent:#001f5c;--on-accent:#ffffff;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#001f5c;--soft:#bfdcee;--pan-bg:#001f5c;--pan-ink:#fff;--lt:#0073bd;--on-lt:#ffffff;--dk:#001f5c;--on-dk:#ffffff;--tex-c:url(../../img/page/i_tex_c.png?v=57cfa8f8);--tex-size:80px 48px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn:url(../../img/page/i_squid_sten.png?v=c2c3394e);--snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -329,9 +329,10 @@
     /* フォトギャラリー */
     /* ギャラリー:1枚ずつ。◀▶・点・横スワイプで切り替え、押すと大きく */
     .gal{position:relative;max-width:920px;margin:0 auto}
-    .gtrack{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:18px}
-    .gtrack::-webkit-scrollbar{display:none}
-    .gslide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .gtrack{overflow:hidden;border-radius:18px;touch-action:pan-y}
+    .grail{display:flex;transform:translate3d(calc(var(--gi,0) * -100% + var(--gdx,0px)),0,0);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+    .grail.drag{transition:none}
+    .gslide{flex:0 0 100%;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
     .gitem{display:block;width:100%;height:min(62vh,560px);padding:18px;border:0;border-radius:18px;background:#fff;cursor:zoom-in}
     .gitem img{width:100%;height:100%;object-fit:contain}
     .gph{display:grid;place-items:center;width:100%;height:min(62vh,560px);border:2px dashed color-mix(in srgb,var(--b2-ink) 35%,transparent);border-radius:18px;font-size:14px;font-weight:700;opacity:.8}
@@ -767,14 +768,14 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title"><span lang="ja">ギャラリー</span><span lang="en">Gallery</span></h2></div></header>
       <div class="gal reveal">
-        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)">
+        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)"><div class="grail">
           <figure class="gslide"><button class="gitem" type="button" aria-label="説明シート「反射神経で生還せよ」を大きく見る"><img src="../../img/gallery/ig_sheet.webp?v=091858bf" alt="説明シート「反射神経で生還せよ」" loading="lazy"></button><figcaption><span lang="ja">説明シート「反射神経で生還せよ」</span><span lang="en">Rules summary sheet</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="パッケージを大きく見る"><img src="../../img/package/pkg_ikatako.webp?v=09232251" alt="パッケージ" loading="lazy"></button><figcaption><span lang="ja">パッケージ</span><span lang="en">Box</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="遊び方説明書(表)を大きく見る"><img src="../../img/gallery/ig_manual1.webp?v=133a64ef" alt="遊び方説明書(表)" loading="lazy"></button><figcaption><span lang="ja">遊び方説明書(表)</span><span lang="en">Rulebook (front)</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="サマリーを大きく見る"><img src="../../img/gallery/ig_summary1.webp?v=4c4117d0" alt="サマリー" loading="lazy"></button><figcaption><span lang="ja">サマリー</span><span lang="en">Summary card</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="遊び方説明書(裏)を大きく見る"><img src="../../img/gallery/ig_manual2.webp?v=14f706fe" alt="遊び方説明書(裏)" loading="lazy"></button><figcaption><span lang="ja">遊び方説明書(裏)</span><span lang="en">Rulebook (back)</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="サマリー(ソロルール)を大きく見る"><img src="../../img/gallery/ig_summary3.webp?v=e5ce947f" alt="サマリー(ソロルール)" loading="lazy"></button><figcaption><span lang="ja">サマリー(ソロルール)</span><span lang="en">Summary card (solo)</span></figcaption></figure>
-        </div>
+        </div></div>
         <button class="gnav prev" type="button" aria-label="前の写真"></button><button class="gnav next" type="button" aria-label="次の写真"></button>
       </div>
       <div class="gdots"><button type="button" aria-label="1枚目" aria-current="true"></button><button type="button" aria-label="2枚目"></button><button type="button" aria-label="3枚目"></button><button type="button" aria-label="4枚目"></button><button type="button" aria-label="5枚目"></button><button type="button" aria-label="6枚目"></button></div>
@@ -787,7 +788,7 @@
     <div class="panel buy-box reveal">
       <img class="pkg" src="../../img/package/pkg_ikatako.webp?v=09232251" alt="イカタコのパッケージ" width="520" height="825" loading="lazy">
       <div>
-        <img class="buy-logo" src="../../img/logo/logo_ikatako.png?v=02d95a4c" alt="イカタコ IKATAKO" loading="lazy">
+        <img class="buy-logo" src="../../img/logo/i_logo_blue.png?v=f7ffc7f4" alt="イカタコ IKATAKO" loading="lazy">
         <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">1〜6人</span><span lang="en">1–6</span></dd></div>
             <div><dt><span lang="ja">時間</span><span lang="en">Time</span></dt><dd><span lang="ja">5〜15分</span><span lang="en">5–15 min</span></dd></div>
@@ -925,17 +926,30 @@
     flow.addEventListener("dragstart",function(e){ e.preventDefault() });
   }
 
-  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー) */
+  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー)。かならず1枚ぶんずつ止まる */
   var gt=document.querySelector(".gtrack");
   if(gt){
-    var gs=[].slice.call(gt.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
-    function ggo(i){ i=Math.max(0,Math.min(gs.length-1,i)); gt.scrollTo({left:gs[i].offsetLeft-gt.offsetLeft*0-gs[0].offsetLeft,behavior:"smooth"}) }
-    function gsync(){ gc=Math.round(gt.scrollLeft/gt.clientWidth); gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1 }
+    var gr=gt.querySelector(".grail"), gs=[].slice.call(gr.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
+    function ggo(i){ gc=Math.max(0,Math.min(gs.length-1,i)); gr.style.setProperty("--gi",gc); gr.style.setProperty("--gdx","0px");
+      gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1;
+      gs.forEach(function(sl,k){ if(k===gc) sl.removeAttribute("aria-hidden"); else sl.setAttribute("aria-hidden","true") }) }
     gp.addEventListener("click",function(){ ggo(gc-1) }); gn.addEventListener("click",function(){ ggo(gc+1) });
     gd.forEach(function(d,k){ d.addEventListener("click",function(){ ggo(k) }) });
-    gt.addEventListener("scroll",function(){ requestAnimationFrame(gsync) },{passive:true});
     gt.addEventListener("keydown",function(e){ if(e.key==="ArrowRight"){ e.preventDefault(); ggo(gc+1) } if(e.key==="ArrowLeft"){ e.preventDefault(); ggo(gc-1) } });
-    gsync();
+    var gx=null, gy=0, gdx=0, gmode=0, gmoved=false;
+    gt.addEventListener("pointerdown",function(e){ if(e.pointerType==="mouse"&&e.button!==0) return; gx=e.clientX; gy=e.clientY; gdx=0; gmode=0; gmoved=false });
+    window.addEventListener("pointermove",function(e){ if(gx===null) return; var dx=e.clientX-gx, dy=e.clientY-gy;
+      if(!gmode){ if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){ gmode=1; gr.classList.add("drag") } else if(Math.abs(dy)>8){ gmode=2 } }
+      if(gmode===1){ gdx=dx; if((gc===0&&dx>0)||(gc===gs.length-1&&dx<0)) gdx=dx/3; gr.style.setProperty("--gdx",gdx+"px"); gmoved=true } });
+    function gend(){ if(gx===null) return; gx=null; gr.classList.remove("drag"); if(gmode===1){ var th=Math.min(80,gt.clientWidth*.18); ggo(gdx<-th?gc+1:(gdx>th?gc-1:gc)) } gmode=0 }
+    window.addEventListener("pointerup",gend); window.addEventListener("pointercancel",gend);
+    gt.addEventListener("click",function(e){ if(gmoved){ e.preventDefault(); e.stopPropagation(); gmoved=false } },true);
+    gt.addEventListener("dragstart",function(e){ e.preventDefault() });
+    /* トラックパッドの横スクロール:ひと区切りで1枚 */
+    var gw=0, gwt=null;
+    gt.addEventListener("wheel",function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return; e.preventDefault(); if(gwt) return; gw+=e.deltaX;
+      if(Math.abs(gw)>30){ ggo(gc+(gw>0?1:-1)); gw=0; gwt=setTimeout(function(){ gwt=null },500) } },{passive:false});
+    ggo(0);
   }
   /* ギャラリー:クリックで大きく */
   var lb=document.querySelector(".lb");

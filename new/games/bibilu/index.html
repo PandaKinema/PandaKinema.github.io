@@ -277,9 +277,10 @@
     /* フォトギャラリー */
     /* ギャラリー:1枚ずつ。◀▶・点・横スワイプで切り替え、押すと大きく */
     .gal{position:relative;max-width:920px;margin:0 auto}
-    .gtrack{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:18px}
-    .gtrack::-webkit-scrollbar{display:none}
-    .gslide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .gtrack{overflow:hidden;border-radius:18px;touch-action:pan-y}
+    .grail{display:flex;transform:translate3d(calc(var(--gi,0) * -100% + var(--gdx,0px)),0,0);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+    .grail.drag{transition:none}
+    .gslide{flex:0 0 100%;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
     .gitem{display:block;width:100%;height:min(62vh,560px);padding:18px;border:0;border-radius:18px;background:#fff;cursor:zoom-in}
     .gitem img{width:100%;height:100%;object-fit:contain}
     .gph{display:grid;place-items:center;width:100%;height:min(62vh,560px);border:2px dashed color-mix(in srgb,var(--b2-ink) 35%,transparent);border-radius:18px;font-size:14px;font-weight:700;opacity:.8}
@@ -716,13 +717,13 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title"><span lang="ja">ギャラリー</span><span lang="en">Gallery</span></h2></div></header>
       <div class="gal reveal">
-        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)">
+        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)"><div class="grail">
           <figure class="gslide"><button class="gitem" type="button" aria-label="説明シート「ビビルの塔はこんなゲーム!」を大きく見る"><img src="../../img/gallery/g_rule.webp?v=7bdc0b8c" alt="説明シート「ビビルの塔はこんなゲーム!」" loading="lazy"></button><figcaption><span lang="ja">説明シート「ビビルの塔はこんなゲーム!」</span><span lang="en">Rules summary sheet</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="パッケージ(表)を大きく見る"><img src="../../img/package/g_pkg_front.webp?v=337b4208" alt="パッケージ(表)" loading="lazy"></button><figcaption><span lang="ja">パッケージ(表)</span><span lang="en">Box (front)</span></figcaption></figure>
           <figure class="gslide"><button class="gitem" type="button" aria-label="パッケージ(裏)を大きく見る"><img src="../../img/package/g_pkg_back.webp?v=5ae805fc" alt="パッケージ(裏)" loading="lazy"></button><figcaption><span lang="ja">パッケージ(裏)</span><span lang="en">Box (back)</span></figcaption></figure>
           <figure class="gslide"><div class="gph"><span lang="ja">プレイ中の写真(準備中)</span><span lang="en">Gameplay photos (coming soon)</span></div></figure>
           <figure class="gslide"><div class="gph"><span lang="ja">内容物の写真(準備中)</span><span lang="en">Components photo (coming soon)</span></div></figure>
-        </div>
+        </div></div>
         <button class="gnav prev" type="button" aria-label="前の写真"></button><button class="gnav next" type="button" aria-label="次の写真"></button>
       </div>
       <div class="gdots"><button type="button" aria-label="1枚目" aria-current="true"></button><button type="button" aria-label="2枚目"></button><button type="button" aria-label="3枚目"></button><button type="button" aria-label="4枚目"></button><button type="button" aria-label="5枚目"></button></div>
@@ -881,17 +882,30 @@
     flow.addEventListener("dragstart",function(e){ e.preventDefault() });
   }
 
-  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー) */
+  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー)。かならず1枚ぶんずつ止まる */
   var gt=document.querySelector(".gtrack");
   if(gt){
-    var gs=[].slice.call(gt.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
-    function ggo(i){ i=Math.max(0,Math.min(gs.length-1,i)); gt.scrollTo({left:gs[i].offsetLeft-gt.offsetLeft*0-gs[0].offsetLeft,behavior:"smooth"}) }
-    function gsync(){ gc=Math.round(gt.scrollLeft/gt.clientWidth); gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1 }
+    var gr=gt.querySelector(".grail"), gs=[].slice.call(gr.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
+    function ggo(i){ gc=Math.max(0,Math.min(gs.length-1,i)); gr.style.setProperty("--gi",gc); gr.style.setProperty("--gdx","0px");
+      gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1;
+      gs.forEach(function(sl,k){ if(k===gc) sl.removeAttribute("aria-hidden"); else sl.setAttribute("aria-hidden","true") }) }
     gp.addEventListener("click",function(){ ggo(gc-1) }); gn.addEventListener("click",function(){ ggo(gc+1) });
     gd.forEach(function(d,k){ d.addEventListener("click",function(){ ggo(k) }) });
-    gt.addEventListener("scroll",function(){ requestAnimationFrame(gsync) },{passive:true});
     gt.addEventListener("keydown",function(e){ if(e.key==="ArrowRight"){ e.preventDefault(); ggo(gc+1) } if(e.key==="ArrowLeft"){ e.preventDefault(); ggo(gc-1) } });
-    gsync();
+    var gx=null, gy=0, gdx=0, gmode=0, gmoved=false;
+    gt.addEventListener("pointerdown",function(e){ if(e.pointerType==="mouse"&&e.button!==0) return; gx=e.clientX; gy=e.clientY; gdx=0; gmode=0; gmoved=false });
+    window.addEventListener("pointermove",function(e){ if(gx===null) return; var dx=e.clientX-gx, dy=e.clientY-gy;
+      if(!gmode){ if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){ gmode=1; gr.classList.add("drag") } else if(Math.abs(dy)>8){ gmode=2 } }
+      if(gmode===1){ gdx=dx; if((gc===0&&dx>0)||(gc===gs.length-1&&dx<0)) gdx=dx/3; gr.style.setProperty("--gdx",gdx+"px"); gmoved=true } });
+    function gend(){ if(gx===null) return; gx=null; gr.classList.remove("drag"); if(gmode===1){ var th=Math.min(80,gt.clientWidth*.18); ggo(gdx<-th?gc+1:(gdx>th?gc-1:gc)) } gmode=0 }
+    window.addEventListener("pointerup",gend); window.addEventListener("pointercancel",gend);
+    gt.addEventListener("click",function(e){ if(gmoved){ e.preventDefault(); e.stopPropagation(); gmoved=false } },true);
+    gt.addEventListener("dragstart",function(e){ e.preventDefault() });
+    /* トラックパッドの横スクロール:ひと区切りで1枚 */
+    var gw=0, gwt=null;
+    gt.addEventListener("wheel",function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return; e.preventDefault(); if(gwt) return; gw+=e.deltaX;
+      if(Math.abs(gw)>30){ ggo(gc+(gw>0?1:-1)); gw=0; gwt=setTimeout(function(){ gwt=null },500) } },{passive:false});
+    ggo(0);
   }
   /* ギャラリー:クリックで大きく */
   var lb=document.querySelector(".lb");

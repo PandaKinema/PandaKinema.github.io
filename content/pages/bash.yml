@@ -6,8 +6,9 @@ logo_alt: BASH&SMASH! バッシュ&スマッシュ
 logo_buy: img/logo/bashlogo_4C.png
 logo_credits: img/logo/bashlogo_4C.png
 bg_color: main
-accent_color: accent
+accent_color: black
 bg1_image: img/page/s_tex_c.png
+bg2_image: img/page/s_tex_w.png
 band_image: img/page/s_band.png
 heading_icon: img/page/s_star_sten.png
 step_icon: img/page/s_star_sil.png
