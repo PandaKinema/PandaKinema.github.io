@@ -97,6 +97,17 @@
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
+    .hero-art:has(.art-box){container-type:size;overflow:hidden}
+    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
+      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
+    .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
+    @media all{
+      .aly.m-spin{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite}
+      .aly.m-spin-r{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite reverse}
+      @keyframes aspin{to{rotate:calc(var(--r,0deg) + 360deg)}}
+    }
     .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
@@ -718,8 +729,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:600px;--lar:5.3417;--hero-bg:#f4b4cb;--hero-ink:#39278b;--hero-ink:#39278b;--art-pos:50% 15%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/page/moco_wide.png?v=ccf617c7" alt="" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:600px;--lar:5.3417;--hero-bg:#f4b4cb;--hero-ink:#39278b;--hero-ink:#39278b;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><div class="art-box" style="--ar:1.4283;--fx:0.5;--fy:0"><img class="art-bg" src="../../img/page/moko_top_bg.png?v=69128f2c" alt="" fetchpriority="high"><img class="aly m-spin" style="--x:30.035%;--y:7.994%;--w:12.294%;--r:0deg;--dl:0.20s;--sp:26s" src="../../img/page/moko_top_p0.png?v=271eb815" alt=""><img class="aly m-spin-r" style="--x:43.528%;--y:7.066%;--w:12.894%;--r:0deg;--dl:0.32s;--sp:31s" src="../../img/page/moko_top_p1.png?v=57b5cf84" alt=""><img class="aly m-spin" style="--x:57.621%;--y:7.994%;--w:12.294%;--r:0deg;--dl:0.44s;--sp:36s" src="../../img/page/moko_top_p2.png?v=1114870f" alt=""><img class="aly m-spin" style="--x:30.085%;--y:27.052%;--w:12.244%;--r:0deg;--dl:0.56s;--sp:26s" src="../../img/page/moko_top_p3.png?v=2dedadcc" alt=""><img class="aly m-spin" style="--x:43.828%;--y:27.052%;--w:12.294%;--r:0deg;--dl:0.68s;--sp:31s" src="../../img/page/moko_top_p4.png?v=ee4b2358" alt=""><img class="aly m-spin" style="--x:57.621%;--y:27.052%;--w:12.244%;--r:0deg;--dl:0.80s;--sp:36s" src="../../img/page/moko_top_p5.png?v=4a1fe301" alt=""><img class="aly m-spin" style="--x:30.085%;--y:46.039%;--w:12.244%;--r:0deg;--dl:0.92s;--sp:26s" src="../../img/page/moko_top_p6.png?v=ccdd9801" alt=""><img class="aly m-spin-r" style="--x:43.528%;--y:45.111%;--w:12.894%;--r:0deg;--dl:1.04s;--sp:31s" src="../../img/page/moko_top_p7.png?v=c896b23a" alt=""><img class="aly m-spin" style="--x:57.621%;--y:46.039%;--w:12.244%;--r:0deg;--dl:1.16s;--sp:36s" src="../../img/page/moko_top_p8.png?v=fef32d81" alt=""></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         

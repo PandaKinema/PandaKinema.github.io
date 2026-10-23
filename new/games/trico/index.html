@@ -97,6 +97,17 @@
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
+    .hero-art:has(.art-box){container-type:size;overflow:hidden}
+    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
+      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
+    .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
+    @media all{
+      .aly.m-spin{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite}
+      .aly.m-spin-r{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite reverse}
+      @keyframes aspin{to{rotate:calc(var(--r,0deg) + 360deg)}}
+    }
     .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
@@ -696,8 +707,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:449px;--lar:2.6728;--hero-bg:#fdd000;--hero-ink:#664498;--hero-ink:#664498;--art-pos:50% 50%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/page/trico_top.png?v=49e43ead" alt="" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:449px;--lar:2.6728;--hero-bg:#fdd000;--hero-ink:#664498;--hero-ink:#664498;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><div class="art-box" style="--ar:1.4283;--fx:0.5;--fy:0"><img class="art-bg" src="../../img/page/trico_top_bg.png?v=1773f796" alt="" fetchpriority="high"><img class="aly m-pop" style="--x:31.734%;--y:6.709%;--w:7.996%;--r:0deg;--dl:0.20s;--sp:26s" src="../../img/page/trico_top_p0.png?v=d67937a9" alt=""><img class="aly m-pop" style="--x:58.521%;--y:6.781%;--w:10.545%;--r:0deg;--dl:0.32s;--sp:31s" src="../../img/page/trico_top_p1.png?v=acd3a400" alt=""><img class="aly m-hop" style="--x:34.183%;--y:19.201%;--w:32.984%;--r:0deg;--dl:0.44s;--sp:36s" src="../../img/page/trico_top_p2.png?v=520db485" alt=""><img class="aly m-pop" style="--x:31.884%;--y:46.181%;--w:8.846%;--r:0deg;--dl:0.56s;--sp:26s" src="../../img/page/trico_top_p3.png?v=26f19fcd" alt=""></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         

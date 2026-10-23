@@ -8,9 +8,34 @@ logo_credits: img/logo/trico_logo_white.png
 bg_color: main
 accent_color: accent
 hero:
-  art: img/page/trico_top.png
+  art: img/page/trico_top_bg.png
   fit: cover
-  art_pos: 50% 50%
+  art_pos: 50% 0%
+  layers:
+    - image: img/page/trico_top_p0.png
+      x: 31.734
+      y: 6.709
+      width: 7.996
+      rotate: 0
+      motion: pop
+    - image: img/page/trico_top_p1.png
+      x: 58.521
+      y: 6.781
+      width: 10.545
+      rotate: 0
+      motion: pop
+    - image: img/page/trico_top_p2.png
+      x: 34.183
+      y: 19.201
+      width: 32.984
+      rotate: 0
+      motion: hop
+    - image: img/page/trico_top_p3.png
+      x: 31.884
+      y: 46.181
+      width: 8.846
+      rotate: 0
+      motion: pop
 bg1_image: img/page/t_tex_c.png
 heading_icon: img/page/trico_icon.png
 step_icon: img/page/dia.png

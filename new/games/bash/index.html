@@ -96,6 +96,17 @@
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
+    .hero-art:has(.art-box){container-type:size;overflow:hidden}
+    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
+      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
+    .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
+    @media all{
+      .aly.m-spin{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite}
+      .aly.m-spin-r{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite reverse}
+      @keyframes aspin{to{rotate:calc(var(--r,0deg) + 360deg)}}
+    }
     .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
@@ -667,8 +678,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:213px;--lar:1.2653;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/page/bash_top.jpg?v=fd42a93e" alt="" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:213px;--lar:1.2653;--hero-bg:#090305;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><img class="art" src="../../img/page/bash_top.jpg?v=26bceaab" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
         

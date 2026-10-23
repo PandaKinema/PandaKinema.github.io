@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v32
+# パンダキネマ 作品ページ 共通フォーマット v33
+#     v33: 全面の絵の上で部品を動かす(TRICO!=鳥と宝石、モコチャカ=アイコンが回る)
 #     v32: トップは画面の高さいっぱい、ロゴを画面の高さに合わせて大きく
 #     v31: トップ画像の下からのぼかしをなくす
 #     v30: トップ画像(横長)を全作品に。明るい絵は下をぼかさない/絵の拡大(zoom)
@@ -86,6 +87,11 @@ def num(v, default):
         return float(v)
     except (TypeError, ValueError):
         return default
+def aw_ah(f):
+    from PIL import Image
+    with Image.open(os.path.join(WEB, imgname(f))) as im:
+        return im.width / im.height
+
 def hero(g, d, t):
     """メインビジュアル(編集画面の「メインビジュアル」)
     ・背景の絵:画面いっぱいに敷く(ビビルの塔)
@@ -112,7 +118,10 @@ def hero(g, d, t):
             fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hbg) >= 4.5, x in (M, A), contrast(x, hbg)))
             style.append('--hero-bg:%s;--hero-ink:%s' % (hbg, fg))
     art_wide = False
-    if h.get('art') and not [x for x in (h.get('layers') or []) if x.get('image')]:   # 部品(Claudeが設定)があればそちらを優先。トップ画像は見本   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
+    cover_layers = str(h.get('fit') or '') == 'cover' and h.get('art') and [x for x in (h.get('layers') or []) if x.get('image')]
+    if cover_layers:   # 全面に敷いた絵の上で、切り抜いた部品を動かす(位置は絵に対する %)
+        art_wide = True
+    elif h.get('art') and not [x for x in (h.get('layers') or []) if x.get('image')]:   # 部品(Claudeが設定)があればそちらを優先。トップ画像は見本   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
         from PIL import Image
         with Image.open(os.path.join(WEB, imgname(h['art']))) as im:
             aw, ah = im.size
@@ -135,6 +144,15 @@ def hero(g, d, t):
         if h.get('zoom'):
             style.append('--zoom:%g' % num(h['zoom'], 1))
         g['hero_art'] = '<div class="hero-art"><img class="art" src="{{img:%s}}" alt="" fetchpriority="high"></div>' % imgname(h['art'])
+        if cover_layers:
+            pos = (str(h.get('art_pos') or '50% 50%').split() + ['50%'])[:2]
+            fx, fy = (num(v.rstrip('%'), 50) / 100 for v in pos)
+            out = []
+            for i, x in enumerate(cover_layers):
+                mo = str(x.get('motion') or 'none')
+                st = '--x:%g%%;--y:%g%%;--w:%g%%;--r:%gdeg;--dl:%.2fs;--sp:%gs' % (num(x.get('x'), 0), num(x.get('y'), 0), num(x.get('width'), 20), num(x.get('rotate'), 0), .2 + .12 * i, num(x.get('speed'), 0) or 26 + (i % 3) * 5)
+                out.append('<img class="aly%s" style="%s" src="{{img:%s}}" alt="">' % ('' if mo == 'none' else ' m-' + mo, st, imgname(x['image'])))
+            g['hero_art'] = '<div class="hero-art"><div class="art-box" style="--ar:%.4f;--fx:%g;--fy:%g"><img class="art-bg" src="{{img:%s}}" alt="" fetchpriority="high">%s</div></div>' % (aw_ah(h['art']), fx, fy, imgname(h['art']), ''.join(out))
         g['hero_visual'] = ''
         if h.get('art_pos'):
             style.append('--art-pos:%s' % str(h['art_pos']))
@@ -1055,6 +1073,17 @@ TEMPLATE = r'''<!doctype html>
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
+    .hero-art:has(.art-box){container-type:size;overflow:hidden}
+    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
+      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
+    .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
+    @media all{
+      .aly.m-spin{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite}
+      .aly.m-spin-r{animation:hfade .8s ease var(--dl) both,aspin var(--sp) linear infinite reverse}
+      @keyframes aspin{to{rotate:calc(var(--r,0deg) + 360deg)}}
+    }
     .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
