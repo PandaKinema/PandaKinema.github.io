@@ -328,6 +328,9 @@
       .b-in{position:relative;inset:auto;flex:none;width:auto;translate:none;gap:9px;padding:16px 20px 50px}
       /* 動画:画面いっぱいに敷いて、動画の真ん中を見せる。文字は下に重ねる */
       .slide.has-vid .b-in{margin-top:auto}
+      .slide.has-vid .b-yt iframe{width:max(100cqw,124.4cqh);height:max(70cqh,56.25cqw)}   /* 高さの7割:拡大しすぎてぼけないように */
+      .slide.has-vid .b-vid{top:15%;height:70%}
+      .slide.has-vid .b-yt,.slide.has-vid .b-vid{-webkit-mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%);mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%)}
       .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 78%)}
       .b-logo{width:min(320px,84%)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
