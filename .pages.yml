@@ -16,9 +16,11 @@ content:
       - { name: date, label: 日付, type: date, required: true, description: "カレンダーから選ぶ。サイトには 2026.10.18 の形で出ます(上にあるものから順に表示)" }
       - { name: cat_ja, label: カテゴリ(日本語), type: string, description: "例:お知らせ / 新作 / 出展" }
       - { name: cat_en, label: カテゴリ(英語), type: string, description: "例:News / New / Event" }
-      - { name: text_ja, label: 本文(日本語), type: string, required: true }
-      - { name: text_en, label: 本文(英語), type: string, description: "空なら日本語をそのまま表示" }
-      - { name: link, label: リンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ。空ならリンクなし" }
+      - { name: text_ja, label: タイトル(日本語), type: string, required: true, description: "一覧とポップアップに出る1行" }
+      - { name: text_en, label: タイトル(英語), type: string, description: "空なら日本語をそのまま表示" }
+      - { name: body_ja, label: 内容(日本語), type: text, description: "タイトルを押すと出るポップアップの本文。改行もそのまま反映されます" }
+      - { name: body_en, label: 内容(英語), type: text }
+      - { name: link, label: リンク先, type: string, description: "ポップアップの下に「リンクを開く」ボタンが出ます。URL、または games/bibilu/ のようなサイト内のページ。空ならボタンなし" }
 
   - name: videos
     label: 動画(MOVIE)
@@ -49,7 +51,8 @@ content:
       - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
 
   - name: games
-    label: ボードゲーム
+    label: ボードゲーム(カード)
+    description: "BOARD GAME の列に並ぶ作品。ミニシアターもここ。並び順はドラッグで変えられます"
     type: file
     path: content/games.yml
     format: yaml
@@ -57,13 +60,14 @@ content:
     fields:
       - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前。あとから変えない" }
       - { name: name, label: 作品名, type: string, required: true }
+      - { name: series, label: シリーズ名, type: string, description: "例:MINI THEATER SERIES 01。バナーのロゴの上に出ます。空でOK" }
       - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの下の中央とバナーに「新作」が出ます" }
-      - { name: front, label: カード(パッケージ正面), type: image, description: "閉じたカードの画像。比率は約 1:1.41" }
-      - { name: pkg, label: パッケージ(立体), type: image, description: "背景が透明なPNG/WebP" }
-      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG。色はロゴの色で塗られます" }
-      - { name: logo_color, label: ロゴの色, type: string, description: "例:#664498" }
-      - { name: color_band, label: キーカラー1(帯), type: string, description: "人数〜年齢の下地の色" }
-      - { name: color_face, label: キーカラー2(面), type: string, description: "カードの背景と、人数〜年齢の文字の色" }
+      - { name: front, label: 閉じたカードの画像, type: image, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
+      - { name: pkg, label: パッケージ, type: image, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
+      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
+      - { name: logo_color, label: ロゴの色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "例:#664498。空ならロゴ画像の色のまま。色見本 → pandakinema.github.io/new/colors.html" }
+      - { name: color_face, label: 開いたカードの背景色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#fdd000 のような6けたの色コードで" }, description: "人数〜年齢の文字の色にもなります。例:#fdd000" }
+      - { name: color_band, label: 人数〜年齢の下地の色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "ジャンルの文字の色にもなります。例:#664498" }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
@@ -84,36 +88,6 @@ content:
           - { name: text_color, label: 文字の色, type: string, description: "人数〜ジャンルと紹介文の色。例:#ffffff" }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
-
-  - name: minis
-    label: ミニシアター
-    type: file
-    path: content/minis.yml
-    format: yaml
-    list: true
-    fields:
-      - { name: key, label: key(英小文字), type: string, required: true }
-      - { name: name, label: 作品名, type: string, required: true }
-      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの下の中央に「新作」が出ます" }
-      - { name: pkg, label: パッケージ(横長), type: image }
-      - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
-      - { name: chara, label: キャラクター, type: image, description: "背景が透明なPNG" }
-      - { name: color_band, label: キーカラー1(帯), type: string }
-      - { name: color_face, label: キーカラー2(面), type: string }
-      - { name: players, label: 人数, type: string }
-      - { name: time, label: 時間(分), type: string }
-      - { name: age, label: 対象年齢, type: string }
-      - { name: genre_ja, label: ジャンル(日本語), type: string }
-      - { name: genre_en, label: ジャンル(英語), type: string }
-      - { name: copy_ja, label: ひとこと(日本語), type: string }
-      - { name: copy_en, label: ひとこと(英語), type: string }
-      - { name: intro_ja, label: 紹介文(日本語), type: text, description: "バナーに出る紹介。空ならひとことを出す" }
-      - { name: intro_en, label: 紹介文(英語), type: text }
-      - { name: text_color, label: バナーの文字の色, type: string, description: "例:#ffffff" }
-      - { name: video, label: バナーの動画, type: file, description: "背景で流す動画(mp4・音なし)。10MB以下くらいに" }
-      - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
-      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "作品ページ。空ならバナーの「詳しく見る」でカードが開く" }
-      - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
 
   - name: tools
     label: ツール(PLAY&TOOLS)
