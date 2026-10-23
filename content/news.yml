@@ -2,9 +2,10 @@
   cat_ja: 公開
   cat_en: Launch
   text_ja: 『カードモックツクールβ』を公開しました。
-  text_en: “Card Mock Makerβ” is now available.
+  text_en: “Card Mock Maker β” is now available.
   body_ja: ボードゲームのカードのモックを作れるツールです。ぜひボードゲームづくりに役立てていただければと思います。フィードバッグもお待ちしております。
   link: https://pandakinema.github.io/card-mock-maker/
+  body_en: A tool for making mockups of board game cards. We hope it helps with your board game making. Feedback is very welcome, too.
 - date: 2026-10-18
   cat_ja: お知らせ
   cat_en: News
