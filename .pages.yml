@@ -115,8 +115,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -229,8 +230,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -343,8 +345,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -457,8 +460,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -571,8 +575,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -685,8 +690,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { path: new/img/logo }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { path: new/img/logo }, hidden: true }
-          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
-          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
+          - { name: color3, label: 3つ目の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "メイン・アクセント以外の色。「背景の色」か「帯・見出しの色」で「3つ目の色」を選ぶと使われます。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "3つ目の色" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - name: hero
             label: トップ画像
             type: object

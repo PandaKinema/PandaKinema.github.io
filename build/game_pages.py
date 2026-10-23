@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v25
+# パンダキネマ 作品ページ 共通フォーマット v26
+#     v26: 作品ページで3つ目の色を選べる(背景・帯/見出し)/トップの絵のパララックスをやめる(ロゴが絵にかぶらない)
 #     v25: 閉じたカードのトップはフルサイズ(画面の高さいっぱい)/ギャラリーは1枚ずつ ◀▶ で切り替え
 #     v24: イカタコ・こいこいのぼり・BASH&SMASH(トップはカード)/名前が空のキャラは名札を出さない
 #     v23: モコチャカ(かんたんルールの4コマ・方眼のトップ・モコのシルエット)。トップの模様に grid(方眼)を追加
@@ -227,6 +228,9 @@ def apply(key):
     M, A = t.get('main'), t.get('accent')
     if M and A:
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
+        c3 = str(d.get('color3') or '').strip()
+        if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「3つ目の色」
+            pick['third'] = '#' + c3.lstrip('#')
         cb = str(t.get('bg') or 'main')   # カードの「背景の色」
         D = pick.get(str(d.get('bg_color') or cb), M)            # 背景(動画・遊び方・購入)。空ならカードと同じ
         O0 = 'accent' if cb == 'main' else ('main' if cb == 'accent' else max(('main', 'accent'), key=lambda k: contrast(pick[k], D)))
@@ -1703,7 +1707,6 @@ TEMPLATE = r'''<!doctype html>
     var ticking=false;
     function frame(){
       ticking=false; var sy=window.scrollY, vh=window.innerHeight;
-      if(art && heroSec){ var y=Math.min(sy,heroSec.offsetHeight); art.style.transform="translate3d(0,"+(y*.28)+"px,0)" }
       root.style.setProperty("--sx",(sy*.25).toFixed(1))
     }
     window.addEventListener("scroll",function(){ if(ticking) return; ticking=true; requestAnimationFrame(frame) },{passive:true});
