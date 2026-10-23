@@ -1,0 +1,94 @@
+# 作品ページ「TRICO!」の文章と画像。動き(遊び方の図など)とデザインは build/game_pages.py にあります
+title: TRICO!
+description: TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。
+now_label: NOW SHOWING
+logo: img/trico_logo_purple.png
+logo_alt: TRICO!(トリコ)
+logo_buy: img/trico_logo_purple.png
+logo_credits: img/trico_logo_white.png
+catch_ja: あのコをとりこにするために
+catch_en: To win her heart
+intro_ja: どこかに生息するカラフルな鳥、トリコ。3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!
+intro_en: Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”
+summary_ja: カードを手札から出し合い、場に出た色の数で勝敗が決まる[[「アピール」]]を行います。勝ったプレイヤーは場に出た3枚のカードのうち、好きなカードを獲得します。これを繰り返し、得点カードの中に[[3色が揃ったら、「トリコ!」と宣言してラウンド勝利]]となります。最初に[[2回]]ラウンド勝利したプレイヤーがこのゲームの勝者です。
+summary_en: Players play cards from their hands in an [[“Appeal,”]] where the number of colors on the table decides the winner. The winner takes any one of the 3 cards played. Repeat this, and [[when your cards hold all 3 colors, declare “Trico!” to win the round.]] The first player to win [[2]] rounds wins the game.
+chara_name_ja: トリコ と ニコ
+chara_name_en: Trico & Nico
+chara_note_ja: ''
+chara_note_en: ''
+contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマーカー1枚、サマリー1枚、トリコマーカー3個、遊び方説明書1枚
+contents_en: 30 game cards (10 per color), lead player marker, summary card, 3 Trico markers, rulebook
+price_ja: ''
+price_en: ''
+extra_kicker_ja: みんなでかこう!
+extra_kicker_en: Let’s draw!
+extra_title_ja: TRICO! えかきうた
+extra_title_en: TRICO! drawing song
+extra_text_ja: キミもかいてみよう!!
+extra_text_en: Try drawing one yourself!
+steps:
+- text_ja: リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、[[同時に表向きに公開します。]]
+  text_en: The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then [[reveal them at the same time.]]
+- text_ja: 場に揃った[[色の数]]で勝敗を決めます。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になります。
+  text_en: The [[number of colors]] on the table decides the winner. If more than one card wins, the Appeal is void and all cards are discarded.
+- text_ja: アピールの勝者は場に出た3枚のカードのうち、[[好きなカードを1枚獲得]]し、手元に表向きで置きます。
+  text_en: The winner of the Appeal [[takes any one]] of the 3 cards played and places it face up in front of them.
+- text_ja: 獲得したカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言します。トリコマーカーを2つ獲得したらゲーム終了!
+  text_en: Declare [[“Nico!”]] when your cards hold 2 colors, and [[“Trico!”]] at 3 colors. Collect 2 Trico markers to win the game!
+videos:
+- kind_ja: 遊び方動画
+  kind_en: How to Play
+  youtube: ''
+  poster: img/trico_poster.webp
+- kind_ja: 予告編
+  kind_en: Trailer
+  youtube: ''
+  poster: img/trico_poster.webp
+gallery:
+- image: img/tg_manual1.webp
+  caption_ja: 遊び方説明書(表)
+  caption_en: Rulebook (front)
+  wide: true
+- image: img/trico_pkg_lg.webp
+  caption_ja: パッケージ
+  caption_en: Box
+  wide: false
+- image: img/tg_summary.webp
+  caption_ja: サマリー
+  caption_en: Summary card
+  wide: false
+- image: img/tg_manual2.webp
+  caption_ja: 遊び方説明書(裏)
+  caption_en: Rulebook (back)
+  wide: true
+gallery_todo: []
+pkg: img/trico_pkg_lg.webp
+fab_pkg: img/trico_pkg.webp
+credits:
+- role_ja: デザイン・アートワーク
+  role_en: Design & Artwork
+  name_ja: ゐするぎ
+  name_en: Isurugi
+- role_ja: 印刷
+  role_en: Printing
+  name_ja: グラフィック
+  name_en: グラフィック
+- role_ja: トークン製造
+  role_en: Tokens
+  name_ja: PROCASE STORE 様
+  name_en: PROCASE STORE
+- role_ja: Special Thanks
+  role_en: Special Thanks
+  name_ja: テストプレイをしてくれた皆さん
+  name_en: Everyone who playtested
+- role_ja: ''
+  role_en: ''
+  name_ja: アンザイミユキ(イラスト原案)
+  name_en: アンザイミユキ (original illustration concept)
+- role_ja: 発行
+  role_en: Published
+  name_ja: 2025年11月
+  name_en: November 2025
+manual_ja: ''
+manual_en: ''
+booth: ''

@@ -1,9 +1,9 @@
-# content/ や画像を保存したら、new/index.html を自動で作り直す
+# content/ や画像を保存したら、トップページ(new/index.html)と作品ページ(new/games/*/index.html)を自動で作り直す
 name: build
 on:
   push:
     branches: [main]
-    paths: ['content/**', 'new/img/**', 'build/**']
+    paths: ['content/**', 'new/img/**', 'new/games/img/**', 'build/**']
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,9 +20,10 @@ jobs:
           python-version: '3.12'
       - run: pip install pyyaml pillow
       - run: python build/build.py
+      - run: python build/game_pages.py
       - name: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
-          git add new/index.html new/colors.html
-          if git diff --cached --quiet; then echo "変更なし"; else git commit -m "トップページを組み立て直し" && git pull --rebase && git push; fi
+          git add new/index.html new/colors.html new/games/*/index.html
+          if git diff --cached --quiet; then echo "変更なし"; else git commit -m "ページを組み立て直し" && git pull --rebase && git push; fi

@@ -8,7 +8,9 @@
   <meta name="description" content="TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。">
   <style>
     :root{--bg:#090909;--line:#2a2a2a;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
-      --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif}
+      --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+      --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans)}
+    @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
     /* ===== 作品ごとの色(パッケージ下部のツートンがキーカラー) ===== */
     .key{
       --k-bg:#7b59a3; --k-ink:#ffffff;            /* キーカラー:紫(パッケージ下部) */
@@ -34,18 +36,20 @@
     a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:4px}
     .wrap{width:min(1100px,calc(100% - 40px));margin-inline:auto}
 
-    .site-header{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(9,9,9,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #1d1d1d}
-    .site-header .bar{display:flex;align-items:center;justify-content:space-between;min-height:64px}
-    .brand img{width:150px;height:31px;object-fit:contain;object-position:left center}
-    .site-nav{display:flex;gap:24px;color:var(--muted);font-size:12px;letter-spacing:.12em}
-    .site-nav a{padding:10px 2px}
-    .site-nav a:hover{color:var(--text)}
-    .site-header .bar{gap:20px}
-    .site-nav{margin-left:auto}
-    .lang{display:flex;padding:3px;border:1px solid #333;border-radius:999px}
+    /* ヘッダー:トップページと同じ形 */
+    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+    .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
+    .brand{flex:none;display:flex;align-items:center;height:28px}
+    .brand img{height:24px;width:auto}
+    .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font-family:var(--cond);font-size:clamp(14px,1.6vw,19px);font-weight:700;text-transform:uppercase;letter-spacing:.01em}
+    .site-nav::-webkit-scrollbar{display:none}
+    .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9}
+    .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+    .lang{display:flex;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
     .lang[hidden]{display:none}
-    .lang button{padding:4px 10px;border:0;border-radius:999px;background:transparent;color:var(--muted);font:700 11px/1 var(--sans);letter-spacing:.08em;cursor:pointer}
-    .lang button[aria-pressed="true"]{background:var(--text);color:#111}
+    .lang button{display:flex;align-items:center;height:26px;padding:0 9px;border:0;border-radius:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+    .lang button[aria-pressed="true"]{background:#f3f2ee;color:#1b2228}
+    .cap{display:block;line-height:1;text-box:trim-both cap alphabetic}
     /* 言語:表示中でない方を隠す */
     html:not(.lang-en) [lang="en"]{display:none !important}
     html.lang-en [lang="ja"]{display:none !important}
@@ -423,7 +427,8 @@
     .lineup .ll{height:44px;width:auto;max-width:90%;object-fit:contain}
     .lineup span{font-size:12px;color:var(--muted)}
     .sub-link{display:inline-block;margin-top:20px;padding-bottom:2px;font-size:12px;letter-spacing:.06em;color:var(--soft-text);border-bottom:1px solid #444}
-    .site-footer{display:flex;justify-content:space-between;margin-top:56px;padding:26px 0 calc(36px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);font-size:10px;letter-spacing:.08em;color:#666}
+    .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
+    .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
     /* ===== 追従するBOOTHボタン(メインビジュアルと購入欄が見えていない間だけ) ===== */
     .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;
@@ -537,13 +542,8 @@
     /* ===== スマホ ===== */
     @media (max-width:650px){
       .wrap{width:calc(100% - 28px)}
-      .site-header .bar{min-height:58px}
-      .brand{flex:none}
-      .brand img{width:108px;height:23px}
-      .site-header .bar{gap:10px}
-      .site-nav{gap:9px;font-size:9.5px;letter-spacing:.06em}
-      .site-nav a{padding:10px 0}
-      .lang button{padding:4px 7px;font-size:10px}
+      .brand img{height:18px}
+      .site-nav{gap:12px;font-size:14px}
       html{scroll-padding-top:calc(66px + env(safe-area-inset-top,0px))}
       .hero{min-height:clamp(540px,calc(100svh - 58px),760px)}
       .hero-copy{padding:16px 14px 30px}
@@ -612,10 +612,10 @@
 </head>
 <body>
 <header class="site-header">
-  <div class="wrap bar">
-    <a class="brand" href="../../"><img src="../img/brand.png" alt="PANDA KINEMA" width="365" height="66"></a>
-    <nav class="site-nav" aria-label="サイト"><a href="../../#board">GAMES</a><a href="../../#movie">VIDEO</a><a href="../../#tools">PLAY</a><a href="../../#about">ABOUT</a></nav>
-    <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true">JA</button><button type="button" data-l="en" aria-pressed="false">EN</button></div>
+  <div class="bar">
+    <a class="brand" href="../../"><img src="../../img/brand.png" alt="PANDA KINEMA"></a>
+    <nav class="site-nav" aria-label="サイト"><a href="../../#news"><span class="cap">NEWS</span></a><a href="../../#board"><span class="cap">BOARD GAME</span></a><a href="../../#movie"><span class="cap">MOVIE</span></a><a href="../../#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="../../#about"><span class="cap">ABOUT</span></a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true"><span class="cap">JA</span></button><button type="button" data-l="en" aria-pressed="false"><span class="cap">EN</span></button></div>
   </div>
 </header>
 
@@ -624,7 +624,7 @@
   <section class="hero hero-trico" aria-labelledby="title">
     <div class="hero-art" style="background:#fdd000 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='160'%3E%3Crect width='92' height='160' fill='%23fbc500'/%3E%3Cpolygon points='0,80 46,0 92,80' fill='%23fdd000'/%3E%3Cpolygon points='-46,160 0,80 46,160' fill='%23fdd000'/%3E%3Cpolygon points='46,160 92,80 138,160' fill='%23fdd000'/%3E%3C/svg%3E") center top/92px 160px"></div>
     <div class="hero-copy">
-      <div class="crumb"><p><a href="../../#board">GAMES</a> / TRICO!</p><p>NOW SHOWING</p></div>
+      <div class="crumb"><p><a href="../../#board">BOARD GAME</a> / TRICO!</p><p>NOW SHOWING</p></div>
       <div class="hero-main">
         <div class="pkgvis" aria-hidden="true">
           <img class="g g1" src="../img/gem_red.webp" alt=""><img class="g g2" src="../img/gem_purple.webp" alt=""><img class="g g3" src="../img/gem_yellow.webp" alt="">
@@ -762,10 +762,10 @@
   <img class="credits-logo" src="../img/trico_logo_white.png" alt="TRICO!(トリコ)" loading="lazy">
   <dl class="roll">
     <div style="--i:0"><dt><span lang="ja">デザイン・アートワーク</span><span lang="en">Design &amp; Artwork</span></dt><dd><span lang="ja">ゐするぎ</span><span lang="en">Isurugi</span></dd></div>
-    <div style="--i:1"><dt><span lang="ja">印刷</span><span lang="en">Printing</span></dt><dd>グラフィック</dd></div>
-    <div style="--i:2"><dt><span lang="ja">トークン製造</span><span lang="en">Tokens</span></dt><dd>PROCASE STORE <span lang="ja">様</span><span lang="en"></span></dd></div>
-    <div style="--i:3"><dt>Special Thanks</dt><dd><span lang="ja">テストプレイをしてくれた皆さん</span><span lang="en">Everyone who playtested</span></dd></div>
-    <div style="--i:4"><dt></dt><dd><span lang="ja">アンザイミユキ(イラスト原案)</span><span lang="en">アンザイミユキ (original illustration concept)</span></dd></div>
+    <div style="--i:1"><dt><span lang="ja">印刷</span><span lang="en">Printing</span></dt><dd><span lang="ja">グラフィック</span><span lang="en">グラフィック</span></dd></div>
+    <div style="--i:2"><dt><span lang="ja">トークン製造</span><span lang="en">Tokens</span></dt><dd><span lang="ja">PROCASE STORE 様</span><span lang="en">PROCASE STORE</span></dd></div>
+    <div style="--i:3"><dt><span lang="ja">Special Thanks</span><span lang="en">Special Thanks</span></dt><dd><span lang="ja">テストプレイをしてくれた皆さん</span><span lang="en">Everyone who playtested</span></dd></div>
+    <div style="--i:4"><dt><span lang="ja"></span><span lang="en"></span></dt><dd><span lang="ja">アンザイミユキ(イラスト原案)</span><span lang="en">アンザイミユキ (original illustration concept)</span></dd></div>
     <div style="--i:5"><dt><span lang="ja">発行</span><span lang="en">Published</span></dt><dd><span lang="ja">2025年11月</span><span lang="en">November 2025</span></dd></div>
   </dl>
 </section>
@@ -775,7 +775,7 @@
   <div class="wrap">
     <div class="section-head"><h2>LINEUP</h2><span><span lang="ja">ほかの上映作品</span><span lang="en">More titles</span></span></div>
     <div class="lineup">
-      <a href="https://gamemarket.jp/game/188751" target="_blank" rel="noopener"><img class="lp" src="../img/bibilu_pkg_sm.webp" alt="" loading="lazy"><img class="ll" src="../img/b_logo_white.png" alt="ビビルの塔" loading="lazy"><span><span lang="ja">ビビっている場合じゃない</span><span lang="en">No time to be scared!</span></span></a>
+      <a href="../bibilu/"><img class="lp" src="../img/bibilu_pkg_sm.webp" alt="" loading="lazy"><img class="ll" src="../img/b_logo_white.png" alt="ビビルの塔" loading="lazy"><span><span lang="ja">ビビっている場合じゃない</span><span lang="en">No time to be scared!</span></span></a>
       <a href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img class="lp" src="../img/ikatako_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/ikatako_logo_white.png" alt="イカタコ" loading="lazy"><span><span lang="ja">イカだ！タコだ！手を挙げろ！</span><span lang="en">Squid! Octopus! Hands up!</span></span></a>
       <a href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img class="lp" src="../img/moko_pkg.webp" alt="" loading="lazy"><img class="ll" src="../img/moko_logo_white.png" alt="モコチャカ" loading="lazy"><span><span lang="ja">ねむりは競争だ。</span><span lang="en">Sleep is a race.</span></span></a>
     </div>
@@ -783,7 +783,7 @@
   </div>
 </section>
 
-<div class="wrap"><footer class="site-footer"><span>© 2026 PANDA KINEMA</span><span>MADE FOR PLAY</span></footer></div>
+<div class="wrap"><footer class="site-footer"><span>©2015-2026 Panda Kinema</span><a href="#"><span class="cap">BACK TO TOP ↑</span></a></footer></div>
 
 <script>
 (function(){

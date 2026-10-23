@@ -1,9 +1,16 @@
 # Pages CMS(https://app.pagescms.org)の編集画面の設定
 # 保存すると GitHub Actions が new/index.html を自動で作り直します(1〜2分)
 media:
-  input: new/img
-  output: img
-  categories: [image, video]
+  - name: site
+    label: サイトの画像
+    input: new/img
+    output: img
+    categories: [image, video]
+  - name: pages
+    label: 作品ページの画像
+    input: new/games/img
+    output: img
+    categories: [image, video]
 
 content:
   - name: news
@@ -92,6 +99,97 @@ content:
           - { name: text_color, label: 文字の色, type: select, default: white, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "人数〜ジャンルと紹介文の色" }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
+
+  - name: pages
+    label: 作品ページ
+    type: group
+    items:
+      - name: page_bibilu
+        label: ビビルの塔
+        type: file
+        path: content/pages/bibilu.yml
+        format: yaml
+        fields: &pagefields
+          - { name: title, label: 作品名, type: string }
+          - { name: description, label: 検索結果に出る説明, type: text }
+          - { name: now_label, label: 右上の表示, type: string, description: "例:NOW SHOWING" }
+          - { name: logo, label: ロゴ(一番上), type: image, options: { media: pages } }
+          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字" }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages } }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages } }
+          - name: videos
+            label: 紹介動画
+            type: object
+            list: true
+            fields:
+              - { name: kind_ja, label: 種類(日本語), type: string, description: "例:遊び方動画 / 予告編" }
+              - { name: kind_en, label: 種類(英語), type: string }
+              - { name: youtube, label: YouTube, type: string, description: "YouTubeのURL。空なら「準備中」" }
+              - { name: poster, label: サムネイル, type: image, options: { media: pages } }
+          - { name: catch_ja, label: キャッチコピー(日本語), type: string }
+          - { name: catch_en, label: キャッチコピー(英語), type: string }
+          - { name: intro_ja, label: ストーリー(日本語), type: text }
+          - { name: intro_en, label: ストーリー(英語), type: text }
+          - { name: chara_name_ja, label: キャラクター名(日本語), type: string }
+          - { name: chara_name_en, label: キャラクター名(英語), type: string }
+          - { name: chara_note_ja, label: キャラクター紹介(日本語), type: text }
+          - { name: chara_note_en, label: キャラクター紹介(英語), type: text }
+          - { name: summary_ja, label: "どんなゲーム?(日本語)", type: text, description: "[[ ]] で囲んだところが赤字(強調)になります" }
+          - { name: summary_en, label: "どんなゲーム?(英語)", type: text }
+          - name: steps
+            label: 遊び方の流れ
+            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 説明(日本語), type: text, description: "[[ ]] で囲んだところが赤字(強調)" }
+              - { name: text_en, label: 説明(英語), type: text }
+          - { name: manual_ja, label: 遊び方説明書のURL(日本語), type: string }
+          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ" }
+          - name: gallery
+            label: ギャラリー
+            type: object
+            list: true
+            fields:
+              - { name: image, label: 画像, type: image, options: { media: pages } }
+              - { name: caption_ja, label: 説明(日本語), type: string }
+              - { name: caption_en, label: 説明(英語), type: string }
+              - { name: wide, label: 横長で大きく出す, type: boolean }
+          - name: gallery_todo
+            label: ギャラリーの準備中の枠
+            type: object
+            list: true
+            fields:
+              - { name: text_ja, label: 内容(日本語), type: string, description: "例:プレイ中の写真" }
+              - { name: text_en, label: 内容(英語), type: string }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { media: pages } }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { media: pages } }
+          - { name: contents_ja, label: 内容物(日本語), type: text }
+          - { name: contents_en, label: 内容物(英語), type: text }
+          - { name: price_ja, label: 価格(日本語), type: string, description: "例:3,300円。空なら出しません" }
+          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300" }
+          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH" }
+          - { name: extra_kicker_ja, label: おまけの小見出し(日本語), type: string }
+          - { name: extra_kicker_en, label: おまけの小見出し(英語), type: string }
+          - { name: extra_title_ja, label: おまけのタイトル(日本語), type: string }
+          - { name: extra_title_en, label: おまけのタイトル(英語), type: string }
+          - { name: extra_text_ja, label: おまけの文(日本語), type: text }
+          - { name: extra_text_en, label: おまけの文(英語), type: text }
+          - name: credits
+            label: クレジット
+            type: object
+            list: true
+            fields:
+              - { name: role_ja, label: 役割(日本語), type: string }
+              - { name: role_en, label: 役割(英語), type: string }
+              - { name: name_ja, label: 名前(日本語), type: string }
+              - { name: name_en, label: 名前(英語), type: string }
+      - name: page_trico
+        label: TRICO!
+        type: file
+        path: content/pages/trico.yml
+        format: yaml
+        fields: *pagefields
 
   - name: tools
     label: ツール(PLAY&TOOLS)
