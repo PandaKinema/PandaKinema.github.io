@@ -315,9 +315,16 @@
       .o-btns .wb{padding:5px 8px;font-size:10.5px;border-radius:5px}
     }
     @media (max-width:700px){
-      .hero{height:clamp(540px,84svh,720px)}
-      .b-art{left:6vw;right:6vw;top:calc(56px + 2%);bottom:auto;height:38%;width:auto}
-      .b-in{left:20px;right:20px;width:auto;top:auto;bottom:48px;translate:none;gap:9px}
+      .hero{height:clamp(580px,84svh,720px)}
+      /* スマホ:上にパッケージ・動画、その下にロゴと情報(重ならないように縦に積む) */
+      .slide:not(.b-custom){display:flex;flex-direction:column;padding-top:calc(56px + env(safe-area-inset-top,0px))}
+      .b-art{position:relative;inset:auto;flex:1 1 auto;min-height:0;width:auto;height:auto;margin:10px 8vw 0}
+      .b-art:empty{display:none}
+      .b-art .tupa{height:86%}
+      .b-in{position:relative;inset:auto;flex:none;width:auto;translate:none;gap:9px;padding:16px 20px 50px}
+      .slide.has-vid .b-yt,.slide.has-vid .b-vid{position:relative;inset:auto;flex:0 1 auto;width:100%;height:56.25vw;min-height:120px;margin-top:auto}
+      .slide.has-vid .b-in{margin-top:auto}
+      .slide.has-vid::before{display:none}
       .b-logo{width:min(320px,84%)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
       .b-intro{font-size:12.5px;line-height:1.7}
@@ -325,7 +332,6 @@
       .b-ui{left:20px;bottom:16px}
       .bars label{width:28px}
       .slide::after{height:9%}
-      .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,.1) 20%,rgba(0,0,0,.78) 62%)}
     }
     @media (max-width:520px){
       .row{--h:240px;--ow:92vw}
