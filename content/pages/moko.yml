@@ -1,0 +1,174 @@
+title: モコチャカ
+description: モコチャカ:場に見えている3枚のカードの動物を数えて、素早く名前を呼ぶ2〜4人用のカードゲーム。パンダキネマ。
+ogp_image: img/share/ogp_mokochaka.png
+logo: img/logo/m_logo_navy.png
+logo_alt: モコチャカ MOKOCHAKA
+logo_buy: img/logo/m_logo_navy.png
+logo_credits: img/logo/logo_moko.png
+bg_color: main
+accent_color: accent
+hero:
+  pattern: grid
+  width: 500
+  layers:
+    - image: img/page/m_stage.png
+      x: 0
+      y: 0
+      width: 100
+      rotate: 0
+      motion: none
+    - image: img/parts/mc_m3.webp
+      x: 38
+      y: -2
+      width: 24
+      rotate: 0
+      motion: rise
+    - image: img/parts/mc_p2.webp
+      x: 12
+      y: 47
+      width: 24
+      rotate: -14
+      motion: rise
+    - image: img/parts/mc_o1.webp
+      x: 64
+      y: 47
+      width: 24
+      rotate: 14
+      motion: rise
+    - image: img/parts/m_token.webp
+      x: 39
+      y: 43
+      width: 22
+      rotate: 0
+      motion: pop
+    - image: img/chara/m_paka.webp
+      x: -6
+      y: 2
+      width: 19
+      rotate: -8
+      motion: float
+    - image: img/chara/m_pome.webp
+      x: 86
+      y: 0
+      width: 19
+      rotate: 8
+      motion: float
+    - image: img/chara/m_gabu.webp
+      x: 90
+      y: 70
+      width: 16
+      rotate: 10
+      motion: float
+bg1_image: img/page/m_tex_c.png
+band_image: img/page/m_band.png
+heading_icon: img/page/m_moko_sten.png
+step_icon: img/page/m_moko_sil.png
+catch_ja: ねむりは競争だ。
+catch_en: Sleep is a race.
+intro_ja: |-
+  あなたたちは眠りの浅瀬でモコを数えていました。
+  正確に数えるほど、よりよい眠りに近づきます。
+  すると「まぜて!」とパカやポメも現れ、数えるのがだんだんややこしくなっていきます。
+  やがて数が揃うと、不思議なアルファ波**「モコチャカ」**が生まれ、眠りはより深くなります。
+  しかし、それを阻むのが**ガブ**です。ガブの妨害をかいくぐり、最も深い眠りにたどり着くのは誰でしょうか。
+intro_en: You were counting Moko in the shallows of sleep. The more accurately
+  you count, the closer you get to a good sleep. Then Paka and Pome show up
+  saying “Let us join!”, and counting gets trickier and trickier. When the
+  numbers line up, a mysterious alpha wave, **“Mokochaka,”** is born and your
+  sleep grows deeper. But **Gabu** stands in the way. Who will slip past Gabu
+  and reach the deepest sleep?
+characters:
+  - image: img/chara/m_moko.webp
+    name_ja: モコ
+    name_en: Moko
+  - image: img/chara/m_paka.webp
+    name_ja: パカ
+    name_en: Paka
+  - image: img/chara/m_pome.webp
+    name_ja: ポメ
+    name_en: Pome
+    note_ja: かわいいので必ず最初に呼ぶ。
+    note_en: So cute that you always call it first.
+  - image: img/chara/m_gabu.webp
+    name_ja: ガブ
+    name_en: Gabu
+    note_ja: |-
+      モコを食べてしまう。
+
+      ガブしかいない時だけ呼ぶ。
+    note_en: |-
+      Eats Moko.
+
+      Called only when Gabu is alone.
+summary_ja: |-
+  自分の手札からカードを山に出し、**上に見えている3枚のカードの動物を数えて素早く名前を呼ぶゲームです。**
+  特定の条件が揃うとトークンの取り合いが発生し、勝った人は山のカードを自分の手札に追加します。
+  誰かの手札がなくなったらゲームは終了し、**ガブを除いた**カードが1番多かった人の勝ちです。
+summary_en: Play cards from your hand onto the piles, and **count the animals
+  on the 3 cards on top and call their names fast.** When certain conditions
+  line up, everyone grabs for the token, and the winner adds pile cards to
+  their hand. When someone runs out of cards, the game ends, and the player
+  with the most cards **not counting Gabu** wins.
+steps:
+  - text_ja: 自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て**コール**を行います。
+    text_en: On your turn, flip the top card of your hand and stack it on any of
+      the 3 piles. Then look at the cards and make a **call**.
+  - text_ja: 場にあるカードを見て、動物の名前を呼ぶことをコールと言います。例:パカ5、モコ2なので**「パカモコ」**
+    text_en: "Looking at the cards and calling the animals’ names is a call.
+      Example: 5 Paka and 2 Moko, so **“Paka-Moko!”**"
+  - text_ja: |-
+      コールには下記のルールがあります。
+
+      **ポメはかわいいので必ず最初に呼ぶ**
+
+      **ガブの数だけモコを減らす**
+    text_en: |-
+      Calls have these rules:
+
+      **Pome is cute, so always call it first**
+
+      **Remove one Moko for each Gabu**
+  - text_ja: 場のカードが次の条件を満たしたとき、**「モコチャカ」**と言いながら**全員で**トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。
+    text_en: When the cards meet a condition, **everyone** grabs for the token
+      while saying **“Mokochaka!”** The one who gets it takes 2 piles and adds
+      them to the bottom of their hand.
+gallery:
+  - image: img/gallery/mg_summary1.webp
+    caption_ja: かんたんルール(表)
+    caption_en: Quick rules (front)
+    wide: true
+  - image: img/package/pkg_moko.webp
+    caption_ja: パッケージ
+    caption_en: Box
+    wide: false
+  - image: img/gallery/mg_summary2.webp
+    caption_ja: かんたんルール(裏)
+    caption_en: Quick rules (back)
+    wide: true
+  - image: img/gallery/mg_manual1.webp
+    caption_ja: 遊び方説明書(表)
+    caption_en: Rulebook (front)
+    wide: true
+  - image: img/gallery/mg_manual2.webp
+    caption_ja: 遊び方説明書(裏)
+    caption_en: Rulebook (back)
+    wide: true
+pkg: img/package/pkg_moko.webp
+fab_pkg: img/package/pkg_moko.webp
+contents_ja: カード32枚(モコ10枚、パカ10枚、ポメ6枚、ガブ6枚)、アクリルトークン1個、遊び方説明書1枚
+contents_en: 32 cards (Moko 10, Paka 10, Pome 6, Gabu 6), acrylic token, rulebook
+credits:
+  - role_ja: ゲームデザイン・アートワーク
+    name_ja: ゐするぎ
+    name_en: Isurugi
+  - role_ja: 印刷
+    name_ja: グラフィック
+  - role_ja: トークン製造
+    name_ja: ALL THAT PRINTING 様
+    name_en: ALL THAT PRINTING
+  - role_ja: Special Thanks
+    name_ja: テストプレイをしてくれた皆さん
+    name_en: Everyone who playtested
+  - role_ja: 発行
+    name_ja: 2026年5月
+    name_en: May 2026

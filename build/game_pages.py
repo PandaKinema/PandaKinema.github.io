@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v22
+# パンダキネマ 作品ページ 共通フォーマット v23
+#     v23: モコチャカ(かんたんルールの4コマ・方眼のトップ・モコのシルエット)。トップの模様に grid(方眼)を追加
 #     v22: TRICO を現フォーマットで(キャラ=トリコとニコ、帯=三角、アイコン=トリコのシルエット、4コマ=取説のアピールの流れ)
 #     v21: スクリーンの光の広がりを小さく(ぼんやりはそのまま)
 #     v20: スクリーンの白い光をぼんやり(広く・薄く)
@@ -121,6 +122,8 @@ def hero(g, d, t):
         g['hero_art'] = '<div class="hero-art"></div>'
         if h.get('pattern') == 'tri':
             style.append('--pat:%s;--pat-size:92px 160px' % tri_pattern(hbg or g.get('_D') or t.get('main') or '#fdd000', hbg2 if hbg else None))
+        elif h.get('pattern') == 'grid':
+            style.append('--pat:%s;--pat-size:44px 44px' % grid_pattern(hbg or g.get('_D') or t.get('main') or '#f19ebc'))
         if h.get('width'):
             style.append('--sw:%dpx' % num(h['width'], 380))
         layers = [x for x in (h.get('layers') or []) if x.get('image')]
@@ -317,6 +320,11 @@ def tri_pattern(c, base=None):   # TRICO のパッケージの三角模様。bas
     return ("url(\"data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='160'%%3E%%3Crect width='92' height='160' fill='%%23%s'/%%3E"
             "%%3Cpolygon points='0,80 46,0 92,80' fill='%%23%s'/%%3E%%3Cpolygon points='-46,160 0,80 46,160' fill='%%23%s'/%%3E%%3Cpolygon points='46,160 92,80 138,160' fill='%%23%s'/%%3E%%3C/svg%%3E\")") % (a, b, b, b)
 
+def grid_pattern(c):   # モコチャカのカード・パッケージの方眼。c = 地の色、線は白を少し混ぜた色
+    a, b = str(c).lstrip('#'), mix('#ffffff', c, .28).lstrip('#')
+    return ("url(\"data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%%3E%%3Crect width='44' height='44' fill='%%23%s'/%%3E"
+            "%%3Cpath d='M0 .75H44M.75 0V44' stroke='%%23%s' stroke-width='1.5'/%%3E%%3C/svg%%3E\")") % (a, b)
+
 GAMES = {}
 
 # ---- TRICO:くり返し動く図の部品
@@ -490,6 +498,139 @@ GAMES['bibilu'] = dict(
     contents=L('カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚', '40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)'),
     price=L('3,300円', '¥3,300'),
     credits=[(L('ゲームデザイン・アートワーク', 'Game Design & Artwork'), L('ゐするぎ', 'Isurugi')), (L('印刷', 'Printing'), L('萬印堂 様', '萬印堂')), (L('トークン製造', 'Tokens'), L('Sui Works 様', 'Sui Works')), ('Special Thanks', L('テストプレイをしてくれた皆さん', 'Everyone who playtested')), (L('発行', 'Published'), L('2026年10月', 'October 2026'))],
+)
+
+# ---- モコチャカ:くり返し動く図の部品(カードは new/img/parts/mc_*.webp)
+MN = {'m': 'モコ', 'p': 'パカ', 'o': 'ポメ', 'g': 'ガブ'}
+def mcd(code, cls='', st=''):   # 表向きのカード(m2 = モコが2匹)
+    return '<img class="mcd %s" style="%s" src="{{img:mc_%s.webp}}" alt="%sが%s匹のカード">' % (cls, st, code, MN[code[0]], code[1:])
+def mfield(top, bl, br, extra=''):   # 場:3つの山(上・左下・右下)と中央のトークン(かんたんルールの図と同じ並び)
+    return ('<div class="mpile mt">%s</div><div class="mpile ml">%s</div><div class="mpile mr">%s</div>'
+            '<img class="mtok" src="{{img:m_token.webp}}" alt="トークン">%s') % (top, bl, br, extra)
+def mdeck(label):   # 手札(裏向きの束)
+    return '<div class="mdeck"><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt="手札"></div><span class="mcap">%s</span>' % label
+
+GAMES['moko'] = dict(
+    title='モコチャカ',
+    description='モコチャカ:場に見えている3枚のカードの動物を数えて、素早く名前を呼ぶ2〜4人用のカードゲーム。パンダキネマ。',
+    theme='''
+      /* 色はトップ(ボードゲーム)のメインカラー・アクセントカラーから自動(build の apply) */
+      --glow:241,158,188;
+      --band:url({{img:m_band.png}}); --band-h:20px;            /* 帯の模様:カードの「### Moko ###」の柵 */
+      --tex-c:url({{img:m_tex_c.png}}); --tex-size:36px 36px;   /* 背景:説明書の方眼 */
+      --orb-glow:241,158,188;
+      --orn:url({{img:m_moko_sten.png}}); --snum:url({{img:m_moko_sil.png}});   /* 見出しの飾り:モコのシルエット */
+    ''',
+    hero_css='''
+    /* ===== モコチャカ:トップ ===== */
+    .hero .logo{width:min(520px,84vw)}
+    @media (max-width:650px){ .hero .stage{width:min(var(--sw,380px),84vw)} }
+    .hero.hero-stage{padding-bottom:22px}
+    .hero.hero-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;   /* カードの縁と同じ波で、下の帯と区切る */
+      background:radial-gradient(circle at 50% 0,transparent 10.5px,var(--k-bg) 11.5px) 0 0/26px 22px repeat-x}
+    /* ===== モコチャカ:遊び方の図(かんたんルールの図を動かしたもの) ===== */
+    .mf{position:relative;flex:none;width:240px;height:178px}
+    .mcd{display:block;width:44px;border-radius:4px;box-shadow:0 3px 7px rgba(0,0,0,.16)}
+    .mpile{position:absolute;width:44px}
+    .mpile .mcd{position:absolute;left:0;top:0}
+    .mpile .mcd:first-child{position:relative}
+    .mt{left:140px;top:2px}.ml{left:98px;top:108px}.mr{left:182px;top:108px}
+    .mtok{position:absolute;left:143px;top:72px;width:40px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+    .mdeck{position:absolute;left:6px;top:58px;width:44px;height:64px}
+    .mdeck .mcd{position:absolute;left:0;top:0}
+    .mdeck .mcd:nth-child(2){top:-3px}.mdeck .mcd:nth-child(3){top:-6px}
+    .mcap{position:absolute;left:28px;top:132px;translate:-50% 0;padding:2px 10px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
+    .mmove{position:absolute;left:6px;top:52px;width:44px;transform-style:preserve-3d}
+    .mmove .mcd{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+    .mmove .back{position:absolute;inset:0;transform:rotateY(180deg)}
+    .mbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
+    .mbub::after{content:"";position:absolute;left:14px;bottom:-6px;border:6px solid transparent;border-top-color:#e8467a;border-bottom:0}
+    /* 2. コール:数えて、多い順に呼ぶ */
+    .m2{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .m2 .row{display:flex;gap:6px}
+    .m2 .mcd{width:52px}
+    .mtally{display:flex;gap:8px}
+    .mtally span{display:flex;align-items:center;gap:4px;padding:2px 9px 2px 3px;border-radius:999px;background:#fff;font-size:12px;font-weight:900;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .mtally img{width:22px}
+    .m2 .mbub{position:relative}
+    .m2 .mbub::after{left:50%;translate:-50% 0;top:-6px;bottom:auto;border-top:0;border-bottom:6px solid #e8467a}
+    /* 3. コールのルール:2つの例 */
+    .m3{display:grid;gap:12px;width:100%}
+    .m3 .row{display:flex;align-items:center;justify-content:center;gap:4px}
+    .m3 .mcd{width:38px}
+    .m3 .eq{margin:0 4px;font-size:16px;font-weight:900;opacity:.5}
+    .m3 .mbub{position:relative;font-size:12px}
+    .m3 .mbub::after{left:-5px;top:50%;bottom:auto;translate:0 -50%;border:5px solid transparent;border-right-color:#e8467a;border-left:0}
+    .m3 .ate{position:relative;display:block}
+    .m3 .ate b{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:0 5px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;line-height:16px;white-space:nowrap}
+    .m3 .rn{display:block;width:100%;margin-bottom:-6px;font-size:10.5px;font-weight:800;text-align:center;opacity:.75}
+    /* 4. モコチャカ!:トークンの取り合い */
+    .s4 .mbub{left:126px;top:-2px;font-size:14px}
+    .s4 .mbub::after{left:auto;right:18px}
+    @media all{
+      .s1 .mmove{animation:m1move 6s cubic-bezier(.4,0,.2,1) infinite}
+      @keyframes m1move{0%,12%{opacity:1;translate:0 0;transform:perspective(500px) rotateY(180deg)}38%,84%{opacity:1;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}92%,100%{opacity:0;translate:92px 56px;transform:perspective(500px) rotateY(0deg)}}
+      .m2 .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
+      @keyframes mdrop{0%{opacity:0;translate:0 -24px}7%{opacity:1;translate:0 0}86%{opacity:1;translate:0 0}93%,100%{opacity:0;translate:0 0}}
+      .mtally span{animation:mtal 7s ease infinite;animation-delay:calc(var(--i) * .35s)}
+      @keyframes mtal{0%,16%{opacity:0;translate:0 6px}22%,86%{opacity:1;translate:0 0}93%,100%{opacity:0}}
+      .m2 .mbub{animation:mpop2 7s ease infinite}
+      @keyframes mpop2{0%,38%{opacity:0;scale:.4}44%{opacity:1;scale:1.15}48%,86%{opacity:1;scale:1}93%,100%{opacity:0;scale:.6}}
+      .m3 .row{animation:mdrop 8s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * 1.2s)}
+      .m3 .mbub{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s)}
+      @keyframes mpop3{0%,14%{opacity:0;scale:.4}19%{opacity:1;scale:1.15}23%,80%{opacity:1;scale:1}88%,100%{opacity:0;scale:.6}}
+      .m3 .ate b{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s - .5s)}
+      .s4 .mbub{animation:mpop4 8s ease infinite}
+      @keyframes mpop4{0%,6%{opacity:0;scale:.4}11%{opacity:1;scale:1.15}15%,82%{opacity:1;scale:1}90%,100%{opacity:0;scale:.6}}
+      .s4 .mtok{animation:mgrab 8s cubic-bezier(.5,0,.3,1) infinite}
+      @keyframes mgrab{0%,12%{translate:0 0;rotate:0deg}14%{rotate:-8deg}16%{rotate:8deg}18%{rotate:0deg}34%,84%{opacity:1;translate:-137px -4px}92%,100%{opacity:0;translate:-137px -4px}}
+      .s4 .ml,.s4 .mr{animation:mtake 8s cubic-bezier(.5,0,.3,1) infinite}
+      .s4 .mr{animation-name:mtake2}
+      @keyframes mtake{0%,40%{opacity:1;translate:0 0}58%{opacity:1;translate:-92px -50px}64%,100%{opacity:0;translate:-92px -50px}}
+      @keyframes mtake2{0%,46%{opacity:1;translate:0 0}64%{opacity:1;translate:-176px -50px}70%,100%{opacity:0;translate:-176px -50px}}
+      .s4 .ml .mcd:first-child,.s4 .mr .mcd:first-child{outline:3px solid transparent;outline-offset:1px;animation:mring 8s ease infinite}
+      @keyframes mring{0%,34%{outline-color:transparent}38%,58%{outline-color:#e8467a}64%,100%{outline-color:transparent}}
+    }''',
+    logo='m_logo_navy.png', logo_size=(1282, 240), logo_alt='モコチャカ MOKOCHAKA',
+    logo_buy='m_logo_navy.png', logo_credits='logo_moko.png',
+    chara_name=L('モコ', 'Moko'),
+    chara_fig='<img class="solo" src="{{img:m_moko.webp}}" alt="モコ">',
+    piece_img='m_token.webp', piece_alt='トークン',
+    chara_note='',
+    catch=L('ねむりは競争だ。', 'Sleep is a race.'),
+    intro=L('あなたたちは眠りの浅瀬でモコを数えていました。', 'You were counting Moko in the shallows of sleep.'),
+    intro_img=('m_moko.webp', 'モコ', ''),
+    summary=L('自分の手札からカードを山に出し、[[上に見えている3枚のカードの動物を数えて素早く名前を呼ぶゲームです。]]',
+              'Play cards from your hand onto the piles, and [[count the animals on the 3 cards on top and call their names fast.]]'),
+    spec=[(L('人数', 'Players'), L('2〜4人', '2–4')), (L('時間', 'Time'), L('10〜15分', '10–15 min')), (L('年齢', 'Age'), L('6歳から', '6+'))],
+    poster='m_stage.png',
+    # 遊び方:かんたんルール「ゲームの流れ」「コール」「コールのルール」「トークンの取り合い」から(文はルールのまま、[[ ]]=赤字)
+    steps=[
+        dict(cls='s1', b=L('自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て[[コール]]を行います。',
+                           'On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a [[call]].'),
+             v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('o1'), mcd('m1'), mcd('p3'))
+               + '<span class="mmove"><img class="mcd back" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span>' + '</div>'),
+        dict(cls='s2', b=L('場にあるカードを見て、動物の名前を呼ぶことをコールと言います。例:パカ5、モコ2なので[[「パカモコ」]]',
+                           'Looking at the cards and calling the animals’ names is a call. Example: 5 Paka and 2 Moko, so [[“Paka-Moko!”]]'),
+             v='<div class="m2"><div class="row">' + mcd('m2', '', '--i:0') + mcd('p2', '', '--i:1') + mcd('p3', '', '--i:2') + '</div>'
+               '<div class="mtally"><span style="--i:0"><img src="{{img:m_paka.webp}}" alt="">' + L('パカ 5', 'Paka 5') + '</span><span style="--i:1"><img src="{{img:m_moko.webp}}" alt="">' + L('モコ 2', 'Moko 2') + '</span></div>'
+               '<span class="mbub">' + L('パカモコ!', 'Paka-Moko!') + '</span></div>'),
+        dict(cls='s3', b=L('コールには下記のルールがあります。\n[[ポメはかわいいので必ず最初に呼ぶ]]\n[[ガブの数だけモコを減らす]]',
+                           'Calls have these rules:\n[[Pome is cute, so always call it first]]\n[[Remove one Moko for each Gabu]]'),
+             v='<div class="m3">'
+               '<div class="row" style="--i:0">' + mcd('o1') + mcd('m2') + mcd('m2') + '<span class="eq">→</span><span class="mbub" style="--i:0">' + L('ポメモコ!', 'Pome-Moko!') + '</span></div>'
+               '<div class="row" style="--i:1"><span class="ate" style="--i:1">' + mcd('m2') + '<b>' + L('モコ0', 'Moko 0') + '</b></span>' + mcd('g2') + mcd('p3') + '<span class="eq">→</span><span class="mbub" style="--i:1">' + L('パカ!', 'Paka!') + '</span></div>'
+               '</div>'),
+        dict(cls='s4', b=L('場のカードが次の条件を満たしたとき、[[「モコチャカ」]]と言いながら[[全員で]]トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。',
+                           'When the cards meet a condition, [[everyone]] grabs for the token while saying [[“Mokochaka!”]] The one who gets it takes 2 piles and adds them to the bottom of their hand.'),
+             v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('m1'), mcd('p2'), mcd('o2'), '<span class="mbub">' + L('モコチャカ!', 'Mokochaka!') + '</span>') + '</div>'),
+    ],
+    gallery=[], gallery_todo=[],
+    fab_pkg='pkg_moko.webp',
+    pkg='pkg_moko.webp', pkg_size=(520, 825),
+    contents=L('カード32枚(モコ10枚、パカ10枚、ポメ6枚、ガブ6枚)、アクリルトークン1個、遊び方説明書1枚', '32 cards (Moko 10, Paka 10, Pome 6, Gabu 6), acrylic token, rulebook'),
+    price='',
+    credits=[(L('ゲームデザイン・アートワーク', 'Game Design & Artwork'), L('ゐするぎ', 'Isurugi'))],
 )
 
 SEATS = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='64'%3E%3Cpath d='M8 64V20a14 14 0 0 1 14-14h32a14 14 0 0 1 14 14v44z' fill='black'/%3E%3C/svg%3E\")"
