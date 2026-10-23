@@ -65,12 +65,26 @@ characters:
   - image: img/chara/t_tricoP.webp
     name_ja: ティガ（紫トリコ）
     name_en: Purple Trico
+    note_ja: |-
+      誠実なオスのトリコ。
+
+      慎重な性格で、じっくり考えてから行動する。
+
+      恋は奥手がち。
   - image: img/chara/t_tricoR.webp
     name_ja: トロワ（赤トリコ）
     name_en: Red Trico
+    note_ja: |-
+      情熱的なオスのトリコ。
+
+      何事にも一直線で、その体色は彼の性格を象徴している。
   - image: img/chara/t_tricoY.webp
     name_ja: サン（黄トリコ）
     name_en: Yellow Trico
+    note_ja: |-
+      陽気なオスのトリコ。
+
+      太陽のように明るい性格で、ニコを笑顔にするのが得意。
   - image: img/chara/t_nico.webp
     name_ja: ニコ
     name_en: Nico
