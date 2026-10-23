@@ -79,7 +79,7 @@
     .spec dd{margin:0;font-size:17px;font-weight:800}
 
     /* ===== 1. メインビジュアル(パッケージの絵をそのまま大きく) ===== */
-    .hero{position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:clamp(600px,calc(100vh - 64px),920px);overflow:hidden}
+    .hero{position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:clamp(600px,calc(100vh - 56px),1200px);min-height:clamp(600px,calc(100svh - 56px),1200px);overflow:hidden}
     .hero-art{position:absolute;inset:0;z-index:-1;will-change:transform}
     .hero-copy{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 20px 40px}
     .hero-main{margin-top:auto;display:flex;flex-direction:column;align-items:center;padding-top:24px}
@@ -92,6 +92,7 @@
     }
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
+    .hero.hero-cover .logo{width:min(calc(var(--lar,3) * clamp(130px,22vh,250px)),66vw,820px)}   /* トップ画像のときは画面の高さに合わせて大きく */
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
@@ -592,7 +593,8 @@
       .brand img{height:18px}
       .site-nav{gap:12px;font-size:14px}
       html{scroll-padding-top:calc(66px + env(safe-area-inset-top,0px))}
-      .hero{min-height:clamp(540px,calc(100svh - 58px),760px)}
+      .hero{min-height:clamp(540px,calc(100svh - 56px),900px)}
+      .hero.hero-cover .logo{width:min(calc(var(--lar,3) * 120px),88vw)}
       .hero-copy{padding:16px 14px 30px}
       .hero.hero-stage{min-height:0}
       .hero.hero-stage .hero-main{margin-block:36px 0}
@@ -665,7 +667,7 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:213px;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
+  <section class="hero hero-cover light" style="--lw:213px;--lar:1.2653;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
     <div class="hero-art"><img class="art" src="../../img/page/bash_top.jpg?v=fd42a93e" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">

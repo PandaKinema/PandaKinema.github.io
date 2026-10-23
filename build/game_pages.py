@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v31
+# パンダキネマ 作品ページ 共通フォーマット v32
+#     v32: トップは画面の高さいっぱい、ロゴを画面の高さに合わせて大きく
 #     v31: トップ画像の下からのぼかしをなくす
 #     v30: トップ画像(横長)を全作品に。明るい絵は下をぼかさない/絵の拡大(zoom)
 #     v29: ギャラリーはスクロールではなく1枚ずつ動かす(途中で止まらない)/アクセントカラー2の帯にも模様
@@ -93,7 +94,7 @@ def hero(g, d, t):
     h = d.get('hero') or {}
     style = []
     lw, lh = g['logo_size']
-    style.append('--lw:%dpx' % min(600, round(168 * lw / lh)))   # ロゴは高さ168pxくらい(幅600pxまで)
+    style.append('--lw:%dpx;--lar:%.4f' % (min(600, round(168 * lw / lh)), lw / lh))   # ロゴの縦横比(大きさは画面の高さに合わせる)
     g['h1_cls'] = ''
     # トップは画像が主役:背景の色はページの色ではなく、トップ画像(なければ閉じたカード)の地の色から取る
     hbg = hbg2 = None
@@ -566,7 +567,6 @@ GAMES['moko'] = dict(
     ''',
     hero_css='''
     /* ===== モコチャカ:トップ ===== */
-    .hero .logo{width:min(520px,84vw)}
     @media (max-width:650px){ .hero .stage{width:min(var(--sw,380px),84vw)} }
     .hero.hero-stage{padding-bottom:22px}
     .hero.hero-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;   /* カードの縁と同じ波で、下の帯と区切る */
@@ -1038,7 +1038,7 @@ TEMPLATE = r'''<!doctype html>
     .spec dd{margin:0;font-size:17px;font-weight:800}
 
     /* ===== 1. メインビジュアル(パッケージの絵をそのまま大きく) ===== */
-    .hero{position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:clamp(600px,calc(100vh - 64px),920px);overflow:hidden}
+    .hero{position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:clamp(600px,calc(100vh - 56px),1200px);min-height:clamp(600px,calc(100svh - 56px),1200px);overflow:hidden}
     .hero-art{position:absolute;inset:0;z-index:-1;will-change:transform}
     .hero-copy{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 20px 40px}
     .hero-main{margin-top:auto;display:flex;flex-direction:column;align-items:center;padding-top:24px}
@@ -1051,6 +1051,7 @@ TEMPLATE = r'''<!doctype html>
     }
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
+    .hero.hero-cover .logo{width:min(calc(var(--lar,3) * clamp(130px,22vh,250px)),66vw,820px)}   /* トップ画像のときは画面の高さに合わせて大きく */
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
@@ -1517,7 +1518,8 @@ TEMPLATE = r'''<!doctype html>
       .brand img{height:18px}
       .site-nav{gap:12px;font-size:14px}
       html{scroll-padding-top:calc(66px + env(safe-area-inset-top,0px))}
-      .hero{min-height:clamp(540px,calc(100svh - 58px),760px)}
+      .hero{min-height:clamp(540px,calc(100svh - 56px),900px)}
+      .hero.hero-cover .logo{width:min(calc(var(--lar,3) * 120px),88vw)}
       .hero-copy{padding:16px 14px 30px}
       .hero.hero-stage{min-height:0}
       .hero.hero-stage .hero-main{margin-block:36px 0}
