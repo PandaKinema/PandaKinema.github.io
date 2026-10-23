@@ -72,10 +72,21 @@ def col(g, sel, default='accent'):
         return sel
     return {'main': g.get('main') or '#163f53', 'accent': g.get('accent') or '#ffffff',
             'white': '#ffffff', 'black': '#000000', 'original': ''}.get(sel, g.get('accent')) or ''
-def MAIN(g):   # 背景(カード・バナー)
-    return col(g, 'main')
-def ACC(g):    # 帯・人数〜年齢の下地・文字
-    return col(g, 'accent')
+def lum(c):
+    c = str(c).lstrip('#'); f = lambda v: v / 12.92 if v <= .03928 else ((v + .055) / 1.055) ** 2.4
+    r, gg, b = (f(int(c[i:i + 2], 16) / 255) for i in (0, 2, 4))
+    return .2126 * r + .7152 * gg + .0722 * b
+def contrast(a, b):
+    la, lb = lum(a), lum(b)
+    return (max(la, lb) + .05) / (min(la, lb) + .05)
+def MAIN(g):   # カード・バナーの背景(編集画面の「背景の色」。空ならメインカラー)
+    return col(g, g.get('bg') or 'main')
+def ACC(g):    # 帯・人数〜年齢の下地・文字:背景がメインならアクセント、アクセントならメイン、白・黒なら読みやすい方
+    sel = str(g.get('bg') or 'main')
+    if sel in ('main', 'accent'):
+        return col(g, 'accent' if sel == 'main' else 'main')
+    bg = MAIN(g)
+    return max((col(g, 'main'), col(g, 'accent')), key=lambda c: contrast(c, bg))
 
 def spec(g):
     return (str(g.get('players', '')), str(g.get('time', '')), str(g.get('age', '')))
@@ -184,7 +195,7 @@ def banner(key, b=None):
         art = ''
     intro = '<p class="b-intro">%s</p>' % T(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
     # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
-    label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
+    label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new"><span class="cap">NEW</span></span>' if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
     txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo'), meta(g), intro)
     return 'b-' + key, 'background:%s;--fg:%s' % (bg, ACC(g)), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'), bn)
 
@@ -197,7 +208,7 @@ def card(x, tool=False):
     """閉じたカード(縦長の画像)と開いたカード(色と画像から作る)。ボードゲームもツールも同じ形"""
     group = 'tools' if tool else 'board'
     cid = 'c-%s' % x['key']
-    new = '<span class="c-new">%s</span>' % L('新作', 'NEW') if x.get('new') else ''
+    new = '<span class="c-new"><span class="cap">NEW</span></span>' if x.get('new') else ''
     if x.get('front'):
         face = '<img src="img/%s" alt="%s" loading="lazy">' % (img(x['front']), e(x['name']))
     else:   # 閉じたカードの画像がまだないツール:絵とタイトルで仮のカード

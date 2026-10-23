@@ -29,6 +29,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
-          git add -A new/img new/games/img content
+          git add -A new/img new/games/img content build/ogp_cache.json
           git add new/index.html new/colors.html new/games/*/index.html .pages.yml
           if git diff --cached --quiet; then echo "変更なし"; else git commit -m "ページを組み立て直し" && git pull --rebase && git push; fi

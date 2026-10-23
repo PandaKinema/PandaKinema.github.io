@@ -88,7 +88,15 @@ def hero(g, d, t):
     lw, lh = g['logo_size']
     style.append('--lw:%dpx' % min(600, round(168 * lw / lh)))   # ロゴは高さ168pxくらい(幅600pxまで)
     g['h1_cls'] = ''
-    if h.get('art'):
+    art_wide = False
+    if h.get('art'):   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
+        from PIL import Image
+        with Image.open(os.path.join(WEB, imgname(h['art']))) as im:
+            aw, ah = im.size
+        art_wide = aw >= ah * 1.2
+        if not art_wide:
+            h = dict(h, layers=[{'image': h['art'], 'motion': 'rise'}], pattern=h.get('pattern'))
+    if art_wide:
         g['hero_cls'] = 'hero-cover'
         g['hero_art'] = '<div class="hero-art"><img class="art" src="{{img:%s}}" alt="" fetchpriority="high"></div>' % imgname(h['art'])
         g['hero_visual'] = ''
@@ -155,6 +163,7 @@ def apply(key):
     # 動画は「動画」(一元管理)から、この作品のものだけ
     g['videos'] = [v for v in (load('content/videos.yml') or []) if v.get('work') == key]
     g['related'] = [str(x) for x in (d.get('related') or []) if x]
+    g['related_links'] = [x for x in (d.get('related_links') or []) if x.get('url')]
     # 人数・時間・年齢は トップ(ボードゲーム)の設定と同じものを使う
     t = games.get(key)
     if t:
@@ -178,8 +187,10 @@ def apply(key):
     M, A = t.get('main'), t.get('accent')
     if M and A:
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
-        D = pick.get(str(d.get('bg_color') or 'main'), M)        # 背景(動画・遊び方・購入)
-        O = pick.get(str(d.get('accent_color') or 'accent'), A)  # 帯(ストーリー・ギャラリー)・見出し・ボタン
+        cb = str(t.get('bg') or 'main')   # カードの「背景の色」
+        D = pick.get(str(d.get('bg_color') or cb), M)            # 背景(動画・遊び方・購入)。空ならカードと同じ
+        O0 = 'accent' if cb == 'main' else ('main' if cb == 'accent' else max(('main', 'accent'), key=lambda k: contrast(pick[k], D)))
+        O = pick.get(str(d.get('accent_color') or O0), A)        # 帯(ストーリー・ギャラリー)・見出し・ボタン。空ならもう一方
         if D == O:
             O = A if D != A else M
         dark, light = (D, O) if lum(D) < lum(O) else (O, D)
@@ -800,6 +811,13 @@ TEMPLATE = r'''<!doctype html>
     /* 関連コンテンツ */
     .rel-row{justify-content:center;gap:18px}
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
+    /* リンクのカード(OGPの画像+タイトル+サイト名) */
+    .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
+    .bl-img{display:block;width:100%;aspect-ratio:1.91/1;object-fit:cover;background:#e9ecee}
+    .bg-link>.bl-img{height:auto;flex:none}
+    .bl-t{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:12px 14px 14px}
+    .bl-t b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:14px;line-height:1.55}
+    .bl-t small{font-size:11.5px;font-weight:700;opacity:.55}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -838,6 +856,7 @@ TEMPLATE = r'''<!doctype html>
     .bt-name{display:flex;align-items:center;justify-content:center;flex:1;padding:8px 10px;font-size:13px;font-weight:900;line-height:1.35;text-align:center}
     .bt-title{width:100%;height:auto}
     .bg-new{position:absolute;left:50%;top:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+    .bg-new{height:24px;padding:0 10px;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.08em}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
@@ -1010,6 +1029,7 @@ TEMPLATE = r'''<!doctype html>
       .roll dt,.roll dd{text-align:center}
       .bg-card{height:180px}
       .rel-row .bg-card{height:200px}
+      .rel-row .bg-link{width:min(260px,72vw)}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -1315,17 +1335,42 @@ def game_card(x):   # トップと同じボードゲームのカード
     e = H.escape
     return '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (
         card_href(x), ' target="_blank" rel="noopener"' if str(x.get('page') or '').startswith('http') else '', imgname(x['front']), e(x['name']),
-        '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '')
+        '<span class="bg-new"><span class="cap">NEW</span></span>' if x.get('new') else '')
 def tool_card(t):   # トップと同じツールのカード(閉じたカードの画像があればそれ、なければ 絵+タイトル。背景=メインカラー、文字=アクセントカラー)
     e = H.escape
-    new = '<span class="bg-new">{{L:新作|NEW}}</span>' if t.get('new') else ''
+    new = '<span class="bg-new"><span class="cap">NEW</span></span>' if t.get('new') else ''
+    c = {'main': t.get('main') or '#163f53', 'accent': t.get('accent') or '#ffffff', 'white': '#ffffff', 'black': '#000000'}
+    sel = str(t.get('bg') or 'main')
+    cbg = c.get(sel, c['main'])
+    cfg = c['accent'] if sel == 'main' else (c['main'] if sel == 'accent' else max((c['main'], c['accent']), key=lambda x: contrast(x, cbg)))
     if t.get('front'):
         return '      <li><a class="bg-card" href="%s" target="_blank" rel="noopener"><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (e(t['url']), imgname(t['front']), e(t['name']), new)
     return '      <li><a class="bg-card bg-tool" href="%s" target="_blank" rel="noopener" style="background:%s;color:%s">%s<span class="bt-name">%s</span>%s</a></li>' % (
-        e(t['url']), e(t.get('main') or '#163f53'), e(t.get('accent') or '#fff'), tool_art(t), tool_title(t), new)
+        e(t['url']), e(cbg), e(cfg), tool_art(t), tool_title(t), new)
+OGP_CACHE = None
+def link_card(x):   # リンク(note の記事など):ページのOGPからタイトル・画像・サイト名を読んでカードに
+    global OGP_CACHE
+    import ogp
+    if OGP_CACHE is None:
+        OGP_CACHE = ogp.load_cache()
+    e = H.escape
+    url = str(x['url']).strip()
+    info = ogp.get(url, OGP_CACHE) or {}
+    title = str(x.get('title') or info.get('title') or url)
+    pic = imgname(x['image']) if x.get('image') else ''
+    if pic:
+        src = '../img/' + pic
+    else:
+        im = info.get('image') or ''
+        src = ('../img/' + im) if im.startswith('ogp/') else im
+    site = info.get('site') or re.sub(r'^www\.', '', url.split('/')[2] if '//' in url else url)
+    return '      <li><a class="bg-card bg-link" href="%s" target="_blank" rel="noopener">%s<span class="bl-t"><b>%s</b><small>%s ↗</small></span></a></li>' % (
+        e(url), ('<img class="bl-img" src="%s" alt="" loading="lazy">' % e(src)) if src else '<span class="bl-img bl-none"></span>', e(title), e(site))
+
 def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツールのカード。なければ何も出さない
     tools = {t['key']: t for t in g['tools']}
     cards = [tool_card(tools[k]) if k in tools else game_card(g['games'][k]) for k in g['related'] if k != key and (k in tools or k in g['games'])]
+    cards += [link_card(x) for x in g['related_links']]
     if not cards:
         return ''
     return '''  <section class="band band-c related" id="related" aria-labelledby="related-title">
@@ -1387,3 +1432,6 @@ if __name__ == '__main__':
         from build import bust
         open(out, 'w', encoding='utf-8').write(bust(render(key), {'../../img/': TOP_IMG, '../img/': WEB}))
         print(out, os.path.getsize(out))
+    if OGP_CACHE is not None:
+        import ogp
+        ogp.save_cache(OGP_CACHE)

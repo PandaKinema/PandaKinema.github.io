@@ -403,6 +403,13 @@
     /* 関連コンテンツ */
     .rel-row{justify-content:center;gap:18px}
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
+    /* リンクのカード(OGPの画像+タイトル+サイト名) */
+    .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
+    .bl-img{display:block;width:100%;aspect-ratio:1.91/1;object-fit:cover;background:#e9ecee}
+    .bg-link>.bl-img{height:auto;flex:none}
+    .bl-t{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:12px 14px 14px}
+    .bl-t b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:14px;line-height:1.55}
+    .bl-t small{font-size:11.5px;font-weight:700;opacity:.55}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -441,6 +448,7 @@
     .bt-name{display:flex;align-items:center;justify-content:center;flex:1;padding:8px 10px;font-size:13px;font-weight:900;line-height:1.35;text-align:center}
     .bt-title{width:100%;height:auto}
     .bg-new{position:absolute;left:50%;top:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+    .bg-new{height:24px;padding:0 10px;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.08em}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
 
@@ -613,6 +621,7 @@
       .roll dt,.roll dd{text-align:center}
       .bg-card{height:180px}
       .rel-row .bg-card{height:200px}
+      .rel-row .bg-link{width:min(260px,72vw)}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -769,7 +778,7 @@
   <div class="wrap">
     <h2 class="lineup-h" id="lineup-title"><span class="cap">CONTENTS</span></h2>
     <ul class="bg-row">
-      <li><a class="bg-card" href="../bibilu/"><img src="../../img/bibilu_bdg.png?v=9fa8f8d5" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span lang="ja">新作</span><span lang="en">NEW</span></span></a></li>
+      <li><a class="bg-card" href="../bibilu/"><img src="../../img/bibilu_bdg.png?v=9fa8f8d5" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span class="cap">NEW</span></span></a></li>
       <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/ikatako_bdg.png?v=b1512469" alt="イカタコ" loading="lazy"></a></li>
       <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/mocochaka_bdg.png?v=5e4e8348" alt="モコチャカ" loading="lazy"></a></li>
       <li><a class="bg-card" href="../../#board"><img src="../../img/koikoi_bdg.png?v=7c92af56" alt="こいこいのぼり 真打" loading="lazy"></a></li>
