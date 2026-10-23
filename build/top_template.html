@@ -258,10 +258,9 @@
     .ava i{width:34px;height:34px;background:var(--text);-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
     .member b{display:block;font-size:22px}
     .member small{font-size:12px;color:var(--muted)}
-    .mail{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
-    .mail span{font-size:12.5px;font-weight:600;color:var(--soft)}
-    .mail a{font-size:clamp(17px,1.6vw,20px);font-weight:600;word-break:break-all;user-select:all}
-    .mail a:hover{text-decoration:underline}
+    .m-lead{margin:0 0 10px;font-size:12.5px;font-weight:600;color:var(--soft)}
+    .mail{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+    .mail .addr{font-size:clamp(15px,1.4vw,17px);font-weight:600;word-break:break-all;user-select:all}
     .copy{padding:5px 10px;border:1.5px solid var(--text);border-radius:4px;background:none;font-size:12px;font-weight:800;cursor:pointer}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:48px var(--side) 0;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,var(--soft) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:var(--soft)}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
@@ -301,7 +300,28 @@
       .tl-t{padding:10px}
       .tl-t .tool-name{font-size:12.5px}
       .site-footer{flex-direction:column;gap:10px;text-align:center}
-      .mail span{flex-basis:100%}
+    }
+    /* 高さをそろえる:横に並ぶものは同じ高さ・上下中央に */
+    .wb{height:36px;padding:0 15px;line-height:1}
+    .o-btns .wb,.mail .wb,.nm-link .wb{height:32px;padding:0 13px;font-size:12.5px}
+    .tl-t .wb{height:28px;padding:0 13px}
+    .copy{display:inline-flex;align-items:center;height:32px;padding:0 12px;line-height:1}
+    .soc,.soc.mx{height:40px;min-width:40px;line-height:1}
+    .news li a,.nm-meta{align-items:center}
+    .news time,.nm-meta time{line-height:1}
+    .news .cat,.nm-meta .cat,.c-new,.b-new{display:inline-flex;align-items:center;height:20px;padding:0 7px;line-height:1}
+    .news .t{line-height:1.3}
+    .lang label{display:inline-flex;align-items:center;height:28px;padding:0 9px;line-height:1}
+    .nav a{display:inline-flex;align-items:center;height:28px;padding:0;line-height:1}
+    .home{display:flex;align-items:center;height:28px}
+    .shuf{line-height:1}
+    .bars label,.tri{flex:none}
+    @media (max-width:520px){
+      .mail .addr{order:-1;flex-basis:100%}
+    }
+    @media (max-width:700px){
+      .wb{height:32px;padding:0 12px;font-size:12px}
+      .o-btns .wb{height:28px;padding:0 9px;font-size:10.5px}
     }
   </style>
 </head>
@@ -369,7 +389,7 @@
       </div>
       <div class="a-side">
         <div class="a-card"><p class="lbl">MEMBER</p><div class="member"><span class="ava"><i></i></span><div><b>{{L:ゐするぎ|Isurugi}}</b><small>Game Design / Artwork</small></div><a class="soc x mx" href="{{member_x}}" target="_blank" rel="noopener" aria-label="ゐするぎのX">X</a></div></div>
-        <div class="a-card contact"><p class="lbl">CONTACT</p><div class="mail"><span>{{L:お問い合わせ、ご連絡はこちら|For inquiries, contact us at}}</span><a href="mailto:{{mail}}">{{mail}}</a><button class="copy js-only" type="button" id="copy">{{L:コピー|Copy}}</button></div></div>
+        <div class="a-card contact"><p class="lbl">CONTACT</p><p class="m-lead">{{L:お問い合わせ、ご連絡はこちら|For inquiries, contact us at}}</p><div class="mail"><a class="wb" href="mailto:{{mail}}"><b class="ar" aria-hidden="true">▶︎</b>{{L:メールを送る|Send email}}</a><span class="addr">{{mail}}</span><button class="copy js-only" type="button" id="copy">{{L:コピー|Copy}}</button></div></div>
       </div>
     </div>
   </section>
