@@ -4,8 +4,8 @@ logo: img/trico_logo_purple.png
 logo_alt: TRICO!(トリコ)
 logo_buy: img/trico_logo_purple.png
 logo_credits: img/trico_logo_white.png
-bg_color: main
-accent_color: accent
+bg_color: accent
+accent_color: main
 hero:
   pattern: tri
   width: 380
