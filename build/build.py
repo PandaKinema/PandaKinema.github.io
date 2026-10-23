@@ -202,7 +202,10 @@ def render():
     v = dict(total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
              about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals,
-             header_logo=img(SITE.get('header_logo') or 'brand.png'), about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'))
+             header_logo=img(SITE.get('header_logo') or 'brand.png'), about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'),
+             member_label=e(SITE.get('member_label') or 'MEMBER'), member_name=T(SITE.get('member_name_ja') or 'ゐするぎ', SITE.get('member_name_en') or 'Isurugi'),
+             member_role=e(SITE.get('member_role') or ''),
+             member_ava=('<img src="img/%s" alt="">' % img(SITE['member_icon'])) if SITE.get('member_icon') else '<i></i>')
     s = open(os.path.join(ROOT, 'build', 'top_template.html'), encoding='utf-8').read()
     for _ in range(2):
         s = re.sub(r'\{\{(?!img:|L:)(\w+)\}\}', lambda m: str(v[m.group(1)]), s)
