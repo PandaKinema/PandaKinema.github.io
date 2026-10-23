@@ -11,8 +11,6 @@ hero:
   art: img/page/koikoi_top.jpg
   fit: cover
   art_pos: 50% 0%
-bg1_image: img/page/k_tex_c.png
-bg2_image: img/page/k_tex_c.png
 step_icon: img/page/k_koi_sil.png
 catch_ja: あげろ!こいのぼり
 catch_en: Raise the carp streamers!
