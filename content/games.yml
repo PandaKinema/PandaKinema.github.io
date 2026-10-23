@@ -1,42 +1,15 @@
-# BOARD GAME の列に並ぶ順(編集画面でドラッグして並べ替えできます)
-# front = 閉じたカードの画像(縦長 840×1185)。開いたカードは色と画像から自動で作ります
-# color_face = 開いたカードの背景色、color_band = 人数〜年齢の下地の色(文字は color_face)、logo_color = ロゴの色(空ならロゴ画像の色のまま)
-- key: trico
-  name: TRICO!
-  series: ''
-  new: false
-  front: img/front_trico.webp
-  pkg: img/pkg_trico.webp
-  logo: img/logo_trico.png
-  logo_color: '#664498'
-  color_band: '#664498'
-  color_face: '#fdd000'
-  players: 2〜3
-  time: 10〜15
-  age: '6'
-  genre_ja: セットコレクション・バッティング
-  genre_en: Set collection / Simultaneous play
-  intro_ja: 場に出た色の数で勝敗が決まる「アピール」をくり返し、3色そろえて「トリコ!」。
-  intro_en: Repeat “Appeals” decided by the number of colors, and collect 3 colors to call “Trico!”
-  page: games/trico/
-  booth: https://pandakinema.booth.pm/
-  banner:
-    text_color: '#2d1f57'
-    bg: '#fdd000'
-    pattern: tri
 - key: bibilu
   name: ビビルの塔
-  series: ''
   new: true
   front: img/front_bibilu.webp
   pkg: img/pkg_bibilu.webp
   logo: img/logo_bibilu.png
-  logo_color: '#173f54'
-  color_band: '#173f54'
-  color_face: '#7ebda9'
+  logo_color: "#173f54"
+  color_face: "#7ebda9"
+  color_band: "#173f54"
   players: 2〜4
   time: 10〜15
-  age: '6'
+  age: "6"
   genre_ja: バッティング・ハンドマネジメント
   genre_en: Simultaneous play / Hand management
   intro_ja: 数字カードを同時に出し、高い塔を建てて得点を競うゲームです。
@@ -44,22 +17,44 @@
   page: games/bibilu/
   booth: https://pandakinema.booth.pm/
   banner:
-    text_color: '#ffffff'
-    bg: '#173f54'
-    logo_color: '#fef4d6'
+    bg: "#173f54"
+    logo_color: "#fef4d6"
+    text_color: "#ffffff"
+- key: trico
+  name: TRICO!
+  new: false
+  front: img/front_trico.webp
+  pkg: img/pkg_trico.webp
+  logo: img/logo_trico.png
+  logo_color: "#664498"
+  color_face: "#fdd000"
+  color_band: "#664498"
+  players: 2〜3
+  time: 10〜15
+  age: "6"
+  genre_ja: セットコレクション・バッティング
+  genre_en: Set collection / Simultaneous play
+  intro_ja: 場に出た色の数で勝敗が決まる「アピール」をくり返し、3色そろえて「トリコ!」。
+  intro_en: Repeat “Appeals” decided by the number of colors, and collect 3 colors
+    to call “Trico!”
+  page: games/trico/
+  booth: https://pandakinema.booth.pm/
+  banner:
+    bg: "#fdd000"
+    pattern: tri
+    text_color: "#2d1f57"
 - key: ikatako
   name: イカタコ
-  series: ''
   new: false
   front: img/front_ikatako.webp
   pkg: img/pkg_ikatako.webp
   logo: img/logo_ikatako.png
-  logo_color: '#ffffff'
-  color_band: '#01215e'
-  color_face: '#0279c3'
+  logo_color: "#ffffff"
+  color_face: "#0279c3"
+  color_band: "#01215e"
   players: 1〜6
   time: 5〜15
-  age: '8'
+  age: "8"
   genre_ja: アクション
   genre_en: Action
   intro_ja: イカだ！タコだ！手を挙げろ！
@@ -67,20 +62,19 @@
   page: https://gamemarket.jp/game/186696
   booth: https://pandakinema.booth.pm/
   banner:
-    text_color: '#ffffff'
+    text_color: "#ffffff"
 - key: moko
   name: モコチャカ
-  series: ''
   new: false
   front: img/front_moko.webp
   pkg: img/pkg_moko.webp
   logo: img/logo_moko.png
-  logo_color: '#38278b'
-  color_band: '#38278b'
-  color_face: '#f19ebb'
+  logo_color: "#38278b"
+  color_face: "#f19ebb"
+  color_band: "#38278b"
   players: 2〜4
   time: 10〜15
-  age: '6'
+  age: "6"
   genre_ja: パターン認識・アクション
   genre_en: Pattern recognition / Action
   intro_ja: ねむりは競争だ。
@@ -88,7 +82,7 @@
   page: https://gamemarket.jp/game/187698
   booth: https://pandakinema.booth.pm/
   banner:
-    text_color: '#2d1f57'
+    text_color: "#2d1f57"
 - key: koikoi
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES 01
@@ -96,21 +90,18 @@
   front: img/front_koikoi.webp
   pkg: img/mini_koikoi.webp
   logo: img/mini_koikoi_logo.png
-  logo_color: ''
-  color_band: '#1a242b'
-  color_face: '#36aede'
-  players: '2'
+  color_face: "#48b0e5"
+  color_band: "#ffffff"
+  players: "2"
   time: 5〜10
-  age: '6'
+  age: "6"
   genre_ja: 花札風セットコレクション
   genre_en: Hanafuda-style set collection
   intro_ja: あげろ！こいのぼり！
   intro_en: Raise the carp streamers!
-  page: ''
-  booth: ''
   banner:
-    bg: '#36aede'
-    text_color: '#ffffff'
+    bg: "#48b0e5"
+    text_color: "#48b0e5"
 - key: bash
   name: BASH&SMASH
   series: MINI THEATER SERIES 02
@@ -118,18 +109,15 @@
   front: img/front_bash.webp
   pkg: img/mini_bash.webp
   logo: img/mini_bash_logo.png
-  logo_color: ''
-  color_band: '#1a242b'
-  color_face: '#e60039'
-  players: '2'
+  color_face: "#e60039"
+  color_band: "#ffffff"
+  players: "2"
   time: 5〜10
-  age: '6'
+  age: "6"
   genre_ja: 対戦格闘ゲーム風読み合い
   genre_en: Fighting-game-style mind games
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
-  page: ''
-  booth: ''
   banner:
-    bg: '#e60039'
-    text_color: '#ffffff'
+    bg: "#e60039"
+    text_color: "#ffffff"
