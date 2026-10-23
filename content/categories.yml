@@ -1,0 +1,11 @@
+# ニュースのカテゴリ。ここに足すと、ニュースのカテゴリで選べるようになります(保存して1〜2分後)
+- name: お知らせ
+  name_en: News
+- name: 新作
+  name_en: New
+- name: 発売
+  name_en: Release
+- name: 公開
+  name_en: Launch
+- name: 出展
+  name_en: Event

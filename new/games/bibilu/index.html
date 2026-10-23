@@ -13,20 +13,15 @@
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
     /* ===== 作品ごとの色(パッケージ下部のツートンがキーカラー) ===== */
     .key{
-      --k-bg:#163f53; --k-ink:#fff7df;            /* キーカラー:紺 */
-      --accent:#fff1cf; --on-accent:#163f53;      /* キーカラー:クリーム */
-      --p-ink:#163f53; --soft:#fbf0d5;
-      --sec-bg:#fff1cf; --sec-ink:#163f53;
-      --pan-bg:#163f53; --pan-ink:#fff;
-      --room:#0b2533; --glow:170,215,225;
-      --b2-bg:#fff1cf; --b2-ink:#163f53;          /* もう1色の帯:クリーム */
+      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      --glow:170,215,225;
       --band:url(../img/b_band.png); --band-h:24px;          /* 帯の境目:塔の模様(ビビル文字) */
       --tex-c:url(../img/b_tex_c.png); --tex-size:525px 175px; --tex-a:rgba(255,241,207,.035);
       --orb-glow:27,185,238;
       --hl:#f2d756;                               /* 強調色(取説の赤字の代わり。紺の上で読める金色) */
       --orn:url(../img/b_tupa_sten.png); --snum:url(../img/b_tupa_sil.png);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
     
-      --k-bg:#153e53;--k-ink:#fff5d7;--b2-bg:#fff5d7;--b2-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--tex-c:url(../img/b_tex_c.png);--tex-size:525px 175px;--band:url(../img/b_band.png);--band-h:24px;--band-d:block;--orn:url(../img/b_tupa_sten.png);--snum:url(../img/b_tupa_sil.png);}
+      --k-bg:#153e53;--k-ink:#fff5d7;--b2-bg:#fff5d7;--b2-ink:#153e53;--sec-bg:#fff5d7;--sec-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--p-ink:#153e53;--soft:#fff5d7;--pan-bg:#153e53;--pan-ink:#fff;--lt:#fff5d7;--on-lt:#153e53;--dk:#153e53;--on-dk:#fff5d7;--tex-c:url(../img/b_tex_c.png);--tex-size:525px 175px;--band:url(../img/b_band.png);--band-h:24px;--band-d:block;--orn:url(../img/b_tupa_sten.png);--snum:url(../img/b_tupa_sil.png);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -69,10 +64,11 @@
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
-    .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent));border-color:var(--buy-ink,var(--on-accent));box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
-    .fab.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent),0 12px 28px rgba(0,0,0,.32)}
     .panel{background:#fff;color:var(--p-ink);border-radius:20px;padding:28px 30px}
     .panel .btn{background:var(--p-ink);color:#fff}
+    /* BOOTHで購入:土台がキーカラー2、文字がキーカラー1。枠線はメインビジュアルの上のときだけ */
+    .btn.buy,.panel .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent))}
+    .hero .btn.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
     .spec div{display:flex;align-items:baseline;gap:7px}
     .spec dt{font-size:12px;opacity:.75}
@@ -93,9 +89,9 @@
       @keyframes rise{from{opacity:0;translate:0 16px}}
     }
 
-    .hero-bibilu{color:#fff7df}
+    .hero-bibilu{color:var(--lt)}
     .hero-bibilu .art{width:100%;height:100%;object-fit:cover;object-position:45% 64%}
-    .hero-bibilu .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(22,63,83,.45),transparent 16%,transparent 52%,rgba(22,63,83,.86) 82%,#163f53)}
+    .hero-bibilu .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero-bibilu .logo{width:min(600px,86vw)}
     @media (max-width:650px){.hero-bibilu .art{object-position:40% 50%}}
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生(パララックスと模様の横流れだけは設定に従う) */
@@ -208,10 +204,10 @@
     .steps.drag{cursor:grabbing;scroll-snap-type:none;user-select:none}
     .step{counter-increment:step;position:relative;flex:0 0 var(--card);scroll-snap-align:start;display:flex;flex-direction:column;gap:12px;padding:16px 16px 16px;border-radius:20px;background:#fff;color:var(--p-ink)}
     .step:not(:last-child)::after{content:"";position:absolute;left:calc(100% + (var(--gap) - 14px) / 2);top:calc(50% - 10px);border-style:solid;border-width:10px 0 10px 14px;border-color:transparent transparent transparent var(--k-ink)}
-    .step-head{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+    .step-head{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:4px;background:var(--p-ink);color:var(--k-ink);
       -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;font:900 22px/1 Georgia,"Times New Roman",serif}
-    .step-lead{margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
+    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
     .flow-ui{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
@@ -240,21 +236,6 @@
     .ruler li{position:absolute;left:0;right:0;bottom:calc(var(--i) * var(--step) + 2px);color:#fff;font:900 12px/16px Georgia,serif;text-align:center}
     .manual-link{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;text-align:center}
     .manual-link p{margin:0;font-size:14px;font-weight:700;opacity:.85}
-    /* STORYの最後:取説の「スクープ!」欄を切り抜き記事ふうに */
-    .scoop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;align-items:center;width:min(780px,100%);margin:6px auto 0;padding:34px 40px;border-radius:6px;
-      background:var(--scoop-bg,#e8d3a0);color:var(--scoop-ink,#163f53);box-shadow:0 22px 36px -22px rgba(0,0,0,.45);rotate:-1deg}
-    .scoop:not(:has(.stele)){grid-template-columns:1fr}
-    .scoop-text{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .scoop .stele{width:160px;rotate:2deg}
-    .scoop .extra-kicker{margin:0}
-    .moji{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin-top:8px;padding-top:20px;border-top:2px dashed rgba(22,63,83,.25)}
-    .moji-h{margin:0;font-size:17px;font-weight:900;line-height:1.4}
-    .moji-h small{display:block;font-size:11px;font-weight:700;letter-spacing:.2em;opacity:.7}
-    .moji-demo{display:flex;align-items:center;justify-content:center;gap:12px}
-    .moji-in{padding:9px 14px;border:2px solid rgba(22,63,83,.35);border-radius:8px;background:#fffaf0;font-size:15px;font-weight:700}
-    .moji-arrow{font-size:20px;font-weight:900;opacity:.6}
-    .moji-out{width:150px;border-radius:6px;box-shadow:0 8px 16px -8px rgba(0,0,0,.4)}
-    .moji-note{margin:0;font-size:13px;font-weight:700}
     /* フォトギャラリー */
     .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
     .gallery figure{margin:0}
@@ -341,16 +322,9 @@
     .tokens{display:flex;gap:5px;margin-top:8px}
     .tokens img{width:34px}
 
-    /* おまけ(もう1色の帯にじか置き) */
-    .extra-body{display:flex;flex-direction:column;align-items:center;gap:22px;max-width:820px;margin-inline:auto;text-align:center}
-    .extra-kicker{margin:0 0 -10px;padding:3px 14px;border-radius:999px;background:#d4242b;color:#fff;font-size:13px;font-weight:800}
-    .extra-title{margin:0;font-size:clamp(21px,2.6vw,28px);font-weight:900}
-    .extra-text{margin:0;font-size:15.5px;line-height:1.95;font-weight:700;max-width:30em;word-break:auto-phrase}
-    .extra-text em{font-style:normal;color:#d4242b}
-    .extra-img{width:100%;border-radius:18px}
-    .stele-wrap{display:flex;align-items:center;justify-content:center;gap:44px;text-align:left}
-    .stele{width:min(190px,46vw);border-radius:10px;box-shadow:0 18px 30px -16px rgba(0,0,0,.35)}
-    .stele-wrap p{margin:0 0 20px;font-size:15.5px;line-height:1.9;font-weight:700;max-width:24em}
+    /* 関連コンテンツ */
+    .rel-row{justify-content:center;gap:18px}
+    .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -394,7 +368,7 @@
 
     /* ===== 追従するBOOTHボタン(メインビジュアルと購入欄が見えていない間だけ) ===== */
     .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;
-      display:flex;align-items:center;gap:.5em;min-height:48px;padding:0 22px 0 70px;border:2px solid var(--on-accent);border-radius:999px;
+      display:flex;align-items:center;gap:.5em;min-height:48px;padding:0 22px 0 70px;border:0;border-radius:999px;
       background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;box-shadow:0 12px 28px rgba(0,0,0,.32);
       opacity:0;translate:0 18px;visibility:hidden;transition:opacity .2s ease,translate .25s ease,visibility 0s linear .25s}
     .fab.show{opacity:1;translate:0 0;visibility:visible;transition:opacity .25s ease,translate .45s cubic-bezier(.3,1.6,.5,1),visibility 0s}
@@ -516,9 +490,6 @@
       .billing .btn{width:100%;justify-content:center}
       .screen-band{padding:14px 0}
       .cinema .vplayer{width:100%}
-      .scoop{grid-template-columns:1fr;gap:20px;padding:26px 18px;rotate:-.6deg}
-      .moji-out{width:120px}
-      .scoop .stele{width:120px;margin-inline:auto}
       .gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
       .gitem,.gph{min-height:150px}
       .vplay{width:56px;height:56px;font-size:19px}
@@ -556,8 +527,6 @@
       .hand .c{width:min(60px,15vw)}
       .w-bird{width:84px}
       .marker{width:36px}
-      .stele-wrap{flex-direction:column;gap:22px}
-      .extra-text{font-size:14.5px}
       .buy-box{grid-template-columns:1fr;gap:22px;padding:24px 18px}
       .buy-box .pkg{width:min(160px,50%);margin-inline:auto}
       .buy-box .btn{display:flex;justify-content:center}
@@ -566,6 +535,7 @@
       .roll div{grid-template-columns:1fr;gap:2px}
       .roll dt,.roll dd{text-align:center}
       .bg-card{height:180px}
+      .rel-row .bg-card{height:200px}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -610,15 +580,15 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../img/bibilu_poster.jpg" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to Play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
-          <figure class="vslide" data-yt="" data-title="予告編"><button class="vposter" type="button"><img src="../img/bibilu_poster.jpg" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">予告編</span><span lang="en">Trailer</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
+          <figure class="vslide" data-yt="y-kmQJgl9Dg" data-title="PV"><button class="vposter" type="button"><img src="../../img/bibilu_poster.jpg" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">PV</span><span lang="en">Promo video</span></span></button></figure>
+          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/bibilu_poster.jpg" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
       </div>
     </div>
     <div class="gband bottom" aria-hidden="true"></div>
-    <div class="vdots"><button type="button" aria-current="true"><span lang="ja">遊び方動画</span><span lang="en">How to Play</span></button><button type="button"><span lang="ja">予告編</span><span lang="en">Trailer</span></button></div>
+    <div class="vdots"><button type="button" aria-current="true"><span lang="ja">PV</span><span lang="en">Promo video</span></button><button type="button"><span lang="ja">遊び方動画</span><span lang="en">How to play</span></button></div>
   </section>
 
   <!-- 3. キャラクター+取説の導入文(世界観+ルール) -->
@@ -644,19 +614,19 @@
       <div class="flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
           <li class="step reveal s1">
-            <div class="step-head"><span class="snum" aria-label="ステップ1">1</span><p class="step-lead"><span lang="ja">全員がせーので手札からカードを出し、数字の大きさが<em>1位と2位の人</em>が出したカードを獲得し、<em>手元に塔を建てられる!</em></span><span lang="en">Everyone plays a card at once. The players with the <em>1st and 2nd highest numbers</em> take their cards and <em>build a tower!</em></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ1">1</span><p class="step-lead"><span><span lang="ja">全員がせーので手札からカードを出し、数字の大きさが<em>1位と2位の人</em>が出したカードを獲得し、<em>手元に塔を建てられる!</em></span><span lang="en">Everyone plays a card at once. The players with the <em>1st and 2nd highest numbers</em> take their cards and <em>build a tower!</em></span></span></p></div>
             <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_7.webp" alt="7のカード"></span><b class="crown" aria-label="2位">2</b></span><span class="pk" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_5.webp" alt="5のカード"></span></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_3.webp" alt="3のカード"></span></span><span class="pk sel" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_8.webp" alt="8のカード"></span><b class="crown" aria-label="1位">1</b></span></div></div>
           </li>
           <li class="step reveal s2">
-            <div class="step-head"><span class="snum" aria-label="ステップ2">2</span><p class="step-lead"><span lang="ja">もし同じ数字を出した人がいたら<em>バッティング。</em><em>バッティングした人だけが塔を建てる!</em></span><span lang="en">If anyone played the same number, it is a <em>clash.</em> <em>Only the clashing players build!</em></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ2">2</span><p class="step-lead"><span><span lang="ja">もし同じ数字を出した人がいたら<em>バッティング。</em><em>バッティングした人だけが塔を建てる!</em></span><span lang="en">If anyone played the same number, it is a <em>clash.</em> <em>Only the clashing players build!</em></span></span></p></div>
             <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_3.webp" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk sel" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_3.webp" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_10.webp" alt="10のカード"></span></span><span class="pk" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../img/bc_ura.webp" alt=""><img class="c front" src="../img/bc_2.webp" alt="2のカード"></span></span></div></div>
           </li>
           <li class="step reveal s3">
-            <div class="step-head"><span class="snum" aria-label="ステップ3">3</span><p class="step-lead"><span lang="ja">塔はどんどん上に重ねていく。ただし、6枚を超えると、<em>天罰マークの数だけ下から崩れる!</em></span><span lang="en">Towers keep growing upward. But past 6 cards, <em>they crumble from the bottom by the number of punishment marks!</em></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ3">3</span><p class="step-lead"><span><span lang="ja">塔はどんどん上に重ねていく。ただし、6枚を超えると、<em>天罰マークの数だけ下から崩れる!</em></span><span lang="en">Towers keep growing upward. But past 6 cards, <em>they crumble from the bottom by the number of punishment marks!</em></span></span></p></div>
             <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:6;--fall:4"><img class="lt fall" style="--i:0" src="../img/bc_2.webp" alt="2のカード"><img class="lt fall" style="--i:1" src="../img/bc_5.webp" alt="5のカード"><img class="lt fall" style="--i:2" src="../img/bc_3.webp" alt="3のカード"><img class="lt fall" style="--i:3" src="../img/bc_7.webp" alt="7のカード"><img class="lt stay" style="--i:4" src="../img/bc_1.webp" alt="1のカード"><img class="lt stay" style="--i:5" src="../img/bc_8.webp" alt="8のカード"></div></div><div class="lnotes"><p class="n1"><span lang="ja"><em>6枚目に8を獲得!</em><br>8の天罰マークは<br>4つなので…</span><span lang="en"><em>6th card: an 8!</em><br>The 8 has 4<br>marks, so…</span></p><p class="n2"><span lang="ja"><em>下から4枚<br>捨てる!</em></span><span lang="en"><em>Discard 4<br>from the bottom!</em></span></p><p class="n3"><span lang="ja">上の2枚は残る</span><span lang="en">The top 2 stay</span></p></div></div></div>
           </li>
           <li class="step reveal s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ4">4</span><p class="step-lead"><span lang="ja">手札がなくなったらゲーム終了! <em>「塔の1番上の数字×高さ」が最も大きい人が勝ち!</em></span><span lang="en">When hands run out, the game ends! <em>Highest “top number × height” wins!</em></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ4">4</span><p class="step-lead"><span><span lang="ja">手札がなくなったらゲーム終了! <em>「塔の1番上の数字×高さ」が最も大きい人が勝ち!</em></span><span lang="en">When hands run out, the game ends! <em>Highest “top number × height” wins!</em></span></span></p></div>
             <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:5;--fall:0"><img class="lt" style="--i:0" src="../img/bc_3.webp" alt="3のカード"><img class="lt" style="--i:1" src="../img/bc_5.webp" alt="5のカード"><img class="lt" style="--i:2" src="../img/bc_2.webp" alt="2のカード"><img class="lt" style="--i:3" src="../img/bc_7.webp" alt="7のカード"><img class="lt" style="--i:4" src="../img/bc_8.webp" alt="8のカード"></div></div><div class="lscore"><p><span lang="ja">8×5=<b>40点!</b></span><span lang="en">8×5=<b>40 pts!</b></span></p><span class="hop"><img class="hop-orb" src="../img/b_tupa_orb.webp" alt=""><img class="hop-tok" src="../img/b_tupa_body.webp" alt="トゥーパ"></span></div></div></div>
           </li>
         </ol>
@@ -699,17 +669,15 @@
     </div>
   </section>
 
-  <!-- おまけ:興味のある人向けに最後に -->
-  <section class="band band-c extra" id="extra" aria-labelledby="extra-title">
+  <!-- 関連コンテンツ(編集画面の「関連コンテンツ」で選んだものだけ。なければ出ない) -->
+  <section class="band band-c related" id="related" aria-labelledby="related-title">
     <div class="wrap">
-      <header class="sec-head reveal"><p class="en" aria-hidden="true">EXTRA</p><div class="sec-row"><h2 class="pill sec-h" id="extra-title"><span lang="ja">おまけ</span><span lang="en">Extras</span></h2></div></header>
-      <article class="scoop reveal" aria-labelledby="scoop-title">
-        <div class="scoop-text"><p class="extra-kicker"><span lang="ja">スクープ!</span><span lang="en">Scoop!</span></p><h3 class="extra-title" id="scoop-title"><span lang="ja">古代の碑文を独占入手!</span><span lang="en">Exclusive: an ancient stele!</span></h3><p class="extra-text"><span lang="ja">トゥーパたちは、この碑文を<em>「ビビル」</em>という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!</span><span lang="en">The Tupa seem to believe this stele is a message from a god called <em>“Bibilu.”</em> But even they cannot read all of it. What does it say? Stay tuned!</span></p><div class="moji"><p class="moji-h"><span lang="ja">ビビル文字ジェネレータ</span><span lang="en">Bibilu Script Generator</span><small>ことばつむぎ　みらいつなぐ</small></p><div class="moji-demo"><span class="moji-in">びびるのとう</span><span class="moji-arrow" aria-hidden="true">→</span><img class="moji-out" src="../img/g_moji_sample.webp" alt="「びびるのとう」をビビル文字にした画像" loading="lazy"></div><p class="moji-note"><span lang="ja">ひらがなを入れると、ビビル文字の碑文ができあがる。</span><span lang="en">Type in hiragana to make your own Bibilu stele.</span></p><a class="btn" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener"><span lang="ja">ビビル文字を書いてみる</span><span lang="en">Write in Bibilu</span> <span aria-hidden="true">↗</span></a></div></div>
-        <img class="stele" src="../img/b_stele.webp" alt="古代の碑文。ビビル文字がびっしりと刻まれている" loading="lazy">
-      </article>
+      <header class="sec-head reveal"><p class="en" aria-hidden="true">RELATED</p><div class="sec-row"><h2 class="pill sec-h" id="related-title"><span lang="ja">関連コンテンツ</span><span lang="en">Related</span></h2></div></header>
+      <ul class="bg-row rel-row reveal">
+      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp" alt=""><img class="to" src="../../img/b_tupa_orb.webp" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/moji_title.png" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
+      </ul>
     </div>
   </section>
-
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
   <a class="fab buy" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../img/bibilu_pkg_sm.webp" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>

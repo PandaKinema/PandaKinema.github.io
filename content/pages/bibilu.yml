@@ -35,28 +35,6 @@ contents_ja: カード40枚(1〜10が4セット)、トゥーパ トークン5個
 contents_en: 40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)
 price_ja: 3,300円
 price_en: ¥3,300
-extra_kicker_ja: スクープ!
-extra_kicker_en: Scoop!
-extra_title_ja: 古代の碑文を独占入手!
-extra_title_en: 'Exclusive: an ancient stele!'
-extra_blocks:
-- type: text
-  text_ja: トゥーパたちは、この碑文を[[「ビビル」]]という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!
-  text_en: The Tupa seem to believe this stele is a message from a god called [[“Bibilu.”]] But even they cannot read all of it. What does it say? Stay tuned!
-- type: box
-  title_ja: ビビル文字ジェネレータ
-  title_en: Bibilu Script Generator
-  sub: ことばつむぎ　みらいつなぐ
-  demo_text: びびるのとう
-  image: img/g_moji_sample.webp
-  alt: 「びびるのとう」をビビル文字にした画像
-  note_ja: ひらがなを入れると、ビビル文字の碑文ができあがる。
-  note_en: Type in hiragana to make your own Bibilu stele.
-  button_ja: ビビル文字を書いてみる
-  button_en: Write in Bibilu
-  url: https://pandakinema.github.io/bibilu-moji/
-extra_side_image: img/b_stele.webp
-extra_side_alt: 古代の碑文。ビビル文字がびっしりと刻まれている
 steps:
 - text_ja: 全員がせーので手札からカードを出し、数字の大きさが[[1位と2位の人]]が出したカードを獲得し、[[手元に塔を建てられる!]]
   text_en: Everyone plays a card at once. The players with the [[1st and 2nd highest numbers]] take their cards and [[build a tower!]]
@@ -66,15 +44,6 @@ steps:
   text_en: Towers keep growing upward. But past 6 cards, [[they crumble from the bottom by the number of punishment marks!]]
 - text_ja: 手札がなくなったらゲーム終了! [[「塔の1番上の数字×高さ」が最も大きい人が勝ち!]]
   text_en: When hands run out, the game ends! [[Highest “top number × height” wins!]]
-videos:
-- kind_ja: 遊び方動画
-  kind_en: How to Play
-  youtube: ''
-  poster: img/bibilu_poster.jpg
-- kind_ja: 予告編
-  kind_en: Trailer
-  youtube: ''
-  poster: img/bibilu_poster.jpg
 gallery:
 - image: img/g_rule.webp
   caption_ja: 説明シート「ビビルの塔はこんなゲーム!」
@@ -95,6 +64,8 @@ gallery_todo:
   text_en: Components photo
 pkg: img/b_pkg.webp
 fab_pkg: img/bibilu_pkg_sm.webp
+related:
+- moji
 credits:
 - role_ja: ゲームデザイン・アートワーク
   role_en: Game Design & Artwork

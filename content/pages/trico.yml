@@ -45,19 +45,6 @@ contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマ�
 contents_en: 30 game cards (10 per color), lead player marker, summary card, 3 Trico markers, rulebook
 price_ja: ''
 price_en: ''
-extra_kicker_ja: みんなでかこう!
-extra_kicker_en: Let’s draw!
-extra_title_ja: TRICO! えかきうた
-extra_title_en: TRICO! drawing song
-extra_blocks:
-- type: image
-  image: img/t_ekaki.webp
-  alt: トリコのえかきうた。西からのぼったおひさまが、ずれてはんしゃしているよ、今日もいい日だにじゅうまる!、ここはくちばしいっぽんせん、足としっぽをかいたなら、あっというまにトリコだね!
-- type: text
-  text_ja: キミもかいてみよう!!
-  text_en: Try drawing one yourself!
-extra_side_image: ''
-extra_side_alt: ''
 steps:
 - text_ja: リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、[[同時に表向きに公開します。]]
   text_en: The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then [[reveal them at the same time.]]
@@ -67,15 +54,6 @@ steps:
   text_en: The winner of the Appeal [[takes any one]] of the 3 cards played and places it face up in front of them.
 - text_ja: 獲得したカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言します。トリコマーカーを2つ獲得したらゲーム終了!
   text_en: Declare [[“Nico!”]] when your cards hold 2 colors, and [[“Trico!”]] at 3 colors. Collect 2 Trico markers to win the game!
-videos:
-- kind_ja: 遊び方動画
-  kind_en: How to Play
-  youtube: ''
-  poster: img/trico_poster.webp
-- kind_ja: 予告編
-  kind_en: Trailer
-  youtube: ''
-  poster: img/trico_poster.webp
 gallery:
 - image: img/tg_manual1.webp
   caption_ja: 遊び方説明書(表)
@@ -96,6 +74,7 @@ gallery:
 gallery_todo: []
 pkg: img/trico_pkg_lg.webp
 fab_pkg: img/trico_pkg.webp
+related: []
 credits:
 - role_ja: デザイン・アートワーク
   role_en: Design & Artwork

@@ -1,0 +1,13 @@
+# クレジット(スタッフロール)の役割。ここに足すと、作品ページのクレジットで選べるようになります(保存して1〜2分後)
+- name: ゲームデザイン・アートワーク
+  name_en: Game Design & Artwork
+- name: デザイン・アートワーク
+  name_en: Design & Artwork
+- name: 印刷
+  name_en: Printing
+- name: トークン製造
+  name_en: Tokens
+- name: Special Thanks
+  name_en: Special Thanks
+- name: 発行
+  name_en: Published

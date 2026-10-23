@@ -67,6 +67,10 @@ def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つのキー�
         return other
     return '#ffffff' if contrast(bg, '#ffffff') >= contrast(bg, '#1b2228') else '#1b2228'
 
+def mix(a, b, w):   # 色 a を w の割合で b に混ぜる
+    a, b = str(a).lstrip('#'), str(b).lstrip('#')
+    return '#' + ''.join('%02x' % round(int(a[i:i + 2], 16) * w + int(b[i:i + 2], 16) * (1 - w)) for i in (0, 2, 4))
+
 def apply(key):
     """content/pages/<key>.yml(編集画面)の文章と画像を、作品の設定に上書きする。動きとデザインはこのファイルのまま"""
     g = GAMES[key]
@@ -88,20 +92,22 @@ def apply(key):
         from PIL import Image
         with Image.open(os.path.join(WEB, g[k])) as im:
             g[k + '_size'] = im.size
-    for k in ('catch', 'intro', 'summary', 'chara_name', 'chara_note', 'contents', 'price', 'extra_kicker', 'extra_title'):
+    for k in ('catch', 'intro', 'summary', 'chara_name', 'chara_note', 'contents', 'price'):
         if (k + '_ja') in d:
             g[k] = LL(d, k)
-    if d.get('extra_text_ja') is not None:
-        g['extra_html'] = re.sub(r'(<p class="extra-text">)\{\{L:.*?\}\}(</p>)', lambda m: m.group(1) + LL(d, 'extra_text') + m.group(2), g['extra_html'], count=1, flags=re.S)
     for st, ds in zip(g['steps'], d.get('steps') or []):
         st['b'] = LL(ds, 'text')
     if d.get('gallery') is not None:
         g['gallery'] = [(imgname(x['image']), str(x.get('caption_ja') or ''), str(x.get('caption_en') or x.get('caption_ja') or ''), 'wide' if x.get('wide') else '') for x in d['gallery'] if x.get('image')]
     if d.get('gallery_todo') is not None:
         g['gallery_todo'] = [(str(x.get('text_ja') or ''), str(x.get('text_en') or x.get('text_ja') or '')) for x in d['gallery_todo'] if x.get('text_ja')]
-    if d.get('credits') is not None:
-        g['credits'] = [(L(str(x.get('role_ja') or ''), str(x.get('role_en') or x.get('role_ja') or '')), L(str(x.get('name_ja') or ''), str(x.get('name_en') or x.get('name_ja') or ''))) for x in d['credits']]
-    g['videos'] = d.get('videos') or [{'kind_ja': '遊び方動画', 'kind_en': 'How to Play', 'poster': g['poster']}]
+    if d.get('credits') is not None:   # 役割の英語は「スタッフロールの役割」から
+        roles = {str(r.get('name')): str(r.get('name_en') or r.get('name')) for r in (load('content/roles.yml') or []) if r.get('name')}
+        g['credits'] = [(L(str(x.get('role_ja') or ''), str(x.get('role_en') or roles.get(str(x.get('role_ja') or ''), '') or x.get('role_ja') or '')),
+                         L(str(x.get('name_ja') or ''), str(x.get('name_en') or x.get('name_ja') or ''))) for x in d['credits']]
+    # 動画は「動画」(一元管理)から、この作品のものだけ
+    g['videos'] = [v for v in (load('content/videos.yml') or []) if v.get('work') == key]
+    g['related'] = [str(x) for x in (d.get('related') or []) if x]
     # 人数・時間・年齢は トップ(ボードゲーム)の設定と同じものを使う
     t = games.get(key)
     if t:
@@ -124,10 +130,25 @@ def apply(key):
     t = games.get(key) or {}
     k1, k2 = t.get('key1'), t.get('key2')
     if k1 and k2:
-        css.append('--k-bg:%s;--k-ink:%s' % (k2, ink(k2, k1)))          # 濃い背景(遊び方・購入など)
-        css.append('--b2-bg:%s;--b2-ink:%s' % (k1, ink(k1, k2)))        # 明るい背景(ストーリー・ギャラリー・おまけ)と帯
-        css.append('--accent:%s;--on-accent:%s' % (k1, ink(k1, k2)))    # ふつうのボタン
+        # 背景の色(編集画面で キーカラー1/2 を選ぶ)。帯・見出し・文字はもう一方の色から自動で
+        D, O = (k1, k2) if t.get('bg') == 'key1' else (k2, k1)
+        dark, light = (k1, k2) if lum(k1) < lum(k2) else (k2, k1)
+        p_ink = dark if contrast(dark, '#ffffff') >= 4.5 else '#1b2228'   # 白い枠(遊び方・購入)の文字
+        k_ink = ink(D, O)
+        hl = None if 'hl_fixed' in g else (O if contrast(O, D) >= 3 else ink(D))   # 強調の色
+        if hl and hl == k_ink:   # 文字ともう1色が同じだと強調が見えないので、文字は白(か濃い色)に
+            k_ink = ink(D)
+        css.append('--k-bg:%s;--k-ink:%s' % (D, k_ink))                  # 背景(動画・遊び方・購入)
+        css.append('--b2-bg:%s;--b2-ink:%s' % (O, ink(O, D)))           # もう1色の帯(ストーリー・ギャラリー)と境目の模様
+        css.append('--sec-bg:%s;--sec-ink:%s' % (O, ink(O, D)))         # 見出しのピル
+        css.append('--accent:%s;--on-accent:%s' % (O, ink(O, D)))       # ふつうのボタン
         css.append('--buy-bg:%s;--buy-ink:%s' % (k2, ink(k2, k1)))      # BOOTHで購入:土台がキーカラー2、文字がキーカラー1
+        soft = mix(dark, '#ffffff', .07) if lum(light) >= .97 else (light if lum(light) >= .8 else mix(light, '#ffffff', .25))   # 遊び方の図の地
+        css.append('--p-ink:%s;--soft:%s;--pan-bg:%s;--pan-ink:#fff' % (p_ink, soft, p_ink))
+        css.append('--lt:%s;--on-lt:%s;--dk:%s;--on-dk:%s' % (light, ink(light, dark), dark, ink(dark, light)))   # 明るい方・濃い方(パッケージの絵の色など)
+        g['hero_css'] = g['hero_css'].replace('TRI_PATTERN', tri_pattern(light))
+        if hl:
+            css.append('--hl:%s' % hl)
     if 'bg1_image' in d:
         if d.get('bg1_image'):
             f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
@@ -165,31 +186,6 @@ def apply(key):
         nav = ('<button class="cnav prev js-only" type="button" aria-label="前のキャラクター"></button><button class="cnav next js-only" type="button" aria-label="次のキャラクター"></button>'
                '<div class="cdots js-only">%s</div>' % ''.join('<i%s></i>' % (' class="on"' if k == 0 else '') for k in range(len(chars)))) if len(chars) > 1 else ''
         g['chara_html'] = '<div class="chara-slides">%s</div>%s' % (''.join(slides), nav)
-    # おまけ:ブロックを上から順に。横に置く画像は別の欄
-    blocks = d.get('extra_blocks')
-    if blocks is not None:
-        out = []
-        for b in blocks:
-            t = b.get('type')
-            if t == 'text':
-                out.append('<p class="extra-text">%s</p>' % LL(b, 'text'))
-            elif t == 'image' and b.get('image'):
-                out.append('<img class="extra-img" src="{{img:%s}}" alt="%s" loading="lazy">' % (imgname(b['image']), H.escape(str(b.get('alt') or ''))))
-            elif t == 'button' and b.get('url'):
-                out.append('<a class="btn" href="%s" target="_blank" rel="noopener">%s <span aria-hidden="true">↗</span></a>' % (H.escape(b['url']), LL(b, 'label')))
-            elif t == 'box':
-                demo = ''
-                if b.get('image'):
-                    demo = '<div class="moji-demo">%s<img class="moji-out" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
-                        ('<span class="moji-in">%s</span><span class="moji-arrow" aria-hidden="true">→</span>' % H.escape(str(b['demo_text']))) if b.get('demo_text') else '',
-                        imgname(b['image']), H.escape(str(b.get('alt') or '')))
-                out.append('<div class="moji"><p class="moji-h">%s%s</p>%s%s%s</div>' % (
-                    LL(b, 'title'), ('<small>%s</small>' % H.escape(str(b['sub']))) if b.get('sub') else '', demo,
-                    ('<p class="moji-note">%s</p>' % LL(b, 'note')) if b.get('note_ja') else '',
-                    ('<a class="btn" href="%s" target="_blank" rel="noopener">%s <span aria-hidden="true">↗</span></a>' % (H.escape(b['url']), LL(b, 'button'))) if b.get('url') else ''))
-        g['extra_html'] = ''.join(out)
-        side = d.get('extra_side_image')
-        g['extra_img'] = ('<img class="stele" src="{{img:%s}}" alt="%s" loading="lazy">' % (imgname(side), H.escape(str(d.get('extra_side_alt') or '')))) if side else ''
     return g
 
 LINEUP_OLD = [
@@ -232,7 +228,10 @@ def ltower(nums, fall=0, ruler=5):
     rl = ''.join('<li style="--i:%d">%d</li>' % (k, k + 1) for k in range(ruler))
     return '<div class="ltw"><ol class="ruler" aria-hidden="true">%s</ol><div class="ltower" style="--n:%d;--fall:%d">%s</div></div>' % (rl, len(nums), fall, cs)
 
-TRI_PATTERN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='160'%3E%3Crect width='92' height='160' fill='%23fbc500'/%3E%3Cpolygon points='0,80 46,0 92,80' fill='%23fdd000'/%3E%3Cpolygon points='-46,160 0,80 46,160' fill='%23fdd000'/%3E%3Cpolygon points='46,160 92,80 138,160' fill='%23fdd000'/%3E%3C/svg%3E\")"
+def tri_pattern(c):   # TRICO のパッケージの三角模様(地は少し濃く)
+    a, b = mix(c, '#000000', .965).lstrip('#'), str(c).lstrip('#')
+    return ("url(\"data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='160'%%3E%%3Crect width='92' height='160' fill='%%23%s'/%%3E"
+            "%%3Cpolygon points='0,80 46,0 92,80' fill='%%23%s'/%%3E%%3Cpolygon points='-46,160 0,80 46,160' fill='%%23%s'/%%3E%%3Cpolygon points='46,160 92,80 138,160' fill='%%23%s'/%%3E%%3C/svg%%3E\")") % (a, b, b, b)
 
 GAMES = {}
 
@@ -250,31 +249,24 @@ GAMES['trico'] = dict(
     description='TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。',
     now_label='NOW SHOWING',
     theme='''
-      --k-bg:#7b59a3; --k-ink:#ffffff;            /* キーカラー:紫(パッケージ下部) */
-      --accent:#fdd000; --on-accent:#3a2366;      /* キーカラー:黄 */
-      --p-ink:#3a2366; --soft:#fff6cf;
-      --sec-bg:#fdd000; --sec-ink:#3a2366;
-      --pan-bg:#e8343d; --pan-ink:#fff;
-      --room:#4b2f7f; --glow:255,236,150;
-      --b2-bg:#fdd000; --b2-ink:#3a2366;          /* もう1色の帯:黄 */
+      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      --glow:255,236,150;
       --band:url({{img:t_band.png}}); --band-h:22px;          /* 帯の模様:パッケージの三角 */
       --tex-c:url({{img:t_tex_c.png}}); --tex-size:92px 160px;
       --orb-glow:255,236,150;
-      --hl:#fdd000;                               /* 強調色(取説の赤字の代わり。紫の上で読める黄) */
       --orn:url({{img:t_bird_sten.png}}); --snum:url({{img:t_bird_sil.png}});   /* 見出しの飾り:トリコのシルエット。反転しない */
-      --scoop-bg:#ffffff; --scoop-ink:#3a2366;
     ''',
     # パッケージ表面の構図:三角模様+宝石+トリコ+ロゴ
     hero_cls='hero-trico',
-    hero_art='<div class="hero-art" style="background:#fdd000 ' + TRI_PATTERN + ' center top/92px 160px"></div>',
+    hero_art='<div class="hero-art"></div>',   # パッケージの三角模様(色はキーカラーの明るい方)
     hero_visual='''<div class="pkgvis" aria-hidden="true">
           <img class="g g1" src="{{img:gem_red.webp}}" alt=""><img class="g g2" src="{{img:gem_purple.webp}}" alt=""><img class="g g3" src="{{img:gem_yellow.webp}}" alt="">
           <img class="bird" src="{{img:trico_bird.webp}}" alt="">
         </div>''',
     hero_css='''
-    .hero-trico{color:#3a2366}
+    .hero-trico{color:var(--on-lt)}
+    .hero-trico .hero-art{background:var(--lt) TRI_PATTERN center top/92px 160px}
     .hero-trico .hero-main{margin-block:auto}
-    .hero-trico .btn{background:#7b59a3;color:#fff}
     .pkgvis{position:relative;width:min(380px,58vw);margin:0 auto -5%}
     .pkgvis .bird{position:relative;width:100%}
     .pkgvis .g{position:absolute}
@@ -386,11 +378,6 @@ GAMES['trico'] = dict(
              v='<div class="tp4"><div class="thand">' + tcard('p12', 0) + tcard('y6', 1) + '<span class="tbub nico2">' + L('ニコ!', 'Nico!') + '</span>' + tcard('r18', 2, 'late') + '</div>'
                '<div class="twin"><span class="tbub trico3">' + L('トリコ!', 'Trico!') + '</span><img class="wbird" src="{{img:t_tricoP.webp}}" alt=""><img class="mk" src="{{img:t_marker.webp}}" alt="トリコマーカー"></div></div>'),
     ],
-    extra_kicker=L('みんなでかこう!', 'Let’s draw!'),
-    extra_title=L('TRICO! えかきうた', 'TRICO! drawing song'),
-    extra_html='<img class="extra-img" src="{{img:t_ekaki.webp}}" alt="トリコのえかきうた。西からのぼったおひさまが、ずれてはんしゃしているよ、今日もいい日だにじゅうまる!、ここはくちばしいっぽんせん、足としっぽをかいたなら、あっというまにトリコだね!" width="1286" height="511" loading="lazy">'
-               '<p class="extra-text">' + L('キミもかいてみよう!!', 'Try drawing one yourself!') + '</p>',
-    extra_img='',
     gallery=[('tg_manual1.webp', '遊び方説明書(表)', 'Rulebook (front)', 'wide'), ('trico_pkg_lg.webp', 'パッケージ', 'Box', ''),
              ('tg_summary.webp', 'サマリー', 'Summary card', ''), ('tg_manual2.webp', '遊び方説明書(裏)', 'Rulebook (back)', 'wide')],
     gallery_todo=[],
@@ -406,16 +393,12 @@ GAMES['trico'] = dict(
 
 GAMES['bibilu'] = dict(
     title='ビビルの塔',
+    hl_fixed=True,   # 強調は取説の金色のまま
     description='ビビルの塔:数字カードを同時に出し、高い塔を建てて得点を競う2〜4人用のカードゲーム。パンダキネマ。',
     now_label='NOW SHOWING',
     theme='''
-      --k-bg:#163f53; --k-ink:#fff7df;            /* キーカラー:紺 */
-      --accent:#fff1cf; --on-accent:#163f53;      /* キーカラー:クリーム */
-      --p-ink:#163f53; --soft:#fbf0d5;
-      --sec-bg:#fff1cf; --sec-ink:#163f53;
-      --pan-bg:#163f53; --pan-ink:#fff;
-      --room:#0b2533; --glow:170,215,225;
-      --b2-bg:#fff1cf; --b2-ink:#163f53;          /* もう1色の帯:クリーム */
+      /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
+      --glow:170,215,225;
       --band:url({{img:b_band.png}}); --band-h:24px;          /* 帯の境目:塔の模様(ビビル文字) */
       --tex-c:url({{img:b_tex_c.png}}); --tex-size:525px 175px; --tex-a:rgba(255,241,207,.035);
       --orb-glow:27,185,238;
@@ -427,9 +410,9 @@ GAMES['bibilu'] = dict(
     hero_art='<div class="hero-art"><img class="art" src="{{img:b_art.jpg}}" alt="砂漠にそびえる塔と、丘を行く2人のトゥーパ" width="1600" height="1993" fetchpriority="high"></div>',
     hero_visual='',
     hero_css='''
-    .hero-bibilu{color:#fff7df}
+    .hero-bibilu{color:var(--lt)}
     .hero-bibilu .art{width:100%;height:100%;object-fit:cover;object-position:45% 64%}
-    .hero-bibilu .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(22,63,83,.45),transparent 16%,transparent 52%,rgba(22,63,83,.86) 82%,#163f53)}
+    .hero-bibilu .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero-bibilu .logo{width:min(600px,86vw)}
     @media (max-width:650px){.hero-bibilu .art{object-position:40% 50%}}
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生(パララックスと模様の横流れだけは設定に従う) */
@@ -462,15 +445,6 @@ GAMES['bibilu'] = dict(
         dict(cls='s4', b=L('手札がなくなったらゲーム終了! [[「塔の1番上の数字×高さ」が最も大きい人が勝ち!]]', 'When hands run out, the game ends! [[Highest “top number × height” wins!]]'),
              v='<div class="lscene">' + ltower([3, 5, 2, 7, 8]) + '<div class="lscore"><p>' + L('8×5=<b>40点!</b>', '8×5=<b>40 pts!</b>') + '</p><span class="hop"><img class="hop-orb" src="{{img:b_tupa_orb.webp}}" alt=""><img class="hop-tok" src="{{img:b_tupa_body.webp}}" alt="トゥーパ"></span></div></div>'),
     ],
-    extra_kicker=L('スクープ!', 'Scoop!'),
-    extra_title=L('古代の碑文を独占入手!', 'Exclusive: an ancient stele!'),
-    extra_html='<p class="extra-text">' + L('トゥーパたちは、この碑文を[[「ビビル」]]という神からのお告げだと信じているらしい。しかし、彼らにも全文は解読できていないという。碑文には何が記されているのか? 続報を待て!', 'The Tupa seem to believe this stele is a message from a god called [[“Bibilu.”]] But even they cannot read all of it. What does it say? Stay tuned!') + '</p>'
-               '<div class="moji"><p class="moji-h">' + L('ビビル文字ジェネレータ', 'Bibilu Script Generator') + '<small>ことばつむぎ　みらいつなぐ</small></p>'
-               '<div class="moji-demo"><span class="moji-in">びびるのとう</span><span class="moji-arrow" aria-hidden="true">→</span>'
-               '<img class="moji-out" src="{{img:g_moji_sample.webp}}" alt="「びびるのとう」をビビル文字にした画像" width="504" height="504" loading="lazy"></div>'
-               '<p class="moji-note">' + L('ひらがなを入れると、ビビル文字の碑文ができあがる。', 'Type in hiragana to make your own Bibilu stele.') + '</p>'
-               '<a class="btn" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener">' + L('ビビル文字を書いてみる', 'Write in Bibilu') + ' <span aria-hidden="true">↗</span></a></div>',
-    extra_img='<img class="stele" src="{{img:b_stele.webp}}" alt="古代の碑文。ビビル文字がびっしりと刻まれている" width="396" height="639" loading="lazy">',
     gallery=[('g_rule.webp', '説明シート「ビビルの塔はこんなゲーム!」', 'Rules summary sheet', 'wide'), ('g_pkg_front.webp', 'パッケージ(表)', 'Box (front)', ''), ('g_pkg_back.webp', 'パッケージ(裏)', 'Box (back)', '')],
     gallery_todo=[('プレイ中の写真', 'Gameplay photos'), ('内容物の写真', 'Components photo')],
     pkg='b_pkg.webp', pkg_size=(498, 760),
@@ -538,10 +512,11 @@ TEMPLATE = r'''<!doctype html>
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
-    .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent));border-color:var(--buy-ink,var(--on-accent));box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
-    .fab.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent),0 12px 28px rgba(0,0,0,.32)}
     .panel{background:#fff;color:var(--p-ink);border-radius:20px;padding:28px 30px}
     .panel .btn{background:var(--p-ink);color:#fff}
+    /* BOOTHで購入:土台がキーカラー2、文字がキーカラー1。枠線はメインビジュアルの上のときだけ */
+    .btn.buy,.panel .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent))}
+    .hero .btn.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
     .spec div{display:flex;align-items:baseline;gap:7px}
     .spec dt{font-size:12px;opacity:.75}
@@ -668,10 +643,10 @@ TEMPLATE = r'''<!doctype html>
     .steps.drag{cursor:grabbing;scroll-snap-type:none;user-select:none}
     .step{counter-increment:step;position:relative;flex:0 0 var(--card);scroll-snap-align:start;display:flex;flex-direction:column;gap:12px;padding:16px 16px 16px;border-radius:20px;background:#fff;color:var(--p-ink)}
     .step:not(:last-child)::after{content:"";position:absolute;left:calc(100% + (var(--gap) - 14px) / 2);top:calc(50% - 10px);border-style:solid;border-width:10px 0 10px 14px;border-color:transparent transparent transparent var(--k-ink)}
-    .step-head{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+    .step-head{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:4px;background:var(--p-ink);color:var(--k-ink);
       -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;font:900 22px/1 Georgia,"Times New Roman",serif}
-    .step-lead{margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
+    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
     .flow-ui{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
@@ -700,21 +675,6 @@ TEMPLATE = r'''<!doctype html>
     .ruler li{position:absolute;left:0;right:0;bottom:calc(var(--i) * var(--step) + 2px);color:#fff;font:900 12px/16px Georgia,serif;text-align:center}
     .manual-link{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;text-align:center}
     .manual-link p{margin:0;font-size:14px;font-weight:700;opacity:.85}
-    /* STORYの最後:取説の「スクープ!」欄を切り抜き記事ふうに */
-    .scoop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;align-items:center;width:min(780px,100%);margin:6px auto 0;padding:34px 40px;border-radius:6px;
-      background:var(--scoop-bg,#e8d3a0);color:var(--scoop-ink,#163f53);box-shadow:0 22px 36px -22px rgba(0,0,0,.45);rotate:-1deg}
-    .scoop:not(:has(.stele)){grid-template-columns:1fr}
-    .scoop-text{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .scoop .stele{width:160px;rotate:2deg}
-    .scoop .extra-kicker{margin:0}
-    .moji{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin-top:8px;padding-top:20px;border-top:2px dashed rgba(22,63,83,.25)}
-    .moji-h{margin:0;font-size:17px;font-weight:900;line-height:1.4}
-    .moji-h small{display:block;font-size:11px;font-weight:700;letter-spacing:.2em;opacity:.7}
-    .moji-demo{display:flex;align-items:center;justify-content:center;gap:12px}
-    .moji-in{padding:9px 14px;border:2px solid rgba(22,63,83,.35);border-radius:8px;background:#fffaf0;font-size:15px;font-weight:700}
-    .moji-arrow{font-size:20px;font-weight:900;opacity:.6}
-    .moji-out{width:150px;border-radius:6px;box-shadow:0 8px 16px -8px rgba(0,0,0,.4)}
-    .moji-note{margin:0;font-size:13px;font-weight:700}
     /* フォトギャラリー */
     .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
     .gallery figure{margin:0}
@@ -801,16 +761,9 @@ TEMPLATE = r'''<!doctype html>
     .tokens{display:flex;gap:5px;margin-top:8px}
     .tokens img{width:34px}
 
-    /* おまけ(もう1色の帯にじか置き) */
-    .extra-body{display:flex;flex-direction:column;align-items:center;gap:22px;max-width:820px;margin-inline:auto;text-align:center}
-    .extra-kicker{margin:0 0 -10px;padding:3px 14px;border-radius:999px;background:#d4242b;color:#fff;font-size:13px;font-weight:800}
-    .extra-title{margin:0;font-size:clamp(21px,2.6vw,28px);font-weight:900}
-    .extra-text{margin:0;font-size:15.5px;line-height:1.95;font-weight:700;max-width:30em;word-break:auto-phrase}
-    .extra-text em{font-style:normal;color:#d4242b}
-    .extra-img{width:100%;border-radius:18px}
-    .stele-wrap{display:flex;align-items:center;justify-content:center;gap:44px;text-align:left}
-    .stele{width:min(190px,46vw);border-radius:10px;box-shadow:0 18px 30px -16px rgba(0,0,0,.35)}
-    .stele-wrap p{margin:0 0 20px;font-size:15.5px;line-height:1.9;font-weight:700;max-width:24em}
+    /* 関連コンテンツ */
+    .rel-row{justify-content:center;gap:18px}
+    .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
 
     /* 購入 */
     .buy-box{display:grid;grid-template-columns:minmax(140px,210px) minmax(0,1fr);gap:44px;align-items:center;padding:34px 40px}
@@ -854,7 +807,7 @@ TEMPLATE = r'''<!doctype html>
 
     /* ===== 追従するBOOTHボタン(メインビジュアルと購入欄が見えていない間だけ) ===== */
     .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;
-      display:flex;align-items:center;gap:.5em;min-height:48px;padding:0 22px 0 70px;border:2px solid var(--on-accent);border-radius:999px;
+      display:flex;align-items:center;gap:.5em;min-height:48px;padding:0 22px 0 70px;border:0;border-radius:999px;
       background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;box-shadow:0 12px 28px rgba(0,0,0,.32);
       opacity:0;translate:0 18px;visibility:hidden;transition:opacity .2s ease,translate .25s ease,visibility 0s linear .25s}
     .fab.show{opacity:1;translate:0 0;visibility:visible;transition:opacity .25s ease,translate .45s cubic-bezier(.3,1.6,.5,1),visibility 0s}
@@ -976,9 +929,6 @@ TEMPLATE = r'''<!doctype html>
       .billing .btn{width:100%;justify-content:center}
       .screen-band{padding:14px 0}
       .cinema .vplayer{width:100%}
-      .scoop{grid-template-columns:1fr;gap:20px;padding:26px 18px;rotate:-.6deg}
-      .moji-out{width:120px}
-      .scoop .stele{width:120px;margin-inline:auto}
       .gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
       .gitem,.gph{min-height:150px}
       .vplay{width:56px;height:56px;font-size:19px}
@@ -1016,8 +966,6 @@ TEMPLATE = r'''<!doctype html>
       .hand .c{width:min(60px,15vw)}
       .w-bird{width:84px}
       .marker{width:36px}
-      .stele-wrap{flex-direction:column;gap:22px}
-      .extra-text{font-size:14.5px}
       .buy-box{grid-template-columns:1fr;gap:22px;padding:24px 18px}
       .buy-box .pkg{width:min(160px,50%);margin-inline:auto}
       .buy-box .btn{display:flex;justify-content:center}
@@ -1026,6 +974,7 @@ TEMPLATE = r'''<!doctype html>
       .roll div{grid-template-columns:1fr;gap:2px}
       .roll dt,.roll dd{text-align:center}
       .bg-card{height:180px}
+      .rel-row .bg-card{height:200px}
       .site-footer{flex-direction:column;gap:8px}
     }
   </style>
@@ -1060,7 +1009,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title">
+  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title"{{video_hidden}}>
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title">{{L:紹介動画|Videos}}</h2></div></header>
@@ -1135,17 +1084,8 @@ TEMPLATE = r'''<!doctype html>
     </div>
   </section>
 
-  <!-- おまけ:興味のある人向けに最後に -->
-  <section class="band band-c extra" id="extra" aria-labelledby="extra-title">
-    <div class="wrap">
-      <header class="sec-head reveal"><p class="en" aria-hidden="true">EXTRA</p><div class="sec-row"><h2 class="pill sec-h" id="extra-title">{{L:おまけ|Extras}}</h2></div></header>
-      <article class="scoop reveal" aria-labelledby="scoop-title">
-        <div class="scoop-text">{{extra_kicker_html}}<h3 class="extra-title" id="scoop-title">{{extra_title}}</h3>{{extra_html}}</div>
-        {{extra_img}}
-      </article>
-    </div>
-  </section>
-
+  <!-- 関連コンテンツ(編集画面の「関連コンテンツ」で選んだものだけ。なければ出ない) -->
+{{related_html}}
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
   <a class="fab buy" href="{{booth}}" target="_blank" rel="noopener"><img src="{{img:{{fab_pkg}}}}" alt="" width="44" height="67">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
@@ -1325,11 +1265,34 @@ def card_href(x):   # トップのカードのリンク先を、作品ページ�
         return '../' + u[len('games/'):]
     return u or '../../#board'
 
+def game_card(x):   # トップと同じボードゲームのカード
+    e = H.escape
+    return '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (
+        card_href(x), ' target="_blank" rel="noopener"' if str(x.get('page') or '').startswith('http') else '', imgname(x['front']), e(x['name']),
+        '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '')
+def tool_card(t):   # トップと同じツールのカード(文字=キーカラー1、背景=キーカラー2)
+    e = H.escape
+    return '      <li><a class="bg-card bg-tool" href="%s" target="_blank" rel="noopener" style="background:%s;color:%s">%s<span class="bt-name">%s</span></a></li>' % (
+        e(t['url']), e(t.get('key2') or '#163f53'), e(t.get('key1') or '#fff'), tool_art(t), tool_title(t))
+def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツールのカード。なければ何も出さない
+    tools = {t['key']: t for t in g['tools']}
+    cards = [tool_card(tools[k]) if k in tools else game_card(g['games'][k]) for k in g['related'] if k != key and (k in tools or k in g['games'])]
+    if not cards:
+        return ''
+    return '''  <section class="band band-c related" id="related" aria-labelledby="related-title">
+    <div class="wrap">
+      <header class="sec-head reveal"><p class="en" aria-hidden="true">RELATED</p><div class="sec-row"><h2 class="pill sec-h" id="related-title">{{L:関連コンテンツ|Related}}</h2></div></header>
+      <ul class="bg-row rel-row reveal">
+%s
+      </ul>
+    </div>
+  </section>''' % '\n'.join(cards)
+
 def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
     steps = '\n'.join('''          <li class="step reveal %s">
-            <div class="step-head"><span class="snum" aria-label="ステップ%d">%d</span><p class="step-lead">%s</p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ%d">%d</span><p class="step-lead"><span>%s</span></p></div>
             <div class="viz">%s</div>
           </li>''' % (st.get('cls', ''), n + 1, n + 1, hl(e(st['b'])), st['v']) for n, st in enumerate(g['steps']))
     credits = '\n'.join('    <div style="--i:%d"><dt>%s</dt><dd>%s</dd></div>' % (i, e(a), e(b)) for i, (a, b) in enumerate(g['credits']))
@@ -1343,10 +1306,9 @@ def render(key):
         catch=br(e(g['catch'])), intro=br(e(g['intro'])), intro_img=g['intro_img'][0], intro_alt=e(g['intro_img'][1]), intro_cls=g['intro_img'][2],
         summary=br(re.sub(r'\[\[(.+?)\]\]', r'<em>\1</em>', e(g['summary']))),
         spec_html='\n'.join('            <div><dt>%s</dt><dd>%s</dd></div>' % (e(a), e(b)) for a, b in g['spec']),
-        steps_html=steps, extra_title=e(g['extra_title']), extra_html=hl(g['extra_html']), extra_img=g.get('extra_img', ''), manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
+        steps_html=steps, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
         gallery_html='\n'.join(['        <figure class="%s"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button></figure>' % (c, e(t), f, e(t)) for f, t, te, c in g.get('gallery', [])]
                                 + ['        <div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
-        extra_kicker_html=('<p class="extra-kicker">%s</p>' % e(g['extra_kicker'])) if g.get('extra_kicker') else '',
         pkg=g['pkg'], pkg_w=g['pkg_size'][0], pkg_h=g['pkg_size'][1], contents=br(e(g['contents'])),
         price_html=('<p class="price">%s<small>{{L:BOOTH価格|on BOOTH}}</small></p>' % e(g['price'])) if g['price'] else '',
         credits_html=credits,
@@ -1354,15 +1316,12 @@ def render(key):
         piece_img=g.get('piece_img', ''), piece_alt=e(g.get('piece_alt', '')),
         chara_note=e(g.get('chara_note', '')).replace('\n', '<br>'),
         fab_pkg=g.get('fab_pkg', 'bibilu_pkg_sm.webp'),
-        videos_html='\n'.join('          <figure class="vslide" data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="{{img:%s}}" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta">%s%s</span></button></figure>' % (
-            e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), imgname(v.get('poster')) or g['poster'], LL(v, 'kind'), '' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>') for v in g['videos']),
+        videos_html='\n'.join('          <figure class="vslide" data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="%s" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta">%s%s</span></button></figure>' % (
+            e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']), LL(v, 'kind'), '' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>') for v in g['videos']),
         vdots_html=''.join('<button type="button"%s>%s</button>' % (' aria-current="true"' if i == 0 else '', LL(v, 'kind')) for i, v in enumerate(g['videos'])),
-        lineup_html='\n'.join(
-            '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (
-                card_href(x), ' target="_blank" rel="noopener"' if str(x.get('page') or '').startswith('http') else '', imgname(x['front']), e(x['name']),
-                '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '') for x in g['games'].values() if x['key'] != key) + '\n' + '\n'.join(
-            '      <li><a class="bg-card bg-tool" href="%s" target="_blank" rel="noopener" style="background:%s;color:%s">%s<span class="bt-name">%s</span></a></li>' % (
-                e(t['url']), e(t.get('key2') or '#163f53'), e(t.get('key1') or '#fff'), tool_art(t), tool_title(t)) for t in g['tools']),
+        lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),
+        related_html=related_html(g, key),
+        video_hidden='' if g['videos'] else ' hidden',
     )
     s = TEMPLATE
     for _ in range(3):

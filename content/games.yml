@@ -9,6 +9,7 @@
   key1: '#fff5d7'
   key2: '#153e53'
   extra_color: ''
+  bg: key2
   logo_color: key1
   players: 2〜4
   time: 10〜15
@@ -28,6 +29,7 @@
   logo: img/logo_trico.png
   key1: '#fdd000'
   key2: '#664498'
+  bg: key2
   logo_color: key1
   players: 2〜3
   time: 10〜15
@@ -52,6 +54,7 @@
   logo: img/logo_ikatako.png
   key1: '#ffffff'
   key2: '#0073bd'
+  bg: key2
   logo_color: key1
   players: 1〜6
   time: 5〜15
@@ -71,6 +74,7 @@
   logo: img/logo_moko.png
   key1: '#f19ebc'
   key2: '#39278b'
+  bg: key2
   logo_color: key1
   players: 2〜4
   time: 10〜15
@@ -91,6 +95,7 @@
   logo: img/koikoilogo.png
   key1: '#ffffff'
   key2: '#48b0e5'
+  bg: key2
   logo_color: original
   players: '2'
   time: 5〜10
@@ -109,6 +114,7 @@
   logo: img/bashlogo_4C.png
   key1: '#ffffff'
   key2: '#e60039'
+  bg: key2
   logo_color: original
   players: '2'
   time: 5〜10
