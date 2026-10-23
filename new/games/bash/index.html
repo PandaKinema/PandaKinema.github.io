@@ -55,6 +55,9 @@
 
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
+    /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
+    :root{--page-max:1440px}
+    main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}
     .pan-h{background:var(--pan-bg);color:var(--pan-ink);font-size:16px}
@@ -284,7 +287,7 @@
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
-    .flow{--gut:max(20px,calc((100vw - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - 50vw)}
+    .flow{--gut:max(20px,calc((min(100vw,var(--page-max)) - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - min(50vw,var(--page-max) / 2))}
     .steps{list-style:none;margin:0;display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
       padding:8px 20px 16px var(--gut);scrollbar-width:none;counter-reset:step;cursor:grab}
     .steps::-webkit-scrollbar{display:none}
@@ -681,8 +684,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:213px;--lar:1.2653;--hero-bg:#090305;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
-    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill" style="background-image:url(../../img/page/bash_side.png?v=a011a64f)"></div><div class="art-box"><img class="art-bg" src="../../img/page/bash_top.jpg?v=26bceaab" alt="" fetchpriority="high"></div></div></div>
+  <section class="hero hero-cover light" style="--lw:213px;--lar:1.2653;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill" style="background-image:url(../../img/page/bash_side.png?v=e4e99020)"></div><div class="art-box"><img class="art-bg" src="../../img/page/bash_top.jpg?v=86b4feb4" alt="" fetchpriority="high"></div></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         

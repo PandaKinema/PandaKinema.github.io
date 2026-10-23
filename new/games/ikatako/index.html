@@ -55,6 +55,9 @@
 
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
+    /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
+    :root{--page-max:1440px}
+    main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}
     .pan-h{background:var(--pan-bg);color:var(--pan-ink);font-size:16px}
@@ -303,7 +306,7 @@
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
-    .flow{--gut:max(20px,calc((100vw - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - 50vw)}
+    .flow{--gut:max(20px,calc((min(100vw,var(--page-max)) - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - min(50vw,var(--page-max) / 2))}
     .steps{list-style:none;margin:0;display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
       padding:8px 20px 16px var(--gut);scrollbar-width:none;counter-reset:step;cursor:grab}
     .steps::-webkit-scrollbar{display:none}
@@ -701,7 +704,7 @@
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
   <section class="hero hero-cover light" style="--lw:600px;--lar:3.7353;--hero-bg:#0e396e;--hero-ink:#ffffff;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
-    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill edge" style="--edge-l:linear-gradient(#115287 0.0%,#0e3a70 8.3%,#0a3a6f 16.7%,#0e386f 25.0%,#0d3e75 33.3%,#143268 41.7%,#0167b5 50.0%,#036bb6 58.3%,#015dac 66.7%,#025dab 75.0%,#0056a5 83.3%,#0257a4 91.7%,#004c97 100.0%);--edge-r:linear-gradient(#0b5189 0.0%,#103572 8.3%,#0c3b70 16.7%,#0a3d74 25.0%,#133469 33.3%,#074482 41.7%,#0254a6 50.0%,#014c9c 58.3%,#024fa0 66.7%,#034695 75.0%,#044493 83.3%,#043e8a 91.7%,#03428c 100.0%)"></div><div class="art-box"><img class="art-bg" src="../../img/page/ikatako_top.jpg?v=57838fea" alt="" fetchpriority="high"></div></div></div>
+    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill edge" style="--edge-l:linear-gradient(#034278 0.0%,#0c3b71 8.3%,#0a396e 16.7%,#0e386f 25.0%,#0c3e74 33.3%,#143167 41.7%,#0266b5 50.0%,#056cb6 58.3%,#035fad 66.7%,#055dac 75.0%,#0054a4 83.3%,#0458a4 91.7%,#02519b 100.0%);--edge-r:linear-gradient(#05427d 0.0%,#113672 8.3%,#0a3a6f 16.7%,#0b3b73 25.0%,#123467 33.3%,#07437f 41.7%,#0456a6 50.0%,#014c9c 58.3%,#024ea0 66.7%,#044595 75.0%,#054393 83.3%,#053d8a 91.7%,#034189 100.0%)"></div><div class="art-box"><img class="art-bg" src="../../img/page/ikatako_top.jpg?v=19b58b7e" alt="" fetchpriority="high"></div></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         

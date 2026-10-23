@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v37
+# パンダキネマ 作品ページ 共通フォーマット v38
+#     v38: 作品ページの幅に上限(1440px)。その外はサイトの黒い下地
 #     v37: トップの絵はいつも全部見せる(画面の高さに合わせる)。横長の画面では左右を模様か端の色でつなぐ
 #     v36: 編集画面で画像を消したら、帯・模様・見出しの飾りも消える(デザインの初期値に戻らない)
 #     v35: 黒文字の代わりに作品の色を暗くした色
@@ -1075,6 +1076,9 @@ TEMPLATE = r'''<!doctype html>
 
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
+    /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
+    :root{--page-max:1440px}
+    main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}
     .pan-h{background:var(--pan-bg);color:var(--pan-ink);font-size:16px}
@@ -1270,7 +1274,7 @@ TEMPLATE = r'''<!doctype html>
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
-    .flow{--gut:max(20px,calc((100vw - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - 50vw)}
+    .flow{--gut:max(20px,calc((min(100vw,var(--page-max)) - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - min(50vw,var(--page-max) / 2))}
     .steps{list-style:none;margin:0;display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
       padding:8px 20px 16px var(--gut);scrollbar-width:none;counter-reset:step;cursor:grab}
     .steps::-webkit-scrollbar{display:none}

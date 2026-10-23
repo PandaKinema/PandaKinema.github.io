@@ -56,6 +56,9 @@
 
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
+    /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
+    :root{--page-max:1440px}
+    main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}
     .pan-h{background:var(--pan-bg);color:var(--pan-ink);font-size:16px}
@@ -251,7 +254,7 @@
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
-    .flow{--gut:max(20px,calc((100vw - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - 50vw)}
+    .flow{--gut:max(20px,calc((min(100vw,var(--page-max)) - 1100px) / 2));--card:320px;--gap:46px;margin-inline:calc(50% - min(50vw,var(--page-max) / 2))}
     .steps{list-style:none;margin:0;display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
       padding:8px 20px 16px var(--gut);scrollbar-width:none;counter-reset:step;cursor:grab}
     .steps::-webkit-scrollbar{display:none}
@@ -648,8 +651,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:600px;--lar:3.6066;--hero-bg:#5ca498;--hero-ink:#113242;--hero-ink:#ffffff;--art-pos:50% 0%" aria-labelledby="title">
-    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill edge" style="--edge-l:linear-gradient(#459990 0.0%,#669e90 8.3%,#74a691 16.7%,#7ca58a 25.0%,#779268 33.3%,#d6c252 41.7%,#9b812a 50.0%,#d6bd49 58.3%,#766a2f 66.7%,#574034 75.0%,#5a4335 83.3%,#513c32 91.7%,#553f33 100.0%);--edge-r:linear-gradient(#a6c4a6 0.0%,#71af8b 8.3%,#7db38c 16.7%,#7aad7e 25.0%,#8fa573 33.3%,#8c7530 41.7%,#e0c13a 50.0%,#edd34b 58.3%,#704b35 66.7%,#be741e 75.0%,#ce8726 83.3%,#c88729 91.7%,#cc8b21 100.0%)"></div><div class="art-box"><img class="art-bg" src="../../img/page/bibilu_top.jpg?v=213f4f4f" alt="" fetchpriority="high"></div></div></div>
+  <section class="hero hero-cover light" style="--lw:600px;--lar:3.6066;--hero-bg:#5ea69a;--hero-ink:#123446;--hero-ink:#fff5d7;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill edge" style="--edge-l:linear-gradient(#40988f 0.0%,#639e8f 8.3%,#74a993 16.7%,#7ba78a 25.0%,#789366 33.3%,#d7c34b 41.7%,#9d8427 50.0%,#d7be42 58.3%,#766a2d 66.7%,#593f34 75.0%,#5c4332 83.3%,#523b32 91.7%,#563e33 100.0%);--edge-r:linear-gradient(#accbab 0.0%,#70b08b 8.3%,#7ab38b 16.7%,#78ad7d 25.0%,#8da470 33.3%,#8c742c 41.7%,#e2c134 50.0%,#eed345 58.3%,#704a33 66.7%,#c1741a 75.0%,#d18822 83.3%,#cc8826 91.7%,#c98518 100.0%)"></div><div class="art-box"><img class="art-bg" src="../../img/page/bibilu_top.jpg?v=00d0f485" alt="" fetchpriority="high"></div></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         
