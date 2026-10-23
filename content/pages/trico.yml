@@ -40,12 +40,20 @@ heading_icon: img/t_bird_sten.png
 step_icon: img/t_bird_sil.png
 catch_ja: あのコをとりこにするために
 catch_en: To win her heart
-intro_ja: どこかに生息するカラフルな鳥、トリコ。3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!
+intro_ja: |-
+  どこかに生息するカラフルな鳥、トリコ。  
+  3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。  
+  ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。  
+  見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!
 intro_en: Somewhere lives a colorful bird called Trico. Three males are courting
   the beautiful female, Nico, trying to win her heart. But Nico’s taste changes
   with the color of the gems each one brings. If Nico accepts gems of all three
   colors, proudly declare “Trico!”
-summary_ja: カードを手札から出し合い、場に出た色の数で勝敗が決まる「**アピール**」を行います。勝ったプレイヤーは場に出た3枚のカードのうち、好きなカードを獲得します。これを繰り返し、得点カードの中に**3色が揃ったら、「トリコ!」と宣言してラウンド勝利**となります。最初に**2回**ラウンド勝利したプレイヤーがこのゲームの勝者です。
+summary_ja: |-
+  カードを手札から出し合い、場に出た色の数で勝敗が決まる「**アピール**」を行います。  
+  勝ったプレイヤーは場に出た3枚のカードのうち、好きなカードを獲得します。  
+  これを繰り返し、得点カードの中に**3色が揃ったら、「トリコ!」と宣言してラウンド勝利**となります。  
+  最初に**2回**ラウンド勝利したプレイヤーがこのゲームの勝者です。
 summary_en: Players play cards from their hands in an **“Appeal,”** where the
   number of colors on the table decides the winner. The winner takes any one of
   the 3 cards played. Repeat this, and **when your cards hold all 3 colors,
@@ -53,13 +61,13 @@ summary_en: Players play cards from their hands in an **“Appeal,”** where th
   the game.
 characters:
   - image: img/t_tricoP.webp
-    name_ja: 紫トリコ
+    name_ja: ティガ（紫トリコ）
     name_en: Purple Trico
   - image: img/t_tricoR.webp
-    name_ja: 赤トリコ
+    name_ja: トロワ（赤トリコ）
     name_en: Red Trico
   - image: img/t_tricoY.webp
-    name_ja: 黄トリコ
+    name_ja: サン（黄トリコ）
     name_en: Yellow Trico
   - image: img/t_nico.webp
     name_ja: ニコ
