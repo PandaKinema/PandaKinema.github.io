@@ -24,7 +24,7 @@
   logo: img/logo_trico.png
   main: "#664498"
   accent: "#fdd000"
-  logo_color: main
+  logo_color: accent
   players: 2〜3
   time: 10〜15
   age: "6"
