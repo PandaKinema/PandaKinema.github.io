@@ -57,6 +57,8 @@ content:
       - { name: key, label: 作品・ツール, type: select, options: { values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "バナーに出す作品かツール。自分で作った画像だけのバナーなら空のまま" }  # AUTO:works
       - { name: youtube, label: 背景で流すYouTube, type: string, description: "YouTubeのURL。key と一緒に入れると、ロゴやボタンはそのままで背景に音なしで流れます" }
       - { name: video, label: 背景で流す動画(mp4), type: file, description: "mp4 の動画。key と一緒に入れると背景で流れます(YouTubeより優先)。10MB以下くらいに" }
+      - { name: start, label: 動画の開始(秒), type: string, description: "動画のどこから流すか。例:30 / 1:05。空なら最初から" }
+      - { name: end, label: 動画の終了(秒), type: string, description: "ここまで流したら次のバナーへ(開始〜終了の間だけ表示)。空ならいつもの秒数で切り替え" }
       - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "key を空にして、画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上" }
       - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
       - { name: bg, label: 読み込み中の色, type: string, description: "画像や動画が出るまでの背景色。例:#173f54。空なら黒" }
@@ -73,15 +75,13 @@ content:
       - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前。あとから変えない" }
       - { name: name, label: 作品名, type: string, required: true }
       - { name: series, label: シリーズ名, type: string, description: "例:MINI THEATER SERIES 01。バナーのロゴの上に出ます。空でOK" }
-      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの下の中央とバナーに「新作」が出ます" }
+      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの上の中央とバナーに「新作」が出ます" }
       - { name: front, label: 閉じたカードの画像, type: image, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
       - { name: pkg, label: パッケージ, type: image, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
-      - { name: key1, label: キーカラー1, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その1(例:パッケージの帯の色)。ほかの色の欄はここから選びます。色見本 → https://pandakinema.github.io/new/colors.html" }
-      - { name: key2, label: キーカラー2, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その2(例:パッケージの面の色)。色見本 → https://pandakinema.github.io/new/colors.html" }
-      - { name: extra_color, label: その他の色(必要なときだけ), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#fef4d6 のような6けたの色コードで" }, description: "キーカラー2色と白・黒以外の色を使いたいときだけ。各欄で「その他の色」を選ぶと使われます", hidden: true }
-      - { name: bg, label: 背景の色, type: select, default: key2, options: { values: [ { value: key2, label: "キーカラー2" }, { value: key1, label: "キーカラー1" } ] }, description: "カード・バナー・作品ページの背景。帯と文字の色は、もう一方のキーカラーで自動" }
-      - { name: logo_color, label: ロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: original, label: "ロゴ画像の色のまま" } ] } }
+      - { name: main, label: メインカラー, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "背景の色(カード・バナー・作品ページ)。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: accent, label: アクセントカラー, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "帯・人数〜年齢の下地・文字の色。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: logo_color, label: ロゴの色, type: select, default: accent, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] } }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
@@ -89,7 +89,7 @@ content:
       - { name: genre_en, label: ジャンル(英語), type: string, hidden: true }
       - { name: intro_ja, label: 紹介文, type: text, description: "トップのバナーに出る短い紹介。1〜2文" }
       - { name: intro_en, label: 紹介文(英語), type: text, description: "空なら日本語をそのまま表示", hidden: true }
-      - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
+      - { name: page, label: 「見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
       - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
       - name: banner
         label: バナー
@@ -112,11 +112,33 @@ content:
         fields: &pagefields
           - { name: title, label: 作品名, type: string, hidden: true }
           - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
-          - { name: now_label, label: 右上の表示, type: string, description: "例:NOW SHOWING", hidden: true }
           - { name: logo, label: ロゴ(一番上), type: image, options: { media: pages } }
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages }, hidden: true }
+          - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならメインカラー(トップと同じ)。文字の色は自動" }
+          - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "空ならアクセントカラー(トップと同じ)。文字の色は自動" }
+          - name: hero
+            label: メインビジュアル(いちばん上)
+            description: "背景の絵を入れると全面に敷きます。絵がなく部品を入れると、模様の上に部品を重ねて動かします。どちらもなければ、トップの閉じたカードの画像を出します"
+            type: object
+            fields:
+              - { name: art, label: 背景の絵, type: image, options: { media: pages }, description: "画面いっぱいに敷く絵(文字なし)。横1600px以上" }
+              - { name: art_pos, label: 背景の絵の見せる位置, type: string, description: "例:50% 50%(左右 上下)。空なら中央", hidden: true }
+              - { name: pattern, label: 模様, type: select, options: { values: [ { value: none, label: "なし" }, { value: tri, label: "トリコの三角" } ] }, description: "部品の後ろの模様。色は背景の色から" }
+              - { name: width, label: 部品の大きさ(px), type: number, description: "1枚目の部品の幅。例:380" }
+              - name: layers
+                label: 部品
+                description: "1枚目が土台。2枚目からは土台に対する位置と大きさ(%)。上にあるものほど後ろ"
+                type: object
+                list: true
+                fields:
+                  - { name: image, label: 画像, type: image, options: { media: pages }, description: "背景透明" }
+                  - { name: x, label: 横の位置(%), type: number, description: "土台の左はしが0、右はしが100。マイナスもOK(2枚目から)" }
+                  - { name: y, label: 縦の位置(%), type: number, description: "土台の上はしが0、下はしが100(2枚目から)" }
+                  - { name: width, label: 幅(%), type: number, description: "土台の幅に対する大きさ(2枚目から)" }
+                  - { name: rotate, label: 傾き(度), type: number, description: "例:-14" }
+                  - { name: motion, label: 動き, type: select, options: { values: [ { value: rise, label: "下からぽよん" }, { value: pop, label: "ぽんと出て ゆらゆら" }, { value: float, label: "ふわふわ" }, { value: hop, label: "ときどき跳ねる" }, { value: fade, label: "ふわっと出る" }, { value: none, label: "動かない" } ] } }
           - { name: bg1_image, label: 濃い背景の模様, type: image, options: { media: pages }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
           - { name: bg2_image, label: 明るい背景の模様, type: image, options: { media: pages }, description: "空なら色だけ" }
           - { name: band_image, label: 帯の模様, type: image, options: { media: pages }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
@@ -124,7 +146,7 @@ content:
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { media: pages }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - { name: catch_ja, label: キャッチコピー, type: string }
           - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
-          - { name: intro_ja, label: ストーリー, type: text }
+          - { name: intro_ja, label: ストーリー, type: rich-text, description: "太字(B)にしたところが強調の色になります" }
           - { name: intro_en, label: ストーリー(英語), type: text, hidden: true }
           - name: characters
             label: キャラクター
@@ -136,9 +158,9 @@ content:
               - { name: float, label: 浮かぶ部品, type: image, options: { media: pages }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
-              - { name: note_ja, label: プロフィール, type: text }
+              - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
-          - { name: summary_ja, label: "どんなゲーム?", type: text, description: "[[ ]] で囲んだところが赤字(強調)になります" }
+          - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
@@ -146,7 +168,7 @@ content:
             type: object
             list: true
             fields:
-              - { name: text_ja, label: 説明, type: text, description: "[[ ]] で囲んだところが赤字(強調)" }
+              - { name: text_ja, label: 説明, type: rich-text, description: "太字(B)にしたところが赤字(強調)" }
               - { name: text_en, label: 説明(英語), type: text, hidden: true }
           - { name: manual_ja, label: 遊び方説明書のURL, type: string }
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
@@ -200,15 +222,16 @@ content:
       - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前" }
       - { name: name, label: ツール名, type: string, required: true }
       - { name: url, label: ツールのURL, type: string, required: true }
-      - { name: title_image, label: タイトル画像, type: image, description: "ロゴ画像があれば。空ならツール名を文字で出す" }
-      - { name: image, label: バナーの絵(画面写真など), type: image }
-      - { name: thumb, label: 一覧の絵(正方形), type: image, description: "PLAY&TOOLS の一覧に出る絵。空ならバナーの絵" }
+      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの上の中央に「新作」が出ます" }
+      - { name: front, label: 閉じたカードの画像, type: image, description: "ボードゲームと同じ 840×1185。空なら一覧の絵とタイトルで作ります" }
+      - { name: title_image, label: ロゴ(タイトル画像), type: image, description: "背景透明。空ならツール名を文字で出す" }
+      - { name: logo_color, label: ロゴの色, type: select, default: original, options: { values: [ { value: original, label: "ロゴ画像の色のまま" }, { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+      - { name: image, label: 開いたカードとバナーの絵(画面写真など), type: image }
+      - { name: thumb, label: 一覧の絵(正方形), type: image, description: "閉じたカードの画像がないときに使う絵。空ならバナーの絵", hidden: true }
       - { name: intro_ja, label: 紹介文, type: text }
       - { name: intro_en, label: 紹介文(英語), type: text, hidden: true }
-      - { name: button_ja, label: ボタンの文字, type: string, description: "例:あそぶ / つかう" }
-      - { name: button_en, label: ボタンの文字(英語), type: string, description: "例:Play / Open", hidden: true }
-      - { name: key1, label: キーカラー1(明るい色), type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#ffffff のような6けたの色コードで" }, description: "文字の色" }
-      - { name: key2, label: キーカラー2(濃い色), type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#163f53 のような6けたの色コードで" }, description: "背景の色" }
+      - { name: main, label: メインカラー, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "背景の色" }
+      - { name: accent, label: アクセントカラー, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "文字の色" }
       - { name: video, label: バナーの動画, type: file, description: "mp4・音なし。10MB以下くらいに" }
       - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 

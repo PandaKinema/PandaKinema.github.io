@@ -4,10 +4,9 @@
   front: img/bibilu_bdg.png
   pkg: img/pkg_bibilu.webp
   logo: img/logo_bibilu.png
-  key1: "#fff5d7"
-  key2: "#153e53"
-  bg: key2
-  logo_color: key1
+  main: "#153e53"
+  accent: "#fff5d7"
+  logo_color: accent
   players: 2〜4
   time: 10〜15
   age: "6"
@@ -23,10 +22,9 @@
   front: img/trico_bdg.png
   pkg: img/pkg_trico.webp
   logo: img/logo_trico.png
-  key1: "#fdd000"
-  key2: "#664498"
-  bg: key2
-  logo_color: key1
+  main: "#664498"
+  accent: "#fdd000"
+  logo_color: accent
   players: 2〜3
   time: 10〜15
   age: "6"
@@ -48,10 +46,9 @@
   front: img/ikatako_bdg.png
   pkg: img/pkg_ikatako.webp
   logo: img/logo_ikatako.png
-  key1: "#ffffff"
-  key2: "#0073bd"
-  bg: key2
-  logo_color: key1
+  main: "#0073bd"
+  accent: "#ffffff"
+  logo_color: accent
   players: 1〜6
   time: 5〜15
   age: "8"
@@ -67,10 +64,9 @@
   front: img/mocochaka_bdg.png
   pkg: img/pkg_moko.webp
   logo: img/logo_moko.png
-  key1: "#f19ebc"
-  key2: "#39278b"
-  bg: key2
-  logo_color: key1
+  main: "#39278b"
+  accent: "#f19ebc"
+  logo_color: accent
   players: 2〜4
   time: 10〜15
   age: "6"
@@ -87,9 +83,8 @@
   front: img/koikoi_bdg.png
   pkg: img/mini_koikoi.webp
   logo: img/koikoilogo.png
-  key1: "#ffffff"
-  key2: "#48b0e5"
-  bg: key2
+  main: "#48b0e5"
+  accent: "#ffffff"
   logo_color: original
   players: "2"
   time: 5〜10
@@ -105,9 +100,8 @@
   front: img/bash_bdg.png
   pkg: img/mini_bash.webp
   logo: img/bashlogo_4C.png
-  key1: "#ffffff"
-  key2: "#e60039"
-  bg: key2
+  main: "#e60039"
+  accent: "#ffffff"
   logo_color: original
   players: "2"
   time: 5〜10

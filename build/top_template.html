@@ -68,7 +68,7 @@
     .b-shot{width:100%;height:auto;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 22px 40px -14px rgba(0,0,0,.6),0 3px 10px rgba(0,0,0,.25)}
     .b-name .tool-name{display:block;font-size:clamp(28px,3.4vw,46px);font-weight:900;line-height:1.2}
     .b-link{position:absolute;inset:0;display:block;z-index:2}
-    .slide.has-vid::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 62%)}
+    .slide.has-vid::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.62) 30%,rgba(0,0,0,.25) 52%,rgba(0,0,0,0) 72%)}   /* 動画のときは文字のある左側を暗く */
     .slide::after{content:"";position:absolute;inset:auto 0 0;height:22%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.5) 60%,var(--bg))}
     .b-in{position:absolute;left:max(20px,6vw);top:50%;translate:0 -54%;z-index:2;width:min(540px,42vw);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
     .b-logo{display:block;width:min(440px,100%);background:var(--lc);-webkit-mask:var(--lg) left center/contain no-repeat;mask:var(--lg) left center/contain no-repeat}
@@ -80,6 +80,7 @@
     .b-series{display:flex;align-items:center;line-height:1;flex-wrap:wrap;gap:8px;margin:0;font-family:var(--cond);font-size:clamp(12px,1.2vw,15px);font-weight:700;letter-spacing:.06em;opacity:.85}
     .b-meta{display:flex;flex-wrap:wrap;column-gap:1.2em;row-gap:3px;margin:0;font-size:clamp(11px,1vw,13px);font-weight:800;letter-spacing:.02em;opacity:.85}
     .b-meta .m-spec{white-space:nowrap}
+    .b-meta .m-gen{flex-basis:100%}   /* ジャンルは次の行 */
     .b-intro{margin:0;max-width:30em;font-size:clamp(12.5px,1.15vw,15.5px);font-weight:600;line-height:1.8}
     .b-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
     .wb{display:inline-flex;align-items:center;justify-content:center;gap:.45em;padding:8px 15px;border-radius:7px;background:#fff;color:#16181a;font-size:13px;font-weight:900;letter-spacing:.04em;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;transition:translate .15s ease}
@@ -144,6 +145,10 @@
     .news li a{display:flex;align-items:center;gap:12px;min-height:32px;font-size:14px;font-weight:700}
     .news time{font-variant-numeric:tabular-nums;white-space:nowrap}
     .news .cat{padding:1px 6px;border:1.5px solid var(--text);font-size:11.5px;white-space:nowrap}
+    /* カテゴリはいちばん長いものと同じ幅。短いものは字の間を空けてそろえる。タイトルの頭が縦にそろう */
+    .news .cat{flex:none;box-sizing:content-box;width:calc(var(--catw,4) * 1em);justify-content:center}
+    .news .cat [lang="ja"]{flex:1;text-align:justify;text-align-last:justify}
+    .news .cat [lang="en"]{flex:1;text-align:center}
     .news .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .news li a:hover .t{text-decoration:underline}
     .nscroll{flex-direction:column;justify-content:space-between}
@@ -174,10 +179,10 @@
     .row::-webkit-scrollbar{display:none}
     .card{position:relative;flex:0 0 var(--cw);height:var(--h);border-radius:12px;overflow:hidden;background:var(--c2);transition:flex-basis .45s cubic-bezier(.2,.8,.2,1)}
     .c-face{position:absolute;inset:0;cursor:pointer;transition:opacity .25s ease}
-    .c-face img{width:100%;height:100%;object-fit:cover;transition:scale .4s ease}
-    .card:hover .c-face img{scale:1.03}
+    .c-face>img{width:100%;height:100%;object-fit:cover;transition:scale .4s ease}
+    .card:hover .c-face>img{scale:1.03}
 
-    .c-new{position:absolute;left:50%;bottom:10px;translate:-50% 0;z-index:1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3);padding:2px 9px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em}
+    .c-new{position:absolute;left:50%;top:10px;translate:-50% 0;z-index:1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3);padding:2px 9px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em}
     .c-open{position:absolute;top:0;bottom:0;left:0;width:var(--ow);display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:22px;padding:0 26px 0 22px;background:var(--c2);opacity:0;pointer-events:none;transition:opacity .3s ease .12s}
     .o-pkg{height:calc(var(--h) * .84);width:auto;max-width:none;filter:drop-shadow(0 14px 16px rgba(0,0,0,.28))}
     .o-pkg.wide{height:auto;width:calc(var(--ow) * .44);border-radius:4px;filter:none;box-shadow:0 12px 20px -8px rgba(0,0,0,.5),0 2px 5px rgba(0,0,0,.25)}
@@ -241,6 +246,19 @@
     .tl-t .wb{align-self:center;min-width:0;margin:6px 0 4px;padding:5px 14px;font-size:12px;border-radius:6px}
     .tool:hover .wb{translate:0 -2px}
     .tool.soon{display:grid;place-items:center;text-align:center;background:var(--bg2);border:1.5px dashed var(--line);color:var(--muted);font-family:var(--cond);font-size:18px;letter-spacing:.08em}
+    /* ツールもボードゲームと同じカード(閉じた/開いた)。閉じたカードの画像がないときは絵とタイトルで仮のカード */
+    .card.soon{display:grid;place-items:center;background:var(--bg2);border:1.5px dashed var(--line);color:var(--muted);font-family:var(--cond);font-size:18px;font-weight:700;letter-spacing:.08em}
+    .c-auto{display:flex;flex-direction:column;height:100%;background:var(--c2);color:var(--c1)}
+    .c-auto .tl-shot{width:100%;aspect-ratio:1;object-fit:cover}
+    .c-auto .tl-tupa{display:block;width:52%;margin:16% auto 6%}
+    .c-auto .tl-tupa .to{filter:drop-shadow(0 0 6px rgba(27,185,238,.7))}
+    .c-auto-t{display:flex;align-items:center;justify-content:center;flex:1;padding:10px 12px;text-align:center}
+    .c-auto-t .tool-name{font-size:14px;font-weight:900;line-height:1.35}
+    .c-auto-t .tl-title{width:100%}
+    .o-art{display:grid;place-items:center;width:calc(var(--ow) * .36);height:calc(var(--h) * .8)}
+    .o-art .tupa{height:80%;width:auto}
+    .o-intro{margin:0;max-width:22em;font-size:12.5px;font-weight:700;line-height:1.7;color:var(--c1)}
+    .o-logo.tool-name{background:none;color:var(--c1);font-size:20px;font-weight:900;line-height:1.3;-webkit-mask:none;mask:none}
 
     /* 6. ABOUT */
     .dotline{height:4px;margin:44px var(--side) 0;background:radial-gradient(circle,var(--soft) 1.6px,transparent 2px) 0 50%/16px 4px repeat-x;opacity:.7}
@@ -292,7 +310,7 @@
       .c-open{gap:10px;padding:0 12px 0 10px}
       .o-txt{gap:8px}
       .o-txt .pill{font-size:10.5px;padding:.2em .7em}
-      .o-genre{font-size:10.5px;line-height:1.5}
+      .o-genre,.o-intro{font-size:10.5px;line-height:1.5}
       .o-btns{gap:6px}
       .o-btns .wb{padding:5px 8px;font-size:10.5px;border-radius:5px}
     }
@@ -307,7 +325,7 @@
       .b-ui{left:20px;bottom:16px}
       .bars label{width:28px}
       .slide::after{height:9%}
-      .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,0) 30%,rgba(0,0,0,.6))}
+      .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,.1) 20%,rgba(0,0,0,.78) 62%)}
     }
     @media (max-width:520px){
       .row{--h:240px;--ow:92vw}
@@ -364,7 +382,7 @@
     <div class="b-ui"><div class="bars">{{bars}}</div></div>
   </section>
 
-  <section class="news" id="news" aria-labelledby="news-title">
+  <section class="news" id="news" aria-labelledby="news-title" style="--catw:{{catw}}">
     <h2 class="cond" id="news-title">NEWS</h2>
     <ul id="newslist">
 {{news}}
@@ -391,9 +409,11 @@
 
   <section class="sec" id="tools" aria-labelledby="tools-title">
     <div class="sec-h"><h2 class="cond" id="tools-title">PLAY&amp;TOOLS</h2></div>
-    <ul class="trow" id="trow">
+    <input class="sr" type="radio" name="tools" id="tools-x" aria-label="とじる">
+    <ul class="row" id="toolrow">
 {{tools}}
     </ul>
+    <div class="pager js-only" data-for="toolrow"><button class="tri prev" type="button" aria-label="前へ"></button><div class="pd"></div><button class="tri next" type="button" aria-label="次へ"></button></div>
   </section>
 
   <div class="dotline" aria-hidden="true"></div>
@@ -432,7 +452,9 @@
   /* バナー:バーが満ちたら次へ。◀▶・バー・スワイプでも動かせる。マウスを乗せている間は止まる */
   var hero=$("#hero"), slides=$$(".slide",hero), bars=$$(".bars label",hero), cur=0, n=slides.length;
   hero.classList.add("jsc");
-  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var y=$(".b-yt",s); if(y){ if(k===cur){ if(!$("iframe",y)){ var id=y.getAttribute("data-yt"), f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&mute=1&loop=1&playlist="+id+"&controls=0&playsinline=1&rel=0&iv_load_policy=3&disablekb=1"; f.allow="autoplay; encrypted-media"; f.tabIndex=-1; f.title=""; y.appendChild(f) } } else y.innerHTML="" } var v=$("video",s); if(v){ if(k===cur){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
+  function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var y=$(".b-yt",s); if(y){ if(k===cur){ if(!$("iframe",y)){ var id=y.getAttribute("data-yt"), st=y.getAttribute("data-start"), en=y.getAttribute("data-end"), f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&mute=1&loop=1&playlist="+id+"&controls=0&playsinline=1&rel=0&iv_load_policy=3&disablekb=1"+(st?"&start="+Math.floor(st):"")+(en?"&end="+Math.ceil(en):""); f.allow="autoplay; encrypted-media"; f.tabIndex=-1; f.title=""; y.appendChild(f) } } else y.innerHTML="" } var v=$("video",s); if(v){ if(k===cur){ v.currentTime=+(v.getAttribute("data-start")||0); var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
+  /* mp4:終わりの秒が決まっていれば、そこで開始の秒に戻す */
+  $$("video[data-end]",hero).forEach(function(v){ v.addEventListener("timeupdate",function(){ if(v.currentTime>=+v.getAttribute("data-end")) v.currentTime=+(v.getAttribute("data-start")||0) }) });
   bars.forEach(function(b,k){ b.addEventListener("click",function(e){ e.preventDefault(); show(k) }); $("i",b).addEventListener("animationend",function(){ if(k===cur && n>1) show(cur+1) }) });
   /* 止めるのは、文字やボタンの上にマウスがある間だけ(バナーが大きいので全体では止めない) */
   $$(".b-in",hero).forEach(function(t){ t.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") hero.classList.add("hold") }); t.addEventListener("pointerleave",function(){ hero.classList.remove("hold") }) });
@@ -460,8 +482,7 @@
     row.addEventListener("transitionend",function(e){ if(e.propertyName==="flex-basis") sync() });
     sync() });
   /* カード:開いたら見える位置へ */
-  var brow=$("#boardrow");
-  $$("#boardrow .card .sr").forEach(function(r){ r.addEventListener("change",function(){ var c=r.parentNode; setTimeout(function(){ var a=c.getBoundingClientRect(), b=brow.getBoundingClientRect(); if(a.left<b.left||a.right>b.right) brow.scrollBy({left:a.left-b.left}) },470) }) });
+  $$(".row .card .sr").forEach(function(r){ r.addEventListener("change",function(){ var c=r.parentNode, brow=c.parentNode; setTimeout(function(){ var a=c.getBoundingClientRect(), b=brow.getBoundingClientRect(); if(a.left<b.left||a.right>b.right) brow.scrollBy({left:a.left-b.left}) },470) }) });
   /* MOVIE:サムネを押すと再生。シャッフルでランダムに */
   var vids=$$(".vid"), last=-1;
   function play(v){ var yt=(v.getAttribute("data-yt")||"").trim(); if(!yt){ v.classList.remove("shake"); void v.offsetWidth; v.classList.add("shake"); return }

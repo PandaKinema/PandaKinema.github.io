@@ -37,6 +37,18 @@ def size(v):
     with Image.open(os.path.join(IMG_DIR, img(v))) as im:
         return im.size
 
+def bust(html, dirs):
+    """画像のURLに中身から作った番号(?v=…)を付ける。同じ名前で差し替えても、ブラウザが古い画像を出さない"""
+    import hashlib
+    cache = {}
+    def v(m):
+        f = os.path.join(dirs[m.group(1)], m.group(2))
+        if f not in cache:
+            cache[f] = hashlib.md5(open(f, 'rb').read()).hexdigest()[:8] if os.path.isfile(f) else ''
+        return m.group(0) + ('?v=' + cache[f] if cache[f] else '')
+    pre = '|'.join(re.escape(k) for k in sorted(dirs, key=len, reverse=True))
+    return re.sub(r'(?<![\w/.])(%s)([\w.\-/]+\.(?:png|webp|jpg|jpeg|gif|svg|mp4))(?![?\w])' % pre, v, html)
+
 def ext(u):
     return ' target="_blank" rel="noopener"' if (u or '').startswith('http') else ''
 
@@ -52,18 +64,18 @@ BANNERS = [b if isinstance(b, dict) else {'key': b} for b in load('banners')]
 CAT_EN = {c['name']: c.get('name_en') for c in (load('categories') or []) if c.get('name')}
 GAME_NAME = {g['key']: g['name'] for g in GAMES}
 
-COLOR_NAMES = {'key1': 'キーカラー1', 'key2': 'キーカラー2', 'extra': 'その他の色', 'white': '白', 'black': '黒', 'original': 'ロゴ画像の色のまま'}
-def other(sel):
-    return 'key1' if sel == 'key2' else 'key2'
-def bgsel(g):   # 背景に使うキーカラー(編集画面の「背景の色」)。帯と文字はもう一方
-    return 'key1' if g.get('bg') == 'key1' else 'key2'
-def col(g, sel, default='key1'):
-    """色の欄(キーカラー1・2・その他・白・黒)を色コードに。'original' は空(画像の色のまま)"""
+COLOR_NAMES = {'main': 'メインカラー', 'accent': 'アクセントカラー', 'white': '白', 'black': '黒', 'original': 'ロゴ画像の色のまま'}
+def col(g, sel, default='accent'):
+    """色の欄(メイン・アクセント・白・黒)を色コードに。'original' は空(画像の色のまま)"""
     sel = str(sel or default).strip()
     if sel.startswith('#'):
         return sel
-    return {'key1': g.get('key1'), 'key2': g.get('key2'), 'extra': g.get('extra_color') or g.get('key1'),
-            'white': '#ffffff', 'black': '#000000', 'original': ''}.get(sel, g.get('key1')) or ''
+    return {'main': g.get('main') or '#163f53', 'accent': g.get('accent') or '#ffffff',
+            'white': '#ffffff', 'black': '#000000', 'original': ''}.get(sel, g.get('accent')) or ''
+def MAIN(g):   # 背景(カード・バナー)
+    return col(g, 'main')
+def ACC(g):    # 帯・人数〜年齢の下地・文字
+    return col(g, 'accent')
 
 def spec(g):
     return (str(g.get('players', '')), str(g.get('time', '')), str(g.get('age', '')))
@@ -72,24 +84,26 @@ def spec_pill(s, bg, fg):
 def spec_line(s):
     return '%s{{L:人| players}} / %s{{L:分| min}} / %s{{L:歳から|+}}' % s
 def tlogo(g, cls, lc=None):   # ロゴを好きな色に塗る(マスク)。色が空ならロゴ画像の色のまま
+    if not g.get('logo'):   # ロゴがない(ツールでタイトル画像もない)ときは名前を文字で
+        return '<span class="%s tool-name">%s</span>' % (cls, e(g['name']))
     w, h = size(g['logo'])
-    lc = col(g, g.get('logo_color'), 'key1') if lc is None else lc
+    lc = col(g, g.get('logo_color'), 'accent') if lc is None else lc
     if not lc:
         return '<img class="%s" src="img/%s" alt="%s" width="%d" height="%d">' % (cls, img(g['logo']), e(g['name']), w, h)
     return '<span class="%s" role="img" aria-label="%s" style="--lg:url(img/%s);aspect-ratio:%d/%d;--lc:%s"></span>' % (cls, e(g['name']), img(g['logo']), w, h, lc)
 def btns(g, card=False):
-    """▶詳しく見る ▶BOOTHで購入。作品ページが空なら、バナーではカードを開き、カードでは薄く表示。BOOTHが空ならサークルのBOOTH"""
+    """▶見る ▶BOOTHで購入。作品ページが空なら、バナーではカードを開き、カードでは薄く表示。BOOTHが空ならサークルのBOOTH"""
     b = ''
     if g.get('page'):
-        b += '<a class="wb" href="%s"%s>%s%s</a>' % (e(g['page']), ext(g['page']), AR, L('詳しく見る', 'More info'))
+        b += '<a class="wb" href="%s"%s>%s%s</a>' % (e(g['page']), ext(g['page']), AR, L('見る', 'View'))
     elif card:
-        b += '<span class="wb off" title="準備中">%s%s</span>' % (AR, L('詳しく見る', 'More info'))
+        b += '<span class="wb off" title="準備中">%s%s</span>' % (AR, L('見る', 'View'))
     else:
-        b += '<label class="wb" for="c-%s">%s%s</label>' % (g['key'], AR, L('詳しく見る', 'More info'))
+        b += '<label class="wb" for="c-%s">%s%s</label>' % (g['key'], AR, L('見る', 'View'))
     booth = g.get('booth') or SITE['booth']
     b += '<a class="wb" href="%s" target="_blank" rel="noopener">%s%s</a>' % (e(booth), AR, L('BOOTHで購入', 'Buy on BOOTH'))
     return b
-def meta(g):   # バナー用:「2〜3人・10〜15分・6歳から　ジャンル:〜」を1行。狭いときはジャンルから次の行へ
+def meta(g):   # バナー用:「2〜3人・10〜15分・6歳から」の次の行に「ジャンル:〜」
     s = spec(g)
     return '<span class="m-spec">%s{{L:人| players}}・%s{{L:分| min}}・%s{{L:歳から|+}}</span><span class="m-gen">%s%s</span>' % (
         s[0], s[1], s[2], L('ジャンル：', 'Genre: '), T(g.get('genre_ja'), g.get('genre_en')))
@@ -102,12 +116,32 @@ def yt_id(v):   # YouTube のURLでもIDでもOK
     v = str(v or '').strip()
     m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/|live/)([\w-]{11})', v)
     return m.group(1) if m else v
-def vid(v, yt=None):   # バナーで流す動画(音なし・くり返し)。mp4 か YouTube
+def secs(v):   # 秒数の欄:30 / 1:05 / 空
+    v = str(v if v is not None else '').strip()
+    if not v:
+        return None
+    try:
+        p = [float(x) for x in v.split(':')]
+    except ValueError:
+        return None
+    return p[0] * 60 + p[1] if len(p) == 2 else p[0]
+def span(b, yt=None):   # 動画の流す範囲(開始・終了の秒)。YouTube の URL の ?t=30 も開始として読む
+    st, en = secs(b.get('start')), secs(b.get('end'))
+    if st is None and yt:
+        m = re.search(r'[?&#](?:t|start)=(\d+)', str(yt))
+        st = float(m.group(1)) if m else None
+    return st, en
+def vid(v, yt=None, b=None):   # バナーで流す動画(音なし・くり返し)。mp4 か YouTube。b = 開始・終了の秒が入った欄
+    st, en = span(b or {}, yt if not v else None)
+    rng = ''.join(' data-%s="%g"' % (k, x) for k, x in (('start', st), ('end', en)) if x is not None)
     if v:
-        return '<video class="b-vid" src="img/%s" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>' % img(v)
+        return '<video class="b-vid" src="img/%s" muted loop playsinline autoplay preload="metadata" aria-hidden="true"%s></video>' % (img(v), rng)
     if yt:
-        return '<div class="b-yt" data-yt="%s" aria-hidden="true"></div>' % e(yt_id(yt))
+        return '<div class="b-yt" data-yt="%s" aria-hidden="true"%s></div>' % (e(yt_id(yt)), rng)
     return ''
+def clip(b, yt=None, v=None):   # 流す範囲が決まっていれば、その長さだけバナーを出す(秒)
+    st, en = span(b or {}, yt if not v else None)
+    return (en - (st or 0)) if en and en > (st or 0) else None
 
 def tool_art(t, where):
     if t.get('image') or t.get('thumb'):
@@ -120,27 +154,28 @@ def tool_title(t, cls):
     if t.get('title_image'):
         return '<img class="%s" src="img/%s" alt="%s">' % (cls, img(t['title_image']), e(t['name']))
     return '<span class="tool-name">%s</span>' % e(t['name'])
-def tool_btn(t, tag='a'):
-    lab = AR + L(t.get('button_ja') or 'あそぶ', t.get('button_en') or 'Play')
+def tool_btn(t, tag='a'):   # ボタンはボードゲームと同じ「見る」
+    lab = AR + L('見る', 'View')
     if tag == 'span':
         return '<span class="wb">%s</span>' % lab
     return '<a class="wb" href="%s"%s>%s</a>' % (e(t['url']), ext(t['url']), lab)
 
-def banner(key):
+def banner(key, b=None):
     """(クラス, スタイル, 絵, 文字, ボタン, 動画)"""
+    b = b or {}
     for t in TOOLS:
         if t['key'] == key:
-            v = vid(t.get('video'), t.get('youtube'))
+            v = vid(t.get('video'), t.get('youtube'), b)
             art = tool_art(t, 'b') if not v else ''
             txt = '<p class="b-series"><span class="cap">PLAY &amp; TOOLS</span></p><h2 class="b-name">%s</h2><p class="b-intro">%s</p>' % (tool_title(t, 'b-mtitle'), T(t.get('intro_ja'), t.get('intro_en')))
-            return 'b-tool b-' + key, 'background:%s;--fg:%s' % (t.get('key2') or '#163f53', t.get('key1') or '#fff'), art, txt, tool_btn(t), v
+            return 'b-tool b-' + key, 'background:%s;--fg:%s' % (MAIN(t), ACC(t)), art, txt, tool_btn(t), v
     g = [x for x in GAMES if x['key'] == key][0]
     bn = g.get('banner') or {}
-    bg = col(g, bgsel(g))
+    bg = MAIN(g)
     if bn.get('pattern') == 'tri':
         bg += ' ' + TRI
     if bn.get('image'):   # 背景を画像で作ったとき:パッケージは出さない
-        bg = "%s url(img/%s) center/cover no-repeat" % (col(g, bgsel(g)), img(bn['image']))
+        bg = "%s url(img/%s) center/cover no-repeat" % (MAIN(g), img(bn['image']))
         art = ''
     else:
         w, h = size(g['pkg'])   # 横長のパッケージ(ミニシアター)は横長の置き方に
@@ -151,13 +186,45 @@ def banner(key):
     # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
     label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
     txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo'), meta(g), intro)
-    return 'b-' + key, 'background:%s;--fg:%s' % (bg, col(g, other(bgsel(g)))), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
+    return 'b-' + key, 'background:%s;--fg:%s' % (bg, ACC(g)), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'), bn)
+
+def clip_of(key):   # 作品の「バナー」欄に入れた動画の範囲
+    g = next((x for x in GAMES + TOOLS if x['key'] == key), {})
+    bn = g.get('banner') or {}
+    return clip(bn, bn.get('youtube'), bn.get('video'))
+
+def card(x, tool=False):
+    """閉じたカード(縦長の画像)と開いたカード(色と画像から作る)。ボードゲームもツールも同じ形"""
+    group = 'tools' if tool else 'board'
+    cid = 'c-%s' % x['key']
+    new = '<span class="c-new">%s</span>' % L('新作', 'NEW') if x.get('new') else ''
+    if x.get('front'):
+        face = '<img src="img/%s" alt="%s" loading="lazy">' % (img(x['front']), e(x['name']))
+    else:   # 閉じたカードの画像がまだないツール:絵とタイトルで仮のカード
+        face = '<span class="c-auto">%s<span class="c-auto-t">%s</span></span>' % (tool_art(x, 'tl'), tool_title(x, 'tl-title'))
+    if tool:
+        shot = x.get('image') or x.get('thumb')
+        art = ('<img class="o-pkg wide" src="img/%s" alt="" loading="lazy">' % img(shot)) if shot else '<span class="o-art">%s</span>' % tool_art(x, 'b')
+        lg = dict(x, logo=x.get('title_image') or '', logo_color=x.get('logo_color') or 'original')
+        info = '<p class="o-intro">%s</p>' % T(x.get('intro_ja'), x.get('intro_en')) if x.get('intro_ja') else ''
+        bt = tool_btn(x)
+    else:
+        w, h = size(x['pkg'])
+        art = '<img class="o-pkg%s" src="img/%s" alt="" loading="lazy">' % (' wide' if w > h else '', img(x['pkg']))
+        lg = x
+        info = '%s<p class="o-genre">%s</p>' % (spec_pill(spec(x), ACC(x), MAIN(x)), genre(x))
+        bt = btns(x, card=True)
+    return ('        <li class="card" style="--c1:%s;--c2:%s"><input class="sr" type="radio" name="%s" id="%s">'
+            '<label class="c-face" for="%s">%s%s</label>'
+            '<div class="c-open">%s<div class="o-txt">%s%s<div class="o-btns">%s</div></div>'
+            '<label class="o-x" for="%s-x" aria-label="とじる"></label></div></li>') % (
+        ACC(x), MAIN(x), group, cid, cid, face, new, art, tlogo(lg, 'o-logo'), info, bt, group)
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
     n = len(BANNERS); total = n * slide
     radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
-    slides = []
+    slides = []; durs = {}
     for i, b in enumerate(BANNERS):
         if not b.get('key') and (b.get('image') or b.get('video') or b.get('youtube')):   # key なし:自分で作ったバナー画像・動画だけを出す
             alt = e(b.get('alt') or '')
@@ -165,17 +232,20 @@ def render():
             link = '<a class="b-link" href="%s"%s aria-label="%s"></a>' % (e(b['link']), ext(b['link']), alt) if b.get('link') else ''
             slides.append('      <article class="slide s%d b-custom" style="--d:%ds;background:%s">%s%s</article>' % (i + 1, i * slide, e(b.get('bg') or '#000'), pic, link))
             continue
-        cls, bg, art, txt, bt, vd = banner(b['key'])
+        cls, bg, art, txt, bt, vd = banner(b['key'], b)
         if b.get('video') or b.get('youtube'):   # key と一緒に入れた動画は、その作品のバナーの背景で流す
-            vd, art = vid(b.get('video'), b.get('youtube')), ''
-        slides.append('      <article class="slide s%d %s%s" style="--d:%ds;%s">%s<div class="b-art">%s</div><div class="b-in">%s<div class="b-btns">%s</div></div></article>' % (
-            i + 1, cls, ' has-vid' if vd else '', i * slide, e(bg), vd, art, txt, bt))
-    bars = ''.join('<label for="br%d" style="--d:%ds" aria-label="%d枚目"><i></i></label>' % (i + 1, i * slide, i + 1) for i in range(n))
+            vd, art = vid(b.get('video'), b.get('youtube'), b), ''
+        durs[i] = clip(b, b.get('youtube'), b.get('video')) or clip_of(b['key'])
+        slides.append('      <article class="slide s%d %s%s" style="--d:%ds;%s%s">%s<div class="b-art">%s</div><div class="b-in">%s<div class="b-btns">%s</div></div></article>' % (
+            i + 1, cls, ' has-vid' if vd else '', i * slide, e(bg), (';--dur:%gs' % durs[i]) if durs[i] else '', vd, art, txt, bt))
+    bars = ''.join('<label for="br%d" style="--d:%ds%s" aria-label="%d枚目"><i></i></label>' % (i + 1, i * slide, (';--dur:%gs' % durs[i]) if durs.get(i) else '', i + 1) for i in range(n))
     w = 100.0 / n; fd = 0.8 / total * 100
     cyc = ('    @keyframes cyc{0%%{opacity:0;visibility:hidden;z-index:1}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:1;visibility:visible;z-index:2}%.3f%%{opacity:0;visibility:hidden;z-index:1}100%%{opacity:0;visibility:hidden;z-index:1}}\n'
            '    @keyframes fill{0%%{width:0}%.3f%%{width:100%%}%.3f%%,100%%{width:0}}\n'
            '    @keyframes kb{0%%{scale:1}%.3f%%{scale:1.04}100%%{scale:1.04}}') % (fd, w, w + fd, w, w + .001, w + fd)
     pick = '\n'.join('    .hero:has(#br%d:checked) .s%d{opacity:1;visibility:visible;z-index:2}\n    .hero:has(#br%d:checked) .bars label:nth-child(%d) i{width:100%%}' % (i + 1, i + 1, i + 1, i + 1) for i in range(n))
+    cats = [(str(x.get('cat_ja') or ''), str(CAT_EN.get(x.get('cat_ja')) or x.get('cat_en') or x.get('cat_ja') or '')) for x in NEWS]
+    catw = max([len(j) for j, _ in cats] + [len(en) * .62 for _, en in cats] + [2])   # いちばん長いカテゴリの幅(文字数)
     news = '\n'.join('        <li><a href="#n%d" data-nm="n%d"><time>%s</time><span class="cat">%s</span><span class="t">%s</span></a></li>' % (
         k + 1, k + 1, e(date(x['date'])), T(x.get('cat_ja'), CAT_EN.get(x.get('cat_ja')) or x.get('cat_en')), T(x.get('text_ja'), x.get('text_en'))) for k, x in enumerate(NEWS))
     modals = '\n'.join(
@@ -185,27 +255,17 @@ def render():
             '<div class="nm-body">%s</div>' % T(x.get('body_ja'), x.get('body_en')) if x.get('body_ja') else '',
             '<p class="nm-link"><a class="wb" href="%s"%s>%s%s</a></p>' % (e(x['link']), ext(x['link']), AR, L('リンクを開く', 'Open link')) if x.get('link') else '')
         for k, x in enumerate(NEWS))
-    cards = []
-    for g in GAMES:   # 閉じたカード=縦長の画像、開いたカード=色と画像から作る(全作品同じ形)
-        cid = 'c-%s' % g['key']
-        w, h = size(g['pkg'])
-        cards.append(('        <li class="card" style="--c1:%s;--c2:%s"><input class="sr" type="radio" name="board" id="%s">'
-                      '<label class="c-face" for="%s"><img src="img/%s" alt="%s" loading="lazy">%s</label>'
-                      '<div class="c-open"><img class="o-pkg%s" src="img/%s" alt="" loading="lazy"><div class="o-txt">%s%s<p class="o-genre">%s</p><div class="o-btns">%s</div></div>'
-                      '<label class="o-x" for="board-x" aria-label="とじる"></label></div></li>')
-                     % (col(g, other(bgsel(g))), col(g, bgsel(g)), cid, cid, img(g['front']), e(g['name']), '<span class="c-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '',
-                        ' wide' if w > h else '', img(g['pkg']), tlogo(g, 'o-logo'), spec_pill(spec(g), col(g, other(bgsel(g))), col(g, bgsel(g))), genre(g), btns(g, card=True)))
+    cards = [card(g) for g in GAMES]
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
                      % (e(yt_id(v.get('youtube'))), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), img(v['poster']), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), T(v.get('kind_ja'), v.get('kind_en')),
                         '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS)
-    tools = '\n'.join('        <li><a class="tool t-%s" href="%s"%s style="background:%s;color:%s">%s<span class="tl-t">%s%s</span></a></li>' % (
-        t['key'], e(t['url']), ext(t['url']), t.get('key2') or '#163f53', t.get('key1') or '#fff', tool_art(t, 'tl'), tool_title(t, 'tl-title'), tool_btn(t, 'span')) for t in TOOLS)
-    tools += '\n        <li><div class="tool soon"><span>COMING SOON</span></div></li>'
+    tools = '\n'.join(card(t, tool=True) for t in TOOLS)
+    tools += '\n        <li class="card soon"><span>COMING SOON</span></li>'
 
     ogp = ''
     if SITE.get('ogp_image'):
         ogp = '  <meta property="og:url" content="%s">\n  <meta property="og:image" content="%simg/%s">' % (SITE_URL, SITE_URL, img(SITE['ogp_image']))
-    v = dict(total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
+    v = dict(catw='%.2f' % catw, total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
              about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals,
              header_logo=img(SITE.get('header_logo') or 'brand.png'), about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'),
@@ -234,19 +294,16 @@ def colors():
         return '<div class="sw"><i style="background:%s"></i><b>%s</b><code>%s</code></div>' % (e(c), label, e(c))
     rows = []
     for g in GAMES:
-        bn = g.get('banner') or {}
         c = lambda v, d: col(g, v, d)
         name = lambda v, d: COLOR_NAMES.get(str(v or d), str(v or d))
-        B, F = bgsel(g), other(bgsel(g))
         prev = '<div class="pv" style="background:%s"><span style="background:%s;color:%s">%s人 / %s分 / %s歳から</span><small style="color:%s">ジャンル:%s</small></div>' % (
-            e(c(B, B)), e(c(F, F)), e(c(B, B)), *map(e, spec(g)), e(c(F, F)), e(g.get('genre_ja') or ''))
-        keys = sw('キーカラー1', g.get('key1')) + sw('キーカラー2', g.get('key2'))
-        uses = ''.join(sw('%s(%s)' % (lab, name(v, v)), c(v, v)) for lab, v in [
-            ('背景(カード・バナー・作品ページ)', B), ('帯・人数〜年齢の下地・文字', F), ('ロゴ', g.get('logo_color') or 'key1')])
-        rows.append('<section><h2>%s <small>%s</small></h2><p class="lbl">キーカラー</p><div class="grid">%s</div><p class="lbl">使われている色</p><div class="grid">%s</div><p class="lbl">開いたカードの見え方</p>%s</section>' % (
+            e(MAIN(g)), e(ACC(g)), e(MAIN(g)), *map(e, spec(g)), e(ACC(g)), e(g.get('genre_ja') or ''))
+        keys = sw('メインカラー(背景)', g.get('main')) + sw('アクセントカラー(帯・文字)', g.get('accent'))
+        uses = sw('ロゴ(%s)' % name(g.get('logo_color'), 'accent'), c(g.get('logo_color'), 'accent'))
+        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div><p class="lbl">開いたカードの見え方</p>%s</section>' % (
             e(g['name']), e(g['key']), keys, uses, prev))
     for t in TOOLS:
-        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div></section>' % (e(t['name']), e(t['key']), sw('キーカラー1(文字)', t.get('key1')), sw('キーカラー2(背景)', t.get('key2'))))
+        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div></section>' % (e(t['name']), e(t['key']), sw('メインカラー(背景)', t.get('main')), sw('アクセントカラー(文字)', t.get('accent'))))
     return """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>色見本 | PANDA KINEMA</title>
 <style>body{margin:0;padding:24px 16px 48px;background:#1b2228;color:#f3f2ee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}main{max-width:900px;margin:auto}
 h1{font-size:22px}p.note{color:#9aa3a9;font-size:13px;line-height:1.8}section{margin:22px 0;padding:18px;border:1px solid #3a464f;border-radius:12px;background:#222b32}h2{margin:0 0 12px;font-size:17px}h2 small{color:#9aa3a9;font-weight:400}
@@ -257,6 +314,6 @@ h1{font-size:22px}p.note{color:#9aa3a9;font-size:13px;line-height:1.8}section{ma
 
 if __name__ == '__main__':
     out = os.path.join(OUT_DIR, 'index.html')
-    open(out, 'w', encoding='utf-8').write(render())
+    open(out, 'w', encoding='utf-8').write(bust(render(), {'img/': IMG_DIR}))
     print(out, os.path.getsize(out))
     open(os.path.join(OUT_DIR, 'colors.html'), 'w', encoding='utf-8').write(colors())

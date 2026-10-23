@@ -1,11 +1,18 @@
 # 作品ページ「ビビルの塔」の文章と画像。動き(遊び方の図など)とデザインは build/game_pages.py にあります
 title: ビビルの塔
 description: ビビルの塔:数字カードを同時に出し、高い塔を建てて得点を競う2〜4人用のカードゲーム。パンダキネマ。
-now_label: NOW SHOWING
 logo: img/b_logo_cream.png
 logo_alt: ビビルの塔 THE TOWER OF BIBILU
 logo_buy: img/b_logo_navy.png
 logo_credits: img/b_logo_white.png
+bg_color: ''
+accent_color: ''
+hero:
+  art: img/b_art.jpg
+  art_pos: 45% 64%
+  pattern: none
+  width: null
+  layers: []
 bg1_image: img/b_tex_c.png
 band_image: img/b_band.png
 heading_icon: img/b_tupa_sten.png
@@ -14,8 +21,8 @@ catch_ja: ビビっている場合じゃない
 catch_en: No time to be scared!
 intro_ja: 遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!
 intro_en: In the distant future, on a planet somewhere, lived beings called Tupa. To them, nothing mattered more than building towers. The taller the tower, the grander it is, but build it too high and divine punishment strikes, bringing it crashing down. Become a Tupa and, sometimes careful and sometimes bold, finish the grandest tower of all!
-summary_ja: 『ビビルの塔』は、[[数字カードを同時に出し、高い塔を建てて得点を競うゲームです。]]出した数字の大きさが[[1位と2位]]のプレイヤーは、そのカードを自分の前に重ねて塔を建てます。同じ数字を出したプレイヤーが複数いた場合は[[バッティング]]となり、そのプレイヤーだけが塔を建てます。塔は高いほど高得点を狙えますが、[[6枚になると天罰によって崩れてしまいます。]]手札がなくなったら塔の得点を計算し、最も得点の高かったプレイヤーがラウンドの勝者です。最初に[[2回]]ラウンド勝利をしたプレイヤーがこのゲームの勝者となります。
-summary_en: In The Tower of Bibilu, [[players reveal number cards at the same time and build tall towers to score points.]] The players who played the [[highest and second-highest]] numbers stack their cards in front of them to build their towers. If several players played the same number, it is a [[clash]], and only those players build. Taller towers score more, but [[at 6 cards, divine punishment makes them crumble.]] When hands run out, towers are scored and the highest score wins the round. The first player to win [[2]] rounds wins the game.
+summary_ja: 『ビビルの塔』は、**数字カードを同時に出し、高い塔を建てて得点を競うゲームです**。出した数字の大きさが**1位と2位**のプレイヤーは、そのカードを自分の前に重ねて塔を建てます。同じ数字を出したプレイヤーが複数いた場合は**バッティング**となり、そのプレイヤーだけが塔を建てます。塔は高いほど高得点を狙えますが、**6枚になると天罰によって崩れてしまいます**。手札がなくなったら塔の得点を計算し、最も得点の高かったプレイヤーがラウンドの勝者です。最初に**2回**ラウンド勝利をしたプレイヤーがこのゲームの勝者となります。
+summary_en: In The Tower of Bibilu, **players reveal number cards at the same time and build tall towers to score points.** The players who played the **highest and second-highest** numbers stack their cards in front of them to build their towers. If several players played the same number, it is a **clash**, and only those players build. Taller towers score more, but **at 6 cards, divine punishment makes them crumble.** When hands run out, towers are scored and the highest score wins the round. The first player to win **2** rounds wins the game.
 characters:
 - image: img/b_tupa_body.webp
   float: img/b_tupa_orb.webp
@@ -23,12 +30,16 @@ characters:
   name_en: Tupa [túpa]
   note_ja: '遠い未来のどこかの惑星にいる生命体。
 
+
     塔を建てる力を持つ。
+
 
     古代の言い伝えを信じ、塔を建てることを大事にしている。'
   note_en: 'A lifeform on a planet somewhere in the distant future.
 
+
     It has the power to build towers.
+
 
     It believes in ancient legends and holds tower building dear.'
 contents_ja: カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚
@@ -36,14 +47,14 @@ contents_en: 40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)
 price_ja: 3,300円
 price_en: ¥3,300
 steps:
-- text_ja: 全員がせーので手札からカードを出し、数字の大きさが[[1位と2位の人]]が出したカードを獲得し、[[手元に塔を建てられる!]]
-  text_en: Everyone plays a card at once. The players with the [[1st and 2nd highest numbers]] take their cards and [[build a tower!]]
-- text_ja: もし同じ数字を出した人がいたら[[バッティング。]][[バッティングした人だけが塔を建てる!]]
-  text_en: If anyone played the same number, it is a [[clash.]] [[Only the clashing players build!]]
-- text_ja: 塔はどんどん上に重ねていく。ただし、6枚を超えると、[[天罰マークの数だけ下から崩れる!]]
-  text_en: Towers keep growing upward. But past 6 cards, [[they crumble from the bottom by the number of punishment marks!]]
-- text_ja: 手札がなくなったらゲーム終了! [[「塔の1番上の数字×高さ」が最も大きい人が勝ち!]]
-  text_en: When hands run out, the game ends! [[Highest “top number × height” wins!]]
+- text_ja: 全員がせーので手札からカードを出し、数字の大きさが**1位と2位の人**が出したカードを獲得し、**手元に塔を建てられる!**
+  text_en: Everyone plays a card at once. The players with the **1st and 2nd highest numbers** take their cards and **build a tower!**
+- text_ja: もし同じ数字を出した人がいたら**バッティング。バッティングした人だけが塔を建てる!**
+  text_en: If anyone played the same number, it is a **clash.** **Only the clashing players build!**
+- text_ja: 塔はどんどん上に重ねていく。ただし、6枚を超えると、**天罰マークの数だけ下から崩れる!**
+  text_en: Towers keep growing upward. But past 6 cards, **they crumble from the bottom by the number of punishment marks!**
+- text_ja: 手札がなくなったらゲーム終了! **「塔の1番上の数字×高さ」が最も大きい人が勝ち!**
+  text_en: When hands run out, the game ends! **Highest “top number × height” wins!**
 gallery:
 - image: img/g_rule.webp
   caption_ja: 説明シート「ビビルの塔はこんなゲーム!」
