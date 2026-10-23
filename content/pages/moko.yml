@@ -14,57 +14,57 @@ hero:
   art_pos: 50% 0%
   layers:
     - image: img/page/moko_top_p0.png
-      x: 30.035
-      y: 7.994
-      width: 12.294
+      x: 30.585
+      y: 8.683
+      width: 11.356
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p1.png
-      x: 43.528
-      y: 7.066
-      width: 12.894
+      x: 43.927
+      y: 7.709
+      width: 12.134
       rotate: 0
       motion: spin-r
     - image: img/page/moko_top_p2.png
-      x: 57.621
-      y: 7.994
-      width: 12.294
+      x: 58.059
+      y: 8.683
+      width: 11.356
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p3.png
-      x: 30.085
-      y: 27.052
-      width: 12.244
+      x: 30.585
+      y: 27.757
+      width: 11.356
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p4.png
-      x: 43.828
-      y: 27.052
-      width: 12.294
+      x: 44.298
+      y: 27.757
+      width: 11.404
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p5.png
-      x: 57.621
-      y: 27.052
-      width: 12.244
+      x: 58.059
+      y: 27.757
+      width: 11.356
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p6.png
-      x: 30.085
-      y: 46.039
-      width: 12.244
+      x: 30.585
+      y: 46.728
+      width: 11.356
       rotate: 0
       motion: spin
     - image: img/page/moko_top_p7.png
-      x: 43.528
-      y: 45.111
-      width: 12.894
+      x: 43.927
+      y: 45.685
+      width: 12.134
       rotate: 0
       motion: spin-r
     - image: img/page/moko_top_p8.png
-      x: 57.621
-      y: 46.039
-      width: 12.244
+      x: 58.059
+      y: 46.728
+      width: 11.356
       rotate: 0
       motion: spin
 bg1_image: img/page/m_tex_c.png

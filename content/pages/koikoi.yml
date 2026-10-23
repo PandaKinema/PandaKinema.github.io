@@ -6,9 +6,8 @@ logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
 logo_buy: img/logo/k_logo_blue.png
 logo_credits: img/logo/koikoilogo.png
 bg_color: main
-color3: "#545959"
+color3: "#2e3333"
 accent_color: third
-dark_text: true
 hero:
   art: img/page/koikoi_top.jpg
   fit: cover

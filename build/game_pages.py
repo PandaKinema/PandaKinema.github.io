@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v38
+# パンダキネマ 作品ページ 共通フォーマット v39
+#     v39: 文字は決めた色・白・黒だけ/強調は色を変える(基本は赤、編集画面で選べる。読みにくければ自動でほかの色)
 #     v38: 作品ページの幅に上限(1440px)。その外はサイトの黒い下地
 #     v37: トップの絵はいつも全部見せる(画面の高さに合わせる)。横長の画面では左右を模様か端の色でつなぐ
 #     v36: 編集画面で画像を消したら、帯・模様・見出しの飾りも消える(デザインの初期値に戻らない)
@@ -76,22 +77,14 @@ def lum(c):   # 色の明るさ(読みやすさの判定用)
 def contrast(a, b):
     la, lb = lum(a), lum(b)
     return (max(la, lb) + .05) / (min(la, lb) + .05)
-def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つの色(メイン/アクセント)で読めればそれ、だめなら白か濃い色
-    if other and contrast(bg, other) >= 4.5:
-        return other
-    if contrast(bg, '#ffffff') >= 4.5:
-        return '#ffffff'
-    dk = deep(bg)
-    return dk if contrast(bg, dk) >= contrast(bg, '#ffffff') else '#ffffff'
-
-HUE = ['#1b2228']   # 作品の濃い方の色(apply で設定)。黒の代わりに、この色を暗くして使う
-def deep(bg, base=None):   # 黒文字の代わり:作品の色を、地の上で読めるところまで暗くした色
-    c = base or HUE[0]
-    for k in range(0, 101, 4):
-        x = mix(c, '#000000', 1 - k / 100)
-        if contrast(x, bg) >= 4.5:
-            return x
-    return mix(c, '#000000', .1)
+PAL = ['#ffffff', '#000000']   # 作品で決めた色(メイン・アクセント・アクセントカラー2)。apply で設定
+def ink(bg, other=None):   # 文字の色:決めた色・白・黒だけを使う。もう1色 → 白 → 決めた色 → 黒 の順で読めるもの
+    for c in ([other] if other else []) + ['#ffffff'] + PAL + ['#000000']:
+        if c and contrast(bg, c) >= 4.5:
+            return c
+    return max(PAL + ['#ffffff', '#000000'], key=lambda c: contrast(bg, c))
+def deep(bg, base=None):   # (互換)読める濃い色:決めた色か黒
+    return next((c for c in PAL + ['#000000'] if contrast(bg, c) >= 4.5), '#000000')
 
 def mix(a, b, w):   # 色 a を w の割合で b に混ぜる
     a, b = str(a).lstrip('#'), str(b).lstrip('#')
@@ -298,9 +291,8 @@ def apply(key):
     t = games.get(key) or {}
     M, A = t.get('main'), t.get('accent')
     if M and A:
-        HUE[0] = M if lum(M) <= lum(A) else A
-        if d.get('dark_text'):   # 編集画面「濃い文字に黒を使う」
-            HUE[0] = '#1b2228'
+
+        PAL[:] = [c for c in (M, A, '#' + str(d.get('color3')).lstrip('#') if d.get('color3') else None) if c]
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()
         if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「アクセントカラー2」
@@ -313,12 +305,14 @@ def apply(key):
             O = A if D != A else M
         dark, light = (D, O) if lum(D) < lum(O) else (O, D)
         p_ink = dark if contrast(dark, '#ffffff') >= 4.5 else deep('#ffffff', dark)   # 白い枠(遊び方・購入)の文字(黒ではなく作品の色を暗くしたもの)
-        def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ
+        HLC = {'red': RED, 'main': M, 'accent': A, 'third': pick.get('third'), 'white': '#ffffff', 'black': '#000000'}
+        hl_want = HLC.get(str(d.get('hl_color') or 'red')) or RED
+        def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ。色を変える(基本は赤)。読みにくければほかの決めた色
             fg = ink(bg, fg_pref)
-            hl = fixed or fg_pref
-            if hl == fg or contrast(hl, bg) < 4.5:   # 強調の色が地に近くて読みにくいときは、赤 → それもだめなら文字と同じ色(太字だけで強調)
-                hl = RED if contrast(RED, bg) >= 4.5 else fg
-            return fg, hl
+            for c in [fixed, hl_want, RED] + PAL + ['#ffffff', '#000000']:
+                if c and contrast(c, fg) >= 1.8 and contrast(c, bg) >= 3:   # 地で読めて、文字の色ともはっきり違う
+                    return fg, c
+            return fg, fg
         k_ink, hl = text_hl(D, O, g.get('hl_fixed'))
         b2_ink, hl2 = text_hl(O, D)
         css.append('--k-bg:%s;--k-ink:%s;--hl:%s' % (D, k_ink, hl))
