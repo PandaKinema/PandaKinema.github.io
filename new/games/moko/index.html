@@ -170,7 +170,17 @@
     .m3 .ate{position:relative;display:block}
     .m3 .ate b{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:0 5px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;line-height:16px;white-space:nowrap}
     .m3 .rn{display:block;width:100%;margin-bottom:-6px;font-size:10.5px;font-weight:800;text-align:center;opacity:.75}
-    /* 4. モコチャカ!:トークンの取り合い */
+    /* 4. ゲームの終了 */
+    .mend{display:flex;align-items:flex-end;justify-content:center;gap:22px;padding-top:26px}
+    .mside{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px}
+    .mempty{display:block;width:44px;aspect-ratio:300/418;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:5px}
+    .mhand{display:flex}
+    .mhand .mcd{width:44px;margin-left:-14px;rotate:calc((var(--i) - 1.5) * 7deg)}
+    .mhand .mcd:first-child{margin-left:0}
+    .mcap2{padding:2px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap}
+    .mbub.mwin{left:50%;top:-30px;translate:-50% 0}
+    .mbub.mwin::after{left:50%;translate:-50% 0}
+    /* 3. モコチャカ!:トークンの取り合い */
     .s4 .mbub{left:126px;top:-2px;font-size:14px}
     .s4 .mbub::after{left:auto;right:18px}
     @media all{
@@ -189,6 +199,10 @@
       .m3 .mbub{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s)}
       @keyframes mpop3{0%,14%{opacity:0;scale:.4}19%{opacity:1;scale:1.15}23%,80%{opacity:1;scale:1}88%,100%{opacity:0;scale:.6}}
       .m3 .ate b{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s - .5s)}
+      .mhand .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
+      .mhand .mgabu{animation:mgone 7s ease infinite}
+      @keyframes mgone{0%{opacity:0;translate:0 -24px}7%,30%{opacity:1;translate:0 0}42%,100%{opacity:0;translate:0 26px}}
+      .mbub.mwin{animation:mpop2 7s ease infinite;animation-delay:.6s}
       .s4 .mbub{animation:mpop4 8s ease infinite}
       @keyframes mpop4{0%,6%{opacity:0;scale:.4}11%{opacity:1;scale:1.15}15%,82%{opacity:1;scale:1}90%,100%{opacity:0;scale:.6}}
       .s4 .mtok{animation:mgrab 8s cubic-bezier(.5,0,.3,1) infinite}
@@ -762,16 +776,16 @@
             <div class="viz"><div class="mf"><div class="mdeck"><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mpile mt"><img class="mcd " style="" src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"></div><div class="mpile ml"><img class="mcd " style="" src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"></div><div class="mpile mr"><img class="mcd " style="" src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"></div><img class="mtok" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mmove"><img class="mcd back" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"></span></div></div>
           </li>
           <li class="step reveal s2">
-            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">場にあるカードを見て、動物の名前を呼ぶことをコールと言います。例:パカ5、モコ2なので<em>「パカモコ」</em></span><span lang="en">Looking at the cards and calling the animals’ names is a call. Example: 5 Paka and 2 Moko, so <em>“Paka-Moko!”</em></span></span></p></div>
-            <div class="viz"><div class="m2"><div class="row"><img class="mcd " style="--i:0" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mcd " style="--i:1" src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"><img class="mcd " style="--i:2" src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"></div><div class="mtally"><span style="--i:0"><img src="../../img/chara/m_paka.webp?v=44fa7d74" alt=""><span lang="ja">パカ 5</span><span lang="en">Paka 5</span></span><span style="--i:1"><img src="../../img/chara/m_moko.webp?v=de0fbd38" alt=""><span lang="ja">モコ 2</span><span lang="en">Moko 2</span></span></div><span class="mbub"><span lang="ja">パカモコ!</span><span lang="en">Paka-Moko!</span></span></div></div>
-          </li>
-          <li class="step reveal s3">
-            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">コールには下記のルールがあります。<br><em>ポメはかわいいので必ず最初に呼ぶ</em><br><em>ガブの数だけモコを減らす</em></span><span lang="en">Calls have these rules:<br><em>Pome is cute, so always call it first</em><br><em>Remove one Moko for each Gabu</em></span></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。<br><em>ポメはかわいいので必ず最初に呼ぶ</em><br><em>ガブの数だけモコを減らす</em></span><span lang="en">Looking at the cards and calling the animals’ names is a call. Calls have these rules:<br><em>Pome is cute, so always call it first</em><br><em>Remove one Moko for each Gabu</em></span></span></p></div>
             <div class="viz"><div class="m3"><div class="row" style="--i:0"><img class="mcd " style="" src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><span class="eq">→</span><span class="mbub" style="--i:0"><span lang="ja">ポメモコ!</span><span lang="en">Pome-Moko!</span></span></div><div class="row" style="--i:1"><span class="ate" style="--i:1"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><b><span lang="ja">モコ0</span><span lang="en">Moko 0</span></b></span><img class="mcd " style="" src="../../img/parts/mc_g2.webp?v=545dc536" alt="ガブが2匹のカード"><img class="mcd " style="" src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"><span class="eq">→</span><span class="mbub" style="--i:1"><span lang="ja">パカ!</span><span lang="en">Paka!</span></span></div></div></div>
           </li>
           <li class="step reveal s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">場のカードが次の条件を満たしたとき、<em>「モコチャカ」</em>と言いながら<em>全員で</em>トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。</span><span lang="en">When the cards meet a condition, <em>everyone</em> grabs for the token while saying <em>“Mokochaka!”</em> The one who gets it takes 2 piles and adds them to the bottom of their hand.</span></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">場のカードが次の条件を満たしたとき、<em>「モコチャカ」</em>と言いながら<em>全員で</em>トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。</span><span lang="en">When the cards meet a condition, <em>everyone</em> grabs for the token while saying <em>“Mokochaka!”</em> The one who gets it takes 2 piles and adds them to the bottom of their hand.</span></span></p></div>
             <div class="viz"><div class="mf"><div class="mdeck"><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mpile mt"><img class="mcd " style="" src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"></div><div class="mpile ml"><img class="mcd " style="" src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"></div><div class="mpile mr"><img class="mcd " style="" src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><img class="mtok" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mbub"><span lang="ja">モコチャカ!</span><span lang="en">Mokochaka!</span></span></div></div>
+          </li>
+          <li class="step reveal s5">
+            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">誰かの手札がなくなったらゲーム終了です。<em>ガブを除いた</em>手札が最も多い人が勝ちになります。</span><span lang="en">When someone runs out of cards, the game ends. The player with the most cards in hand <em>not counting Gabu</em> wins.</span></span></p></div>
+            <div class="viz"><div class="mend"><div class="mside"><span class="mempty"></span><span class="mcap2"><span lang="ja">手札0で終了</span><span lang="en">Out of cards</span></span></div><div class="mside"><div class="mhand"><img class="mcd " style="--i:0" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mcd " style="--i:1" src="../../img/parts/mc_p1.webp?v=c727d89c" alt="パカが1匹のカード"><img class="mcd mgabu" style="--i:2" src="../../img/parts/mc_g1.webp?v=2e6d5046" alt="ガブが1匹のカード"><img class="mcd " style="--i:3" src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><span class="mcap2"><span lang="ja">ガブを除いて3枚</span><span lang="en">3 without Gabu</span></span><span class="mbub mwin"><span lang="ja">勝ち!</span><span lang="en">Win!</span></span></div></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>

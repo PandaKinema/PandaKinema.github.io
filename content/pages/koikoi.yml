@@ -32,38 +32,32 @@ summary_en: Players take turns doing the steps below. One hand lasts until the
   score is settled and the token moves, and you play **3 hands**. After 3
   hands, **the player with the token on their side wins.**
 steps:
-  - text_ja: |-
-      **カードは同じ色のペアで取る!**
+- text_ja: '**カードは同じ色のペアで取る!**
 
-      場札に同じ色があれば、ペアにして獲得できる!
-    text_en: |-
-      **Take cards in same-color pairs!**
 
-      If the table has a card of the same color, pair it up and take it!
-  - text_ja: |-
-      山札を上から1枚めくります。場に同じ色があれば、ペアで獲得します。
+    場札に同じ色があれば、ペアにして獲得できる!'
+  text_en: '**Take cards in same-color pairs!**
 
-      **※同じ色のカードが場になければそのまま場に置いておきます。**
-    text_en: |-
-      Flip the top card of the deck. If the table has the same color, take the pair.
 
-      **If there is no card of that color, leave it on the table.**
-  - text_ja: |-
-      **同じ数字を揃えると役になる!**
+    If the table has a card of the same color, pair it up and take it!'
+- text_ja: '**同じ数字を揃えると役になる!**
 
-      同じ数字を複数枚獲得すると役になる!
-    text_en: |-
-      **Match numbers to make a set!**
 
-      Collect several cards of the same number to make a set!
-  - text_ja: |-
-      成立していた場合は**「あがり」か「こいこい」**を宣言します。
+    同じ数字を複数枚獲得すると役になる!'
+  text_en: '**Match numbers to make a set!**
 
-      あがり:得点を確定し、トークンの移動を行い局を終了します。
-    text_en: |-
-      If you made a set, declare **“Agari” or “Koi-Koi.”**
 
-      Agari: lock in your score, move the token, and end the hand.
+    Collect several cards of the same number to make a set!'
+- text_ja: '成立していた場合は**「あがり」か「こいこい」**を宣言します。
+
+
+    局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。'
+  text_en: 'If you made a set, declare **“Agari” or “Koi-Koi.”**
+
+
+    At the end of a hand, the winner pulls the token toward their side by their score.'
+- text_ja: 得点が確定してトークンを移動するまでを1局とし、これを3局行います。**3局終了時、トークンが自分側にあるプレイヤーの勝利です。**
+  text_en: One hand lasts until the score is settled and the token moves; play 3 hands. **After 3 hands, the player with the token on their side wins.**
 gallery:
   - image: img/gallery/kg_manual1.webp
     caption_ja: 遊び方説明書(表)

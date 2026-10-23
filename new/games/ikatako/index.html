@@ -159,6 +159,12 @@
     .s4 .irow{bottom:30px}
     .s4 .irow .icd{width:48px}
     .iminus{position:relative;display:block}
+    .iend{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:18px}
+    .irow2{display:flex;gap:4px}
+    .irow2 .icd{width:36px}
+    .isum{margin:0;font-size:13px;font-weight:900;line-height:1.3;text-align:center}
+    .isum em{font-style:normal;color:#e8343d}
+    .isum b{font-size:22px;color:#e8343d}
     @media all{
       .s1 .burst{animation:lmark 6s ease infinite;animation-delay:calc(var(--d) * .12s)}
       .idg figure{animation:idrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .5s)}
@@ -172,6 +178,8 @@
       .iflip{animation:iflip 6s cubic-bezier(.4,1.5,.5,1) infinite}
       @keyframes iflip{0%,34%{rotate:0deg}46%,86%{rotate:180deg}94%,100%{rotate:0deg}}
       .itag{animation:lmark 6s ease infinite;animation-delay:.9s}
+      .irow2>*{animation:idrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .12s)}
+      .isum{animation:icap 6s ease infinite;animation-delay:1.2s}
     }
 
     /* ===== 2. 動画:映画館のスクリーンと客席 ===== */
@@ -739,12 +747,12 @@
             <div class="viz"><div class="idg"><figure style="--i:0"><img class="icd " style="" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"><figcaption><b><span lang="ja">左手</span><span lang="en">Left</span></b><em><span lang="ja">タコ!</span><span lang="en">Tako!</span></em></figcaption></figure><figure style="--i:1"><img class="icd " style="" src="../../img/parts/ic_10.webp?v=1b34223c" alt="イカ(10)のカード"><figcaption><b><span lang="ja">右手</span><span lang="en">Right</span></b><em><span lang="ja">イカ!</span><span lang="en">Ika!</span></em></figcaption></figure><figure style="--i:2"><img class="icd " style="" src="../../img/parts/ic_18.webp?v=40575bc4" alt="イカタコ(18)のカード"><figcaption><b><span lang="ja">両手</span><span lang="en">Both</span></b><em><span lang="ja">イカタコ!</span><span lang="en">Ikatako!</span></em></figcaption></figure></div></div>
           </li>
           <li class="step reveal s3">
-            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">一番リアクションが早かった人は<em>得点としてカードを獲得</em>し、手元に並べます。</span><span lang="en">The fastest player <em>takes the card as points</em> and lines it up in front of them.</span></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">一番リアクションが早かった人は<em>得点としてカードを獲得</em>し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を<em>減点(上下逆さま)</em>にします。</span><span lang="en">The fastest player <em>takes the card as points</em> and lines it up. Anyone who got it wrong or didn’t react turns one point card <em>upside down as a penalty</em>.</span></span></p></div>
             <div class="viz"><div class="ia"><span class="itake"><img class="icd " style="" src="../../img/parts/ic_5.webp?v=5be5fcdc" alt="5のカード"></span><span class="burst " style=""><span>5!</span></span><div class="irow"><img class="icd " style="" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><span style="width:40px"></span></div><span class="ilabel"><span lang="ja">得点</span><span lang="en">Points</span></span></div></div>
           </li>
           <li class="step reveal s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">間違えた、反応できなかった人は自分の得点のうち任意の1枚を<em>減点(上下逆さま)</em>にします。</span><span lang="en">Anyone who got it wrong or didn’t react turns one of their point cards <em>upside down as a penalty</em>.</span></span></p></div>
-            <div class="viz"><div class="ia"><span class="burst " style=""><span><span lang="ja">ミス!</span><span lang="en">Miss!</span></span></span><div class="irow"><img class="icd " style="" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"><span class="iminus"><span class="iflip"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"></span><b class="itag"><span lang="ja">減点</span><span lang="en">Penalty</span></b></span><img class="icd " style="" src="../../img/parts/ic_5.webp?v=5be5fcdc" alt="5のカード"></div></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。<em>生還した中で最も得点の高い人が勝利</em>となります。</span><span lang="en">When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. <em>The highest score among the survivors wins.</em></span></span></p></div>
+            <div class="viz"><div class="iend"><div class="irow2"><img class="icd " style="--i:0" src="../../img/parts/ic_6u.webp?v=3512306d" alt="6uのカード"><img class="icd " style="--i:1" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"><span class="iminus" style="--i:2"><span class="iflip"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><b class="itag"><span lang="ja">減点</span><span lang="en">Penalty</span></b></span><img class="icd " style="--i:3" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><img class="icd " style="--i:4" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"></div><p class="isum">6+2+4+8<span lang="ja">(得点)</span><span lang="en"></span><em>-3<span lang="ja">(減点)</span><span lang="en"></span></em><br><b>=17<span lang="ja">点!</span><span lang="en"> pts!</span></b></p></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>

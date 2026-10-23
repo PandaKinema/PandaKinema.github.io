@@ -147,6 +147,10 @@
     .ksora{position:relative;display:flex;gap:2px}
     .ksora img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
     .kfish{position:absolute;left:107px;top:28px;width:30px}
+    .k5{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .kround{padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900}
+    .kfish.kfin{left:200px}
+    .kbub.kwin{position:relative;font-size:14px;margin-left:120px}
     .k4{display:flex;flex-direction:column;align-items:center;gap:20px}
     .k4 .kbub{position:relative;font-size:14px}
     @media all{
@@ -166,6 +170,8 @@
       .kyaku p{animation:lmark 6s ease infinite;animation-delay:.4s}
       .k4 .kbub{animation:lmark 7s ease infinite;animation-delay:-1.6s}
       .kfish{animation:kfish 7s cubic-bezier(.5,0,.3,1) infinite}
+      .kfish.kfin{animation:none}
+      .kbub.kwin{animation:lmark 6s ease infinite;animation-delay:-.8s}
       @keyframes kfish{0%,40%{translate:0 0}60%,86%{translate:57px 0}94%,100%{translate:0 0}}
     }
 
@@ -729,17 +735,17 @@
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja"><em>カードは同じ色のペアで取る!</em><br>場札に同じ色があれば、ペアにして獲得できる!</span><span lang="en"><em>Take cards in same-color pairs!</em><br>If the table has a card of the same color, pair it up and take it!</span></span></p></div>
             <div class="viz"><div class="ka"><div class="kfield"><img class="kcd " style="" src="../../img/parts/kc_b1.webp?v=5d6dc5da" alt="青の1"><img class="kcd " style="" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"><img class="kcd " style="" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"><img class="kcd kpair" style="" src="../../img/parts/kc_r1.webp?v=1c0bd412" alt="赤の1"></div><span class="kcap" style="left:200px;top:24px"><span lang="ja">場札</span><span lang="en">Table</span></span><span class="kmove" style="--x0:101px;--y0:104px;--dx:48px;--dy:-86px"><img class="kcd " style="" src="../../img/parts/kc_r3.webp?v=f96ecfda" alt="赤の3"></span><span class="kcap" style="left:96px;top:166px"><span lang="ja">手札から</span><span lang="en">From hand</span></span><span class="kbub" style="left:150px;top:78px"><span lang="ja">ペア!</span><span lang="en">Pair!</span></span></div></div>
           </li>
-          <li class="step reveal s2">
-            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">山札を上から1枚めくります。場に同じ色があれば、ペアで獲得します。<br><em>※同じ色のカードが場になければそのまま場に置いておきます。</em></span><span lang="en">Flip the top card of the deck. If the table has the same color, take the pair.<br><em>If there is no card of that color, leave it on the table.</em></span></span></p></div>
-            <div class="viz"><div class="ka"><div class="kfield" style="justify-content:flex-start;padding-left:58px"><img class="kcd " style="" src="../../img/parts/kc_b1.webp?v=5d6dc5da" alt="青の1"><img class="kcd " style="" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"><img class="kcd " style="" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"></div><div class="kdeck"><img class="kcd " style="" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><img class="kcd " style="" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><img class="kcd " style="" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></div><span class="kcap" style="left:14px;top:172px"><span lang="ja">山札</span><span lang="en">Deck</span></span><span class="kmove" style="--x0:14px;--y0:98px;--dx:174px;--dy:-94px"><img class="kcd back" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><img class="kcd front" src="../../img/parts/kc_r5.webp?v=ea676835" alt="赤の5"></span><span class="kbub" style="left:118px;top:96px;background:var(--p-ink)"><span lang="ja">そのまま場に</span><span lang="en">Stays on table</span></span></div></div>
-          </li>
           <li class="step reveal s3">
-            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja"><em>同じ数字を揃えると役になる!</em><br>同じ数字を複数枚獲得すると役になる!</span><span lang="en"><em>Match numbers to make a set!</em><br>Collect several cards of the same number to make a set!</span></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja"><em>同じ数字を揃えると役になる!</em><br>同じ数字を複数枚獲得すると役になる!</span><span lang="en"><em>Match numbers to make a set!</em><br>Collect several cards of the same number to make a set!</span></span></p></div>
             <div class="viz"><div class="kyaku"><div class="row"><img class="kcd " style="--i:0" src="../../img/parts/kc_b5.webp?v=176f9345" alt="青の5"><img class="kcd " style="--i:1" src="../../img/parts/kc_r5.webp?v=ea676835" alt="赤の5"><img class="kcd " style="--i:2" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"></div><p><span lang="ja">5:色の異なる3枚(5点)</span><span lang="en">5: three different colors (5 pts)</span></p></div></div>
           </li>
           <li class="step reveal s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">成立していた場合は<em>「あがり」か「こいこい」</em>を宣言します。<br>あがり:得点を確定し、トークンの移動を行い局を終了します。</span><span lang="en">If you made a set, declare <em>“Agari” or “Koi-Koi.”</em><br>Agari: lock in your score, move the token, and end the hand.</span></span></p></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">成立していた場合は<em>「あがり」か「こいこい」</em>を宣言します。<br>局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。</span><span lang="en">If you made a set, declare <em>“Agari” or “Koi-Koi.”</em><br>At the end of a hand, the winner pulls the token toward their side by their score.</span></span></p></div>
             <div class="viz"><div class="k4"><span class="kbub"><span lang="ja">あがり!</span><span lang="en">Agari!</span></span><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><svg class="kfish" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg></div></div></div>
+          </li>
+          <li class="step reveal s5">
+            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">得点が確定してトークンを移動するまでを1局とし、これを3局行います。<em>3局終了時、トークンが自分側にあるプレイヤーの勝利です。</em></span><span lang="en">One hand lasts until the score is settled and the token moves; play 3 hands. <em>After 3 hands, the player with the token on their side wins.</em></span></span></p></div>
+            <div class="viz"><div class="k5"><span class="kround"><span lang="ja">3局終了</span><span lang="en">After 3 hands</span></span><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><svg class="kfish kfin" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg></div><span class="kbub kwin"><span lang="ja">勝ち!</span><span lang="en">Win!</span></span></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>

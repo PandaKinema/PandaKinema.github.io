@@ -110,28 +110,26 @@ summary_en: Play cards from your hand onto the piles, and **count the animals
   their hand. When someone runs out of cards, the game ends, and the player
   with the most cards **not counting Gabu** wins.
 steps:
-  - text_ja: 自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て**コール**を行います。
-    text_en: On your turn, flip the top card of your hand and stack it on any of
-      the 3 piles. Then look at the cards and make a **call**.
-  - text_ja: 場にあるカードを見て、動物の名前を呼ぶことをコールと言います。例:パカ5、モコ2なので**「パカモコ」**
-    text_en: "Looking at the cards and calling the animals’ names is a call.
-      Example: 5 Paka and 2 Moko, so **“Paka-Moko!”**"
-  - text_ja: |-
-      コールには下記のルールがあります。
+- text_ja: 自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て**コール**を行います。
+  text_en: On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a **call**.
+- text_ja: '場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。
 
-      **ポメはかわいいので必ず最初に呼ぶ**
 
-      **ガブの数だけモコを減らす**
-    text_en: |-
-      Calls have these rules:
+    **ポメはかわいいので必ず最初に呼ぶ**
 
-      **Pome is cute, so always call it first**
 
-      **Remove one Moko for each Gabu**
-  - text_ja: 場のカードが次の条件を満たしたとき、**「モコチャカ」**と言いながら**全員で**トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。
-    text_en: When the cards meet a condition, **everyone** grabs for the token
-      while saying **“Mokochaka!”** The one who gets it takes 2 piles and adds
-      them to the bottom of their hand.
+    **ガブの数だけモコを減らす**'
+  text_en: 'Looking at the cards and calling the animals’ names is a call. Calls have these rules:
+
+
+    **Pome is cute, so always call it first**
+
+
+    **Remove one Moko for each Gabu**'
+- text_ja: 場のカードが次の条件を満たしたとき、**「モコチャカ」**と言いながら**全員で**トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。
+  text_en: When the cards meet a condition, **everyone** grabs for the token while saying **“Mokochaka!”** The one who gets it takes 2 piles and adds them to the bottom of their hand.
+- text_ja: 誰かの手札がなくなったらゲーム終了です。**ガブを除いた**手札が最も多い人が勝ちになります。
+  text_en: When someone runs out of cards, the game ends. The player with the most cards in hand **not counting Gabu** wins.
 gallery:
   - image: img/gallery/mg_summary1.webp
     caption_ja: かんたんルール(表)

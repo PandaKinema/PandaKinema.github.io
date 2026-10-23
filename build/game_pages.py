@@ -3,8 +3,9 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v26
-#     v26: 作品ページで3つ目の色を選べる(背景・帯/見出し)/トップの絵のパララックスをやめる(ロゴが絵にかぶらない)
+# パンダキネマ 作品ページ 共通フォーマット v27
+#     v27: 4コマをゲームの終わりまで(モコチャカ・イカタコ・こいこいのぼり)
+#     v26: 作品ページでアクセントカラー2を選べる(背景・帯/見出し)/トップの絵のパララックスをやめる(ロゴが絵にかぶらない)
 #     v25: 閉じたカードのトップはフルサイズ(画面の高さいっぱい)/ギャラリーは1枚ずつ ◀▶ で切り替え
 #     v24: イカタコ・こいこいのぼり・BASH&SMASH(トップはカード)/名前が空のキャラは名札を出さない
 #     v23: モコチャカ(かんたんルールの4コマ・方眼のトップ・モコのシルエット)。トップの模様に grid(方眼)を追加
@@ -229,7 +230,7 @@ def apply(key):
     if M and A:
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()
-        if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「3つ目の色」
+        if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「アクセントカラー2」
             pick['third'] = '#' + c3.lstrip('#')
         cb = str(t.get('bg') or 'main')   # カードの「背景の色」
         D = pick.get(str(d.get('bg_color') or cb), M)            # 背景(動画・遊び方・購入)。空ならカードと同じ
@@ -589,7 +590,17 @@ GAMES['moko'] = dict(
     .m3 .ate{position:relative;display:block}
     .m3 .ate b{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:0 5px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;line-height:16px;white-space:nowrap}
     .m3 .rn{display:block;width:100%;margin-bottom:-6px;font-size:10.5px;font-weight:800;text-align:center;opacity:.75}
-    /* 4. モコチャカ!:トークンの取り合い */
+    /* 4. ゲームの終了 */
+    .mend{display:flex;align-items:flex-end;justify-content:center;gap:22px;padding-top:26px}
+    .mside{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px}
+    .mempty{display:block;width:44px;aspect-ratio:300/418;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:5px}
+    .mhand{display:flex}
+    .mhand .mcd{width:44px;margin-left:-14px;rotate:calc((var(--i) - 1.5) * 7deg)}
+    .mhand .mcd:first-child{margin-left:0}
+    .mcap2{padding:2px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap}
+    .mbub.mwin{left:50%;top:-30px;translate:-50% 0}
+    .mbub.mwin::after{left:50%;translate:-50% 0}
+    /* 3. モコチャカ!:トークンの取り合い */
     .s4 .mbub{left:126px;top:-2px;font-size:14px}
     .s4 .mbub::after{left:auto;right:18px}
     @media all{
@@ -608,6 +619,10 @@ GAMES['moko'] = dict(
       .m3 .mbub{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s)}
       @keyframes mpop3{0%,14%{opacity:0;scale:.4}19%{opacity:1;scale:1.15}23%,80%{opacity:1;scale:1}88%,100%{opacity:0;scale:.6}}
       .m3 .ate b{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s - .5s)}
+      .mhand .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
+      .mhand .mgabu{animation:mgone 7s ease infinite}
+      @keyframes mgone{0%{opacity:0;translate:0 -24px}7%,30%{opacity:1;translate:0 0}42%,100%{opacity:0;translate:0 26px}}
+      .mbub.mwin{animation:mpop2 7s ease infinite;animation-delay:.6s}
       .s4 .mbub{animation:mpop4 8s ease infinite}
       @keyframes mpop4{0%,6%{opacity:0;scale:.4}11%{opacity:1;scale:1.15}15%,82%{opacity:1;scale:1}90%,100%{opacity:0;scale:.6}}
       .s4 .mtok{animation:mgrab 8s cubic-bezier(.5,0,.3,1) infinite}
@@ -638,12 +653,7 @@ GAMES['moko'] = dict(
                            'On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a [[call]].'),
              v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('o1'), mcd('m1'), mcd('p3'))
                + '<span class="mmove"><img class="mcd back" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span>' + '</div>'),
-        dict(cls='s2', b=L('場にあるカードを見て、動物の名前を呼ぶことをコールと言います。例:パカ5、モコ2なので[[「パカモコ」]]',
-                           'Looking at the cards and calling the animals’ names is a call. Example: 5 Paka and 2 Moko, so [[“Paka-Moko!”]]'),
-             v='<div class="m2"><div class="row">' + mcd('m2', '', '--i:0') + mcd('p2', '', '--i:1') + mcd('p3', '', '--i:2') + '</div>'
-               '<div class="mtally"><span style="--i:0"><img src="{{img:m_paka.webp}}" alt="">' + L('パカ 5', 'Paka 5') + '</span><span style="--i:1"><img src="{{img:m_moko.webp}}" alt="">' + L('モコ 2', 'Moko 2') + '</span></div>'
-               '<span class="mbub">' + L('パカモコ!', 'Paka-Moko!') + '</span></div>'),
-        dict(cls='s3', b=L('コールには下記のルールがあります。\n[[ポメはかわいいので必ず最初に呼ぶ]]\n[[ガブの数だけモコを減らす]]',
+        dict(cls='s2', b=L('場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。\n[[ポメはかわいいので必ず最初に呼ぶ]]\n[[ガブの数だけモコを減らす]]',
                            'Calls have these rules:\n[[Pome is cute, so always call it first]]\n[[Remove one Moko for each Gabu]]'),
              v='<div class="m3">'
                '<div class="row" style="--i:0">' + mcd('o1') + mcd('m2') + mcd('m2') + '<span class="eq">→</span><span class="mbub" style="--i:0">' + L('ポメモコ!', 'Pome-Moko!') + '</span></div>'
@@ -652,6 +662,9 @@ GAMES['moko'] = dict(
         dict(cls='s4', b=L('場のカードが次の条件を満たしたとき、[[「モコチャカ」]]と言いながら[[全員で]]トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。',
                            'When the cards meet a condition, [[everyone]] grabs for the token while saying [[“Mokochaka!”]] The one who gets it takes 2 piles and adds them to the bottom of their hand.'),
              v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('m1'), mcd('p2'), mcd('o2'), '<span class="mbub">' + L('モコチャカ!', 'Mokochaka!') + '</span>') + '</div>'),
+        dict(cls='s5', b=L('誰かの手札がなくなったらゲーム終了です。[[ガブを除いた]]手札が最も多い人が勝ちになります。', 'When someone runs out of cards, the game ends. The player with the most cards in hand [[not counting Gabu]] wins.'),
+             v='<div class="mend"><div class="mside"><span class="mempty"></span><span class="mcap2">' + L('手札0で終了', 'Out of cards') + '</span></div>'
+               '<div class="mside"><div class="mhand">' + mcd('m2', '', '--i:0') + mcd('p1', '', '--i:1') + mcd('g1', 'mgabu', '--i:2') + mcd('o2', '', '--i:3') + '</div><span class="mcap2">' + L('ガブを除いて3枚', '3 without Gabu') + '</span><span class="mbub mwin">' + L('勝ち!', 'Win!') + '</span></div></div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='pkg_moko.webp',
@@ -721,6 +734,12 @@ GAMES['ikatako'] = dict(
     .s4 .irow{bottom:30px}
     .s4 .irow .icd{width:48px}
     .iminus{position:relative;display:block}
+    .iend{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:18px}
+    .irow2{display:flex;gap:4px}
+    .irow2 .icd{width:36px}
+    .isum{margin:0;font-size:13px;font-weight:900;line-height:1.3;text-align:center}
+    .isum em{font-style:normal;color:#e8343d}
+    .isum b{font-size:22px;color:#e8343d}
     @media all{
       .s1 .burst{animation:lmark 6s ease infinite;animation-delay:calc(var(--d) * .12s)}
       .idg figure{animation:idrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .5s)}
@@ -734,6 +753,8 @@ GAMES['ikatako'] = dict(
       .iflip{animation:iflip 6s cubic-bezier(.4,1.5,.5,1) infinite}
       @keyframes iflip{0%,34%{rotate:0deg}46%,86%{rotate:180deg}94%,100%{rotate:0deg}}
       .itag{animation:lmark 6s ease infinite;animation-delay:.9s}
+      .irow2>*{animation:idrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .12s)}
+      .isum{animation:icap 6s ease infinite;animation-delay:1.2s}
     }''',
     logo='logo_ikatako.png', logo_size=(1270, 340), logo_alt='イカタコ IKATAKO',
     logo_buy='logo_ikatako.png', logo_credits='logo_ikatako.png',
@@ -754,10 +775,11 @@ GAMES['ikatako'] = dict(
         dict(cls='s2', b=L('危険カードは上の方にあるライトがあげる腕と対応しています。[[タコは左手、イカは右手、イカタコは両手]]です。', 'The lights on a danger card show which arm to raise: [[Octopus = left, Squid = right, Ikatako = both]].'),
              v='<div class="idg">' + ''.join('<figure style="--i:%d">%s<figcaption><b>%s</b><em>%s</em></figcaption></figure>' % (i, icd(k), h, c) for i, (k, h, c) in enumerate([
                  ('8', L('左手', 'Left'), L('タコ!', 'Tako!')), ('10', L('右手', 'Right'), L('イカ!', 'Ika!')), ('18', L('両手', 'Both'), L('イカタコ!', 'Ikatako!'))])) + '</div>'),
-        dict(cls='s3', b=L('一番リアクションが早かった人は[[得点としてカードを獲得]]し、手元に並べます。', 'The fastest player [[takes the card as points]] and lines it up in front of them.'),
+        dict(cls='s3', b=L('一番リアクションが早かった人は[[得点としてカードを獲得]]し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を[[減点(上下逆さま)]]にします。', 'The fastest player [[takes the card as points]] and lines it up. Anyone who got it wrong or didn’t react turns one point card [[upside down as a penalty]].'),
              v='<div class="ia"><span class="itake">' + icd('5') + '</span>' + burst('5!') + '<div class="irow">' + icd('2') + icd('4') + '<span style="width:40px"></span></div><span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
-        dict(cls='s4', b=L('間違えた、反応できなかった人は自分の得点のうち任意の1枚を[[減点(上下逆さま)]]にします。', 'Anyone who got it wrong or didn’t react turns one of their point cards [[upside down as a penalty]].'),
-             v='<div class="ia">' + burst(L('ミス!', 'Miss!')) + '<div class="irow">' + icd('2') + '<span class="iminus"><span class="iflip">' + icd('4') + '</span><b class="itag">' + L('減点', 'Penalty') + '</b></span>' + icd('5') + '</div></div>'),
+        dict(cls='s4', b=L('山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。[[生還した中で最も得点の高い人が勝利]]となります。', 'When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. [[The highest score among the survivors wins.]]'),
+             v='<div class="iend"><div class="irow2">' + icd('6u', '', '--i:0') + icd('2', '', '--i:1') + '<span class="iminus" style="--i:2"><span class="iflip">' + icd('3') + '</span><b class="itag">' + L('減点', 'Penalty') + '</b></span>' + icd('4', '', '--i:3') + icd('8', '', '--i:4') + '</div>'
+               '<p class="isum">6+2+4+8' + L('(得点)', '') + '<em>-3' + L('(減点)', '') + '</em><br><b>=17' + L('点!', ' pts!') + '</b></p></div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='pkg_ikatako.webp', pkg='pkg_ikatako.webp', pkg_size=(520, 825),
@@ -800,6 +822,10 @@ GAMES['koikoi'] = dict(
     .ksora{position:relative;display:flex;gap:2px}
     .ksora img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
     .kfish{position:absolute;left:107px;top:28px;width:30px}
+    .k5{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .kround{padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900}
+    .kfish.kfin{left:200px}
+    .kbub.kwin{position:relative;font-size:14px;margin-left:120px}
     .k4{display:flex;flex-direction:column;align-items:center;gap:20px}
     .k4 .kbub{position:relative;font-size:14px}
     @media all{
@@ -819,6 +845,8 @@ GAMES['koikoi'] = dict(
       .kyaku p{animation:lmark 6s ease infinite;animation-delay:.4s}
       .k4 .kbub{animation:lmark 7s ease infinite;animation-delay:-1.6s}
       .kfish{animation:kfish 7s cubic-bezier(.5,0,.3,1) infinite}
+      .kfish.kfin{animation:none}
+      .kbub.kwin{animation:lmark 6s ease infinite;animation-delay:-.8s}
       @keyframes kfish{0%,40%{translate:0 0}60%,86%{translate:57px 0}94%,100%{translate:0 0}}
     }''',
     logo='koikoilogo.png', logo_size=(1009, 522), logo_alt='こいこいのぼり 真打 KOIKOINOBORI SHINUCHI',
@@ -835,15 +863,12 @@ GAMES['koikoi'] = dict(
              v='<div class="ka"><div class="kfield">' + kcd('b1') + kcd('k5') + kcd('g3') + kcd('r1', 'kpair') + '</div><span class="kcap" style="left:200px;top:24px">' + L('場札', 'Table') + '</span>'
                + '<span class="kmove" style="--x0:101px;--y0:104px;--dx:48px;--dy:-86px">' + kcd('r3') + '</span><span class="kcap" style="left:96px;top:166px">' + L('手札から', 'From hand') + '</span>'
                + '<span class="kbub" style="left:150px;top:78px">' + L('ペア!', 'Pair!') + '</span></div>'),
-        dict(cls='s2', b=L('山札を上から1枚めくります。場に同じ色があれば、ペアで獲得します。\n[[※同じ色のカードが場になければそのまま場に置いておきます。]]', 'Flip the top card of the deck. If the table has the same color, take the pair.\n[[If not, leave it on the table.]]'),
-             v='<div class="ka"><div class="kfield" style="justify-content:flex-start;padding-left:58px">' + kcd('b1') + kcd('k5') + kcd('g3') + '</div>'
-               + '<div class="kdeck">' + kcd('ura') + kcd('ura') + kcd('ura') + '</div><span class="kcap" style="left:14px;top:172px">' + L('山札', 'Deck') + '</span>'
-               + '<span class="kmove" style="--x0:14px;--y0:98px;--dx:174px;--dy:-94px"><img class="kcd back" src="{{img:kc_ura.webp}}" alt=""><img class="kcd front" src="{{img:kc_r5.webp}}" alt="赤の5"></span>'
-               + '<span class="kbub" style="left:118px;top:96px;background:var(--p-ink)">' + L('そのまま場に', 'Stays on table') + '</span></div>'),
         dict(cls='s3', b=L('[[同じ数字を揃えると役になる!]]\n同じ数字を複数枚獲得すると役になる!', '[[Match the same number to make a set!]]\nCollect several cards of the same number to score a set!'),
              v='<div class="kyaku"><div class="row">' + kcd('b5', '', '--i:0') + kcd('r5', '', '--i:1') + kcd('k5', '', '--i:2') + '</div><p>' + L('5:色の異なる3枚(5点)', '5: three different colors (5 pts)') + '</p></div>'),
-        dict(cls='s4', b=L('成立していた場合は[[「あがり」か「こいこい」]]を宣言します。\nあがり:得点を確定し、トークンの移動を行い局を終了します。', 'If a set is made, declare [[“Agari” or “Koi-Koi.”]]\nAgari: lock in your points, move the token, and end the hand.'),
+        dict(cls='s4', b=L('成立していた場合は[[「あがり」か「こいこい」]]を宣言します。\n局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。', 'If a set is made, declare [[“Agari” or “Koi-Koi.”]]\nAgari: lock in your points, move the token, and end the hand.'),
              v='<div class="k4"><span class="kbub">' + L('あがり!', 'Agari!') + '</span><div class="ksora"><img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">' + FISH + '</div></div>'),
+        dict(cls='s5', b=L('得点が確定してトークンを移動するまでを1局とし、これを3局行います。[[3局終了時、トークンが自分側にあるプレイヤーの勝利です。]]', 'One hand lasts until the token moves; play 3 hands. [[After 3 hands, the player with the token on their side wins.]]'),
+             v='<div class="k5"><span class="kround">' + L('3局終了', 'After 3 hands') + '</span><div class="ksora"><img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">' + FISH.replace('class="kfish"', 'class="kfish kfin"') + '</div><span class="kbub kwin">' + L('勝ち!', 'Win!') + '</span></div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='mini_koikoi.webp', pkg='mini_koikoi.webp', pkg_size=(900, 529),

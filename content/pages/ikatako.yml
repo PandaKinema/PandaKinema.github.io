@@ -36,18 +36,14 @@ summary_en: Ikatako is a game where you flip cards from the deck and react to
   **“Solo rules.”** In Versus, the first to shout the number takes the card!
   But if a squid or octopus shows up, you must shout its name and raise a hand!
 steps:
-  - text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
-    text_en: The active player flips one card from the deck and reveals it.
-      Everyone reacts to the card.
-  - text_ja: 危険カードは上の方にあるライトがあげる腕と対応しています。**タコは左手、イカは右手、イカタコは両手**です。
-    text_en: The lights at the top of a danger card show which arm to raise.
-      **Octopus = left hand, squid = right hand, Ikatako = both hands.**
-  - text_ja: 一番リアクションが早かった人は**得点としてカードを獲得**し、手元に並べます。
-    text_en: The fastest player **takes the card as points** and lines it up in
-      front of them.
-  - text_ja: 間違えた、反応できなかった人は自分の得点のうち任意の1枚を**減点(上下逆さま)**にします。
-    text_en: Anyone who got it wrong or didn’t react turns one of their point
-      cards **upside down as a penalty**.
+- text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
+  text_en: The active player flips one card from the deck and reveals it. Everyone reacts to the card.
+- text_ja: 危険カードは上の方にあるライトがあげる腕と対応しています。**タコは左手、イカは右手、イカタコは両手**です。
+  text_en: The lights at the top of a danger card show which arm to raise. **Octopus = left hand, squid = right hand, Ikatako = both hands.**
+- text_ja: 一番リアクションが早かった人は**得点としてカードを獲得**し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を**減点(上下逆さま)**にします。
+  text_en: The fastest player **takes the card as points** and lines it up. Anyone who got it wrong or didn’t react turns one point card **upside down as a penalty**.
+- text_ja: 山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。**生還した中で最も得点の高い人が勝利**となります。
+  text_en: When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. **The highest score among the survivors wins.**
 gallery:
   - image: img/gallery/ig_sheet.webp
     caption_ja: 説明シート「反射神経で生還せよ」
