@@ -6,11 +6,7 @@ logo: img/b_logo_cream.png
 logo_alt: ビビルの塔 THE TOWER OF BIBILU
 logo_buy: img/b_logo_navy.png
 logo_credits: img/b_logo_white.png
-bg1_color: '#163f53'
-bg1_text: '#fff7df'
 bg1_image: img/b_tex_c.png
-bg2_color: '#fff1cf'
-bg2_text: '#163f53'
 band_image: img/b_band.png
 heading_icon: img/b_tupa_sten.png
 step_icon: img/b_tupa_sil.png

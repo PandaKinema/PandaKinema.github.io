@@ -78,11 +78,8 @@ content:
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
       - { name: key1, label: キーカラー1, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その1(例:パッケージの帯の色)。ほかの色の欄はここから選びます。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: key2, label: キーカラー2, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その2(例:パッケージの面の色)。色見本 → https://pandakinema.github.io/new/colors.html" }
-      - { name: extra_color, label: その他の色(必要なときだけ), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#fef4d6 のような6けたの色コードで" }, description: "キーカラー2色と白・黒以外の色を使いたいときだけ。各欄で「その他の色」を選ぶと使われます" }
-      - { name: card_bg, label: 開いたカードの背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2", hidden: true }
-      - { name: pill_bg, label: 人数〜年齢の下地, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ジャンルの文字もこの色。ふつうはキーカラー1", hidden: true }
-      - { name: pill_text, label: 人数〜年齢の文字, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2", hidden: true }
-      - { name: logo_color, label: カードのロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "ロゴが単色なら塗る色、多色なら「ロゴ画像の色のまま」" }
+      - { name: extra_color, label: その他の色(必要なときだけ), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#fef4d6 のような6けたの色コードで" }, description: "キーカラー2色と白・黒以外の色を使いたいときだけ。各欄で「その他の色」を選ぶと使われます", hidden: true }
+      - { name: logo_color, label: ロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1(明るい色)" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "単色のロゴはキーカラー1で塗ります。色が多いロゴは「ロゴ画像の色のまま」" }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
@@ -96,11 +93,8 @@ content:
         label: バナー
         type: object
         fields:
-          - { name: bg, label: 背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "" }
           - { name: pattern, label: 背景の模様, type: select, options: { values: [ { value: none, label: "なし" }, { value: tri, label: "トリコの三角" } ] } }
           - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
-          - { name: logo_color, label: ロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "" }
-          - { name: text_color, label: 文字の色, type: select, default: white, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "人数〜ジャンルと紹介文の色", hidden: true }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
@@ -121,13 +115,9 @@ content:
           - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
           - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages }, hidden: true }
           - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages }, hidden: true }
-          - { name: bg1_color, label: 背景1の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "遊び方・購入などの帯の背景。空ならトップのキーカラー1。文字の色は自動" }
-          - { name: bg1_text, label: 背景1の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, hidden: true }
-          - { name: bg1_image, label: 背景1の模様, type: image, options: { media: pages }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_color, label: 背景2の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー・ギャラリー・おまけの背景。帯の模様もこの色。空ならトップのキーカラー2。文字の色は自動" }
-          - { name: bg2_text, label: 背景2の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, hidden: true }
-          - { name: bg2_image, label: 背景2の模様, type: image, options: { media: pages }, description: "空なら色だけ" }
-          - { name: band_image, label: 帯の模様, type: image, options: { media: pages }, description: "背景1の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。空なら帯なし" }
+          - { name: bg1_image, label: 濃い背景の模様, type: image, options: { media: pages }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
+          - { name: bg2_image, label: 明るい背景の模様, type: image, options: { media: pages }, description: "空なら色だけ" }
+          - { name: band_image, label: 帯の模様, type: image, options: { media: pages }, description: "濃い背景の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。色はキーカラー1。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { media: pages }, description: "見出しの左右に出るシルエット(背景透明)" }
           - { name: step_icon, label: 遊び方の番号の形, type: image, options: { media: pages }, description: "遊び方1〜4の番号が入る形(背景透明)" }
           - name: videos
@@ -266,8 +256,8 @@ content:
       - { name: intro_en, label: 紹介文(英語), type: text, hidden: true }
       - { name: button_ja, label: ボタンの文字, type: string, description: "例:あそぶ / つかう" }
       - { name: button_en, label: ボタンの文字(英語), type: string, description: "例:Play / Open", hidden: true }
-      - { name: bg, label: 背景色, type: string }
-      - { name: text_color, label: 文字の色, type: string }
+      - { name: key1, label: キーカラー1(明るい色), type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#ffffff のような6けたの色コードで" }, description: "文字の色" }
+      - { name: key2, label: キーカラー2(濃い色), type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#163f53 のような6けたの色コードで" }, description: "背景の色" }
       - { name: video, label: バナーの動画, type: file, description: "mp4・音なし。10MB以下くらいに" }
       - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 

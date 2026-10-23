@@ -111,6 +111,7 @@ def apply(key):
     g['manual_en'] = d.get('manual_en') or g['manual_ja']
     g['site'] = site
     g['games'] = games
+    g['tools'] = load('content/tools.yml') or []
     # 背景2色(色か画像)と帯・見出しの飾り:編集画面の値を CSS の変数で上書き
     def tile(v):   # 2倍の大きさで作った画像を半分の大きさで敷き詰める
         f = imgname(v)
@@ -119,14 +120,14 @@ def apply(key):
         return f, w // 2, h // 2
     from PIL import Image
     css = []
-    # 色の初期値はトップ(ボードゲーム)のキーカラー。文字の色は空なら読みやすい方を自動で選ぶ
+    # 色はトップ(ボードゲーム)のキーカラーから:キーカラー1=明るい色(帯・明るい背景)、キーカラー2=濃い色(背景・文字)
     t = games.get(key) or {}
     k1, k2 = t.get('key1'), t.get('key2')
-    bg1 = d.get('bg1_color') or k1; bg2 = d.get('bg2_color') or k2
-    if bg1: css.append('--k-bg:%s;--k-ink:%s' % (bg1, d.get('bg1_text') or ink(bg1, bg2)))
-    if bg2: css.append('--b2-bg:%s;--b2-ink:%s' % (bg2, d.get('bg2_text') or ink(bg2, bg1)))
-    if k1 and k2:   # ボタン(BOOTHで購入など)もキーカラーで
-        css.append('--accent:%s;--on-accent:%s' % (k2, ink(k2, k1)))
+    if k1 and k2:
+        css.append('--k-bg:%s;--k-ink:%s' % (k2, ink(k2, k1)))          # 濃い背景(遊び方・購入など)
+        css.append('--b2-bg:%s;--b2-ink:%s' % (k1, ink(k1, k2)))        # 明るい背景(ストーリー・ギャラリー・おまけ)と帯
+        css.append('--accent:%s;--on-accent:%s' % (k1, ink(k1, k2)))    # ふつうのボタン
+        css.append('--buy-bg:%s;--buy-ink:%s' % (k2, ink(k2, k1)))      # BOOTHで購入:土台がキーカラー2、文字がキーカラー1
     if 'bg1_image' in d:
         if d.get('bg1_image'):
             f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
@@ -537,6 +538,8 @@ TEMPLATE = r'''<!doctype html>
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+    .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent));border-color:var(--buy-ink,var(--on-accent));box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
+    .fab.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent),0 12px 28px rgba(0,0,0,.32)}
     .panel{background:#fff;color:var(--p-ink);border-radius:20px;padding:28px 30px}
     .panel .btn{background:var(--p-ink);color:#fff}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
@@ -837,7 +840,14 @@ TEMPLATE = r'''<!doctype html>
     .bg-row li{flex:none}
     .bg-card{position:relative;display:block;height:230px;aspect-ratio:560/790;border-radius:10px;overflow:hidden;transition:translate .2s ease}
     .bg-card:hover{translate:0 -4px}
-    .bg-card img{width:100%;height:100%;object-fit:cover}
+    .bg-card>img{width:100%;height:100%;object-fit:cover}
+    .bg-tool{display:flex;flex-direction:column}
+    .bg-tool .bt-shot{width:100%;aspect-ratio:1;object-fit:cover}
+    .bt-tupa{position:relative;display:block;width:52%;aspect-ratio:1164/1562;margin:16% auto 4%}
+    .bt-tupa .tb{position:absolute;left:0;bottom:0;width:100%}
+    .bt-tupa .to{position:absolute;left:50%;top:0;width:30.4%;translate:-50% 0;filter:drop-shadow(0 0 6px rgba(27,185,238,.7))}
+    .bt-name{display:flex;align-items:center;justify-content:center;flex:1;padding:8px 10px;font-size:13px;font-weight:900;line-height:1.35;text-align:center}
+    .bt-title{width:100%;height:auto}
     .bg-new{position:absolute;left:50%;bottom:8px;translate:-50% 0;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
@@ -1043,7 +1053,7 @@ TEMPLATE = r'''<!doctype html>
           <dl class="spec">
 {{spec_html}}
           </dl>
-          <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+          <a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
@@ -1119,7 +1129,7 @@ TEMPLATE = r'''<!doctype html>
         </dl>
         <p class="contents">{{contents}}</p>
         {{price_html}}
-        <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+        <a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     </div>
@@ -1138,7 +1148,7 @@ TEMPLATE = r'''<!doctype html>
 
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
-  <a class="fab" href="{{booth}}" target="_blank" rel="noopener"><img src="{{img:{{fab_pkg}}}}" alt="" width="44" height="67">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+  <a class="fab buy" href="{{booth}}" target="_blank" rel="noopener"><img src="{{img:{{fab_pkg}}}}" alt="" width="44" height="67">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
 </main>
 
 <!-- 5. クレジット -->
@@ -1149,11 +1159,11 @@ TEMPLATE = r'''<!doctype html>
   </dl>
 </section>
 
-<!-- 6. ほかの作品:トップと同じカード(少し小さめ) -->
+<!-- 6. CONTENTS:ほかのボードゲーム → ツール(トップと同じカード・少し小さめ) -->
 <div class="wrap"><div class="dotline" aria-hidden="true"></div></div>
 <section class="lineup-sec" id="lineup" aria-labelledby="lineup-title">
   <div class="wrap">
-    <h2 class="lineup-h" id="lineup-title"><span class="cap">BOARD GAME</span></h2>
+    <h2 class="lineup-h" id="lineup-title"><span class="cap">CONTENTS</span></h2>
     <ul class="bg-row">
 {{lineup_html}}
     </ul>
@@ -1296,6 +1306,17 @@ def yt(v):   # YouTube のURLでもIDでもOK
     m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/|live/)([\w-]{11})', v)
     return m.group(1) if m else v
 
+def tool_art(t):   # ツールの絵(トップの PLAY&TOOLS と同じもの)。画像はトップの画像の置き場から
+    if t.get('thumb') or t.get('image'):
+        return '<img class="bt-shot" src="../../img/%s" alt="" loading="lazy">' % imgname(t.get('thumb') or t.get('image'))
+    if t['key'] == 'moji':
+        return '<span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp" alt=""><img class="to" src="../../img/b_tupa_orb.webp" alt=""></span>'
+    return ''
+def tool_title(t):
+    if t.get('title_image'):
+        return '<img class="bt-title" src="../../img/%s" alt="%s" loading="lazy">' % (imgname(t['title_image']), H.escape(t['name']))
+    return H.escape(t['name'])
+
 def card_href(x):   # トップのカードのリンク先を、作品ページから見た場所に
     u = str(x.get('page') or '')
     if u.startswith('http'):
@@ -1339,7 +1360,9 @@ def render(key):
         lineup_html='\n'.join(
             '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (
                 card_href(x), ' target="_blank" rel="noopener"' if str(x.get('page') or '').startswith('http') else '', imgname(x['front']), e(x['name']),
-                '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '') for x in g['games'].values() if x['key'] != key),
+                '<span class="bg-new">{{L:新作|NEW}}</span>' if x.get('new') else '') for x in g['games'].values() if x['key'] != key) + '\n' + '\n'.join(
+            '      <li><a class="bg-card bg-tool" href="%s" target="_blank" rel="noopener" style="background:%s;color:%s">%s<span class="bt-name">%s</span></a></li>' % (
+                e(t['url']), e(t.get('key2') or '#163f53'), e(t.get('key1') or '#fff'), tool_art(t), tool_title(t)) for t in g['tools']),
     )
     s = TEMPLATE
     for _ in range(3):

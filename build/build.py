@@ -127,7 +127,7 @@ def banner(key):
             v = vid(t.get('video'), t.get('youtube'))
             art = tool_art(t, 'b') if not v else ''
             txt = '<p class="b-series"><span class="cap">PLAY &amp; TOOLS</span></p><h2 class="b-name">%s</h2><p class="b-intro">%s</p>' % (tool_title(t, 'b-mtitle'), T(t.get('intro_ja'), t.get('intro_en')))
-            return 'b-tool b-' + key, 'background:%s;--fg:%s' % (t.get('bg') or '#163f53', t.get('text_color') or '#fff'), art, txt, tool_btn(t), v
+            return 'b-tool b-' + key, 'background:%s;--fg:%s' % (t.get('key2') or '#163f53', t.get('key1') or '#fff'), art, txt, tool_btn(t), v
     g = [x for x in GAMES if x['key'] == key][0]
     bn = g.get('banner') or {}
     bg = col(g, bn.get('bg'), 'key2')
@@ -144,8 +144,8 @@ def banner(key):
     intro = '<p class="b-intro">%s</p>' % T(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
     # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
     label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
-    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo', col(g, bn.get('logo_color'), 'key1')), meta(g), intro)
-    return 'b-' + key, 'background:%s;--fg:%s' % (bg, col(g, bn.get('text_color'), 'white')), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
+    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo', col(g, bn.get('logo_color') or g.get('logo_color'), 'key1')), meta(g), intro)
+    return 'b-' + key, 'background:%s;--fg:%s' % (bg, col(g, bn.get('text_color'), 'key1')), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
 
 def render():
     slide = int(SITE.get('slide_seconds') or 7)
@@ -193,7 +193,7 @@ def render():
                      % (e(yt_id(v.get('youtube'))), e(v['title']), img(v['poster']), e(v['title']), T(v.get('kind_ja'), v.get('kind_en')),
                         '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS)
     tools = '\n'.join('        <li><a class="tool t-%s" href="%s"%s style="background:%s;color:%s">%s<span class="tl-t">%s%s</span></a></li>' % (
-        t['key'], e(t['url']), ext(t['url']), t.get('bg') or '#163f53', t.get('text_color') or '#fff', tool_art(t, 'tl'), tool_title(t, 'tl-title'), tool_btn(t, 'span')) for t in TOOLS)
+        t['key'], e(t['url']), ext(t['url']), t.get('key2') or '#163f53', t.get('key1') or '#fff', tool_art(t, 'tl'), tool_title(t, 'tl-title'), tool_btn(t, 'span')) for t in TOOLS)
     tools += '\n        <li><div class="tool soon"><span>COMING SOON</span></div></li>'
 
     ogp = ''
@@ -236,11 +236,11 @@ def colors():
         keys = sw('キーカラー1', g.get('key1')) + sw('キーカラー2', g.get('key2')) + (sw('その他の色', g.get('extra_color')) if g.get('extra_color') else '')
         uses = ''.join(sw('%s(%s)' % (lab, name(v, d)), c(v, d)) for lab, v, d in [
             ('開いたカードの背景', g.get('card_bg'), 'key2'), ('人数〜年齢の下地', g.get('pill_bg'), 'key1'), ('人数〜年齢の文字', g.get('pill_text'), 'key2'), ('ロゴ', g.get('logo_color'), 'key1'),
-            ('バナーの背景', bn.get('bg'), 'key2'), ('バナーの文字', bn.get('text_color'), 'white'), ('バナーのロゴ', bn.get('logo_color'), 'key1')])
+            ('バナーの背景', bn.get('bg'), 'key2'), ('バナーの文字', bn.get('text_color'), 'key1'), ('バナーのロゴ', bn.get('logo_color') or g.get('logo_color'), 'key1')])
         rows.append('<section><h2>%s <small>%s</small></h2><p class="lbl">キーカラー</p><div class="grid">%s</div><p class="lbl">使われている色</p><div class="grid">%s</div><p class="lbl">開いたカードの見え方</p>%s</section>' % (
             e(g['name']), e(g['key']), keys, uses, prev))
     for t in TOOLS:
-        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div></section>' % (e(t['name']), e(t['key']), sw('背景色', t.get('bg')), sw('文字の色', t.get('text_color'))))
+        rows.append('<section><h2>%s <small>%s</small></h2><div class="grid">%s%s</div></section>' % (e(t['name']), e(t['key']), sw('キーカラー1(文字)', t.get('key1')), sw('キーカラー2(背景)', t.get('key2'))))
     return """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>色見本 | PANDA KINEMA</title>
 <style>body{margin:0;padding:24px 16px 48px;background:#1b2228;color:#f3f2ee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}main{max-width:900px;margin:auto}
 h1{font-size:22px}p.note{color:#9aa3a9;font-size:13px;line-height:1.8}section{margin:22px 0;padding:18px;border:1px solid #3a464f;border-radius:12px;background:#222b32}h2{margin:0 0 12px;font-size:17px}h2 small{color:#9aa3a9;font-weight:400}

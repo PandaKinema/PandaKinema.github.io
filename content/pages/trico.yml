@@ -6,11 +6,7 @@ logo: img/trico_logo_purple.png
 logo_alt: TRICO!(トリコ)
 logo_buy: img/trico_logo_purple.png
 logo_credits: img/trico_logo_white.png
-bg1_color: '#7b59a3'
-bg1_text: '#ffffff'
 bg1_image: img/t_tex_c.png
-bg2_color: '#fdd000'
-bg2_text: '#3a2366'
 band_image: img/t_band.png
 heading_icon: img/t_bird_sten.png
 step_icon: img/t_bird_sil.png

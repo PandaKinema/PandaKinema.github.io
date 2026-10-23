@@ -1,16 +1,15 @@
+# BOARD GAME の列に並ぶ作品(編集画面でドラッグして並べ替えできます)
+# key1 = 明るい色(帯・人数〜年齢の下地・ロゴ・文字)、key2 = 濃い色(背景)。カード・バナー・作品ページの色はこの2色から自動で決まります
 - key: bibilu
   name: ビビルの塔
   new: true
   front: img/front_bibilu.webp
   pkg: img/pkg_bibilu.webp
   logo: img/logo_bibilu.png
-  key1: '#153e53'
-  key2: '#fff5d7'
-  extra_color: '#fef4d6'
-  card_bg: key1
-  pill_bg: key2
-  pill_text: key1
-  logo_color: key2
+  key1: '#fff5d7'
+  key2: '#153e53'
+  extra_color: ''
+  logo_color: key1
   players: 2〜4
   time: 10〜15
   age: '6'
@@ -20,21 +19,15 @@
   intro_en: Reveal number cards at the same time and build tall towers to score points.
   page: games/bibilu/
   booth: https://pandakinema.booth.pm/
-  banner:
-    bg: key1
-    logo_color: key2
-    text_color: white
+  banner: {}
 - key: trico
   name: TRICO!
   new: false
   front: img/front_trico.webp
   pkg: img/pkg_trico.webp
   logo: img/logo_trico.png
-  key1: '#664498'
-  key2: '#fdd000'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
+  key1: '#fdd000'
+  key2: '#664498'
   logo_color: key1
   players: 2〜3
   time: 10〜15
@@ -50,10 +43,7 @@
   page: games/trico/
   booth: https://pandakinema.booth.pm/
   banner:
-    bg: key2
     pattern: none
-    logo_color: key1
-    text_color: key1
 - key: ikatako
   name: イカタコ
   new: false
@@ -62,10 +52,7 @@
   logo: img/logo_ikatako.png
   key1: '#ffffff'
   key2: '#0073bd'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
-  logo_color: white
+  logo_color: key1
   players: 1〜6
   time: 5〜15
   age: '8'
@@ -75,10 +62,7 @@
   intro_en: Squid! Octopus! Hands up!
   page: https://gamemarket.jp/game/186696
   booth: https://pandakinema.booth.pm/
-  banner:
-    bg: key2
-    logo_color: white
-    text_color: white
+  banner: {}
 - key: moko
   name: モコチャカ
   new: false
@@ -87,9 +71,6 @@
   logo: img/logo_moko.png
   key1: '#f19ebc'
   key2: '#39278b'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
   logo_color: key1
   players: 2〜4
   time: 10〜15
@@ -100,10 +81,7 @@
   intro_en: Sleep is a race.
   page: https://gamemarket.jp/game/187698
   booth: https://pandakinema.booth.pm/
-  banner:
-    bg: key2
-    logo_color: key1
-    text_color: key1
+  banner: {}
 - key: koikoi
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES
@@ -113,9 +91,6 @@
   logo: img/koikoilogo.png
   key1: '#ffffff'
   key2: '#48b0e5'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
   logo_color: original
   players: '2'
   time: 5〜10
@@ -124,10 +99,7 @@
   genre_en: Hanafuda-style set collection
   intro_ja: あげろ！こいのぼり！
   intro_en: Raise the carp streamers!
-  banner:
-    bg: key2
-    logo_color: original
-    text_color: key1
+  banner: {}
 - key: bash
   name: BASH&SMASH
   series: 'MINI THEATER SERIES '
@@ -137,9 +109,6 @@
   logo: img/bashlogo_4C.png
   key1: '#ffffff'
   key2: '#e60039'
-  card_bg: key2
-  pill_bg: key1
-  pill_text: key2
   logo_color: original
   players: '2'
   time: 5〜10
@@ -148,7 +117,4 @@
   genre_en: Fighting-game-style mind game
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
-  banner:
-    bg: key2
-    logo_color: original
-    text_color: key1
+  banner: {}
