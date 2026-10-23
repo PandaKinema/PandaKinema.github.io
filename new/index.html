@@ -447,7 +447,8 @@
   hero.classList.add("jsc");
   function show(i){ cur=(i+n)%n; slides.forEach(function(s,k){ s.classList.toggle("cur",k===cur); var y=$(".b-yt",s); if(y){ if(k===cur){ if(!$("iframe",y)){ var id=y.getAttribute("data-yt"), f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&mute=1&loop=1&playlist="+id+"&controls=0&playsinline=1&rel=0&iv_load_policy=3&disablekb=1"; f.allow="autoplay; encrypted-media"; f.tabIndex=-1; f.title=""; y.appendChild(f) } } else y.innerHTML="" } var v=$("video",s); if(v){ if(k===cur){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}) } else v.pause() } }); bars.forEach(function(b){ b.classList.remove("on") }); void hero.offsetWidth; bars[cur].classList.add("on") }
   bars.forEach(function(b,k){ b.addEventListener("click",function(e){ e.preventDefault(); show(k) }); $("i",b).addEventListener("animationend",function(){ if(k===cur && n>1) show(cur+1) }) });
-  hero.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") hero.classList.add("hold") }); hero.addEventListener("pointerleave",function(){ hero.classList.remove("hold") });
+  /* 止めるのは、文字やボタンの上にマウスがある間だけ(バナーが大きいので全体では止めない) */
+  $$(".b-in",hero).forEach(function(t){ t.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") hero.classList.add("hold") }); t.addEventListener("pointerleave",function(){ hero.classList.remove("hold") }) });
   var tx=null; hero.addEventListener("touchstart",function(e){ tx=e.touches[0].clientX },{passive:true});
   hero.addEventListener("touchend",function(e){ if(tx===null) return; var dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) show(cur+(dx<0?1:-1)); tx=null });
   if(n<2) $(".b-ui",hero).style.setProperty("display","none","important");
