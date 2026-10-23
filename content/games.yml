@@ -6,6 +6,7 @@
   logo: img/logo_bibilu.png
   main: "#153e53"
   accent: "#fff5d7"
+  bg: main
   logo_color: accent
   players: 2〜4
   time: 10〜15
@@ -24,7 +25,8 @@
   logo: img/logo_trico.png
   main: "#664498"
   accent: "#fdd000"
-  logo_color: accent
+  bg: accent
+  logo_color: main
   players: 2〜3
   time: 10〜15
   age: "6"
@@ -48,6 +50,7 @@
   logo: img/logo_ikatako.png
   main: "#0073bd"
   accent: "#ffffff"
+  bg: main
   logo_color: accent
   players: 1〜6
   time: 5〜15
@@ -66,6 +69,7 @@
   logo: img/logo_moko.png
   main: "#39278b"
   accent: "#f19ebc"
+  bg: main
   logo_color: accent
   players: 2〜4
   time: 10〜15
@@ -85,6 +89,7 @@
   logo: img/koikoilogo.png
   main: "#48b0e5"
   accent: "#ffffff"
+  bg: main
   logo_color: original
   players: "2"
   time: 5〜10
@@ -102,6 +107,7 @@
   logo: img/bashlogo_4C.png
   main: "#e60039"
   accent: "#ffffff"
+  bg: main
   logo_color: original
   players: "2"
   time: 5〜10
