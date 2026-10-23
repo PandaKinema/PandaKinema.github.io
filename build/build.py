@@ -131,9 +131,9 @@ def banner(key):
     if bn.get('video') or bn.get('youtube'):
         art = ''
     intro = '<p class="b-intro">%s</p>' % T(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
-    series = '<p class="b-series">%s</p>' % e(g['series']) if g.get('series') else ''
-    txt = '%s%s<h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (
-        '<p class="b-new">%s</p>' % L('新作', 'NEW') if g.get('new') else '', series, tlogo(g, 'b-logo', bn.get('logo_color')), meta(g), intro)
+    # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
+    label = '%s<span>BOARD GAME%s</span>' % ('<span class="b-new">%s</span>' % L('新作', 'NEW') if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
+    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo', bn.get('logo_color')), meta(g), intro)
     return 'b-' + key, 'background:%s;--fg:%s' % (bg, bn.get('text_color') or '#fff'), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'))
 
 def render():
