@@ -705,7 +705,7 @@
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title" hidden>
+  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title">
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title"><span lang="ja">紹介動画</span><span lang="en">Videos</span></h2></div></header>
@@ -713,14 +713,14 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-
+          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/ikatako_poster.jpg?v=06824a1d" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
       </div>
     </div>
     <div class="gband bottom" aria-hidden="true"></div>
-    <div class="vdots"></div>
+    <div class="vdots"><button type="button" aria-current="true"><span lang="ja">遊び方動画</span><span lang="en">How to play</span></button></div>
   </section>
 
   <!-- 3. キャラクター+取説の導入文(世界観+ルール) -->

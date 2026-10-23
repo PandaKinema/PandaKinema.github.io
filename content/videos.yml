@@ -14,3 +14,23 @@
   kind_ja: 遊び方動画
   kind_en: How to play
   poster: img/video/trico_poster.webp
+- work: ikatako
+  title: イカタコ
+  kind_ja: 遊び方動画
+  kind_en: How to play
+  poster: img/video/ikatako_poster.jpg
+- work: moko
+  title: モコチャカ
+  kind_ja: 遊び方動画
+  kind_en: How to play
+  poster: img/video/moko_poster.jpg
+- work: koikoi
+  title: こいこいのぼり 真打
+  kind_ja: 遊び方動画
+  kind_en: How to play
+  poster: img/video/koikoi_poster.jpg
+- work: bash
+  title: BASH&SMASH
+  kind_ja: 遊び方動画
+  kind_en: How to play
+  poster: img/video/bash_poster.jpg
