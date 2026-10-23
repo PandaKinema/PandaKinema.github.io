@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v34
+# パンダキネマ 作品ページ 共通フォーマット v35
+#     v35: 黒文字の代わりに作品の色を暗くした色
 #     v34: 強調の色は地と4.5以上の差があるときだけ(なければ赤→文字色+太字)/見出しの飾りの色を選べる
 #     v33: 全面の絵の上で部品を動かす(TRICO!=鳥と宝石、モコチャカ=アイコンが回る)
 #     v32: トップは画面の高さいっぱい、ロゴを画面の高さに合わせて大きく
@@ -75,7 +76,19 @@ def contrast(a, b):
 def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つの色(メイン/アクセント)で読めればそれ、だめなら白か濃い色
     if other and contrast(bg, other) >= 4.5:
         return other
-    return '#ffffff' if contrast(bg, '#ffffff') >= contrast(bg, '#1b2228') else '#1b2228'
+    if contrast(bg, '#ffffff') >= 4.5:
+        return '#ffffff'
+    dk = deep(bg)
+    return dk if contrast(bg, dk) >= contrast(bg, '#ffffff') else '#ffffff'
+
+HUE = ['#1b2228']   # 作品の濃い方の色(apply で設定)。黒の代わりに、この色を暗くして使う
+def deep(bg, base=None):   # 黒文字の代わり:作品の色を、地の上で読めるところまで暗くした色
+    c = base or HUE[0]
+    for k in range(0, 101, 4):
+        x = mix(c, '#000000', 1 - k / 100)
+        if contrast(x, bg) >= 4.5:
+            return x
+    return mix(c, '#000000', .1)
 
 def mix(a, b, w):   # 色 a を w の割合で b に混ぜる
     a, b = str(a).lstrip('#'), str(b).lstrip('#')
@@ -116,7 +129,7 @@ def hero(g, d, t):
             hbg = '#%02x%02x%02x' % c
             hbg2 = '#%02x%02x%02x' % min(top, key=lambda x: sum(x)) if len(top) > 1 else None   # 暗い方(三角模様の地。トップ画像と同じ色に)
             M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
-            fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hbg) >= 4.5, x in (M, A), contrast(x, hbg)))
+            fg = max((M, A, deep(hbg), '#ffffff'), key=lambda x: (contrast(x, hbg) >= 4.5, x in (M, A), x == '#ffffff', contrast(x, hbg)))
             style.append('--hero-bg:%s;--hero-ink:%s' % (hbg, fg))
     art_wide = False
     cover_layers = str(h.get('fit') or '') == 'cover' and h.get('art') and [x for x in (h.get('layers') or []) if x.get('image')]
@@ -140,7 +153,7 @@ def hero(g, d, t):
         bot = '#%02x%02x%02x' % tuple(sum(p[c] for p in px) // len(px) for c in range(3))
         M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
         g['hero_cls'] += ' light'   # 下からのぼかしはなし。文字は絵の下の方の色の上で読める色
-        fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, bot) >= 4.5, x in (M, A), contrast(x, bot)))
+        fg = max((M, A, deep(bot), '#ffffff'), key=lambda x: (contrast(x, bot) >= 4.5, x in (M, A), x == '#ffffff', contrast(x, bot)))
         style.append('--hero-ink:%s' % fg)
         if h.get('zoom'):
             style.append('--zoom:%g' % num(h['zoom'], 1))
@@ -193,7 +206,7 @@ def hero(g, d, t):
                 el, er = edge(1), edge(W - 5)
             hb = '#%02x%02x%02x' % bc
             M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
-            fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hb) >= 4.5, x in (M, A), contrast(x, hb)))
+            fg = max((M, A, deep(hb), '#ffffff'), key=lambda x: (contrast(x, hb) >= 4.5, x in (M, A), x == '#ffffff', contrast(x, hb)))
             style.append('--hero-bg:%s;--hero-ink:%s;--edge-l:%s;--edge-r:%s;--card-ar:%d/%d' % (hb, fg, el, er, W, Hh))
             g['hero_cls'] = 'hero-full'
             g['hero_art'] = '<div class="hero-art"><img class="card-full" src="../../img/%s" alt="%s" fetchpriority="high"></div>' % (f, H.escape(str(t.get('name') or '')))
@@ -264,6 +277,7 @@ def apply(key):
     t = games.get(key) or {}
     M, A = t.get('main'), t.get('accent')
     if M and A:
+        HUE[0] = M if lum(M) <= lum(A) else A
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()
         if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「アクセントカラー2」
@@ -275,7 +289,7 @@ def apply(key):
         if D == O:
             O = A if D != A else M
         dark, light = (D, O) if lum(D) < lum(O) else (O, D)
-        p_ink = dark if contrast(dark, '#ffffff') >= 4.5 else '#1b2228'   # 白い枠(遊び方・購入)の文字
+        p_ink = dark if contrast(dark, '#ffffff') >= 4.5 else deep('#ffffff', dark)   # 白い枠(遊び方・購入)の文字(黒ではなく作品の色を暗くしたもの)
         def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ
             fg = ink(bg, fg_pref)
             hl = fixed or fg_pref
