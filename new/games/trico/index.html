@@ -94,7 +94,9 @@
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
     .hero.hero-cover{color:var(--lt)}
-    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
+    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
+    .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
     .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}
@@ -692,11 +694,11 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-stage" style="--lw:449px;--hero-bg:#fdd000;--hero-ink:#664498;--pat:url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; width=&#x27;92&#x27; height=&#x27;160&#x27;%3E%3Crect width=&#x27;92&#x27; height=&#x27;160&#x27; fill=&#x27;%23fcc600&#x27;/%3E%3Cpolygon points=&#x27;0,80 46,0 92,80&#x27; fill=&#x27;%23fdd000&#x27;/%3E%3Cpolygon points=&#x27;-46,160 0,80 46,160&#x27; fill=&#x27;%23fdd000&#x27;/%3E%3Cpolygon points=&#x27;46,160 92,80 138,160&#x27; fill=&#x27;%23fdd000&#x27;/%3E%3C/svg%3E&quot;);--pat-size:92px 160px;--sw:380px" aria-labelledby="title">
-    <div class="hero-art"></div>
+  <section class="hero hero-cover light" style="--lw:449px;--hero-bg:#fdd000;--hero-ink:#664498;--hero-ink:#664498;--art-pos:50% 50%" aria-labelledby="title">
+    <div class="hero-art"><img class="art" src="../../img/page/trico_top.png?v=49e43ead" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
-        <div class="stage" aria-hidden="true"><img class="ly0 m-rise" style="--dl:0.10s;--bd:1.20s" src="../../img/page/trico_bird.webp?v=3d35976d" alt=""><img class="ly m-pop" style="--x:-11%;--y:-36%;--w:22%;--r:-14deg;--dl:0.50s;--bd:0.40s" src="../../img/page/gem_red.webp?v=1fd26f10" alt=""><img class="ly m-pop" style="--x:78%;--y:-32%;--w:30%;--r:8deg;--dl:0.65s;--bd:-0.40s" src="../../img/page/gem_purple.webp?v=a131a0b4" alt=""><img class="ly m-pop" style="--x:-11%;--y:71%;--w:23%;--r:-6deg;--dl:0.80s;--bd:-1.20s" src="../../img/page/gem_yellow.webp?v=bb3d28a8" alt=""></div>
+        
         <h1 id="title"><img class="logo" src="../../img/logo/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)" width="1021" height="382"></h1>
         <div class="billing">
           <dl class="spec">

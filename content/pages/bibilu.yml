@@ -6,10 +6,9 @@ logo_alt: ビビルの塔 THE TOWER OF BIBILU
 logo_buy: img/logo/b_logo_navy.png
 logo_credits: img/logo/b_logo_white.png
 hero:
-  art: img/page/b_art.jpg
-  art_pos: 45% 76%
+  art: img/page/bibilu_top.jpg
   fit: cover
-  pattern: none
+  art_pos: 50% 50%
 bg1_image: img/page/b_tex_c.png
 band_image: img/page/b_band.png
 heading_icon: img/page/b_tupa_sten.png

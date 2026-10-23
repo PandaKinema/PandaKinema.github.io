@@ -93,7 +93,9 @@
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
     .hero.hero-cover{color:var(--lt)}
-    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
+    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
+    .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
     .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}
@@ -675,12 +677,12 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-full" style="--lw:325px;--hero-bg:#3aaae2;--hero-ink:#1b2228;--hero-bg:#47ade3;--hero-ink:#1b2228;--edge-l:linear-gradient(#1c3a40 0.0%,#5eb4e6 8.3%,#3aaae2 16.7%,#50b0e4 25.0%,#3eabe2 33.3%,#3aaae2 41.7%,#5eb4e6 50.0%,#49aee3 58.3%,#5eb4e6 66.7%,#3aaae2 75.0%,#3aaae2 83.3%,#3aaae2 91.7%,#5eb4e6 100.0%);--edge-r:linear-gradient(#1c373c 0.0%,#41abe2 8.3%,#5eb4e6 16.7%,#3aaae2 25.0%,#3aaae2 33.3%,#3aaae2 41.7%,#5cb3e5 50.0%,#5eb4e6 58.3%,#3aaae2 66.7%,#3aaae2 75.0%,#3aaae2 83.3%,#5eb4e6 91.7%,#4eafe4 100.0%);--card-ar:841/1186" aria-labelledby="title">
-    <div class="hero-art"><img class="card-full" src="../../img/card/koikoi_bdg.png?v=a1377913" alt="こいこいのぼり 真打" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:325px;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#1b2228;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><img class="art" src="../../img/page/koikoi_top.jpg?v=11ae244e" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
         
-        <h1 id="title" class="sr-only"><img class="logo" src="../../img/logo/koikoilogo.png?v=bc68f6cc" alt="こいこいのぼり 真打 KOIKOINOBORI SHINUCHI" width="1009" height="522"></h1>
+        <h1 id="title"><img class="logo" src="../../img/logo/koikoilogo.png?v=bc68f6cc" alt="こいこいのぼり 真打 KOIKOINOBORI SHINUCHI" width="1009" height="522"></h1>
         <div class="billing">
           <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">2人</span><span lang="en">2</span></dd></div>

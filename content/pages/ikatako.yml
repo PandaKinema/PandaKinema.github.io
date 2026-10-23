@@ -8,6 +8,10 @@ logo_credits: img/logo/logo_ikatako.png
 bg_color: main
 color3: "#001f5c"
 accent_color: third
+hero:
+  art: img/page/ikatako_top.jpg
+  fit: cover
+  art_pos: 50% 50%
 bg1_image: img/page/i_tex_c.png
 band_image: img/page/i_band.png
 heading_icon: img/page/i_squid_sten.png

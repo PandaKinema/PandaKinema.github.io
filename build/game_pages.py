@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v29
+# パンダキネマ 作品ページ 共通フォーマット v30
+#     v30: トップ画像(横長)を全作品に。明るい絵は下をぼかさない/絵の拡大(zoom)
 #     v29: ギャラリーはスクロールではなく1枚ずつ動かす(途中で止まらない)/アクセントカラー2の帯にも模様
 #     v28: 遊び方のカードはまとめて表示(横スクロールで上下に揺れない)
 #     v27: 4コマをゲームの終わりまで(モコチャカ・イカタコ・こいこいのぼり)
@@ -119,6 +120,21 @@ def hero(g, d, t):
             h = dict(h, layers=[{'image': h['art'], 'motion': 'rise'}], pattern=h.get('pattern'))
     if art_wide:
         g['hero_cls'] = 'hero-cover'
+        # 絵の下の方が明るいとき(モコチャカ・TRICO! など)は暗くぼかさず、文字はその上で読める色に
+        from PIL import Image
+        with Image.open(os.path.join(WEB, imgname(h['art']))) as im:
+            im = im.convert('RGB'); bw, bh = im.size
+            px = [im.getpixel((x, y)) for x in range(0, bw, max(1, bw // 40)) for y in range(int(bh * .7), bh, max(1, bh // 30))]
+        bot = '#%02x%02x%02x' % tuple(sum(p[c] for p in px) // len(px) for c in range(3))
+        M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
+        if lum(bot) > .18:
+            g['hero_cls'] += ' light'
+        else:   # 下を暗くぼかすので、ぼかした色(背景の色)の上で読める色
+            bot = g.get('_D') or bot
+        fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, bot) >= 4.5, x in (M, A), contrast(x, bot)))
+        style.append('--hero-ink:%s' % fg)
+        if h.get('zoom'):
+            style.append('--zoom:%g' % num(h['zoom'], 1))
         g['hero_art'] = '<div class="hero-art"><img class="art" src="{{img:%s}}" alt="" fetchpriority="high"></div>' % imgname(h['art'])
         g['hero_visual'] = ''
         if h.get('art_pos'):
@@ -1038,7 +1054,9 @@ TEMPLATE = r'''<!doctype html>
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
     .hero.hero-cover{color:var(--lt)}
-    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
+    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
+    .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
     .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}

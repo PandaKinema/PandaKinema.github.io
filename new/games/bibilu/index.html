@@ -94,7 +94,9 @@
     /* メインビジュアル(編集画面の「メインビジュアル」):絵を全面に敷く/模様の上に部品を重ねる/閉じたカード */
     .hero .logo{position:relative;width:min(var(--lw,460px),86vw)}
     .hero.hero-cover{color:var(--lt)}
-    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
+    .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
+    .hero.hero-cover{color:var(--hero-ink,var(--lt))}
+    .hero.hero-cover.light .hero-art::after{display:none}   /* 明るい絵はぼかさない */
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
     .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
     .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}
@@ -630,8 +632,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover" style="--lw:600px;--hero-bg:#039497;--hero-ink:#fff5d7;--art-pos:45% 76%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/page/b_art.jpg?v=c3244d4a" alt="" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:600px;--hero-bg:#6aaa9a;--hero-ink:#1b2228;--hero-ink:#fff5d7;--art-pos:50% 50%" aria-labelledby="title">
+    <div class="hero-art"><img class="art" src="../../img/page/bibilu_top.jpg?v=51826b97" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
         

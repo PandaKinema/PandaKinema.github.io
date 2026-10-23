@@ -125,6 +125,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers
@@ -240,6 +241,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers
@@ -355,6 +357,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers
@@ -470,6 +473,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers
@@ -585,6 +589,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers
@@ -700,6 +705,7 @@ content:
               - { name: art, label: トップ画像, type: image, options: { path: new/img/page }, description: "ページのいちばん上の絵(文字なし)。横長なら画面いっぱいに敷き、縦長・正方形なら背景の色の上に置きます。空ならトップの閉じたカードの画像。TRICO!のように部品を動かしたいときはClaudeに頼んでください" }
               - { name: art_pos, label: 見せる位置, type: string, hidden: true }
               - { name: fit, label: 出し方, type: string, hidden: true }
+              - { name: zoom, label: 拡大, type: number, hidden: true }
               - { name: pattern, label: 模様, type: string, hidden: true }
               - { name: width, label: 大きさ, type: number, hidden: true }
               - name: layers

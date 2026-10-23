@@ -7,6 +7,10 @@ logo_buy: img/logo/bashlogo_4C.png
 logo_credits: img/logo/bashlogo_4C.png
 bg_color: main
 accent_color: black
+hero:
+  art: img/page/bash_top.jpg
+  fit: cover
+  art_pos: 50% 0%
 bg1_image: img/page/s_tex_c.png
 bg2_image: img/page/s_tex_w.png
 band_image: img/page/s_band.png

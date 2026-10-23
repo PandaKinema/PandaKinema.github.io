@@ -8,57 +8,9 @@ logo_credits: img/logo/logo_moko.png
 bg_color: main
 accent_color: accent
 hero:
-  pattern: grid
-  width: 500
-  layers:
-    - image: img/page/m_stage.png
-      x: 0
-      y: 0
-      width: 100
-      rotate: 0
-      motion: none
-    - image: img/parts/mc_m3.webp
-      x: 38
-      y: -2
-      width: 24
-      rotate: 0
-      motion: rise
-    - image: img/parts/mc_p2.webp
-      x: 12
-      y: 47
-      width: 24
-      rotate: -14
-      motion: rise
-    - image: img/parts/mc_o1.webp
-      x: 64
-      y: 47
-      width: 24
-      rotate: 14
-      motion: rise
-    - image: img/parts/m_token.webp
-      x: 39
-      y: 43
-      width: 22
-      rotate: 0
-      motion: pop
-    - image: img/chara/m_paka.webp
-      x: -6
-      y: 2
-      width: 19
-      rotate: -8
-      motion: float
-    - image: img/chara/m_pome.webp
-      x: 86
-      y: 0
-      width: 19
-      rotate: 8
-      motion: float
-    - image: img/chara/m_gabu.webp
-      x: 90
-      y: 70
-      width: 16
-      rotate: 10
-      motion: float
+  art: img/page/moko_top.png
+  fit: cover
+  art_pos: 50% 50%
 bg1_image: img/page/m_tex_c.png
 band_image: img/page/m_band.png
 heading_icon: img/page/m_moko_sten.png

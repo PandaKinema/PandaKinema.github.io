@@ -8,34 +8,9 @@ logo_credits: img/logo/trico_logo_white.png
 bg_color: main
 accent_color: accent
 hero:
-  pattern: tri
-  width: 380
-  layers:
-    - image: img/page/trico_bird.webp
-      x: 0
-      y: 0
-      width: 100
-      rotate: 0
-      motion: rise
-    - image: img/page/gem_red.webp
-      x: -11
-      y: -36
-      width: 22
-      rotate: -14
-      motion: pop
-    - image: img/page/gem_purple.webp
-      x: 78
-      y: -32
-      width: 30
-      rotate: 8
-      motion: pop
-    - image: img/page/gem_yellow.webp
-      x: -11
-      y: 71
-      width: 23
-      rotate: -6
-      motion: pop
-  art: img/card/trico_bdg.png
+  art: img/page/trico_top.png
+  fit: cover
+  art_pos: 50% 50%
 bg1_image: img/page/t_tex_c.png
 heading_icon: img/page/trico_icon.png
 step_icon: img/page/dia.png
