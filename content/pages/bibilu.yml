@@ -20,22 +20,21 @@ intro_ja: 遠い未来、どこかの惑星に、トゥーパという生命体�
 intro_en: In the distant future, on a planet somewhere, lived beings called Tupa. To them, nothing mattered more than building towers. The taller the tower, the grander it is, but build it too high and divine punishment strikes, bringing it crashing down. Become a Tupa and, sometimes careful and sometimes bold, finish the grandest tower of all!
 summary_ja: 『ビビルの塔』は、[[数字カードを同時に出し、高い塔を建てて得点を競うゲームです。]]出した数字の大きさが[[1位と2位]]のプレイヤーは、そのカードを自分の前に重ねて塔を建てます。同じ数字を出したプレイヤーが複数いた場合は[[バッティング]]となり、そのプレイヤーだけが塔を建てます。塔は高いほど高得点を狙えますが、[[6枚になると天罰によって崩れてしまいます。]]手札がなくなったら塔の得点を計算し、最も得点の高かったプレイヤーがラウンドの勝者です。最初に[[2回]]ラウンド勝利をしたプレイヤーがこのゲームの勝者となります。
 summary_en: In The Tower of Bibilu, [[players reveal number cards at the same time and build tall towers to score points.]] The players who played the [[highest and second-highest]] numbers stack their cards in front of them to build their towers. If several players played the same number, it is a [[clash]], and only those players build. Taller towers score more, but [[at 6 cards, divine punishment makes them crumble.]] When hands run out, towers are scored and the highest score wins the round. The first player to win [[2]] rounds wins the game.
-chara_name_ja: トゥーパ [túpa]
-chara_name_en: Tupa [túpa]
-chara_note_ja: '遠い未来のどこかの惑星にいる生命体。
-
-  塔を建てる力を持つ。
-
-  古代の言い伝えを信じ、塔を建てることを大事にしている。'
-chara_note_en: 'A lifeform on a planet somewhere in the distant future.
-
-  It has the power to build towers.
-
-  It believes in ancient legends and holds tower building dear.'
-chara_images:
+characters:
 - image: img/b_tupa_body.webp
-  alt: トゥーパ
-chara_float: img/b_tupa_orb.webp
+  float: img/b_tupa_orb.webp
+  name_ja: トゥーパ [túpa]
+  name_en: Tupa [túpa]
+  note_ja: '遠い未来のどこかの惑星にいる生命体。
+
+    塔を建てる力を持つ。
+
+    古代の言い伝えを信じ、塔を建てることを大事にしている。'
+  note_en: 'A lifeform on a planet somewhere in the distant future.
+
+    It has the power to build towers.
+
+    It believes in ancient legends and holds tower building dear.'
 contents_ja: カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚
 contents_en: 40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)
 price_ja: 3,300円

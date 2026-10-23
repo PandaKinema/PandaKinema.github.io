@@ -26,7 +26,7 @@
       --hl:#f2d756;                               /* 強調色(取説の赤字の代わり。紺の上で読める金色) */
       --orn:url(../img/b_tupa_sten.png); --snum:url(../img/b_tupa_sil.png);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
     
-      --k-bg:#163f53;--k-ink:#fff7df;--b2-bg:#fff1cf;--b2-ink:#163f53;--tex-c:url(../img/b_tex_c.png);--tex-size:525px 175px;--band:url(../img/b_band.png);--band-h:24px;--band-d:block;--orn:url(../img/b_tupa_sten.png);--snum:url(../img/b_tupa_sil.png);}
+      --k-bg:#163f53;--k-ink:#fff7df;--b2-bg:#fff1cf;--b2-ink:#163f53;--accent:#fff5d7;--on-accent:#153e53;--tex-c:url(../img/b_tex_c.png);--tex-size:525px 175px;--band:url(../img/b_band.png);--band-h:24px;--band-d:block;--orn:url(../img/b_tupa_sten.png);--snum:url(../img/b_tupa_sil.png);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -169,6 +169,26 @@
     .badge{position:absolute;right:-16%;bottom:-2%;display:grid;place-items:center;width:38%;aspect-ratio:1;border:4px solid var(--b2-ink);border-radius:50%;background:#fff;box-shadow:0 10px 20px -8px rgba(0,0,0,.3)}
     .badge img{width:70%}
     .chara-fig figcaption{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:22px;text-align:center}
+    /* キャラクターは1体ずつ。◀▶で切り替え */
+    .chara-slides{display:grid}
+    .chara-slide{grid-area:1/1;display:flex;flex-direction:column;align-items:center;visibility:hidden;opacity:0;transition:opacity .35s ease,visibility 0s linear .35s}
+    .chara-slide.cur{visibility:visible;opacity:1;transition:opacity .35s ease,visibility 0s}
+    .chara-slide .solo{width:100%;height:auto;animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
+    .fig-wrap:has(.solo){width:min(220px,52vw)}
+    .chara-fig{position:relative}
+    .chara-fig:has(.cnav){padding-inline:58px}
+    .cnav{position:absolute;top:min(110px,26vw);z-index:2;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;translate:0 -50%}
+    .cnav::before{content:"";border-style:solid;border-color:transparent}
+    .cnav.prev{left:0}.cnav.next{right:0}
+    .cnav.prev::before{border-width:7px 10px 7px 0;border-right-color:var(--b2-bg);margin-right:3px}
+    .cnav.next::before{border-width:7px 0 7px 10px;border-left-color:var(--b2-bg);margin-left:3px}
+    .cnav:hover{scale:1.08}
+    .cdots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+    .cdots i{width:7px;height:7px;border-radius:50%;background:var(--b2-ink);opacity:.3}
+    .cdots i.on{opacity:1}
+    .js-only{display:none !important}
+    .js .js-only.cnav{display:grid !important}
+    .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
@@ -369,8 +389,8 @@
       background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;box-shadow:0 12px 28px rgba(0,0,0,.32);
       opacity:0;translate:0 18px;visibility:hidden;transition:opacity .2s ease,translate .25s ease,visibility 0s linear .25s}
     .fab.show{opacity:1;translate:0 0;visibility:visible;transition:opacity .25s ease,translate .45s cubic-bezier(.3,1.6,.5,1),visibility 0s}
-    .fab img{position:absolute;left:14px;bottom:7px;width:44px;rotate:-7deg;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));transition:rotate .2s ease,translate .2s ease}
-    .fab:hover img{rotate:-12deg;translate:0 -4px}
+    .fab img{position:absolute;left:14px;bottom:7px;width:44px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));transition:rotate .2s ease,translate .2s ease}
+    .fab:hover img{translate:0 -4px}
 
     /* ===== スクロールの演出(見えたら再生、画面の外に出たら元に戻る) ===== */
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生(パララックスと模様の横流れだけは設定に従う) */
@@ -502,6 +522,8 @@
       .chara-in{gap:28px}
       .fig-wrap{width:min(130px,36vw)}
       .chara-fig figcaption{margin-top:16px}
+      .chara-fig:has(.cnav){padding-inline:44px}
+      .cnav{width:34px;height:34px}
       .chara-note{font-size:12.5px}
       .chara-name{font-size:17px}
       .story>p:not(.en){font-size:14.5px;line-height:1.95}
@@ -564,7 +586,7 @@
             <div><dt><span lang="ja">時間</span><span lang="en">Time</span></dt><dd><span lang="ja">10〜15分</span><span lang="en">10–15 min</span></dd></div>
             <div><dt><span lang="ja">年齢</span><span lang="en">Age</span></dt><dd><span lang="ja">6歳から</span><span lang="en">6+</span></dd></div>
           </dl>
-          <a class="btn" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><span lang="ja">BOOTHで買う</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+          <a class="btn" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
@@ -599,8 +621,7 @@
         <p><span lang="ja">遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!</span><span lang="en">In the distant future, on a planet somewhere, lived beings called Tupa. To them, nothing mattered more than building towers. The taller the tower, the grander it is, but build it too high and divine punishment strikes, bringing it crashing down. Become a Tupa and, sometimes careful and sometimes bold, finish the grandest tower of all!</span></p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="fig-wrap"><div class="tupa" style="aspect-ratio:1164/1562"><span class="orb"><img src="../img/b_tupa_orb.webp" alt=""></span><img class="body" src="../img/b_tupa_body.webp" alt="トゥーパ" loading="lazy"></div></div>
-        <figcaption><span class="chara-name"><span lang="ja">トゥーパ [túpa]</span><span lang="en">Tupa [túpa]</span></span><span class="chara-note"><span lang="ja">遠い未来のどこかの惑星にいる生命体。<br>塔を建てる力を持つ。<br>古代の言い伝えを信じ、塔を建てることを大事にしている。</span><span lang="en">A lifeform on a planet somewhere in the distant future.<br>It has the power to build towers.<br>It believes in ancient legends and holds tower building dear.</span></span></figcaption>
+        <div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap"><div class="tupa" style="aspect-ratio:1164/1562"><span class="orb"><img src="../img/b_tupa_orb.webp" alt=""></span><img class="body" src="../img/b_tupa_body.webp" alt="トゥーパ [túpa]" loading="lazy"></div></div><figcaption><span class="chara-name"><span lang="ja">トゥーパ [túpa]</span><span lang="en">Tupa [túpa]</span></span><span class="chara-note"><span lang="ja">遠い未来のどこかの惑星にいる生命体。<br>塔を建てる力を持つ。<br>古代の言い伝えを信じ、塔を建てることを大事にしている。</span><span lang="en">A lifeform on a planet somewhere in the distant future.<br>It has the power to build towers.<br>It believes in ancient legends and holds tower building dear.</span></span></figcaption></div></div>
       </figure>
     </div>
   </section>
@@ -663,7 +684,7 @@
         </dl>
         <p class="contents"><span lang="ja">カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚</span><span lang="en">40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)</span></p>
         <p class="price"><span lang="ja">3,300円</span><span lang="en">¥3,300</span><small><span lang="ja">BOOTH価格</span><span lang="en">on BOOTH</span></small></p>
-        <a class="btn" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><span lang="ja">BOOTHで買う</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     </div>
@@ -682,7 +703,7 @@
 
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
-  <a class="fab" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../img/bibilu_pkg_sm.webp" alt="" width="44" height="67"><span lang="ja">BOOTHで買う</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+  <a class="fab" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../img/bibilu_pkg_sm.webp" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
 </main>
 
 <!-- 5. クレジット -->
@@ -760,6 +781,14 @@
     window.addEventListener("resize",frame); frame();
   }
 
+  /* キャラクター:◀▶ で1体ずつ */
+  [].forEach.call(document.querySelectorAll(".chara-fig"),function(fig){
+    var sl=[].slice.call(fig.querySelectorAll(".chara-slide")), dots=[].slice.call(fig.querySelectorAll(".cdots i")), cur=0;
+    if(sl.length<2) return;
+    function go(k){ cur=(k+sl.length)%sl.length; sl.forEach(function(s,i){ s.classList.toggle("cur",i===cur); if(i===cur) s.removeAttribute("aria-hidden"); else s.setAttribute("aria-hidden","true") }); dots.forEach(function(d,i){ d.classList.toggle("on",i===cur) }) }
+    fig.querySelector(".cnav.prev").addEventListener("click",function(){ go(cur-1) });
+    fig.querySelector(".cnav.next").addEventListener("click",function(){ go(cur+1) });
+  });
   /* 言語切替(JA/EN)。選んだ言語はこの端末に覚えておく。?lang=en でも開ける */
   var langBox=document.querySelector(".lang");
   if(langBox){

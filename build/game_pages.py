@@ -55,15 +55,32 @@ def LL(d, k):   # 編集画面の _ja / _en を切替用の文字に(英語が�
     ja = str(d.get(k + '_ja') or ''); en = str(d.get(k + '_en') or '') or ja
     return L(ja, en) if ja else ''
 
+def lum(c):   # 色の明るさ(読みやすさの判定用)
+    c = str(c).lstrip('#'); r, g, b = (int(c[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    f = lambda v: v / 12.92 if v <= .03928 else ((v + .055) / 1.055) ** 2.4
+    return .2126 * f(r) + .7152 * f(g) + .0722 * f(b)
+def contrast(a, b):
+    la, lb = lum(a), lum(b)
+    return (max(la, lb) + .05) / (min(la, lb) + .05)
+def ink(bg, other=None):   # 背景に乗せる文字の色:もう1つのキーカラーで読めればそれ、だめなら白か濃い色
+    if other and contrast(bg, other) >= 4.5:
+        return other
+    return '#ffffff' if contrast(bg, '#ffffff') >= contrast(bg, '#1b2228') else '#1b2228'
+
 def apply(key):
     """content/pages/<key>.yml(編集画面)の文章と画像を、作品の設定に上書きする。動きとデザインはこのファイルのまま"""
     g = GAMES[key]
     d = load('content/pages/%s.yml' % key)
     site = load('content/site.yml')
     games = {x['key']: x for x in load('content/games.yml')}
+    t0 = games.get(key) or {}
     for k in ('title', 'description', 'now_label', 'logo_alt'):
-        if d.get(k) is not None:
+        if d.get(k):
             g[k] = str(d[k])
+    if not d.get('title') and t0.get('name'):
+        g['title'] = g['logo_alt'] = str(t0['name'])
+    if not d.get('description') and t0.get('name'):
+        g['description'] = '%s:%s パンダキネマ。' % (t0['name'], t0.get('intro_ja') or '')
     for k in ('logo', 'logo_buy', 'logo_credits', 'pkg', 'fab_pkg'):
         if d.get(k):
             g[k] = imgname(d[k])
@@ -102,9 +119,14 @@ def apply(key):
         return f, w // 2, h // 2
     from PIL import Image
     css = []
-    for k, var in (('bg1_color', '--k-bg'), ('bg1_text', '--k-ink'), ('bg2_color', '--b2-bg'), ('bg2_text', '--b2-ink')):
-        if d.get(k):
-            css.append('%s:%s' % (var, d[k]))
+    # 色の初期値はトップ(ボードゲーム)のキーカラー。文字の色は空なら読みやすい方を自動で選ぶ
+    t = games.get(key) or {}
+    k1, k2 = t.get('key1'), t.get('key2')
+    bg1 = d.get('bg1_color') or k1; bg2 = d.get('bg2_color') or k2
+    if bg1: css.append('--k-bg:%s;--k-ink:%s' % (bg1, d.get('bg1_text') or ink(bg1, bg2)))
+    if bg2: css.append('--b2-bg:%s;--b2-ink:%s' % (bg2, d.get('bg2_text') or ink(bg2, bg1)))
+    if k1 and k2:   # ボタン(BOOTHで購入など)もキーカラーで
+        css.append('--accent:%s;--on-accent:%s' % (k2, ink(k2, k1)))
     if 'bg1_image' in d:
         if d.get('bg1_image'):
             f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
@@ -122,20 +144,26 @@ def apply(key):
             css.append('%s:url(../img/%s)' % (var, imgname(d[k])))
     if css:
         g['theme'] += '\n      ' + ';'.join(css) + ';'
-    # STORY のキャラクター:画像を横に並べる。「浮かぶ部品」があれば1枚目の上に浮かせる
-    ch = [x for x in (d.get('chara_images') or []) if x.get('image')]
-    if ch:
-        if d.get('chara_float') and len(ch) == 1:
-            f = imgname(ch[0]['image'])
+    # STORY のキャラクター:1体ずつ表示。複数いるときは ◀▶ で切り替え。それぞれ名前とプロフィール
+    chars = [x for x in (d.get('characters') or []) if x.get('image')]
+    if chars:
+        slides = []
+        for k, x in enumerate(chars):
+            f = imgname(x['image'])
             with Image.open(os.path.join(WEB, f)) as im:
                 w, h = im.size
-            # 元のトゥーパ(本体 560×526)の枠は 1164:1562。本体の上に玉が浮く分だけ縦に余白をとる
-            g['chara_fig'] = '<div class="tupa" style="aspect-ratio:%d/%d"><span class="orb"><img src="{{img:%s}}" alt=""></span><img class="body" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
-                1164, round(1164 * h / w * 1562 / (1164 * 526 / 560)), imgname(d['chara_float']), f, H.escape(str(ch[0].get('alt') or '')))
-        else:
-            n = len(ch)
-            g['chara_fig'] = '<div class="cast">%s</div>' % ''.join('<img style="--i:%d;width:%s%%" src="{{img:%s}}" alt="%s">' % (
-                i, x.get('size') or round(96 / n, 1), imgname(x['image']), H.escape(str(x.get('alt') or ''))) for i, x in enumerate(ch))
+            alt = H.escape(str(x.get('name_ja') or ''))
+            if x.get('float'):   # 浮かぶ部品(トゥーパの玉など)を上に。元のトゥーパ(本体 560×526)の枠 1164:1562 と同じ考え方
+                fig = '<div class="tupa" style="aspect-ratio:%d/%d"><span class="orb"><img src="{{img:%s}}" alt=""></span><img class="body" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
+                    1164, round(1164 * h / w * 1562 / (1164 * 526 / 560)), imgname(x['float']), f, alt)
+            else:
+                fig = '<img class="solo" src="{{img:%s}}" alt="%s" width="%d" height="%d" loading="lazy">' % (f, alt, w, h)
+            note = LL(x, 'note')
+            slides.append('<div class="chara-slide%s"%s><div class="fig-wrap">%s</div><figcaption><span class="chara-name">%s</span>%s</figcaption></div>' % (
+                ' cur' if k == 0 else '', '' if k == 0 else ' aria-hidden="true"', fig, LL(x, 'name'), ('<span class="chara-note">%s</span>' % note.replace('\n', '<br>')) if note else ''))
+        nav = ('<button class="cnav prev js-only" type="button" aria-label="前のキャラクター"></button><button class="cnav next js-only" type="button" aria-label="次のキャラクター"></button>'
+               '<div class="cdots js-only">%s</div>' % ''.join('<i%s></i>' % (' class="on"' if k == 0 else '') for k in range(len(chars)))) if len(chars) > 1 else ''
+        g['chara_html'] = '<div class="chara-slides">%s</div>%s' % (''.join(slides), nav)
     # おまけ:ブロックを上から順に。横に置く画像は別の欄
     blocks = d.get('extra_blocks')
     if blocks is not None:
@@ -600,6 +628,26 @@ TEMPLATE = r'''<!doctype html>
     .badge{position:absolute;right:-16%;bottom:-2%;display:grid;place-items:center;width:38%;aspect-ratio:1;border:4px solid var(--b2-ink);border-radius:50%;background:#fff;box-shadow:0 10px 20px -8px rgba(0,0,0,.3)}
     .badge img{width:70%}
     .chara-fig figcaption{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:22px;text-align:center}
+    /* キャラクターは1体ずつ。◀▶で切り替え */
+    .chara-slides{display:grid}
+    .chara-slide{grid-area:1/1;display:flex;flex-direction:column;align-items:center;visibility:hidden;opacity:0;transition:opacity .35s ease,visibility 0s linear .35s}
+    .chara-slide.cur{visibility:visible;opacity:1;transition:opacity .35s ease,visibility 0s}
+    .chara-slide .solo{width:100%;height:auto;animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
+    .fig-wrap:has(.solo){width:min(220px,52vw)}
+    .chara-fig{position:relative}
+    .chara-fig:has(.cnav){padding-inline:58px}
+    .cnav{position:absolute;top:min(110px,26vw);z-index:2;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;translate:0 -50%}
+    .cnav::before{content:"";border-style:solid;border-color:transparent}
+    .cnav.prev{left:0}.cnav.next{right:0}
+    .cnav.prev::before{border-width:7px 10px 7px 0;border-right-color:var(--b2-bg);margin-right:3px}
+    .cnav.next::before{border-width:7px 0 7px 10px;border-left-color:var(--b2-bg);margin-left:3px}
+    .cnav:hover{scale:1.08}
+    .cdots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+    .cdots i{width:7px;height:7px;border-radius:50%;background:var(--b2-ink);opacity:.3}
+    .cdots i.on{opacity:1}
+    .js-only{display:none !important}
+    .js .js-only.cnav{display:grid !important}
+    .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
@@ -800,8 +848,8 @@ TEMPLATE = r'''<!doctype html>
       background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;box-shadow:0 12px 28px rgba(0,0,0,.32);
       opacity:0;translate:0 18px;visibility:hidden;transition:opacity .2s ease,translate .25s ease,visibility 0s linear .25s}
     .fab.show{opacity:1;translate:0 0;visibility:visible;transition:opacity .25s ease,translate .45s cubic-bezier(.3,1.6,.5,1),visibility 0s}
-    .fab img{position:absolute;left:14px;bottom:7px;width:44px;rotate:-7deg;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));transition:rotate .2s ease,translate .2s ease}
-    .fab:hover img{rotate:-12deg;translate:0 -4px}
+    .fab img{position:absolute;left:14px;bottom:7px;width:44px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));transition:rotate .2s ease,translate .2s ease}
+    .fab:hover img{translate:0 -4px}
 
     /* ===== スクロールの演出(見えたら再生、画面の外に出たら元に戻る) ===== */
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生(パララックスと模様の横流れだけは設定に従う) */
@@ -933,6 +981,8 @@ TEMPLATE = r'''<!doctype html>
       .chara-in{gap:28px}
       .fig-wrap{width:min(130px,36vw)}
       .chara-fig figcaption{margin-top:16px}
+      .chara-fig:has(.cnav){padding-inline:44px}
+      .cnav{width:34px;height:34px}
       .chara-note{font-size:12.5px}
       .chara-name{font-size:17px}
       .story>p:not(.en){font-size:14.5px;line-height:1.95}
@@ -993,7 +1043,7 @@ TEMPLATE = r'''<!doctype html>
           <dl class="spec">
 {{spec_html}}
           </dl>
-          <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで買う|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+          <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
@@ -1027,8 +1077,7 @@ TEMPLATE = r'''<!doctype html>
         <p>{{intro}}</p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="fig-wrap">{{chara_fig}}</div>
-        <figcaption><span class="chara-name">{{chara_name}}</span><span class="chara-note">{{chara_note}}</span></figcaption>
+        {{chara_html}}
       </figure>
     </div>
   </section>
@@ -1070,7 +1119,7 @@ TEMPLATE = r'''<!doctype html>
         </dl>
         <p class="contents">{{contents}}</p>
         {{price_html}}
-        <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで買う|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+        <a class="btn" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     </div>
@@ -1089,7 +1138,7 @@ TEMPLATE = r'''<!doctype html>
 
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
-  <a class="fab" href="{{booth}}" target="_blank" rel="noopener"><img src="{{img:{{fab_pkg}}}}" alt="" width="44" height="67">{{L:BOOTHで買う|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+  <a class="fab" href="{{booth}}" target="_blank" rel="noopener"><img src="{{img:{{fab_pkg}}}}" alt="" width="44" height="67">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
 </main>
 
 <!-- 5. クレジット -->
@@ -1159,6 +1208,14 @@ TEMPLATE = r'''<!doctype html>
     window.addEventListener("resize",frame); frame();
   }
 
+  /* キャラクター:◀▶ で1体ずつ */
+  [].forEach.call(document.querySelectorAll(".chara-fig"),function(fig){
+    var sl=[].slice.call(fig.querySelectorAll(".chara-slide")), dots=[].slice.call(fig.querySelectorAll(".cdots i")), cur=0;
+    if(sl.length<2) return;
+    function go(k){ cur=(k+sl.length)%sl.length; sl.forEach(function(s,i){ s.classList.toggle("cur",i===cur); if(i===cur) s.removeAttribute("aria-hidden"); else s.setAttribute("aria-hidden","true") }); dots.forEach(function(d,i){ d.classList.toggle("on",i===cur) }) }
+    fig.querySelector(".cnav.prev").addEventListener("click",function(){ go(cur-1) });
+    fig.querySelector(".cnav.next").addEventListener("click",function(){ go(cur+1) });
+  });
   /* 言語切替(JA/EN)。選んだ言語はこの端末に覚えておく。?lang=en でも開ける */
   var langBox=document.querySelector(".lang");
   if(langBox){
@@ -1272,7 +1329,7 @@ def render(key):
         pkg=g['pkg'], pkg_w=g['pkg_size'][0], pkg_h=g['pkg_size'][1], contents=br(e(g['contents'])),
         price_html=('<p class="price">%s<small>{{L:BOOTH価格|on BOOTH}}</small></p>' % e(g['price'])) if g['price'] else '',
         credits_html=credits,
-        chara_name=e(g.get('chara_name', '')), chara_fig=g.get('chara_fig', ''),
+        chara_html=g.get('chara_html') or ('<div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap">%s</div><figcaption><span class="chara-name">%s</span><span class="chara-note">%s</span></figcaption></div></div>' % (g.get('chara_fig', ''), e(g.get('chara_name', '')), e(g.get('chara_note', '')).replace('\n', '<br>'))),
         piece_img=g.get('piece_img', ''), piece_alt=e(g.get('piece_alt', '')),
         chara_note=e(g.get('chara_note', '')).replace('\n', '<br>'),
         fab_pkg=g.get('fab_pkg', 'bibilu_pkg_sm.webp'),

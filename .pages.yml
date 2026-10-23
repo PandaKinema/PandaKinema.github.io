@@ -1,5 +1,9 @@
 # Pages CMS(https://app.pagescms.org)の編集画面の設定
 # 保存すると GitHub Actions が new/index.html を自動で作り直します(1〜2分)
+settings:
+  content:
+    merge: true
+
 media:
   - name: site
     label: サイトの画像
@@ -21,12 +25,12 @@ content:
     list: true
     fields:
       - { name: date, label: 日付, type: date, required: true, description: "カレンダーから選ぶ。サイトには 2026.10.18 の形で出ます(上にあるものから順に表示)" }
-      - { name: cat_ja, label: カテゴリ(日本語), type: string, description: "例:お知らせ / 新作 / 出展" }
-      - { name: cat_en, label: カテゴリ(英語), type: string, description: "例:News / New / Event" }
-      - { name: text_ja, label: タイトル(日本語), type: string, required: true, description: "一覧とポップアップに出る1行" }
-      - { name: text_en, label: タイトル(英語), type: string, description: "空なら日本語をそのまま表示" }
-      - { name: body_ja, label: 内容(日本語), type: text, description: "タイトルを押すと出るポップアップの本文。改行もそのまま反映されます" }
-      - { name: body_en, label: 内容(英語), type: text }
+      - { name: cat_ja, label: カテゴリ, type: string, description: "例:お知らせ / 新作 / 出展" }
+      - { name: cat_en, label: カテゴリ(英語), type: string, description: "例:News / New / Event", hidden: true }
+      - { name: text_ja, label: タイトル, type: string, required: true, description: "一覧とポップアップに出る1行" }
+      - { name: text_en, label: タイトル(英語), type: string, description: "空なら日本語をそのまま表示", hidden: true }
+      - { name: body_ja, label: 内容, type: text, description: "タイトルを押すと出るポップアップの本文。改行もそのまま反映されます" }
+      - { name: body_en, label: 内容(英語), type: text, hidden: true }
       - { name: link, label: リンク先, type: string, description: "ポップアップの下に「リンクを開く」ボタンが出ます。URL、または games/bibilu/ のようなサイト内のページ。空ならボタンなし" }
 
   - name: videos
@@ -37,8 +41,8 @@ content:
     list: true
     fields:
       - { name: title, label: 作品名, type: string, required: true }
-      - { name: kind_ja, label: 種類(日本語), type: string, description: "例:遊び方動画 / 予告編" }
-      - { name: kind_en, label: 種類(英語), type: string, description: "例:How to play / Trailer" }
+      - { name: kind_ja, label: 種類, type: string, description: "例:遊び方動画 / 予告編" }
+      - { name: kind_en, label: 種類(英語), type: string, description: "例:How to play / Trailer", hidden: true }
       - { name: poster, label: サムネイル, type: image, description: "16:9 の画像" }
       - { name: youtube, label: YouTube の動画ID, type: string, description: "YouTubeのURL(またはID)。空なら「準備中」" }
 
@@ -75,17 +79,17 @@ content:
       - { name: key1, label: キーカラー1, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その1(例:パッケージの帯の色)。ほかの色の欄はここから選びます。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: key2, label: キーカラー2, type: string, required: true, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "作品の色その2(例:パッケージの面の色)。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: extra_color, label: その他の色(必要なときだけ), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#fef4d6 のような6けたの色コードで" }, description: "キーカラー2色と白・黒以外の色を使いたいときだけ。各欄で「その他の色」を選ぶと使われます" }
-      - { name: card_bg, label: 開いたカードの背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2" }
-      - { name: pill_bg, label: 人数〜年齢の下地, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ジャンルの文字もこの色。ふつうはキーカラー1" }
-      - { name: pill_text, label: 人数〜年齢の文字, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2" }
+      - { name: card_bg, label: 開いたカードの背景, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2", hidden: true }
+      - { name: pill_bg, label: 人数〜年齢の下地, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ジャンルの文字もこの色。ふつうはキーカラー1", hidden: true }
+      - { name: pill_text, label: 人数〜年齢の文字, type: select, default: key2, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "ふつうはキーカラー2", hidden: true }
       - { name: logo_color, label: カードのロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "ロゴが単色なら塗る色、多色なら「ロゴ画像の色のまま」" }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
-      - { name: genre_ja, label: ジャンル(日本語), type: string }
-      - { name: genre_en, label: ジャンル(英語), type: string }
-      - { name: intro_ja, label: 紹介文(日本語), type: text, description: "トップのバナーに出る短い紹介。1〜2文" }
-      - { name: intro_en, label: 紹介文(英語), type: text, description: "空なら日本語をそのまま表示" }
+      - { name: genre_ja, label: ジャンル, type: string }
+      - { name: genre_en, label: ジャンル(英語), type: string, hidden: true }
+      - { name: intro_ja, label: 紹介文, type: text, description: "トップのバナーに出る短い紹介。1〜2文" }
+      - { name: intro_en, label: 紹介文(英語), type: text, description: "空なら日本語をそのまま表示", hidden: true }
       - { name: page, label: 「詳しく見る」のリンク先, type: string, description: "URL、または games/bibilu/ のようなサイト内のページ" }
       - { name: booth, label: 「BOOTHで購入」のリンク先, type: string, description: "作品のBOOTHページ。空ならサークルのBOOTHトップ" }
       - name: banner
@@ -96,7 +100,7 @@ content:
           - { name: pattern, label: 背景の模様, type: select, options: { values: [ { value: none, label: "なし" }, { value: tri, label: "トリコの三角" } ] } }
           - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
           - { name: logo_color, label: ロゴの色, type: select, default: key1, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: original, label: "ロゴ画像の色のまま" } ] }, description: "" }
-          - { name: text_color, label: 文字の色, type: select, default: white, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "人数〜ジャンルと紹介文の色" }
+          - { name: text_color, label: 文字の色, type: select, default: white, options: { values: [ { value: key1, label: "キーカラー1" }, { value: key2, label: "キーカラー2" }, { value: extra, label: "その他の色" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "人数〜ジャンルと紹介文の色", hidden: true }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
@@ -110,18 +114,18 @@ content:
         path: content/pages/bibilu.yml
         format: yaml
         fields: &pagefields
-          - { name: title, label: 作品名, type: string }
-          - { name: description, label: 検索結果に出る説明, type: text }
-          - { name: now_label, label: 右上の表示, type: string, description: "例:NOW SHOWING" }
+          - { name: title, label: 作品名, type: string, hidden: true }
+          - { name: description, label: 検索結果に出る説明, type: text, hidden: true }
+          - { name: now_label, label: 右上の表示, type: string, description: "例:NOW SHOWING", hidden: true }
           - { name: logo, label: ロゴ(一番上), type: image, options: { media: pages } }
-          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字" }
-          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages } }
-          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages } }
-          - { name: bg1_color, label: 背景1の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー以外の帯(遊び方・購入など)の背景" }
-          - { name: bg1_text, label: 背景1の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" } }
+          - { name: logo_alt, label: ロゴの読み方, type: string, description: "画像が出ないときや読み上げで使う文字", hidden: true }
+          - { name: logo_buy, label: ロゴ(購入欄), type: image, options: { media: pages }, hidden: true }
+          - { name: logo_credits, label: ロゴ(クレジット), type: image, options: { media: pages }, hidden: true }
+          - { name: bg1_color, label: 背景1の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "遊び方・購入などの帯の背景。空ならトップのキーカラー1。文字の色は自動" }
+          - { name: bg1_text, label: 背景1の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, hidden: true }
           - { name: bg1_image, label: 背景1の模様, type: image, options: { media: pages }, description: "敷き詰める模様の画像(2倍の大きさで作ったもの)。空なら色だけ" }
-          - { name: bg2_color, label: 背景2の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー・ギャラリー・おまけの帯の背景。帯の模様もこの色になります" }
-          - { name: bg2_text, label: 背景2の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" } }
+          - { name: bg2_color, label: 背景2の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, description: "ストーリー・ギャラリー・おまけの背景。帯の模様もこの色。空ならトップのキーカラー2。文字の色は自動" }
+          - { name: bg2_text, label: 背景2の文字の色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#163f53 のような6けたの色コードで" }, hidden: true }
           - { name: bg2_image, label: 背景2の模様, type: image, options: { media: pages }, description: "空なら色だけ" }
           - { name: band_image, label: 帯の模様, type: image, options: { media: pages }, description: "背景1の上下に入る帯(横に続く模様。2倍の大きさで作った背景透明の画像)。空なら帯なし" }
           - { name: heading_icon, label: 見出しの飾り, type: image, options: { media: pages }, description: "見出しの左右に出るシルエット(背景透明)" }
@@ -131,67 +135,65 @@ content:
             type: object
             list: true
             fields:
-              - { name: kind_ja, label: 種類(日本語), type: string, description: "例:遊び方動画 / 予告編" }
-              - { name: kind_en, label: 種類(英語), type: string }
+              - { name: kind_ja, label: 種類, type: string, description: "例:遊び方動画 / 予告編" }
+              - { name: kind_en, label: 種類(英語), type: string, hidden: true }
               - { name: youtube, label: YouTube, type: string, description: "YouTubeのURL。空なら「準備中」" }
               - { name: poster, label: サムネイル, type: image, options: { media: pages } }
-          - { name: catch_ja, label: キャッチコピー(日本語), type: string }
-          - { name: catch_en, label: キャッチコピー(英語), type: string }
-          - { name: intro_ja, label: ストーリー(日本語), type: text }
-          - { name: intro_en, label: ストーリー(英語), type: text }
-          - { name: chara_name_ja, label: キャラクター名(日本語), type: string }
-          - { name: chara_name_en, label: キャラクター名(英語), type: string }
-          - { name: chara_note_ja, label: キャラクター紹介(日本語), type: text }
-          - { name: chara_note_en, label: キャラクター紹介(英語), type: text }
-          - name: chara_images
-            label: キャラクターの画像
-            description: "左から順に横に並びます(背景透明)。大きさは並びの幅に対する%。空なら等分"
+          - { name: catch_ja, label: キャッチコピー, type: string }
+          - { name: catch_en, label: キャッチコピー(英語), type: string, hidden: true }
+          - { name: intro_ja, label: ストーリー, type: text }
+          - { name: intro_en, label: ストーリー(英語), type: text, hidden: true }
+          - name: characters
+            label: キャラクター
+            description: "1体ずつ表示。2体以上いると左右の ◀▶ で切り替えられます"
             type: object
             list: true
             fields:
-              - { name: image, label: 画像, type: image, options: { media: pages } }
-              - { name: alt, label: 説明, type: string, description: "読み上げ用。例:赤のトリコ" }
-              - { name: size, label: "大きさ(%)", type: number }
-          - { name: chara_float, label: 浮かぶ部品, type: image, options: { media: pages }, description: "キャラクターが1つのとき、その上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
-          - { name: summary_ja, label: "どんなゲーム?(日本語)", type: text, description: "[[ ]] で囲んだところが赤字(強調)になります" }
-          - { name: summary_en, label: "どんなゲーム?(英語)", type: text }
+              - { name: image, label: 画像, type: image, options: { media: pages }, description: "背景透明" }
+              - { name: float, label: 浮かぶ部品, type: image, options: { media: pages }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: note_ja, label: プロフィール, type: text }
+              - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
+          - { name: summary_ja, label: "どんなゲーム?", type: text, description: "[[ ]] で囲んだところが赤字(強調)になります" }
+          - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
             description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
-              - { name: text_ja, label: 説明(日本語), type: text, description: "[[ ]] で囲んだところが赤字(強調)" }
-              - { name: text_en, label: 説明(英語), type: text }
-          - { name: manual_ja, label: 遊び方説明書のURL(日本語), type: string }
-          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ" }
+              - { name: text_ja, label: 説明, type: text, description: "[[ ]] で囲んだところが赤字(強調)" }
+              - { name: text_en, label: 説明(英語), type: text, hidden: true }
+          - { name: manual_ja, label: 遊び方説明書のURL, type: string }
+          - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { media: pages } }
-              - { name: caption_ja, label: 説明(日本語), type: string }
-              - { name: caption_en, label: 説明(英語), type: string }
+              - { name: caption_ja, label: 説明, type: string }
+              - { name: caption_en, label: 説明(英語), type: string, hidden: true }
               - { name: wide, label: 横長で大きく出す, type: boolean }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
             list: true
             fields:
-              - { name: text_ja, label: 内容(日本語), type: string, description: "例:プレイ中の写真" }
-              - { name: text_en, label: 内容(英語), type: string }
-          - { name: pkg, label: パッケージ(購入欄), type: image, options: { media: pages } }
-          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { media: pages } }
-          - { name: contents_ja, label: 内容物(日本語), type: text }
-          - { name: contents_en, label: 内容物(英語), type: text }
-          - { name: price_ja, label: 価格(日本語), type: string, description: "例:3,300円。空なら出しません" }
-          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300" }
-          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH" }
-          - { name: extra_kicker_ja, label: おまけの小見出し(日本語), type: string }
-          - { name: extra_kicker_en, label: おまけの小見出し(英語), type: string }
-          - { name: extra_title_ja, label: おまけのタイトル(日本語), type: string }
-          - { name: extra_title_en, label: おまけのタイトル(英語), type: string }
+              - { name: text_ja, label: 内容, type: string, description: "例:プレイ中の写真" }
+              - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: pkg, label: パッケージ(購入欄), type: image, options: { media: pages }, hidden: true }
+          - { name: fab_pkg, label: パッケージ(画面右下のボタン), type: image, options: { media: pages }, hidden: true }
+          - { name: contents_ja, label: 内容物, type: text }
+          - { name: contents_en, label: 内容物(英語), type: text, hidden: true }
+          - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
+          - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
+          - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
+          - { name: extra_kicker_ja, label: おまけの小見出し, type: string }
+          - { name: extra_kicker_en, label: おまけの小見出し(英語), type: string, hidden: true }
+          - { name: extra_title_ja, label: おまけのタイトル, type: string }
+          - { name: extra_title_en, label: おまけのタイトル(英語), type: string, hidden: true }
           - name: extra_blocks
             label: おまけの中身
             description: "上から順に並びます。「追加」で 文 / 画像 / ボタン / 紹介カード を選べます"
@@ -202,8 +204,8 @@ content:
               - name: text
                 label: 文
                 fields:
-                  - { name: text_ja, label: 文(日本語), type: text, description: "[[ ]] で囲んだところが赤字" }
-                  - { name: text_en, label: 文(英語), type: text }
+                  - { name: text_ja, label: 文, type: text, description: "[[ ]] で囲んだところが赤字" }
+                  - { name: text_en, label: 文(英語), type: text, hidden: true }
               - name: image
                 label: 画像
                 fields:
@@ -212,22 +214,22 @@ content:
               - name: button
                 label: ボタン
                 fields:
-                  - { name: label_ja, label: ボタンの文字(日本語), type: string }
-                  - { name: label_en, label: ボタンの文字(英語), type: string }
+                  - { name: label_ja, label: ボタンの文字, type: string }
+                  - { name: label_en, label: ボタンの文字(英語), type: string, hidden: true }
                   - { name: url, label: リンク先, type: string }
               - name: box
                 label: 紹介カード
                 fields:
-                  - { name: title_ja, label: タイトル(日本語), type: string }
-                  - { name: title_en, label: タイトル(英語), type: string }
+                  - { name: title_ja, label: タイトル, type: string }
+                  - { name: title_en, label: タイトル(英語), type: string, hidden: true }
                   - { name: sub, label: 小さい文字, type: string }
                   - { name: demo_text, label: 見本の文字, type: string, description: "入れると「文字 → 画像」の形で見本を出します" }
                   - { name: image, label: 画像, type: image, options: { media: pages } }
                   - { name: alt, label: 画像の説明, type: string }
-                  - { name: note_ja, label: 説明(日本語), type: string }
-                  - { name: note_en, label: 説明(英語), type: string }
-                  - { name: button_ja, label: ボタンの文字(日本語), type: string }
-                  - { name: button_en, label: ボタンの文字(英語), type: string }
+                  - { name: note_ja, label: 説明, type: string }
+                  - { name: note_en, label: 説明(英語), type: string, hidden: true }
+                  - { name: button_ja, label: ボタンの文字, type: string }
+                  - { name: button_en, label: ボタンの文字(英語), type: string, hidden: true }
                   - { name: url, label: リンク先, type: string }
           - { name: extra_side_image, label: おまけの横の画像, type: image, options: { media: pages }, description: "中身の右に置く画像(例:碑文)。空ならなし" }
           - { name: extra_side_alt, label: 横の画像の説明, type: string }
@@ -236,10 +238,10 @@ content:
             type: object
             list: true
             fields:
-              - { name: role_ja, label: 役割(日本語), type: string }
-              - { name: role_en, label: 役割(英語), type: string }
-              - { name: name_ja, label: 名前(日本語), type: string }
-              - { name: name_en, label: 名前(英語), type: string }
+              - { name: role_ja, label: 役割, type: string }
+              - { name: role_en, label: 役割(英語), type: string, hidden: true }
+              - { name: name_ja, label: 名前, type: string }
+              - { name: name_en, label: 名前(英語), type: string, hidden: true }
       - name: page_trico
         label: TRICO!
         type: file
@@ -260,10 +262,10 @@ content:
       - { name: title_image, label: タイトル画像, type: image, description: "ロゴ画像があれば。空ならツール名を文字で出す" }
       - { name: image, label: バナーの絵(画面写真など), type: image }
       - { name: thumb, label: 一覧の絵(正方形), type: image, description: "PLAY&TOOLS の一覧に出る絵。空ならバナーの絵" }
-      - { name: intro_ja, label: 紹介文(日本語), type: text }
-      - { name: intro_en, label: 紹介文(英語), type: text }
-      - { name: button_ja, label: ボタンの文字(日本語), type: string, description: "例:あそぶ / つかう" }
-      - { name: button_en, label: ボタンの文字(英語), type: string, description: "例:Play / Open" }
+      - { name: intro_ja, label: 紹介文, type: text }
+      - { name: intro_en, label: 紹介文(英語), type: text, hidden: true }
+      - { name: button_ja, label: ボタンの文字, type: string, description: "例:あそぶ / つかう" }
+      - { name: button_en, label: ボタンの文字(英語), type: string, description: "例:Play / Open", hidden: true }
       - { name: bg, label: 背景色, type: string }
       - { name: text_color, label: 文字の色, type: string }
       - { name: video, label: バナーの動画, type: file, description: "mp4・音なし。10MB以下くらいに" }
@@ -286,12 +288,12 @@ content:
       - { name: header_logo, label: ヘッダーのロゴ, type: image, description: "白い文字のロゴ(背景透明)。高さ24pxで表示" }
       - { name: about_logo, label: ABOUT のロゴ, type: image, description: "白いロゴ(背景透明)" }
       - { name: member_label, label: メンバー欄の見出し, type: string, description: "例:MEMBER / DIRECTOR / FOUNDER" }
-      - { name: member_name_ja, label: 名前(日本語), type: string }
-      - { name: member_name_en, label: 名前(英語), type: string }
+      - { name: member_name_ja, label: 名前, type: string }
+      - { name: member_name_en, label: 名前(英語), type: string, hidden: true }
       - { name: member_role, label: 担当, type: string, description: "例:Game Design / Artwork" }
-      - { name: member_bio_ja, label: プロフィール(日本語), type: text, description: "名前の下に出る2行くらいの紹介。改行もそのまま出ます" }
-      - { name: member_bio_en, label: プロフィール(英語), type: text }
+      - { name: member_bio_ja, label: プロフィール, type: text, description: "名前の下に出る2行くらいの紹介。改行もそのまま出ます" }
+      - { name: member_bio_en, label: プロフィール(英語), type: text, hidden: true }
       - { name: member_icon, label: メンバーのアイコン, type: image, description: "丸く切り抜いて表示します(正方形がおすすめ)。空ならサークルのマーク" }
       - { name: icon, label: サークルのマーク, type: image, description: "アイコンが空のときに丸の中に出るマーク(背景透明・単色)" }
-      - { name: about_ja, label: ABOUT の文(日本語), type: text }
-      - { name: about_en, label: ABOUT の文(英語), type: text }
+      - { name: about_ja, label: ABOUT の文, type: text }
+      - { name: about_en, label: ABOUT の文(英語), type: text, hidden: true }

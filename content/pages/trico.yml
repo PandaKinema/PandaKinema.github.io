@@ -20,24 +20,31 @@ intro_ja: どこかに生息するカラフルな鳥、トリコ。3匹のオス
 intro_en: Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”
 summary_ja: カードを手札から出し合い、場に出た色の数で勝敗が決まる[[「アピール」]]を行います。勝ったプレイヤーは場に出た3枚のカードのうち、好きなカードを獲得します。これを繰り返し、得点カードの中に[[3色が揃ったら、「トリコ!」と宣言してラウンド勝利]]となります。最初に[[2回]]ラウンド勝利したプレイヤーがこのゲームの勝者です。
 summary_en: Players play cards from their hands in an [[“Appeal,”]] where the number of colors on the table decides the winner. The winner takes any one of the 3 cards played. Repeat this, and [[when your cards hold all 3 colors, declare “Trico!” to win the round.]] The first player to win [[2]] rounds wins the game.
-chara_name_ja: トリコ と ニコ
-chara_name_en: Trico & Nico
-chara_note_ja: ''
-chara_note_en: ''
-chara_images:
+characters:
 - image: img/t_tricoR.webp
-  alt: 赤のトリコ
-  size: 24
+  float: ''
+  name_ja: 赤トリコ
+  name_en: Red Trico
+  note_ja: ''
+  note_en: ''
 - image: img/t_tricoY.webp
-  alt: 黄のトリコ
-  size: 24
+  float: ''
+  name_ja: 黄トリコ
+  name_en: Yellow Trico
+  note_ja: ''
+  note_en: ''
 - image: img/t_nico.webp
-  alt: ニコ
-  size: 27
+  float: ''
+  name_ja: ニコ
+  name_en: Nico
+  note_ja: ''
+  note_en: ''
 - image: img/t_tricoP.webp
-  alt: 紫のトリコ
-  size: 24
-chara_float: ''
+  float: ''
+  name_ja: 紫トリコ
+  name_en: Purple Trico
+  note_ja: ''
+  note_en: ''
 contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマーカー1枚、サマリー1枚、トリコマーカー3個、遊び方説明書1枚
 contents_en: 30 game cards (10 per color), lead player marker, summary card, 3 Trico markers, rulebook
 price_ja: ''
