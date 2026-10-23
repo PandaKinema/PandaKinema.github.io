@@ -332,6 +332,9 @@
       .slide:not(.b-custom){display:flex;flex-direction:column;padding-top:calc(56px + env(safe-area-inset-top,0px))}
       .b-art{position:relative;inset:auto;flex:1 1 auto;min-height:0;width:auto;height:auto;margin:10px 8vw 0}
       .b-art:empty{display:none}
+      .b-pkg{filter:drop-shadow(0 6px 8px rgba(0,0,0,.2))}
+      .b-mini{box-shadow:0 8px 14px -6px rgba(0,0,0,.35)}
+      .b-art,.hero.jsc .slide.cur .b-art{animation:none;scale:1;transition:none}   /* スマホはゆっくり寄る動きなし(影がにじむため) */
       .b-art .tupa{height:86%}
       .b-in{position:relative;inset:auto;flex:none;width:auto;translate:none;gap:9px;padding:16px 20px 50px}
       .slide.has-vid .b-yt,.slide.has-vid .b-vid{position:relative;inset:auto;flex:0 1 auto;width:100%;height:56.25vw;min-height:120px;margin-top:auto}
