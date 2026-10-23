@@ -13,8 +13,6 @@ hero:
   art_pos: 50% 0%
 bg1_image: img/page/s_tex_c.png
 bg2_image: img/page/s_tex_w.png
-band_image: img/page/s_band.png
-heading_icon: img/page/s_star_sten.png
 step_icon: img/page/s_star_sil.png
 catch_ja: 読みきれ。叩き込め!
 catch_en: Read them. Strike hard!
@@ -51,14 +49,14 @@ characters:
       A speed fighter who masters kicks. Strong-willed, she hates cowards.
 summary_ja: |-
   やることはただ1つ。手札から1枚出すだけ。  
-  相手より大きい数字を出せば得点ゲット!しかし、相手のカードが裏向きだった場合は**「パリィ」**が発動し、得点を奪われてしまう。  
-  さらに、カードの合計が10になると**「ラッシュ」**突入!ラッシュ中はルールが反転し、小さい数字が勝利する。  
+  相手より大きい数字を出せば得点ゲット!しかし、相手のカードが裏向きだった場合は**「パリィ」**が発動し、得点を奪われてしまう。**  
+  **さらに、カードの合計が10になると**「ラッシュ」**突入!ラッシュ中はルールが反転し、小さい数字が勝利する。  
   攻めるか受けるか。この一手を見切り、勝つのはどっちだ!?
 summary_en: There’s only one thing to do — play one card from your hand. Play a
-  bigger number than your opponent to score! But if their card is face down,
-  a **“Parry”** triggers and they steal the points. And when the cards add up
-  to 10, it’s a **“Rush”**! During a Rush the rule flips and the smaller
-  number wins. Attack or defend? Read this one move — who will win!?
+  bigger number than your opponent to score! But if their card is face down, a
+  **“Parry”** triggers and they steal the points. And when the cards add up to
+  10, it’s a **“Rush”**! During a Rush the rule flips and the smaller number
+  wins. Attack or defend? Read this one move — who will win!?
 steps:
   - text_ja: |-
       **同時にカードを出し合う!**
@@ -77,12 +75,12 @@ steps:
 
       You steal the points no matter what number your opponent played!
   - text_ja: お互いがヒット(攻め)で出した**カードの合計が10になったとき、ラッシュが発生します。**ラッシュ中はルールが反転し、小さい数字がヒット成功となります!
-    text_en: When both players attack and **the cards add up to 10, a Rush
-      begins.** During a Rush the rule flips, and the smaller number hits!
+    text_en: When both players attack and **the cards add up to 10, a Rush begins.**
+      During a Rush the rule flips, and the smaller number hits!
   - text_ja: 手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。**先に2ラウンド先取したプレイヤーがゲームの勝者です。**
-    text_en: When your hands run out, the round ends. Add up the points you
-      took; the higher score wins the round. **The first player to win 2 rounds
-      wins the game.**
+    text_en: When your hands run out, the round ends. Add up the points you took;
+      the higher score wins the round. **The first player to win 2 rounds wins
+      the game.**
 gallery:
   - image: img/gallery/sg_manual1.webp
     caption_ja: 遊び方説明書(表)
