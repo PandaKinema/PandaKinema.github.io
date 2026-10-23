@@ -107,7 +107,7 @@
   new: false
   front: img/front_koikoi.webp
   pkg: img/mini_koikoi.webp
-  logo: img/mini_koikoi_logo.png
+  logo: img/koikoilogo.png
   key1: "#ffffff"
   key2: "#48b0e5"
   card_bg: key2
@@ -131,7 +131,7 @@
   new: false
   front: img/front_bash.webp
   pkg: img/mini_bash.webp
-  logo: img/mini_bash_logo.png
+  logo: img/bashlogo_4C.png
   key1: "#ffffff"
   key2: "#e60039"
   card_bg: key2
