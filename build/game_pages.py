@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v24
+# パンダキネマ 作品ページ 共通フォーマット v25
+#     v25: 閉じたカードのトップはフルサイズ(画面の高さいっぱい)/ギャラリーは1枚ずつ ◀▶ で切り替え
 #     v24: イカタコ・こいこいのぼり・BASH&SMASH(トップはカード)/名前が空のキャラは名札を出さない
 #     v23: モコチャカ(かんたんルールの4コマ・方眼のトップ・モコのシルエット)。トップの模様に grid(方眼)を追加
 #     v22: TRICO を現フォーマットで(キャラ=トリコとニコ、帯=三角、アイコン=トリコのシルエット、4コマ=取説のアピールの流れ)
@@ -137,8 +138,28 @@ def hero(g, d, t):
             out.append('<img class="%s%s" style="%s" src="{{img:%s}}" alt="">' % (cls, '' if mo == 'none' else ' m-' + mo, st, imgname(x['image'])))
         if out:
             g['hero_visual'] = '<div class="stage" aria-hidden="true">%s</div>' % ''.join(out)
-        elif t.get('front'):   # 閉じたカード
-            g['hero_visual'] = '<div class="stage"><img class="ly0 card-face m-rise" src="../../img/%s" alt="%s"></div>' % (imgname(t['front']), H.escape(str(t.get('name') or '')))
+        elif t.get('front'):   # 閉じたカードを画面の高さいっぱいに。左右は画像の端の色をのばす、下(人数・購入)は画像の下端の色
+            f = imgname(t['front'])
+            from PIL import Image
+            with Image.open(os.path.join(WEB, f)) as im:
+                im = im.convert('RGB'); W, Hh = im.size
+                def edge(x0):
+                    stops = []
+                    for k in range(13):
+                        y = min(Hh - 1, round(k * (Hh - 1) / 12))
+                        r, gg, b = [sum(im.getpixel((x, y))[c] for x in range(x0, x0 + 4)) // 4 for c in range(3)]
+                        stops.append('#%02x%02x%02x %.1f%%' % (r, gg, b, k * 100 / 12))
+                    return 'linear-gradient(%s)' % ','.join(stops)
+                bot = [im.getpixel((x, Hh - 3)) for x in range(0, W, max(1, W // 40))]
+                bc = tuple(sum(p[c] for p in bot) // len(bot) for c in range(3))
+                el, er = edge(1), edge(W - 5)
+            hb = '#%02x%02x%02x' % bc
+            M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
+            fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hb) >= 4.5, x in (M, A), contrast(x, hb)))
+            style.append('--hero-bg:%s;--hero-ink:%s;--edge-l:%s;--edge-r:%s;--card-ar:%d/%d' % (hb, fg, el, er, W, Hh))
+            g['hero_cls'] = 'hero-full'
+            g['hero_art'] = '<div class="hero-art"><img class="card-full" src="../../img/%s" alt="%s" fetchpriority="high"></div>' % (f, H.escape(str(t.get('name') or '')))
+            g['hero_visual'] = ''
             g['h1_cls'] = ' class="sr-only"'
         else:
             g['hero_visual'] = ''
@@ -996,6 +1017,15 @@ TEMPLATE = r'''<!doctype html>
     .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分 */
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
+    /* 閉じたカードをフルサイズで:画面の高さいっぱい、左右は画像の端の色、下に人数・購入 */
+    .hero.hero-full{background:var(--hero-bg);color:var(--hero-ink)}
+    .hero.hero-full .hero-art{bottom:118px;display:flex;justify-content:center;
+      background:var(--edge-l) left top/50.5% 100% no-repeat,var(--edge-r) right top/50.5% 100% no-repeat}
+    .hero.hero-full .card-full{height:100%;width:auto;max-width:none;aspect-ratio:var(--card-ar)}
+    .hero.hero-full .billing{margin-top:0}
+    .hero.hero-full .hero-copy{padding-bottom:30px}
+    @media all{ .hero.hero-full .card-full{animation:artin 2.2s cubic-bezier(.2,.7,.2,1) both} }
+    @media (max-width:650px){ .hero.hero-full{min-height:calc(100vw * var(--card-ar-inv,1.41) + 190px)} .hero.hero-full .hero-art{bottom:190px} .hero.hero-full .card-full{width:100%;height:auto} }
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生 */
@@ -1158,12 +1188,26 @@ TEMPLATE = r'''<!doctype html>
     .manual-link{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;text-align:center}
     .manual-link p{margin:0;font-size:14px;font-weight:700;opacity:.85}
     /* フォトギャラリー */
-    .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .gallery figure{margin:0}
-    .gallery .wide{grid-column:span 2}
-    .gitem{display:block;width:100%;height:100%;min-height:220px;padding:14px;border:0;border-radius:16px;background:#fff;cursor:zoom-in}
-    .gitem img{width:100%;height:100%;max-height:300px;object-fit:contain}
-    .gph{display:grid;place-items:center;min-height:220px;height:100%;border:2px dashed color-mix(in srgb,var(--b2-ink) 30%,transparent);border-radius:16px;font-size:13px;font-weight:700;opacity:.75}
+    /* ギャラリー:1枚ずつ。◀▶・点・横スワイプで切り替え、押すと大きく */
+    .gal{position:relative;max-width:920px;margin:0 auto}
+    .gtrack{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:18px}
+    .gtrack::-webkit-scrollbar{display:none}
+    .gslide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .gitem{display:block;width:100%;height:min(62vh,560px);padding:18px;border:0;border-radius:18px;background:#fff;cursor:zoom-in}
+    .gitem img{width:100%;height:100%;object-fit:contain}
+    .gph{display:grid;place-items:center;width:100%;height:min(62vh,560px);border:2px dashed color-mix(in srgb,var(--b2-ink) 35%,transparent);border-radius:18px;font-size:14px;font-weight:700;opacity:.8}
+    .gslide figcaption{font-size:14px;font-weight:800;text-align:center}
+    .gnav{position:absolute;top:calc(min(62vh,560px) / 2);translate:0 -50%;display:grid;place-items:center;width:46px;height:46px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);transition:opacity .2s ease}
+    .gnav::before{content:"";border-style:solid;border-color:transparent}
+    .gnav.prev{left:-23px}.gnav.next{right:-23px}
+    .gnav.prev::before{border-width:8px 12px 8px 0;border-right-color:var(--b2-bg);margin-right:3px}
+    .gnav.next::before{border-width:8px 0 8px 12px;border-left-color:var(--b2-bg);margin-left:3px}
+    .gnav[disabled]{opacity:0;pointer-events:none}
+    .gnav:hover{scale:1.06}
+    .gdots{display:flex;justify-content:center;gap:8px;margin-top:16px}
+    .gdots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);opacity:.3;cursor:pointer}
+    .gdots button[aria-current="true"]{opacity:1}
+    .gal:not(:has(.gslide+.gslide))~.gdots,.gal:not(:has(.gslide+.gslide)) .gnav{display:none}
     .lb{max-width:none;max-height:none;padding:0;border:0;background:transparent;overflow:visible}
     .lb::backdrop{background:rgba(0,0,0,.86)}
     .lb img{max-width:92vw;max-height:88vh;width:auto;height:auto;border-radius:8px}
@@ -1431,8 +1475,9 @@ TEMPLATE = r'''<!doctype html>
       .billing .btn{width:100%;justify-content:center}
       .screen-band{padding:14px 0}
       .cinema .vplayer{width:100%}
-      .gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-      .gitem,.gph{min-height:150px}
+      .gitem,.gph{height:min(56vh,420px);padding:12px}
+      .gnav{top:calc(min(56vh,420px) / 2);width:38px;height:38px}
+      .gnav.prev{left:6px}.gnav.next{right:6px}
       .vplay{width:56px;height:56px;font-size:19px}
       .vmeta{right:10px;top:10px;font-size:12px;padding:5px 11px}
       .cinema{padding:62px 0 62px}
@@ -1563,9 +1608,13 @@ TEMPLATE = r'''<!doctype html>
   <section class="band band-c" id="photo" aria-labelledby="photo-title">
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title">{{L:ギャラリー|Gallery}}</h2></div></header>
-      <div class="gallery reveal">
+      <div class="gal reveal">
+        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)">
 {{gallery_html}}
+        </div>
+        <button class="gnav prev" type="button" aria-label="前の写真"></button><button class="gnav next" type="button" aria-label="次の写真"></button>
       </div>
+      <div class="gdots">{{gdots_html}}</div>
     </div>
   </section>
 
@@ -1701,6 +1750,18 @@ TEMPLATE = r'''<!doctype html>
     flow.addEventListener("dragstart",function(e){ e.preventDefault() });
   }
 
+  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー) */
+  var gt=document.querySelector(".gtrack");
+  if(gt){
+    var gs=[].slice.call(gt.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
+    function ggo(i){ i=Math.max(0,Math.min(gs.length-1,i)); gt.scrollTo({left:gs[i].offsetLeft-gt.offsetLeft*0-gs[0].offsetLeft,behavior:"smooth"}) }
+    function gsync(){ gc=Math.round(gt.scrollLeft/gt.clientWidth); gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1 }
+    gp.addEventListener("click",function(){ ggo(gc-1) }); gn.addEventListener("click",function(){ ggo(gc+1) });
+    gd.forEach(function(d,k){ d.addEventListener("click",function(){ ggo(k) }) });
+    gt.addEventListener("scroll",function(){ requestAnimationFrame(gsync) },{passive:true});
+    gt.addEventListener("keydown",function(e){ if(e.key==="ArrowRight"){ e.preventDefault(); ggo(gc+1) } if(e.key==="ArrowLeft"){ e.preventDefault(); ggo(gc-1) } });
+    gsync();
+  }
   /* ギャラリー:クリックで大きく */
   var lb=document.querySelector(".lb");
   if(lb && lb.showModal){
@@ -1886,8 +1947,9 @@ def render(key):
         summary=rich_L(g['summary']),
         spec_html='\n'.join('            <div><dt>%s</dt><dd>%s</dd></div>' % (e(a), e(b)) for a, b in g['spec']),
         steps_html=steps, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
-        gallery_html='\n'.join(['        <figure class="%s"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button></figure>' % (c, e(t), f, e(t)) for f, t, te, c in g.get('gallery', [])]
-                                + ['        <div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
+        gallery_html='\n'.join(['          <figure class="gslide"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button><figcaption>{{L:%s|%s}}</figcaption></figure>' % (e(t), f, e(t), e(t), e(te)) for f, t, te, c in g.get('gallery', [])]
+                                + ['          <figure class="gslide"><div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div></figure>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
+        gdots_html=''.join('<button type="button" aria-label="%d枚目"%s></button>' % (i + 1, ' aria-current="true"' if i == 0 else '') for i in range(len(g.get('gallery', [])) + len(g.get('gallery_todo', [])))),
         pkg=g['pkg'], pkg_w=g['pkg_size'][0], pkg_h=g['pkg_size'][1], contents=br(e(g['contents'])),
         price_html=('<p class="price">%s<small>{{L:BOOTH価格|on BOOTH}}</small></p>' % e(g['price'])) if g['price'] else '',
         credits_html=credits,

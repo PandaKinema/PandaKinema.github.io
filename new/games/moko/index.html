@@ -104,6 +104,15 @@
     .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分 */
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
+    /* 閉じたカードをフルサイズで:画面の高さいっぱい、左右は画像の端の色、下に人数・購入 */
+    .hero.hero-full{background:var(--hero-bg);color:var(--hero-ink)}
+    .hero.hero-full .hero-art{bottom:118px;display:flex;justify-content:center;
+      background:var(--edge-l) left top/50.5% 100% no-repeat,var(--edge-r) right top/50.5% 100% no-repeat}
+    .hero.hero-full .card-full{height:100%;width:auto;max-width:none;aspect-ratio:var(--card-ar)}
+    .hero.hero-full .billing{margin-top:0}
+    .hero.hero-full .hero-copy{padding-bottom:30px}
+    @media all{ .hero.hero-full .card-full{animation:artin 2.2s cubic-bezier(.2,.7,.2,1) both} }
+    @media (max-width:650px){ .hero.hero-full{min-height:calc(100vw * var(--card-ar-inv,1.41) + 190px)} .hero.hero-full .hero-art{bottom:190px} .hero.hero-full .card-full{width:100%;height:auto} }
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
     @media all{  /* 端末の「動きを減らす」設定に関係なく再生 */
@@ -337,12 +346,26 @@
     .manual-link{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;text-align:center}
     .manual-link p{margin:0;font-size:14px;font-weight:700;opacity:.85}
     /* フォトギャラリー */
-    .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .gallery figure{margin:0}
-    .gallery .wide{grid-column:span 2}
-    .gitem{display:block;width:100%;height:100%;min-height:220px;padding:14px;border:0;border-radius:16px;background:#fff;cursor:zoom-in}
-    .gitem img{width:100%;height:100%;max-height:300px;object-fit:contain}
-    .gph{display:grid;place-items:center;min-height:220px;height:100%;border:2px dashed color-mix(in srgb,var(--b2-ink) 30%,transparent);border-radius:16px;font-size:13px;font-weight:700;opacity:.75}
+    /* ギャラリー:1枚ずつ。◀▶・点・横スワイプで切り替え、押すと大きく */
+    .gal{position:relative;max-width:920px;margin:0 auto}
+    .gtrack{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:18px}
+    .gtrack::-webkit-scrollbar{display:none}
+    .gslide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .gitem{display:block;width:100%;height:min(62vh,560px);padding:18px;border:0;border-radius:18px;background:#fff;cursor:zoom-in}
+    .gitem img{width:100%;height:100%;object-fit:contain}
+    .gph{display:grid;place-items:center;width:100%;height:min(62vh,560px);border:2px dashed color-mix(in srgb,var(--b2-ink) 35%,transparent);border-radius:18px;font-size:14px;font-weight:700;opacity:.8}
+    .gslide figcaption{font-size:14px;font-weight:800;text-align:center}
+    .gnav{position:absolute;top:calc(min(62vh,560px) / 2);translate:0 -50%;display:grid;place-items:center;width:46px;height:46px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);transition:opacity .2s ease}
+    .gnav::before{content:"";border-style:solid;border-color:transparent}
+    .gnav.prev{left:-23px}.gnav.next{right:-23px}
+    .gnav.prev::before{border-width:8px 12px 8px 0;border-right-color:var(--b2-bg);margin-right:3px}
+    .gnav.next::before{border-width:8px 0 8px 12px;border-left-color:var(--b2-bg);margin-left:3px}
+    .gnav[disabled]{opacity:0;pointer-events:none}
+    .gnav:hover{scale:1.06}
+    .gdots{display:flex;justify-content:center;gap:8px;margin-top:16px}
+    .gdots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);opacity:.3;cursor:pointer}
+    .gdots button[aria-current="true"]{opacity:1}
+    .gal:not(:has(.gslide+.gslide))~.gdots,.gal:not(:has(.gslide+.gslide)) .gnav{display:none}
     .lb{max-width:none;max-height:none;padding:0;border:0;background:transparent;overflow:visible}
     .lb::backdrop{background:rgba(0,0,0,.86)}
     .lb img{max-width:92vw;max-height:88vh;width:auto;height:auto;border-radius:8px}
@@ -610,8 +633,9 @@
       .billing .btn{width:100%;justify-content:center}
       .screen-band{padding:14px 0}
       .cinema .vplayer{width:100%}
-      .gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-      .gitem,.gph{min-height:150px}
+      .gitem,.gph{height:min(56vh,420px);padding:12px}
+      .gnav{top:calc(min(56vh,420px) / 2);width:38px;height:38px}
+      .gnav.prev{left:6px}.gnav.next{right:6px}
       .vplay{width:56px;height:56px;font-size:19px}
       .vmeta{right:10px;top:10px;font-size:12px;padding:5px 11px}
       .cinema{padding:62px 0 62px}
@@ -759,13 +783,17 @@
   <section class="band band-c" id="photo" aria-labelledby="photo-title">
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title"><span lang="ja">ギャラリー</span><span lang="en">Gallery</span></h2></div></header>
-      <div class="gallery reveal">
-        <figure class="wide"><button class="gitem" type="button" aria-label="かんたんルール(表)を大きく見る"><img src="../../img/gallery/mg_summary1.webp?v=092cba8e" alt="かんたんルール(表)" loading="lazy"></button></figure>
-        <figure class=""><button class="gitem" type="button" aria-label="パッケージを大きく見る"><img src="../../img/package/pkg_moko.webp?v=bd55ef37" alt="パッケージ" loading="lazy"></button></figure>
-        <figure class="wide"><button class="gitem" type="button" aria-label="かんたんルール(裏)を大きく見る"><img src="../../img/gallery/mg_summary2.webp?v=ad140b4a" alt="かんたんルール(裏)" loading="lazy"></button></figure>
-        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(表)を大きく見る"><img src="../../img/gallery/mg_manual1.webp?v=93e39a61" alt="遊び方説明書(表)" loading="lazy"></button></figure>
-        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(裏)を大きく見る"><img src="../../img/gallery/mg_manual2.webp?v=0e862898" alt="遊び方説明書(裏)" loading="lazy"></button></figure>
+      <div class="gal reveal">
+        <div class="gtrack" tabindex="0" aria-label="ギャラリー(横に切り替え)">
+          <figure class="gslide"><button class="gitem" type="button" aria-label="かんたんルール(表)を大きく見る"><img src="../../img/gallery/mg_summary1.webp?v=092cba8e" alt="かんたんルール(表)" loading="lazy"></button><figcaption><span lang="ja">かんたんルール(表)</span><span lang="en">Quick rules (front)</span></figcaption></figure>
+          <figure class="gslide"><button class="gitem" type="button" aria-label="パッケージを大きく見る"><img src="../../img/package/pkg_moko.webp?v=bd55ef37" alt="パッケージ" loading="lazy"></button><figcaption><span lang="ja">パッケージ</span><span lang="en">Box</span></figcaption></figure>
+          <figure class="gslide"><button class="gitem" type="button" aria-label="かんたんルール(裏)を大きく見る"><img src="../../img/gallery/mg_summary2.webp?v=ad140b4a" alt="かんたんルール(裏)" loading="lazy"></button><figcaption><span lang="ja">かんたんルール(裏)</span><span lang="en">Quick rules (back)</span></figcaption></figure>
+          <figure class="gslide"><button class="gitem" type="button" aria-label="遊び方説明書(表)を大きく見る"><img src="../../img/gallery/mg_manual1.webp?v=93e39a61" alt="遊び方説明書(表)" loading="lazy"></button><figcaption><span lang="ja">遊び方説明書(表)</span><span lang="en">Rulebook (front)</span></figcaption></figure>
+          <figure class="gslide"><button class="gitem" type="button" aria-label="遊び方説明書(裏)を大きく見る"><img src="../../img/gallery/mg_manual2.webp?v=0e862898" alt="遊び方説明書(裏)" loading="lazy"></button><figcaption><span lang="ja">遊び方説明書(裏)</span><span lang="en">Rulebook (back)</span></figcaption></figure>
+        </div>
+        <button class="gnav prev" type="button" aria-label="前の写真"></button><button class="gnav next" type="button" aria-label="次の写真"></button>
       </div>
+      <div class="gdots"><button type="button" aria-label="1枚目" aria-current="true"></button><button type="button" aria-label="2枚目"></button><button type="button" aria-label="3枚目"></button><button type="button" aria-label="4枚目"></button><button type="button" aria-label="5枚目"></button></div>
     </div>
   </section>
 
@@ -913,6 +941,18 @@
     flow.addEventListener("dragstart",function(e){ e.preventDefault() });
   }
 
+  /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー) */
+  var gt=document.querySelector(".gtrack");
+  if(gt){
+    var gs=[].slice.call(gt.children), gd=[].slice.call(document.querySelectorAll(".gdots button")), gp=document.querySelector(".gnav.prev"), gn=document.querySelector(".gnav.next"), gc=0;
+    function ggo(i){ i=Math.max(0,Math.min(gs.length-1,i)); gt.scrollTo({left:gs[i].offsetLeft-gt.offsetLeft*0-gs[0].offsetLeft,behavior:"smooth"}) }
+    function gsync(){ gc=Math.round(gt.scrollLeft/gt.clientWidth); gd.forEach(function(d,k){ d.setAttribute("aria-current",k===gc?"true":"false") }); gp.disabled=gc<=0; gn.disabled=gc>=gs.length-1 }
+    gp.addEventListener("click",function(){ ggo(gc-1) }); gn.addEventListener("click",function(){ ggo(gc+1) });
+    gd.forEach(function(d,k){ d.addEventListener("click",function(){ ggo(k) }) });
+    gt.addEventListener("scroll",function(){ requestAnimationFrame(gsync) },{passive:true});
+    gt.addEventListener("keydown",function(e){ if(e.key==="ArrowRight"){ e.preventDefault(); ggo(gc+1) } if(e.key==="ArrowLeft"){ e.preventDefault(); ggo(gc-1) } });
+    gsync();
+  }
   /* ギャラリー:クリックで大きく */
   var lb=document.querySelector(".lb");
   if(lb && lb.showModal){

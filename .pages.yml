@@ -175,13 +175,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
@@ -288,13 +289,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
@@ -401,13 +403,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
@@ -514,13 +517,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
@@ -627,13 +631,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
@@ -740,13 +745,14 @@ content:
           - { name: manual_en, label: 遊び方説明書のURL(英語), type: string, description: "空なら日本語と同じ", hidden: true }
           - name: gallery
             label: ギャラリー
+            description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
             type: object
             list: true
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/gallery } }
               - { name: caption_ja, label: 説明, type: string }
               - { name: caption_en, label: 説明(英語), type: string, hidden: true }
-              - { name: wide, label: 横長で大きく出す, type: boolean }
+              - { name: wide, label: 横長で大きく出す, type: boolean, hidden: true }
           - name: gallery_todo
             label: ギャラリーの準備中の枠
             type: object
