@@ -565,6 +565,8 @@
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -746,21 +748,21 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
       <p class="summary"><span lang="ja">カードを手札から出し合い、場に出た色の数で勝敗が決まる「<em>アピール</em>」を行います。<br>勝ったプレイヤーは場に出た3枚のカードのうち、好きなカードを獲得します。<br>これを繰り返し、得点カードの中に<em>3色が揃ったら、「トリコ!」と宣言してラウンド勝利</em>となります。<br>最初に<em>2回</em>ラウンド勝利したプレイヤーがこのゲームの勝者です。</span><span lang="en">Players play cards from their hands in an <em>“Appeal,”</em> where the number of colors on the table decides the winner. The winner takes any one of the 3 cards played. Repeat this, and <em>when your cards hold all 3 colors, declare “Trico!” to win the round.</em> The first player to win <em>2</em> rounds wins the game.</span></p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
-          <li class="step reveal s1">
+          <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、<em>同時に表向きに公開します。</em></span><span lang="en">The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then <em>reveal them at the same time.</em></span></span></p></div>
             <div class="viz"><div class="tp1"><figure><img class="lead" src="../../img/parts/tc_lead_o.webp?v=0bd15a45" alt="リードプレイヤーマーカー"><img class="tcd " style="--i:0" src="../../img/parts/tc_y21.webp?v=bc8826c5" alt="黄の21"><figcaption><span lang="ja">リードプレイヤー</span><span lang="en">Lead player</span></figcaption></figure><figure><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_p30.webp?v=a550956f" alt="紫の30"></span><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_y12.webp?v=55b15df4" alt="黄の12"></span><figcaption><span lang="ja">同時に公開</span><span lang="en">Reveal together</span></figcaption></figure></div></div>
           </li>
-          <li class="step reveal s2">
+          <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">場に揃った<em>色の数</em>で勝敗を決めます。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になります。</span><span lang="en">The <em>number of colors</em> on the table decides the winner. If more than one card wins, the Appeal is void and all cards are discarded.</span></span></p></div>
             <div class="viz"><div class="tjudge"><div class="trow" style="--i:0"><span class="tlabel"><span lang="ja">1色</span><span lang="en">1</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><img class="tcd " style="--i:0" src="../../img/parts/tc_p12.webp?v=7743f0db" alt="紫の12"><span class="tw" style="--i:0"><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><b>WIN</b></span></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div><div class="trow" style="--i:1"><span class="tlabel"><span lang="ja">2色</span><span lang="en">2</span></span><span class="tcards"><span class="tw" style="--i:1"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="tcd " style="--i:0" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span><span class="trule"><span lang="ja">同じ色の中で<br>最も小さい数</span><span lang="en">Lowest of<br>the pair color</span></span></div><div class="trow" style="--i:2"><span class="tlabel"><span lang="ja">3色</span><span lang="en">3</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/parts/tc_p9.webp?v=a9dbb6fc" alt="紫の9"><span class="tw" style="--i:2"><img class="tcd " style="--i:0" src="../../img/parts/tc_y24.webp?v=e85d8da9" alt="黄の24"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/parts/tc_r15.webp?v=1d279c82" alt="赤の15"></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div></div></div>
           </li>
-          <li class="step reveal s3">
+          <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">アピールの勝者は場に出た3枚のカードのうち、<em>好きなカードを1枚獲得</em>し、手元に表向きで置きます。</span><span lang="en">The winner of the Appeal <em>takes any one</em> of the 3 cards played and places it face up in front of them.</span></span></p></div>
             <div class="viz"><div class="tp3"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><span class="tpick"><img class="tcd " style="--i:1" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"><b><span lang="ja">獲得!</span><span lang="en">Take!</span></b></span><img class="tcd " style="--i:2" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"></div></div>
           </li>
-          <li class="step reveal s4">
+          <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">獲得したカードが2色になったら「<em>ニコ</em>!」、3色になったら「<em>トリコ</em>!」と宣言します。トリコマーカーを2つ獲得したらゲーム終了!</span><span lang="en">Declare <em>“Nico!”</em> when your cards hold 2 colors, and <em>“Trico!”</em> at 3 colors. Collect 2 Trico markers to win the game!</span></span></p></div>
             <div class="viz"><div class="tp4"><div class="thand"><img class="tcd " style="--i:0" src="../../img/parts/tc_p12.webp?v=7743f0db" alt="紫の12"><img class="tcd " style="--i:1" src="../../img/parts/tc_y6.webp?v=eedbd274" alt="黄の6"><span class="tbub nico2"><span lang="ja">ニコ!</span><span lang="en">Nico!</span></span><img class="tcd late" style="--i:2" src="../../img/parts/tc_r18.webp?v=1c956465" alt="赤の18"></div><div class="twin"><span class="tbub trico3"><span lang="ja">トリコ!</span><span lang="en">Trico!</span></span><img class="wbird" src="../../img/chara/t_tricoP.webp?v=ded230d8" alt=""><img class="mk" src="../../img/parts/t_marker.webp?v=5ae7ebe2" alt="トリコマーカー"></div></div></div>
           </li>
@@ -862,14 +864,16 @@
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });

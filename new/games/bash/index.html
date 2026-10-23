@@ -536,6 +536,8 @@
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -717,21 +719,21 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
       <p class="summary"><span lang="ja">やることはただ1つ。手札から1枚出すだけ。<br>相手より大きい数字を出せば得点ゲット!しかし、相手のカードが裏向きだった場合は<em>「パリィ」</em>が発動し、得点を奪われてしまう。<br>さらに、カードの合計が10になると<em>「ラッシュ」</em>突入!ラッシュ中はルールが反転し、小さい数字が勝利する。<br>攻めるか受けるか。この一手を見切り、勝つのはどっちだ!?</span><span lang="en">There’s only one thing to do — play one card from your hand. Play a bigger number than your opponent to score! But if their card is face down, a <em>“Parry”</em> triggers and they steal the points. And when the cards add up to 10, it’s a <em>“Rush”</em>! During a Rush the rule flips and the smaller number wins. Attack or defend? Read this one move — who will win!?</span></p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
-          <li class="step reveal s1">
+          <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja"><em>同時にカードを出し合う!</em><br>数の大きい方がヒットになる!勝った数字が得点。</span><span lang="en"><em>Play cards at the same time!</em><br>The bigger number is a hit! The winning number is your score.</span></span></p></div>
             <div class="viz"><div class="sduel"><span class="sside a"><img class="scd " style="" src="../../img/parts/bc2_r3.webp?v=44c7c08f" alt="赤の3"></span><b class="svs">VS</b><span class="sside b"><img class="scd " style="" src="../../img/parts/bc2_b5.webp?v=eea3a3f3" alt="青の5"><b class="shit">HIT!</b></span></div></div>
           </li>
-          <li class="step reveal s2">
+          <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja"><em>裏向きで出すとパリィ!</em><br>相手の出した数字に関係なく得点を奪うことができる!</span><span lang="en"><em>Play face down to Parry!</em><br>You steal the points no matter what number your opponent played!</span></span></p></div>
             <div class="viz"><div class="sduel"><span class="sside a"><img class="scd " style="" src="../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><b class="shit parry">Parry!</b></span><b class="svs">VS</b><span class="sside b"><img class="scd " style="" src="../../img/parts/bc2_b4.webp?v=201d114a" alt="青の4"></span></div></div>
           </li>
-          <li class="step reveal s3">
+          <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">お互いがヒット(攻め)で出した<em>カードの合計が10になったとき、ラッシュが発生します。</em>ラッシュ中はルールが反転し、小さい数字がヒット成功となります!</span><span lang="en">When both players attack and <em>the cards add up to 10, a Rush begins.</em> During a Rush the rule flips, and the smaller number hits!</span></span></p></div>
             <div class="viz"><div class="sduel"><span class="sside a"><img class="scd " style="" src="../../img/parts/bc2_r6.webp?v=b1d67d4c" alt="赤の6"><img class="scd " style="" src="../../img/parts/bc2_r1.webp?v=247c22f8" alt="赤の1"><b class="shit">HIT!</b></span><b class="svs">VS</b><span class="sside b"><img class="scd " style="" src="../../img/parts/bc2_b4.webp?v=201d114a" alt="青の4"><img class="scd " style="" src="../../img/parts/bc2_b2.webp?v=26cf7e71" alt="青の2"></span><span class="srush">RUSH!</span></div></div>
           </li>
-          <li class="step reveal s4">
+          <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。<em>先に2ラウンド先取したプレイヤーがゲームの勝者です。</em></span><span lang="en">When your hands run out, the round ends. Add up the points you took; the higher score wins the round. <em>The first player to win 2 rounds wins the game.</em></span></span></p></div>
             <div class="viz"><div class="swin"><img src="../../img/parts/sc_wbash.webp?v=510d84e3" alt="勝利セリフ(バッシュ)"><b>YOU WIN!</b></div></div>
           </li>
@@ -824,14 +826,16 @@
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });

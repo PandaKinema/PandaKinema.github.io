@@ -588,6 +588,8 @@
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -769,21 +771,21 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
       <p class="summary"><span lang="ja">自分の手札からカードを山に出し、<em>上に見えている3枚のカードの動物を数えて素早く名前を呼ぶゲームです。</em><br>特定の条件が揃うとトークンの取り合いが発生し、勝った人は山のカードを自分の手札に追加します。<br>誰かの手札がなくなったらゲームは終了し、<em>ガブを除いた</em>カードが1番多かった人の勝ちです。</span><span lang="en">Play cards from your hand onto the piles, and <em>count the animals on the 3 cards on top and call their names fast.</em> When certain conditions line up, everyone grabs for the token, and the winner adds pile cards to their hand. When someone runs out of cards, the game ends, and the player with the most cards <em>not counting Gabu</em> wins.</span></p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
-          <li class="step reveal s1">
+          <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て<em>コール</em>を行います。</span><span lang="en">On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a <em>call</em>.</span></span></p></div>
             <div class="viz"><div class="mf"><div class="mdeck"><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mpile mt"><img class="mcd " style="" src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"></div><div class="mpile ml"><img class="mcd " style="" src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"></div><div class="mpile mr"><img class="mcd " style="" src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"></div><img class="mtok" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mmove"><img class="mcd back" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"></span></div></div>
           </li>
-          <li class="step reveal s2">
+          <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。<br><em>ポメはかわいいので必ず最初に呼ぶ</em><br><em>ガブの数だけモコを減らす</em></span><span lang="en">Looking at the cards and calling the animals’ names is a call. Calls have these rules:<br><em>Pome is cute, so always call it first</em><br><em>Remove one Moko for each Gabu</em></span></span></p></div>
             <div class="viz"><div class="m3"><div class="row" style="--i:0"><img class="mcd " style="" src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><span class="eq">→</span><span class="mbub" style="--i:0"><span lang="ja">ポメモコ!</span><span lang="en">Pome-Moko!</span></span></div><div class="row" style="--i:1"><span class="ate" style="--i:1"><img class="mcd " style="" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><b><span lang="ja">モコ0</span><span lang="en">Moko 0</span></b></span><img class="mcd " style="" src="../../img/parts/mc_g2.webp?v=545dc536" alt="ガブが2匹のカード"><img class="mcd " style="" src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"><span class="eq">→</span><span class="mbub" style="--i:1"><span lang="ja">パカ!</span><span lang="en">Paka!</span></span></div></div></div>
           </li>
-          <li class="step reveal s4">
+          <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">場のカードが次の条件を満たしたとき、<em>「モコチャカ」</em>と言いながら<em>全員で</em>トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。</span><span lang="en">When the cards meet a condition, <em>everyone</em> grabs for the token while saying <em>“Mokochaka!”</em> The one who gets it takes 2 piles and adds them to the bottom of their hand.</span></span></p></div>
             <div class="viz"><div class="mf"><div class="mdeck"><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mcd" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mpile mt"><img class="mcd " style="" src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"></div><div class="mpile ml"><img class="mcd " style="" src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"></div><div class="mpile mr"><img class="mcd " style="" src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><img class="mtok" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mbub"><span lang="ja">モコチャカ!</span><span lang="en">Mokochaka!</span></span></div></div>
           </li>
-          <li class="step reveal s5">
+          <li class="step s5">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">誰かの手札がなくなったらゲーム終了です。<em>ガブを除いた</em>手札が最も多い人が勝ちになります。</span><span lang="en">When someone runs out of cards, the game ends. The player with the most cards in hand <em>not counting Gabu</em> wins.</span></span></p></div>
             <div class="viz"><div class="mend"><div class="mside"><span class="mempty"></span><span class="mcap2"><span lang="ja">手札0で終了</span><span lang="en">Out of cards</span></span></div><div class="mside"><div class="mhand"><img class="mcd " style="--i:0" src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mcd " style="--i:1" src="../../img/parts/mc_p1.webp?v=c727d89c" alt="パカが1匹のカード"><img class="mcd mgabu" style="--i:2" src="../../img/parts/mc_g1.webp?v=2e6d5046" alt="ガブが1匹のカード"><img class="mcd " style="--i:3" src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><span class="mcap2"><span lang="ja">ガブを除いて3枚</span><span lang="en">3 without Gabu</span></span><span class="mbub mwin"><span lang="ja">勝ち!</span><span lang="en">Win!</span></span></div></div></div>
           </li>
@@ -878,14 +880,16 @@
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });

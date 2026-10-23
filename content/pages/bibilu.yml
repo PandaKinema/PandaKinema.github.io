@@ -7,7 +7,7 @@ logo_buy: img/logo/b_logo_navy.png
 logo_credits: img/logo/b_logo_white.png
 hero:
   art: img/page/b_art.jpg
-  art_pos: 45% 64%
+  art_pos: 45% 76%
   fit: cover
   pattern: none
 bg1_image: img/page/b_tex_c.png

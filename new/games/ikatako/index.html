@@ -555,6 +555,8 @@
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -736,21 +738,21 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
       <p class="summary"><span lang="ja">イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。<br>得点を奪い合う<em>「対戦ルール」</em>、力を合わせてクリアを目指す<em>「協力ルール」</em>、ひとりでじっくり挑む<em>「ソロルール」</em>の3つの遊び方があります。<br>めくったカードの数字を最も早く叫んだ人が獲得できる争奪戦!ただし「イカ」や「タコ」が出たら名前を叫んでいずれかの手をあげなければいけない!</span><span lang="en">Ikatako is a game where you flip cards from the deck and react to them. There are 3 ways to play — compete for points in the <em>“Versus rules,”</em> work together in the <em>“Co-op rules,”</em> or take it on alone in the <em>“Solo rules.”</em> In Versus, the first to shout the number takes the card! But if a squid or octopus shows up, you must shout its name and raise a hand!</span></p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
-          <li class="step reveal s1">
+          <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。</span><span lang="en">The active player flips one card from the deck and reveals it. Everyone reacts to the card.</span></span></p></div>
             <div class="viz"><div class="ia"><div class="iring" aria-hidden="true"><img class="irc" style="--a:0deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:25.7143deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:51.4286deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:77.1429deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:102.857deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:128.571deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:154.286deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:180deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:205.714deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:231.429deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:257.143deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:282.857deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:308.571deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="irc" style="--a:334.286deg;--r:64px" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""></div><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt=""><img class="c front" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><span class="burst " style="--x:2px;--y:14px;--d:0"><span>3!</span></span><span class="burst " style="--x:188px;--y:10px;--d:1"><span>3!</span></span><span class="burst " style="--x:6px;--y:118px;--d:2"><span>3!</span></span><span class="burst " style="--x:184px;--y:120px;--d:3"><span>3!</span></span></div></div>
           </li>
-          <li class="step reveal s2">
+          <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">危険カードは上の方にあるライトがあげる腕と対応しています。<em>タコは左手、イカは右手、イカタコは両手</em>です。</span><span lang="en">The lights at the top of a danger card show which arm to raise. <em>Octopus = left hand, squid = right hand, Ikatako = both hands.</em></span></span></p></div>
             <div class="viz"><div class="idg"><figure style="--i:0"><img class="icd " style="" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"><figcaption><b><span lang="ja">左手</span><span lang="en">Left</span></b><em><span lang="ja">タコ!</span><span lang="en">Tako!</span></em></figcaption></figure><figure style="--i:1"><img class="icd " style="" src="../../img/parts/ic_10.webp?v=1b34223c" alt="イカ(10)のカード"><figcaption><b><span lang="ja">右手</span><span lang="en">Right</span></b><em><span lang="ja">イカ!</span><span lang="en">Ika!</span></em></figcaption></figure><figure style="--i:2"><img class="icd " style="" src="../../img/parts/ic_18.webp?v=40575bc4" alt="イカタコ(18)のカード"><figcaption><b><span lang="ja">両手</span><span lang="en">Both</span></b><em><span lang="ja">イカタコ!</span><span lang="en">Ikatako!</span></em></figcaption></figure></div></div>
           </li>
-          <li class="step reveal s3">
+          <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">一番リアクションが早かった人は<em>得点としてカードを獲得</em>し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を<em>減点(上下逆さま)</em>にします。</span><span lang="en">The fastest player <em>takes the card as points</em> and lines it up. Anyone who got it wrong or didn’t react turns one point card <em>upside down as a penalty</em>.</span></span></p></div>
             <div class="viz"><div class="ia"><span class="itake"><img class="icd " style="" src="../../img/parts/ic_5.webp?v=5be5fcdc" alt="5のカード"></span><span class="burst " style=""><span>5!</span></span><div class="irow"><img class="icd " style="" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><span style="width:40px"></span></div><span class="ilabel"><span lang="ja">得点</span><span lang="en">Points</span></span></div></div>
           </li>
-          <li class="step reveal s4">
+          <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。<em>生還した中で最も得点の高い人が勝利</em>となります。</span><span lang="en">When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. <em>The highest score among the survivors wins.</em></span></span></p></div>
             <div class="viz"><div class="iend"><div class="irow2"><img class="icd " style="--i:0" src="../../img/parts/ic_6u.webp?v=3512306d" alt="6uのカード"><img class="icd " style="--i:1" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"><span class="iminus" style="--i:2"><span class="iflip"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><b class="itag"><span lang="ja">減点</span><span lang="en">Penalty</span></b></span><img class="icd " style="--i:3" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><img class="icd " style="--i:4" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"></div><p class="isum">6+2+4+8<span lang="ja">(得点)</span><span lang="en"></span><em>-3<span lang="ja">(減点)</span><span lang="en"></span></em><br><b>=17<span lang="ja">点!</span><span lang="en"> pts!</span></b></p></div></div>
           </li>
@@ -845,14 +847,16 @@
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });

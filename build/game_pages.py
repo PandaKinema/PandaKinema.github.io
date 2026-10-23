@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v27
+# パンダキネマ 作品ページ 共通フォーマット v28
+#     v28: 遊び方のカードはまとめて表示(横スクロールで上下に揺れない)
 #     v27: 4コマをゲームの終わりまで(モコチャカ・イカタコ・こいこいのぼり)
 #     v26: 作品ページでアクセントカラー2を選べる(背景・帯/見出し)/トップの絵のパララックスをやめる(ロゴが絵にかぶらない)
 #     v25: 閉じたカードのトップはフルサイズ(画面の高さいっぱい)/ギャラリーは1枚ずつ ◀▶ で切り替え
@@ -1445,6 +1446,8 @@ TEMPLATE = r'''<!doctype html>
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -1624,7 +1627,7 @@ TEMPLATE = r'''<!doctype html>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title">{{L:どんなゲーム?|What kind of game?}}</h2></div></header>
       <p class="summary">{{summary}}</p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
 {{steps_html}}
         </ol>
@@ -1702,14 +1705,16 @@ TEMPLATE = r'''<!doctype html>
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });
@@ -1960,7 +1965,7 @@ def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツール�
 def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
-    steps = '\n'.join('''          <li class="step reveal %s">
+    steps = '\n'.join('''          <li class="step %s">
             <div class="step-head"><span class="snum" aria-label="ステップ%d"><b>%d</b></span><p class="step-lead"><span>%s</span></p></div>
             <div class="viz">%s</div>
           </li>''' % (st.get('cls', ''), n + 1, n + 1, rich_L(st['b']), st['v']) for n, st in enumerate(g['steps']))

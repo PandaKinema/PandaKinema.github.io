@@ -503,6 +503,8 @@
       .js .chara-fig.on .badge{scale:1;rotate:0deg;transition:scale .5s cubic-bezier(.3,1.7,.5,1) 1.2s,rotate .5s cubic-bezier(.3,1.7,.5,1) 1.2s}
       .js .chara-fig .chara-note{opacity:0}
       .js .chara-fig.on .chara-note{opacity:1;transition:opacity .5s ease 1.3s}
+      .js .step{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
+      .js .step.on{opacity:1;translate:0 0}
       .js .reveal{opacity:0;translate:0 28px;transition:opacity .5s ease,translate .6s cubic-bezier(.2,.8,.2,1)}
       .js .reveal.on{opacity:1;translate:0 0}
       @keyframes deal{from{opacity:0;translate:-40px 16px;rotate:-14deg}to{opacity:1;translate:0 0;rotate:0deg}}
@@ -627,7 +629,7 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover" style="--lw:600px;--hero-bg:#039497;--hero-ink:#fff5d7;--art-pos:45% 64%" aria-labelledby="title">
+  <section class="hero hero-cover" style="--lw:600px;--hero-bg:#039497;--hero-ink:#fff5d7;--art-pos:45% 76%" aria-labelledby="title">
     <div class="hero-art"><img class="art" src="../../img/page/b_art.jpg?v=c3244d4a" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
@@ -685,21 +687,21 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
       <p class="summary"><span lang="ja">『ビビルの塔』は、<em>数字カードを同時に出し、高い塔を建てて得点を競うゲームです</em>。<br>出した数字の大きさが<em>1位と2位</em>のプレイヤーは、そのカードを自分の前に重ねて塔を建てます。<br>同じ数字を出したプレイヤーが複数いた場合は<em>バッティング</em>となり、そのプレイヤーだけが塔を建てます<br>。塔は高いほど高得点を狙えますが、<em>6枚になると天罰によって崩れてしまいます</em>。<br>手札がなくなったら塔の得点を計算し、最も得点の高かったプレイヤーがラウンドの勝者です。最初に<em>2回</em>ラウンド勝利をしたプレイヤーがこのゲームの勝者となります。</span><span lang="en">In The Tower of Bibilu, <em>players reveal number cards at the same time and build tall towers to score points.</em> The players who played the <em>highest and second-highest</em> numbers stack their cards in front of them to build their towers. If several players played the same number, it is a <em>clash</em>, and only those players build. Taller towers score more, but <em>at 6 cards, divine punishment makes them crumble.</em> When hands run out, towers are scored and the highest score wins the round. The first player to win <em>2</em> rounds wins the game.</span></p>
-      <div class="flow">
+      <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
-          <li class="step reveal s1">
+          <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">全員がせーので手札からカードを出し、数字の大きさが<em>1位と2位の人</em>が出したカードを獲得し、<em>手元に塔を建てられる!</em></span><span lang="en">Everyone plays a card at once. The players with the <em>1st and 2nd highest numbers</em> take their cards and <em>build a tower!</em></span></span></p></div>
             <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"></span><b class="crown" aria-label="2位">2</b></span><span class="pk" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"></span></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span></span><span class="pk sel" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></span><b class="crown" aria-label="1位">1</b></span></div></div>
           </li>
-          <li class="step reveal s2">
+          <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">もし同じ数字を出した人がいたら<em>バッティング。バッティングした人だけが塔を建てる!</em></span><span lang="en">If anyone played the same number, it is a <em>clash.</em> <em>Only the clashing players build!</em></span></span></p></div>
             <div class="viz"><div class="picks"><span class="pk sel" style="--i:0"><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk sel" style="--i:1"><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"></span><b class="star" aria-label="バッティング"></b></span><span class="pk" style="--i:2"><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_10.webp?v=0edc613f" alt="10のカード"></span></span><span class="pk" style="--i:3"><span class="lf" style="--i:3"><img class="c back" src="../../img/parts/bc_ura.webp?v=8d52340d" alt=""><img class="c front" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"></span></span></div></div>
           </li>
-          <li class="step reveal s3">
+          <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">塔はどんどん上に重ねていく。ただし、6枚を超えると、<em>天罰マークの数だけ下から崩れる!</em></span><span lang="en">Towers keep growing upward. But past 6 cards, <em>they crumble from the bottom by the number of punishment marks!</em></span></span></p></div>
             <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:6;--fall:4"><img class="lt fall" style="--i:0" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt fall" style="--i:1" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt fall" style="--i:2" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt fall" style="--i:3" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt stay" style="--i:4" src="../../img/parts/bc_1.webp?v=eb8ef767" alt="1のカード"><img class="lt stay" style="--i:5" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lnotes"><p class="n1"><span lang="ja"><em>6枚目に8を獲得!</em><br>8の天罰マークは<br>4つなので…</span><span lang="en"><em>6th card: an 8!</em><br>The 8 has 4<br>marks, so…</span></p><p class="n2"><span lang="ja"><em>下から4枚<br>捨てる!</em></span><span lang="en"><em>Discard 4<br>from the bottom!</em></span></p><p class="n3"><span lang="ja">上の2枚は残る</span><span lang="en">The top 2 stay</span></p></div></div></div>
           </li>
-          <li class="step reveal s4">
+          <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">手札がなくなったらゲーム終了! <em>「塔の1番上の数字×高さ」が最も大きい人が勝ち!</em></span><span lang="en">When hands run out, the game ends! <em>Highest “top number × height” wins!</em></span></span></p></div>
             <div class="viz"><div class="lscene"><div class="ltw"><ol class="ruler" aria-hidden="true"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="ltower" style="--n:5;--fall:0"><img class="lt" style="--i:0" src="../../img/parts/bc_3.webp?v=cdaa3531" alt="3のカード"><img class="lt" style="--i:1" src="../../img/parts/bc_5.webp?v=b948c317" alt="5のカード"><img class="lt" style="--i:2" src="../../img/parts/bc_2.webp?v=0b5747b7" alt="2のカード"><img class="lt" style="--i:3" src="../../img/parts/bc_7.webp?v=6f4e2c32" alt="7のカード"><img class="lt" style="--i:4" src="../../img/parts/bc_8.webp?v=f9211e57" alt="8のカード"></div></div><div class="lscore"><p><span lang="ja">8×5=<b>40点!</b></span><span lang="en">8×5=<b>40 pts!</b></span></p><span class="hop"><img class="hop-orb" src="../../img/chara/b_tupa_orb.webp?v=3f820354" alt=""><img class="hop-tok" src="../../img/chara/b_tupa_body.webp?v=f35a06f0" alt="トゥーパ"></span></div></div></div>
           </li>
@@ -801,14 +803,16 @@
   setTimeout(lit,1500);
 
   /* スクロール:見えたら再生、画面の外に出たら戻す(戻ってきたらもう一度) */
-  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara"));
+  var els=[].slice.call(document.querySelectorAll(".reveal,.reveal-credits,.reveal-cinema,.reveal-chara,.reveal-flow"));
   if("IntersectionObserver" in window){
     var io=new IntersectionObserver(function(es){ var k=0; es.forEach(function(e){
       var t=e.target;
       if(e.isIntersecting && e.intersectionRatio>=.18){
-        if(t.classList.contains("step")){ var d=k++*550; clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.add("on") },d) }   /* 一度に入ったカードは左から順に */
-        else t.classList.add("on");
-      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on") }
+        if(t.classList.contains("reveal-flow")){   /* 遊び方のカード:まとめて左から順に(横にスクロールしても揺れない) */
+          [].forEach.call(t.querySelectorAll(".step"),function(c,i){ clearTimeout(c._t); c._t=setTimeout(function(){ c.classList.add("on") },i*180) });
+        } else t.classList.add("on");
+      } else if(!e.isIntersecting){ clearTimeout(t._t); t.classList.remove("on");
+        if(t.classList.contains("reveal-flow")) [].forEach.call(t.querySelectorAll(".step"),function(c){ clearTimeout(c._t); c.classList.remove("on") }) }
     }) },{threshold:[0,.18]});
     els.forEach(function(el){ io.observe(el) });
   } else els.forEach(function(el){ el.classList.add("on") });
