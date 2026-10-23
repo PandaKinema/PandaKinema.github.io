@@ -1,15 +1,15 @@
 - date: 2026-10-19
   cat_ja: 公開
   cat_en: Launch
-  text_ja: 『カードモックツクール』を公開しました。
-  text_en: “Card Mock Maker” is now available.
+  text_ja: 『カードモックツクールβ』を公開しました。
+  text_en: “Card Mock Makerβ” is now available.
+  body_ja: ボードゲームのカードのモックを作れるツールです。ぜひボードゲームづくりに役立てていただければと思います。フィードバッグもお待ちしております。
   link: https://pandakinema.github.io/card-mock-maker/
 - date: 2026-10-18
   cat_ja: お知らせ
   cat_en: News
   text_ja: ゲームマーケット2026秋、お疲れ様でした!
   text_en: Thank you for visiting us at Game Market 2026 Autumn!
-  link: ''
 - date: 2026-10-17
   cat_ja: 新作
   cat_en: New
