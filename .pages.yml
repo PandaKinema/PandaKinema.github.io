@@ -119,6 +119,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -170,7 +172,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
@@ -238,6 +240,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -289,7 +293,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
@@ -357,6 +361,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -408,7 +414,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
@@ -476,6 +482,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -527,7 +535,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
@@ -595,6 +603,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -646,7 +656,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:
@@ -714,6 +724,8 @@ content:
           - { name: bg_color, label: 背景の色, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの「背景の色」と同じ。文字の色は自動" }
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
+          - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - name: hero
             label: トップ画像
             type: object
@@ -765,7 +777,7 @@ content:
           - { name: summary_en, label: "どんなゲーム?(英語)", type: text, hidden: true }
           - name: steps
             label: 遊び方の流れ
-            description: "上から順に、遊び方の図1〜4の説明文。図はデザイン側で作っているので、数は変えずに文だけ直してください"
+            description: "上から順に、遊び方の図の説明文(イカタコは対戦4・協力4・ソロ4の順)。図はデザイン側で作っているので、数は変えずに文だけ直してください"
             type: object
             list: true
             fields:

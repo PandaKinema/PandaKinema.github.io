@@ -8,6 +8,8 @@ logo_credits: img/logo/koikoilogo.png
 bg_color: main
 color3: "#2e3333"
 accent_color: third
+prefer_white: true
+hero_ink: white
 hero:
   art: img/page/koikoi_top.jpg
   fit: cover

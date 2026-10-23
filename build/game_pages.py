@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v40
+# パンダキネマ 作品ページ 共通フォーマット v41
+#     v41: 遊び方をタブで複数(イカタコ:対戦・協力・ソロ)/トップの文字色を選べる(hero_ink)/白い文字を優先(prefer_white)
 #     v40: 強調は選んだ色か赤、読みにくければ太字だけ/遊び方の図の下地はメインカラーの薄色
 #     v39: 文字は決めた色・白・黒だけ/強調は色を変える(基本は赤、編集画面で選べる。読みにくければ自動でほかの色)
 #     v38: 作品ページの幅に上限(1440px)。その外はサイトの黒い下地
@@ -79,7 +80,10 @@ def contrast(a, b):
     la, lb = lum(a), lum(b)
     return (max(la, lb) + .05) / (min(la, lb) + .05)
 PAL = ['#ffffff', '#000000']   # 作品で決めた色(メイン・アクセント・アクセントカラー2)。apply で設定
+PREFW = [False]   # 作品ページ「白い文字を優先」
 def ink(bg, other=None):   # 文字の色:決めた色・白・黒だけを使う。もう1色 → 白 → 決めた色 → 黒 の順で読めるもの
+    if PREFW[0] and contrast(bg, '#ffffff') >= 4.5:
+        return '#ffffff'
     for c in ([other] if other else []) + ['#ffffff'] + PAL + ['#000000']:
         if c and contrast(bg, c) >= 4.5:
             return c
@@ -151,6 +155,9 @@ def hero(g, d, t):
         M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
         g['hero_cls'] += ' light'   # 下からのぼかしはなし。文字は絵の下の方の色の上で読める色
         fg = max((M, A, deep(bot), '#ffffff'), key=lambda x: (contrast(x, bot) >= 4.5, x in (M, A), x == '#ffffff', contrast(x, bot)))
+        if d.get('hero_ink') in ('white', 'black'):   # トップの文字・ボタンの色を指定
+            fg = '#ffffff' if d['hero_ink'] == 'white' else '#000000'
+            g['hero_cls'] += ' ink-set'
         style.append('--hero-ink:%s' % fg)
         if h.get('zoom'):
             style.append('--zoom:%g' % num(h['zoom'], 1))
@@ -292,8 +299,8 @@ def apply(key):
     t = games.get(key) or {}
     M, A = t.get('main'), t.get('accent')
     if M and A:
-
-        PAL[:] = [c for c in (M, A, '#' + str(d.get('color3')).lstrip('#') if d.get('color3') else None) if c]
+        PREFW[0] = bool(d.get('prefer_white'))
+        PAL[:] =[c for c in (M, A, '#' + str(d.get('color3')).lstrip('#') if d.get('color3') else None) if c]
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()
         if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「アクセントカラー2」
@@ -808,6 +815,31 @@ GAMES['ikatako'] = dict(
     .itag{position:absolute;left:50%;top:-22px;translate:-50% 0;padding:1px 8px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
     .s4 .irow{bottom:30px}
     .s4 .irow .icd{width:48px}
+    /* 協力・ソロ */
+    .ideck{position:absolute;left:16px;top:52px;width:46px;height:66px}
+    .ideck .icd{position:absolute;left:0;top:0}.ideck .icd:nth-child(2){top:-3px}.ideck .icd:nth-child(3){top:-6px}
+    .ipc{position:absolute;display:block}
+    .ipc2{display:block}
+    .q1 .burst,.q2 .burst,.q3 .burst{position:absolute;width:54px;height:54px;font-size:16px;--bc:#0a4fa0}
+    .q3 .burst{--bc:#e8343d;font-size:13px}
+    .iplus{position:absolute;left:118px;top:126px;padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px;font-weight:800}
+    .imiss{position:absolute;left:0;right:0;top:66px;display:flex;justify-content:center;gap:16px}
+    .ipile{position:relative;display:block;width:40px;height:58px}
+    .ipile .icd{position:absolute;left:0;top:0;width:40px}.ipile .icd+.icd{left:5px;top:5px;rotate:6deg}
+    .ilab{position:absolute;left:50%;top:138px;translate:-50% 0;font-size:11px;font-weight:800}
+    .ito{left:50%;top:auto;bottom:4px;translate:-50% 0}
+    .ilab2{position:absolute;padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap}
+    .iempty{display:block;width:40px;aspect-ratio:300/420;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px}
+    .burst.ibig{position:relative;width:86px;height:86px;font-size:15px}
+    .q4 .isum b,.o4 .isum b{font-size:16px}
+    .q4 .iend,.q4.step .iend{gap:8px}
+    .o1 .irow{bottom:22px}
+    @media all{
+      .ipc,.ipc2,.ipile{animation:iin 7s cubic-bezier(.3,1.4,.5,1) infinite both;animation-delay:calc(var(--d,0) * .45s)}
+      @keyframes iin{0%{opacity:0;translate:0 -18px}7%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
+      .q1 .burst,.q2 .burst,.q3 .burst,.iend .burst,.ito,.iplus{animation:lmark 7s ease infinite both;animation-delay:calc(var(--d,0) * .45s - 1.2s)}
+      .o2 .iflip{animation:iflip 6s cubic-bezier(.4,1.5,.5,1) infinite}
+    }
     .iminus{position:relative;display:block}
     .iend{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:18px}
     .irow2{display:flex;gap:4px}
@@ -855,8 +887,27 @@ GAMES['ikatako'] = dict(
         dict(cls='s4', b=L('山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。[[生還した中で最も得点の高い人が勝利]]となります。', 'When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. [[The highest score among the survivors wins.]]'),
              v='<div class="iend"><div class="irow2">' + icd('6u', '', '--i:0') + icd('2', '', '--i:1') + '<span class="iminus" style="--i:2"><span class="iflip">' + icd('3') + '</span><b class="itag">' + L('減点', 'Penalty') + '</b></span>' + icd('4', '', '--i:3') + icd('8', '', '--i:4') + '</div>'
                '<p class="isum">6+2+4+8' + L('(得点)', '') + '<em>-3' + L('(減点)', '') + '</em><br><b>=17' + L('点!', ' pts!') + '</b></p></div>'),
+        # ---- 協力ルール(取説「協力ルール」2.ゲームの流れ ①〜④)
+        dict(cls='q1', b=L('手番の人は山札から1枚カードをめくり、出たカードの数字を宣言します。ただし、危険カードや特殊カードの場合は処理が変わります。', 'The active player flips a card and declares its number. Danger and special cards work differently.'),
+             v='<div class="ia"><div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ipc" style="left:108px;top:44px;--d:0">' + icd('2') + '</span>' + burst('2!', '', 'left:170px;top:40px;--d:1') + '</div>'),
+        dict(cls='q2', b=L('宣言があっていたら、次の人に手番が移ります。山札からカードをめくり、最初の人と同様に数字を宣言します。このとき、[[前の人が宣言した数字に今出たカードの数字を足さなければいけません。]]これを繰り返します。', 'If it was right, the next player flips and declares too — [[adding this card to the number the previous player declared.]] Keep going.'),
+             v='<div class="ia"><div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ipc" style="left:100px;top:40px">' + icd('2') + '</span><span class="ipc" style="left:118px;top:54px;--d:2">' + icd('5') + '</span>' + burst('7!', '', 'left:174px;top:44px;--d:3') + '<span class="iplus">2+5</span></div>'),
+        dict(cls='q3', b=L('計算を間違えたり、違うアクションをしてしまった場合は[[ミス]]となります。これまでに重ねたカードを1つの山にして端に避けておきます。これを[[ミス山]]といいます。ミス山が3つになったら潜水艇が沈没し、[[ゲームオーバー]]となります。', 'A wrong sum or wrong action is a [[miss]]: set the stacked cards aside as a [[miss pile]]. With 3 miss piles the sub sinks — [[game over]].'),
+             v='<div class="ia">' + burst(L('ミス!', 'Miss!'), '', 'left:10px;top:10px;--d:0') + '<div class="imiss">' + ''.join('<span class="ipile" style="--d:%d">%s%s</span>' % (k, icd('ura'), icd(c)) for k, c in enumerate(['8', '10', '18'])) + '</div><span class="ilab">' + L('ミス山', 'Miss piles') + '</span><span class="itag ito" style="--d:3">' + L('ゲームオーバー', 'Game over') + '</span></div>'),
+        dict(cls='q4', b=L('ゲームオーバーにならずに、山札を全てめくり切ったらゲームクリアです! この時[[最後に宣言された数字が得点]]となります。できるだけ多くの得点を獲得し、深海から生還しましょう!', 'Flip the whole deck without a game over to clear! [[The last number declared is your score.]] Score as much as you can and make it back from the deep!'),
+             v='<div class="iend"><span class="iempty"></span>' + burst(L('クリア!', 'Clear!'), 'ibig', '--d:0') + '<p class="isum">' + L('最後の宣言が得点', 'Last number = score') + '<br><b>' + L('めざせ!100点越え!', 'Aim for 100+!') + '</b></p></div>'),
+        # ---- ソロルール(取説「ソロルール」ゲームの流れ ②〜⑤)
+        dict(cls='o1', b=L('カードを1枚引き、得点として配置します。2枚目以降は、すでにある得点の右か左、もしくは[[差し込み]]で配置します。[[トラブルカードが出た時は得点とは別に置いてください。]]', 'Draw a card and place it as points — to the right or left of your row, or [[slide it in]] between. [[Trouble cards go to one side.]]'),
+             v='<div class="ia"><span class="ipc" style="left:12px;top:4px;--d:3">' + icd('rep') + '</span><span class="ilab2" style="left:62px;top:28px">' + L('トラブルは別に', 'Trouble aside') + '</span><div class="irow">' + icd('3') + icd('4') + '<span class="ipc2" style="--d:1">' + icd('2') + '</span></div><span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
+        dict(cls='o2', b=L('サルベージまたはうずしおを引いた場合は特殊行動を行います。うずしお:このカードを配置した時、[[隣接する得点カードを上下逆さまにします。]]得点は減点になり、減点は得点になります。', 'Salvage or Uzushio trigger special actions. Uzushio: [[flip the neighboring point cards upside down]] — points become penalties and vice versa.'),
+             v='<div class="ia"><div class="irow">' + icd('3') + '<span class="iminus"><span class="iflip">' + icd('4') + '</span></span><span class="ipc2" style="--d:0">' + icd('6u') + '</span></div><span class="ilab2" style="left:150px;top:26px">' + L('うずしお', 'Uzushio') + '</span></div>'),
+        dict(cls='o3', b=L('どんどんカードを引いていき、終了条件を満たすか、[[帰投]]を選択したらゲームを終了し、最終得点を計算します。[[役が成立していたらボーナス点]]を得ることができます。', 'Keep drawing until an end condition is met or you choose to [[return]]. Then total your score — [[sets earn bonus points.]]'),
+             v='<div class="iend"><div class="irow2">' + icd('3', '', '--i:0') + icd('3', '', '--i:1') + icd('3', '', '--i:2') + '</div><p class="isum">' + L('狭域', 'Narrow') + '<br><b>+15' + L('点', '') + '</b></p></div>'),
+        dict(cls='o4', b=L('得点が確定したら、ソロルール用サマリーの「最終得点評価」の称号を確認しましょう。[[目指せ!深海の覇者!!]]', 'Once your score is set, check your title on the solo summary card. [[Become the ruler of the deep!!]]'),
+             v='<div class="iend">' + burst(L('72点!', '72 pts!'), 'ibig', '--d:0') + '<p class="isum">' + L('合計51+役30+帰投2−減点11', '51 + 30 + 2 − 11') + '<br><b>' + L('称号は…?', 'Your title…?') + '</b></p></div>'),
     ],
     gallery=[], gallery_todo=[],
+    tabs=[(L('対戦ルール', 'Versus'), '', 0, 4), (L('協力ルール', 'Co-op'), '', 4, 8), (L('ソロルール', 'Solo'), '', 8, 12)],
     fab_pkg='pkg_ikatako.webp', pkg='pkg_ikatako.webp', pkg_size=(520, 825),
     contents=L('', ''), price='', credits=[],
 )
@@ -879,7 +930,10 @@ GAMES['koikoi'] = dict(
     ''',
     hero_css='''
 
-    .buy-box{grid-template-columns:minmax(200px,340px) minmax(0,1fr)}   /* 横長のパッケージ */
+    .buy-box.buy-box{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:36px}   /* 横長のパッケージ:パッケージをロゴより大きく */
+    .buy-box.buy-box .buy-logo{width:min(220px,100%)}
+    @media (max-width:650px){ .buy-box.buy-box{grid-template-columns:1fr} }
+    @media (max-width:650px){ .buy-box.buy-box .pkg{width:min(340px,92%)} .buy-box .buy-logo{width:min(200px,70%)} }
     /* ===== こいこいのぼり:遊び方の図 ===== */
     .kcd{display:block;width:38px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
     .ka{position:relative;flex:none;width:240px;height:180px}
@@ -969,7 +1023,10 @@ GAMES['bash'] = dict(
     ''',
     hero_css=BURST_CSS + '''
 
-    .buy-box{grid-template-columns:minmax(200px,340px) minmax(0,1fr)}   /* 横長のパッケージ */
+    .buy-box.buy-box{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:36px}   /* 横長のパッケージ:パッケージをロゴより大きく */
+    .buy-box.buy-box .buy-logo{width:min(220px,100%)}
+    @media (max-width:650px){ .buy-box.buy-box{grid-template-columns:1fr} }
+    @media (max-width:650px){ .buy-box.buy-box .pkg{width:min(340px,92%)} .buy-box .buy-logo{width:min(200px,70%)} }
     /* ===== BASH&SMASH:遊び方の図 ===== */
     .scd{display:block;width:56px;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.22)}
     .sduel{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding-top:18px}
@@ -1094,6 +1151,7 @@ TEMPLATE = r'''<!doctype html>
     /* BOOTHで購入:土台がメインカラー、文字がアクセントカラー。枠線はメインビジュアルの上のときだけ */
     .btn.buy,.panel .btn.buy,.fab.buy{background:var(--buy-bg,var(--accent));color:var(--buy-ink,var(--on-accent))}
     .hero .btn.buy{box-shadow:inset 0 0 0 2px var(--buy-ink,transparent)}
+    .hero.ink-set .btn.buy{background:transparent;color:var(--hero-ink);box-shadow:inset 0 0 0 2px var(--hero-ink)}
     .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin:0}
     .spec div{display:flex;align-items:baseline;gap:7px}
     .spec dt{font-size:12px;opacity:.75}
@@ -1285,6 +1343,10 @@ TEMPLATE = r'''<!doctype html>
     .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
+    .ptabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 20px}
+    .ptabs button{padding:8px 18px;border:2px solid var(--k-ink);border-radius:999px;background:transparent;color:var(--k-ink);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+    .ptabs button[aria-selected="true"]{background:var(--sec-bg);border-color:var(--sec-bg);color:var(--sec-ink)}
+    .steps[hidden]{display:none}
     .flow-ui{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
     .flow-ui[hidden]{display:none}
     .flow-bar{position:relative;width:min(220px,40vw);height:4px;border-radius:4px;background:color-mix(in srgb,var(--k-ink) 22%,transparent);overflow:hidden}
@@ -1723,10 +1785,9 @@ TEMPLATE = r'''<!doctype html>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title">{{L:どんなゲーム?|What kind of game?}}</h2></div></header>
       <p class="summary">{{summary}}</p>
+{{tabs_html}}
       <div class="flow reveal-flow">
-        <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
 {{steps_html}}
-        </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
       </div>
       <div class="manual-link reveal"><p>{{L:くわしいルールは遊び方説明書で|Full rules are in the rulebook}}</p><a class="btn" lang="ja" href="{{manual_ja}}" target="_blank" rel="noopener">遊び方説明書を読む <span aria-hidden="true">↗</span></a><a class="btn" lang="en" href="{{manual_en}}" target="_blank" rel="noopener">Read the rulebook <span aria-hidden="true">↗</span></a></div>
@@ -1860,7 +1921,7 @@ TEMPLATE = r'''<!doctype html>
   }
 
   /* 遊び方:横に流れるカード(ボタン・バー・マウスのドラッグ) */
-  var flow=document.querySelector(".flow .steps");
+  var flows=[].slice.call(document.querySelectorAll(".flow .steps")), flow=flows[0];
   if(flow){
     var ui=document.querySelector(".flow-ui"), fb=ui.querySelector(".flow-bar span"), fp=ui.querySelector(".prev"), fn=ui.querySelector(".next");
     function fsync(){ var max=flow.scrollWidth-flow.clientWidth; ui.hidden=max<4; if(max<4) return;
@@ -1869,14 +1930,21 @@ TEMPLATE = r'''<!doctype html>
     function step(){ var c=flow.querySelector(".step"); return c.offsetWidth+parseFloat(getComputedStyle(flow).columnGap||0) }
     fp.addEventListener("click",function(){ flow.scrollBy({left:-step(),behavior:"smooth"}) });
     fn.addEventListener("click",function(){ flow.scrollBy({left:step(),behavior:"smooth"}) });
-    flow.addEventListener("scroll",function(){ requestAnimationFrame(fsync) },{passive:true});
-    window.addEventListener("resize",fsync); fsync();
+    window.addEventListener("resize",fsync);
     var sx0=0, sl0=0, moved=false, down=false;
-    flow.addEventListener("pointerdown",function(e){ if(e.pointerType!=="mouse"||e.button!==0) return; down=true; moved=false; sx0=e.clientX; sl0=flow.scrollLeft });
+    flows.forEach(function(f){
+      f.addEventListener("scroll",function(){ if(f===flow) requestAnimationFrame(fsync) },{passive:true});
+      f.addEventListener("pointerdown",function(e){ if(e.pointerType!=="mouse"||e.button!==0) return; down=true; moved=false; sx0=e.clientX; sl0=flow.scrollLeft });
+      f.addEventListener("click",function(e){ if(moved){ e.preventDefault(); e.stopPropagation(); moved=false } },true);
+      f.addEventListener("dragstart",function(e){ e.preventDefault() });
+    });
     window.addEventListener("pointermove",function(e){ if(!down) return; var dx=e.clientX-sx0; if(!moved&&Math.abs(dx)>5){ moved=true; flow.classList.add("drag") } if(moved) flow.scrollLeft=sl0-dx });
     window.addEventListener("pointerup",function(){ if(!down) return; down=false; if(moved){ var l=flow.scrollLeft; flow.classList.remove("drag"); flow.scrollLeft=l; flow.scrollBy({left:0}) } });
-    flow.addEventListener("click",function(e){ if(moved){ e.preventDefault(); e.stopPropagation(); moved=false } },true);
-    flow.addEventListener("dragstart",function(e){ e.preventDefault() });
+    /* 遊び方のタブ(イカタコの対戦・協力・ソロなど) */
+    [].forEach.call(document.querySelectorAll(".ptabs button"),function(t,k,all){ t.addEventListener("click",function(){
+      [].forEach.call(all,function(x,j){ x.setAttribute("aria-selected",j===k?"true":"false") });
+      flows.forEach(function(f,j){ f.hidden=j!==k }); flow=flows[k]; flow.scrollLeft=0; fsync() }) });
+    fsync();
   }
 
   /* ギャラリー:1枚ずつ切り替え(◀▶・点・スワイプ・矢印キー)。かならず1枚ぶんずつ止まる */
@@ -2074,10 +2142,18 @@ def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツール�
 def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
-    steps = '\n'.join('''          <li class="step %s">
+    groups = g.get('tabs') or [('', '', 0, len(g['steps']))]
+    def li(n, st):
+        return '''          <li class="step %s">
             <div class="step-head"><span class="snum" aria-label="ステップ%d"><b>%d</b></span><p class="step-lead"><span>%s</span></p></div>
             <div class="viz">%s</div>
-          </li>''' % (st.get('cls', ''), n + 1, n + 1, rich_L(st['b']), st['v']) for n, st in enumerate(g['steps']))
+          </li>''' % (st.get('cls', ''), n + 1, n + 1, rich_L(st['b']), st['v'])
+    steps = '\n'.join('        <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)"%s>\n%s\n        </ol>' % (
+        '' if k == 0 else ' hidden', '\n'.join(li(n, st) for n, st in enumerate(g['steps'][a:b]))) for k, (_, _, a, b) in enumerate(groups))
+    tabs_html = ''
+    if g.get('tabs'):   # 遊び方が複数あるとき:タブで切り替え
+        tabs_html = '      <div class="ptabs reveal" role="tablist">%s</div>' % ''.join(
+            '<button type="button" role="tab" aria-selected="%s">%s</button>' % ('true' if k == 0 else 'false', lab) for k, (lab, _, _, _) in enumerate(groups))
     credits = '\n'.join('    <div style="--i:%d"><dt>%s</dt><dd>%s</dd></div>' % (i, e(a), e(b)) for i, (a, b) in enumerate(g['credits']))
     v = dict(
         header_logo=imgname(g['site'].get('header_logo') or 'brand.png'),
@@ -2088,7 +2164,7 @@ def render(key):
         catch=br(e(g['catch'])), intro=rich_L(g['intro']), intro_img=g['intro_img'][0], intro_alt=e(g['intro_img'][1]), intro_cls=g['intro_img'][2],
         summary=rich_L(g['summary']),
         spec_html='\n'.join('            <div><dt>%s</dt><dd>%s</dd></div>' % (e(a), e(b)) for a, b in g['spec']),
-        steps_html=steps, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
+        steps_html=steps, tabs_html=tabs_html, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
         gallery_html='\n'.join(['          <figure class="gslide"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button><figcaption>{{L:%s|%s}}</figcaption></figure>' % (e(t), f, e(t), e(t), e(te)) for f, t, te, c in g.get('gallery', [])]
                                 + ['          <figure class="gslide"><div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div></figure>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
         gdots_html=''.join('<button type="button" aria-label="%d枚目"%s></button>' % (i + 1, ' aria-current="true"' if i == 0 else '') for i in range(len(g.get('gallery', [])) + len(g.get('gallery_todo', [])))),

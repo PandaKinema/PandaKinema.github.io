@@ -41,20 +41,30 @@ summary_en: Ikatako is a game where you flip cards from the deck and react to
   rules.”** In Versus, the first to shout the number takes the card! But if a
   squid or octopus shows up, you must shout its name and raise a hand!
 steps:
-  - text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
-    text_en: The active player flips one card from the deck and reveals it. Everyone
-      reacts to the card.
-  - text_ja: 危険カードは上の方にあるライトがあげる腕と対応しています。**タコは左手、イカは右手、イカタコは両手**です。
-    text_en: The lights at the top of a danger card show which arm to raise.
-      **Octopus = left hand, squid = right hand, Ikatako = both hands.**
-  - text_ja: 一番リアクションが早かった人は**得点としてカードを獲得**し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を**減点(上下逆さま)**にします。
-    text_en: The fastest player **takes the card as points** and lines it up. Anyone
-      who got it wrong or didn’t react turns one point card **upside down as a
-      penalty**.
-  - text_ja: 山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。**生還した中で最も得点の高い人が勝利**となります。
-    text_en: When the deck runs out, the game ends. Your final score is your point
-      cards minus your penalties. At 0 or less, you sink. **The highest score
-      among the survivors wins.**
+- text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
+  text_en: The active player flips one card from the deck and reveals it. Everyone reacts to the card.
+- text_ja: 危険カードは上の方にあるライトがあげる腕と対応しています。**タコは左手、イカは右手、イカタコは両手**です。
+  text_en: The lights at the top of a danger card show which arm to raise. **Octopus = left hand, squid = right hand, Ikatako = both hands.**
+- text_ja: 一番リアクションが早かった人は**得点としてカードを獲得**し、手元に並べます。間違えた、反応できなかった人は自分の得点のうち任意の1枚を**減点(上下逆さま)**にします。
+  text_en: The fastest player **takes the card as points** and lines it up. Anyone who got it wrong or didn’t react turns one point card **upside down as a penalty**.
+- text_ja: 山札がなくなったらゲームは終了です。得点カードの数字の合計から、減点の合計を引いたものが最終得点です。最終得点が0点以下だった場合は沈没となります。**生還した中で最も得点の高い人が勝利**となります。
+  text_en: When the deck runs out, the game ends. Your final score is your point cards minus your penalties. At 0 or less, you sink. **The highest score among the survivors wins.**
+- text_ja: 手番の人は山札から1枚カードをめくり、出たカードの数字を宣言します。ただし、危険カードや特殊カードの場合は処理が変わります。
+  text_en: The active player flips a card and declares its number. Danger and special cards work differently.
+- text_ja: 宣言があっていたら、次の人に手番が移ります。山札からカードをめくり、最初の人と同様に数字を宣言します。このとき、**前の人が宣言した数字に今出たカードの数字を足さなければいけません。**これを繰り返します。
+  text_en: If it was right, the next player flips and declares too — **adding this card to the number the previous player declared.** Keep going.
+- text_ja: 計算を間違えたり、違うアクションをしてしまった場合は**ミス**となります。これまでに重ねたカードを1つの山にして端に避けておきます。これを**ミス山**といいます。ミス山が3つになったら潜水艇が沈没し、**ゲームオーバー**となります。
+  text_en: 'A wrong sum or wrong action is a **miss**: set the stacked cards aside as a **miss pile**. With 3 miss piles the sub sinks — **game over**.'
+- text_ja: ゲームオーバーにならずに、山札を全てめくり切ったらゲームクリアです! この時**最後に宣言された数字が得点**となります。できるだけ多くの得点を獲得し、深海から生還しましょう!
+  text_en: Flip the whole deck without a game over to clear! **The last number declared is your score.** Score as much as you can and make it back from the deep!
+- text_ja: カードを1枚引き、得点として配置します。2枚目以降は、すでにある得点の右か左、もしくは**差し込み**で配置します。**トラブルカードが出た時は得点とは別に置いてください。**
+  text_en: Draw a card and place it as points — to the right or left of your row, or **slide it in** between. **Trouble cards go to one side.**
+- text_ja: サルベージまたはうずしおを引いた場合は特殊行動を行います。うずしお:このカードを配置した時、**隣接する得点カードを上下逆さまにします。**得点は減点になり、減点は得点になります。
+  text_en: 'Salvage or Uzushio trigger special actions. Uzushio: **flip the neighboring point cards upside down** — points become penalties and vice versa.'
+- text_ja: どんどんカードを引いていき、終了条件を満たすか、**帰投**を選択したらゲームを終了し、最終得点を計算します。**役が成立していたらボーナス点**を得ることができます。
+  text_en: Keep drawing until an end condition is met or you choose to **return**. Then total your score — **sets earn bonus points.**
+- text_ja: 得点が確定したら、ソロルール用サマリーの「最終得点評価」の称号を確認しましょう。**目指せ!深海の覇者!!**
+  text_en: Once your score is set, check your title on the solo summary card. **Become the ruler of the deep!!**
 gallery:
   - image: img/gallery/ig_sheet.webp
     caption_ja: 説明シート「反射神経で生還せよ」
