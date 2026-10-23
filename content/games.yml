@@ -1,7 +1,7 @@
 - key: bibilu
   name: ビビルの塔
   new: true
-  front: img/front_bibilu.webp
+  front: img/bibilu_bdg.png
   pkg: img/pkg_bibilu.webp
   logo: img/logo_bibilu.png
   key1: "#fff5d7"
@@ -20,7 +20,7 @@
 - key: trico
   name: TRICO!
   new: false
-  front: img/front_trico.webp
+  front: img/trico_bdg.png
   pkg: img/pkg_trico.webp
   logo: img/logo_trico.png
   key1: "#fdd000"
@@ -45,7 +45,7 @@
 - key: ikatako
   name: イカタコ
   new: false
-  front: img/front_ikatako.webp
+  front: img/ikatako_bdg.png
   pkg: img/pkg_ikatako.webp
   logo: img/logo_ikatako.png
   key1: "#ffffff"
@@ -64,7 +64,7 @@
 - key: moko
   name: モコチャカ
   new: false
-  front: img/front_moko.webp
+  front: img/mocochaka_bdg.png
   pkg: img/pkg_moko.webp
   logo: img/logo_moko.png
   key1: "#f19ebc"
@@ -84,7 +84,7 @@
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES
   new: false
-  front: img/front_koikoi.webp
+  front: img/koikoi_bdg.png
   pkg: img/mini_koikoi.webp
   logo: img/koikoilogo.png
   key1: "#ffffff"
@@ -102,7 +102,7 @@
   name: BASH&SMASH
   series: "MINI THEATER SERIES "
   new: false
-  front: img/front_bash.webp
+  front: img/bash_bdg.png
   pkg: img/mini_bash.webp
   logo: img/bashlogo_4C.png
   key1: "#ffffff"
