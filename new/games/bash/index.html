@@ -25,7 +25,7 @@
       --orb-glow:255,220,120;
       --orn:url(../../img/page/s_star_sten.png?v=ca9fdfce); --snum:url(../../img/page/s_star_sil.png?v=9c60f75e);   /* 見出しの飾り:星 */
     
-      --k-bg:#e60039;--k-ink:#ffffff;--hl:#ffffff;--b2-bg:#000000;--b2-ink:#ffffff;--hl2:#ffffff;--sec-bg:#000000;--sec-ink:#ffffff;--accent:#000000;--on-accent:#ffffff;--buy-bg:#e60039;--buy-ink:#ffffff;--p-ink:#000000;--soft:#f9bfce;--pan-bg:#000000;--pan-ink:#fff;--lt:#e60039;--on-lt:#ffffff;--dk:#000000;--on-dk:#ffffff;--tex-c:url(../../img/page/s_tex_c.png?v=23e941fe);--tex-size:24px 24px;--b2-img:url(../../img/page/s_tex_w.png?v=27e8f9ae);--b2-size:24px 24px;--snum:url(../../img/page/s_star_sil.png?v=9c60f75e);}
+      --k-bg:#e60039;--k-ink:#ffffff;--hl:#ffffff;--b2-bg:#000000;--b2-ink:#ffffff;--hl2:#ffffff;--sec-bg:#000000;--sec-ink:#ffffff;--accent:#000000;--on-accent:#ffffff;--buy-bg:#e60039;--buy-ink:#ffffff;--p-ink:#000000;--soft:#f9bfce;--pan-bg:#000000;--pan-ink:#fff;--lt:#e60039;--on-lt:#ffffff;--dk:#000000;--on-dk:#ffffff;--tex-c:url(../../img/page/s_tex_c.png?v=23e941fe);--tex-size:24px 24px;--b2-img:url(../../img/page/s_tex_w.png?v=27e8f9ae);--b2-size:24px 24px;--band-d:none;--orn-d:none;--snum:url(../../img/page/s_star_sil.png?v=9c60f75e);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -63,7 +63,7 @@
     .en{margin:0;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
     .sec-head .en{padding-left:.34em}
     .sec-row{display:flex;align-items:center;gap:16px}
-    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
+    .sec-row::before,.sec-row::after{display:var(--orn-d,block);content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
@@ -291,7 +291,7 @@
     .step:not(:last-child)::after{content:"";position:absolute;left:calc(100% + (var(--gap) - 14px) / 2);top:calc(50% - 10px);border-style:solid;border-width:10px 0 10px 14px;border-color:transparent transparent transparent var(--k-ink)}
     .step-head{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:0;background:var(--p-ink);color:#fff;
-      -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;font:900 22px/1 Georgia,"Times New Roman",serif}
+      -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;border-radius:var(--snum-r,0);font:900 22px/1 Georgia,"Times New Roman",serif}
     .snum b{font:inherit;translate:var(--snum-x,0px) var(--snum-y,0px)}   /* 番号の位置(編集画面で微調整) */
     .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */

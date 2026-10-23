@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v35
+# パンダキネマ 作品ページ 共通フォーマット v36
+#     v36: 編集画面で画像を消したら、帯・模様・見出しの飾りも消える(デザインの初期値に戻らない)
 #     v35: 黒文字の代わりに作品の色を暗くした色
 #     v34: 強調の色は地と4.5以上の差があるときだけ(なければ赤→文字色+太字)/見出しの飾りの色を選べる
 #     v33: 全面の絵の上で部品を動かす(TRICO!=鳥と宝石、モコチャカ=アイコンが回る)
@@ -308,18 +309,17 @@ def apply(key):
         css.append('--lt:%s;--on-lt:%s;--dk:%s;--on-dk:%s' % (light, ink(light, dark), dark, ink(dark, light)))
         g['_D'] = D
     hero(g, d, t)
-    if 'bg1_image' in d:
-        if d.get('bg1_image'):
-            f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
-        else:
-            css.append('--tex-c:none')
+    # 編集画面がすべて:画像の欄が空(消した)なら、デザイン側の初期値も使わず「なし」
+    if d.get('bg1_image'):
+        f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
+    else:
+        css.append('--tex-c:none')
     if d.get('bg2_image'):
         f, w, h = tile(d['bg2_image']); css.append('--b2-img:url(../../img/%s);--b2-size:%dpx %dpx' % (f, w, h))
-    if 'band_image' in d:
-        if d.get('band_image'):
-            f, w, h = tile(d['band_image']); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
-        else:
-            css.append('--band-d:none')
+    if d.get('band_image'):
+        f, w, h = tile(d['band_image']); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
+    else:
+        css.append('--band-d:none')
     for k, var in (('step_num_x', '--snum-x'), ('step_num_y', '--snum-y')):   # 遊び方の番号の位置(px)
         if d.get(k) not in (None, ''):
             css.append('%s:%gpx' % (var, num(d[k], 0)))
@@ -331,6 +331,10 @@ def apply(key):
     for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
         if d.get(k):
             css.append('%s:url(../../img/%s)' % (var, imgname(d[k])))
+        elif k == 'heading_icon':
+            css.append('--orn-d:none')    # 見出しの飾りなし
+        else:
+            css.append('--snum:none;--snum-r:50%')   # 番号はただの丸に
     if css:
         g['theme'] += '\n      ' + ';'.join(css) + ';'
     # STORY のキャラクター:1体ずつ表示。複数いるときは ◀▶ で切り替え。それぞれ名前とプロフィール
@@ -1058,7 +1062,7 @@ TEMPLATE = r'''<!doctype html>
     .en{margin:0;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
     .sec-head .en{padding-left:.34em}
     .sec-row{display:flex;align-items:center;gap:16px}
-    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
+    .sec-row::before,.sec-row::after{display:var(--orn-d,block);content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
@@ -1252,7 +1256,7 @@ TEMPLATE = r'''<!doctype html>
     .step:not(:last-child)::after{content:"";position:absolute;left:calc(100% + (var(--gap) - 14px) / 2);top:calc(50% - 10px);border-style:solid;border-width:10px 0 10px 14px;border-color:transparent transparent transparent var(--k-ink)}
     .step-head{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:0;background:var(--p-ink);color:#fff;
-      -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;font:900 22px/1 Georgia,"Times New Roman",serif}
+      -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;border-radius:var(--snum-r,0);font:900 22px/1 Georgia,"Times New Roman",serif}
     .snum b{font:inherit;translate:var(--snum-x,0px) var(--snum-y,0px)}   /* 番号の位置(編集画面で微調整) */
     .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
     .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
