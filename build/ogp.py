@@ -1,10 +1,10 @@
 # 関連コンテンツの「リンク」(note の記事など)を、ページのOGP(タイトル・画像・サイト名)からカードにする
-# 一度読んだものは build/ogp_cache.json に覚えておき、画像は new/games/img/ogp/ に保存します(GitHub Actions が保存)
+# 一度読んだものは build/ogp_cache.json に覚えておき、画像は new/img/links/ に保存します(GitHub Actions が保存)
 import hashlib, html as H, json, os, re, urllib.request, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, 'build', 'ogp_cache.json')
-IMG = os.path.join(ROOT, 'new', 'games', 'img', 'ogp')
+IMG = os.path.join(ROOT, 'new', 'img', 'links')
 UA = 'Mozilla/5.0 (compatible; PandaKinemaBot/1.0; +https://pandakinema.github.io/)'
 
 def _get(url, limit=3_000_000):
@@ -52,7 +52,7 @@ def get(url, cache):
             data, _, _ = _get(info['image'], 8_000_000)
             ext = os.path.splitext(urllib.parse.urlparse(info['image']).path)[1].lower()
             ext = ext if ext in ('.jpg', '.jpeg', '.png', '.webp', '.gif') else '.jpg'
-            name = 'ogp/' + hashlib.md5(url.encode()).hexdigest()[:12] + ext
+            name = 'links/' + hashlib.md5(url.encode()).hexdigest()[:12] + ext
             os.makedirs(IMG, exist_ok=True)
             open(os.path.join(IMG, os.path.basename(name)), 'wb').write(data)
             info['image'] = name

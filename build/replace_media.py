@@ -1,37 +1,57 @@
-# 同じ名前の画像をアップし直したときの差し替え
-# Pages CMS は同じ名前のファイルがあると「foo-1.png」のように番号を付けて保存します。
-# これを見つけたら、元の「foo.png」をその中身で上書きして「foo-1.png」は消し、content/ の中の「foo-1.png」も「foo.png」に戻します。
-# → 設定されている画像はそのままの名前で新しい絵に変わります。GitHub Actions がページを組み立てる前に動かします。
-import os, re, glob, subprocess
+# 同じ名前の画像をアップし直したときの差し替え(GitHub Actions がページを組み立てる前に動かします)
+# ・同じフォルダに同じ名前でアップすると、Pages CMS は「foo-1.png」のように番号を付けて保存します
+# ・別のフォルダ(たとえば画像のいちばん上)に同じ名前でアップすると、別のファイルになります
+# どちらの場合も、元の「trico/foo.png」を新しい中身で上書きし、新しく増えたファイルは消して、
+# content/ の中の参照も元の場所に戻します → 設定されている画像が、そのままの名前で新しい絵に変わります
+import os, re, subprocess
+from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIRS = ['new/img', 'new/games/img']
+IMG = os.path.join(ROOT, 'new', 'img')
+SKIP = ('unused/', 'links/')
 
-def added_after(newer, older):   # newer が older より後に追加されたか(git の記録で判定。わからなければ True)
-    def t(p):
-        out = subprocess.run(['git', 'log', '-1', '--format=%ct', '--diff-filter=A', '--', p], cwd=ROOT, capture_output=True, text=True).stdout.strip()
-        return int(out) if out else None
-    a, b = t(newer), t(older)
-    return a is None or b is None or a >= b
+def added(rel):   # git に追加された時刻(まだ記録がなければ今)
+    out = subprocess.run(['git', 'log', '-1', '--format=%ct', '--diff-filter=AR', '--', 'new/img/' + rel],
+                         cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    return int(out) if out else 10 ** 12
 
-moved = []
-for d in DIRS:
-    for path in sorted(glob.glob(os.path.join(ROOT, d, '**', '*'), recursive=True)):
-        m = re.match(r'^(.*)-(\d+)(\.[A-Za-z0-9]+)$', path)
-        if not m or not os.path.isfile(path):
+groups = defaultdict(list)   # 「foo.png」ごとに、同じ名前(番号付きも含む)のファイルを集める
+for d, _, fs in os.walk(IMG):
+    for f in fs:
+        rel = os.path.relpath(os.path.join(d, f), IMG).replace(os.sep, '/')
+        if rel.startswith(SKIP):
             continue
-        base = m.group(1) + m.group(3)
-        if not os.path.exists(base) or not added_after(os.path.relpath(path, ROOT), os.path.relpath(base, ROOT)):
-            continue
-        os.replace(path, base)
-        moved.append((os.path.basename(path), os.path.basename(base)))
-        print('差し替え:', os.path.relpath(base, ROOT), '←', os.path.basename(path))
+        m = re.match(r'^(.*)-(\d+)(\.[A-Za-z0-9]+)$', f)
+        base = m.group(1) + m.group(3) if m else f
+        groups[base].append(rel)
 
-if moved:   # content/ の中の参照も元の名前に
-    for y in glob.glob(os.path.join(ROOT, 'content', '**', '*.yml'), recursive=True):
-        s = open(y, encoding='utf-8').read(); s2 = s
-        for new, old in moved:
-            s2 = re.sub(r'(?<![\w.\-])' + re.escape(new) + r'(?![\w.\-])', old, s2)
-        if s2 != s:
-            open(y, 'w', encoding='utf-8').write(s2)
-            print('参照を戻した:', os.path.relpath(y, ROOT))
+moved = []   # (消したファイル, 残した場所)
+for base, rels in groups.items():
+    if len(rels) < 2:
+        continue
+    plain = [r for r in rels if os.path.basename(r) == base]
+    if not plain:
+        continue
+    keep = min(plain, key=added)              # いちばん古くからある場所を残す
+    newest = max(rels, key=added)             # いちばん新しくアップしたものの中身を使う
+    if newest != keep:
+        os.replace(os.path.join(IMG, newest), os.path.join(IMG, keep))
+        print('差し替え: new/img/%s ← %s' % (keep, newest))
+    for r in rels:
+        if r != keep and os.path.exists(os.path.join(IMG, r)):
+            os.remove(os.path.join(IMG, r))
+        if r != keep:
+            moved.append((r, keep))
+
+if moved:   # content/ の中の参照も残した場所に
+    for d, _, fs in os.walk(os.path.join(ROOT, 'content')):
+        for f in fs:
+            if not f.endswith('.yml'):
+                continue
+            y = os.path.join(d, f)
+            s = open(y, encoding='utf-8').read(); s2 = s
+            for old, keep in moved:
+                s2 = re.sub(r'(?<![\w.\-/])img/' + re.escape(old) + r'(?![\w.\-])', 'img/' + keep, s2)
+            if s2 != s:
+                open(y, 'w', encoding='utf-8').write(s2)
+                print('参照を戻した:', os.path.relpath(y, ROOT))

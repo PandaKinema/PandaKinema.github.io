@@ -2,7 +2,7 @@
 - key: moji
   name: ビビル文字ジェネレータ
   url: https://pandakinema.github.io/bibilu-moji/
-  title_image: img/moji_title.png
+  title_image: img/tools/moji_title.png
   image: ''
   thumb: ''
   intro_ja: ことばをビビル文字に変換して遊べます。
@@ -13,8 +13,8 @@
   name: カードモックツクール β
   url: https://pandakinema.github.io/card-mock-maker/
   title_image: ''
-  image: img/tool_cmm_screen.webp
-  thumb: img/tool_cmm_thumb.webp
+  image: img/tools/tool_cmm_screen.webp
+  thumb: img/tools/tool_cmm_thumb.webp
   intro_ja: カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。
   intro_en: A tool for easily making and printing card game mockups in your browser.
   main: '#2a3138'

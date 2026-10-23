@@ -5,6 +5,8 @@
 import html as H, os, re, sys
 import yaml
 from PIL import Image
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import media
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, 'new')          # トップと入れ替えるときはここを変える
@@ -26,12 +28,8 @@ def T(ja, en):   # 編集画面で入れた文。改行をそのまま反映す�
     return '<span lang="ja">%s</span><span lang="en">%s</span>' % (ja, en)
 
 def img(v):
-    """画像の欄の値(img/foo.png、/new/img/foo.png、foo.png など)を img/ 以下の名前にそろえる"""
-    v = (v or '').strip().lstrip('/')
-    for pre in ('new/img/', 'img/'):
-        if v.startswith(pre):
-            v = v[len(pre):]
-    return v
+    """画像の欄の値(img/trico/foo.png、foo.png など)を new/img からの場所に(フォルダが違っても名前で見つける)"""
+    return media.path(v)
 
 def size(v):
     with Image.open(os.path.join(IMG_DIR, img(v))) as im:
@@ -289,6 +287,8 @@ def render():
         s = re.sub(r'\{\{(?!img:|L:)(\w+)\}\}', lambda m: str(v[m.group(1)]), s)
     s = re.sub(r'\{\{L:(.*?)\|(.*?)\}\}', r'<span lang="ja">\1</span><span lang="en">\2</span>', s, flags=re.S)
     s = re.sub(r'\{\{img:([\w.\-/]+)\}\}', r'img/\1', s)
+    # 名前だけで書いた画像(img/foo.png)を、フォルダの中の場所に
+    s = re.sub(r'(?<![\w/.])img/([\w.\-/]+\.(?:png|webp|jpg|jpeg|gif|svg|mp4))', lambda m: 'img/' + media.path(m.group(1)), s)
     assert '{{' not in s, re.findall(r'\{\{[^}]*\}\}', s)[:5]
     # 使っている画像がそろっているか
     missing = sorted({m for m in re.findall(r'img/([\w.\-/]+\.(?:png|webp|jpg|jpeg|gif|svg))', s) if not os.path.exists(os.path.join(IMG_DIR, m))})

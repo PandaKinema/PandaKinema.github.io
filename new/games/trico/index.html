@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#090909">
   <title>TRICO! | PANDA KINEMA</title>
   <meta name="description" content="TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。">
+  <meta property="og:title" content="TRICO! | PANDA KINEMA">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="TRICO!(トリコ):カードを出し合い、場に出た色の数で勝敗が決まる「アピール」をくり返して3色をそろえる、2〜3人用のカードゲーム。パンダキネマ。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:url" content="https://pandakinema.github.io/new/games/trico/">
+  <meta property="og:image" content="https://pandakinema.github.io/new/img/trico/ogp_trico.png">
   <style>
     :root{--bg:#090909;--line:#2a2a2a;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
@@ -15,12 +21,12 @@
     .key{
       /* 色はトップ(ボードゲーム)のキーカラーから自動(build の apply) */
       --glow:255,236,150;
-      --band:url(../img/t_band.png?v=6d898a9a); --band-h:22px;          /* 帯の模様:パッケージの三角 */
-      --tex-c:url(../img/t_tex_c.png?v=38936893); --tex-size:92px 160px;
+      --band:url(../../img/trico/t_band.png?v=6d898a9a); --band-h:22px;          /* 帯の模様:パッケージの三角 */
+      --tex-c:url(../../img/trico/t_tex_c.png?v=38936893); --tex-size:92px 160px;
       --orb-glow:255,236,150;
-      --orn:url(../img/t_bird_sten.png?v=e36f86a2); --snum:url(../img/t_bird_sil.png?v=161d2c37);   /* 見出しの飾り:トリコのシルエット。反転しない */
+      --orn:url(../../img/trico/t_bird_sten.png?v=e36f86a2); --snum:url(../../img/trico/t_bird_sil.png?v=161d2c37);   /* 見出しの飾り:トリコのシルエット。反転しない */
     
-      --k-bg:#fdd000;--k-ink:#664498;--hl:#d4242b;--b2-bg:#664498;--b2-ink:#fdd000;--hl2:#fdd000;--sec-bg:#664498;--sec-ink:#fdd000;--accent:#664498;--on-accent:#fdd000;--buy-bg:#664498;--buy-ink:#fdd000;--p-ink:#664498;--soft:#fef3bf;--pan-bg:#664498;--pan-ink:#fff;--lt:#fdd000;--on-lt:#664498;--dk:#664498;--on-dk:#fdd000;--tex-c:url(../img/t_tex_c.png?v=38936893);--tex-size:92px 160px;--band:url(../img/t_band.png?v=6d898a9a);--band-h:24px;--band-d:block;--orn:url(../img/t_bird_sten.png?v=e36f86a2);--snum:url(../img/t_bird_sil.png?v=161d2c37);}
+      --k-bg:#fdd000;--k-ink:#664498;--hl:#d4242b;--b2-bg:#664498;--b2-ink:#fdd000;--hl2:#fdd000;--sec-bg:#664498;--sec-ink:#fdd000;--accent:#664498;--on-accent:#fdd000;--buy-bg:#664498;--buy-ink:#fdd000;--p-ink:#664498;--soft:#fef3bf;--pan-bg:#664498;--pan-ink:#fff;--lt:#fdd000;--on-lt:#664498;--dk:#664498;--on-dk:#fdd000;--tex-c:url(../../img/trico/t_tex_c.png?v=38936893);--tex-size:92px 160px;--band:url(../../img/trico/t_band.png?v=6d898a9a);--band-h:24px;--band-d:block;--orn:url(../../img/trico/t_bird_sten.png?v=e36f86a2);--snum:url(../../img/trico/t_bird_sil.png?v=161d2c37);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -95,6 +101,7 @@
     .hero.hero-stage .hero-main{margin-block:auto}
     .stage{position:relative;width:min(var(--sw,380px),58vw);margin:0 auto -5%}
     .stage .ly0{position:relative;display:block;width:100%}
+    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}
@@ -250,6 +257,10 @@
     .chara-slide.cur{visibility:visible;opacity:1;transition:opacity .35s ease,visibility 0s}
     .chara-slide .solo{width:100%;height:auto;animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
     .fig-wrap:has(.solo){width:min(220px,52vw)}
+    /* キャラの大きさが違っても名前の高さがそろうように、絵の枠の高さを固定して下にそろえる */
+    .chara-slide .fig-wrap{height:var(--fh,230px);display:flex;align-items:flex-end;justify-content:center}
+    .chara-slide .solo{width:auto;max-width:100%;max-height:100%}
+    .chara-slide .tupa{flex:none}
     .chara-fig{position:relative}
     .chara-fig:has(.cnav){padding-inline:58px}
     .cnav{position:absolute;top:min(110px,26vw);z-index:2;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;translate:0 -50%}
@@ -587,6 +598,7 @@
       .chara-in{gap:28px}
       .fig-wrap{width:min(130px,36vw)}
       .chara-fig figcaption{margin-top:16px}
+      .chara-slide .fig-wrap{--fh:180px}
       .chara-fig:has(.cnav){padding-inline:44px}
       .cnav{width:34px;height:34px}
       .chara-note{font-size:12.5px}
@@ -630,7 +642,7 @@
 <body>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../../"><img src="../../img/brand.png?v=329028a3" alt="PANDA KINEMA"></a>
+    <a class="brand" href="../../"><img src="../../img/site/brand.png?v=329028a3" alt="PANDA KINEMA"></a>
     <nav class="site-nav" aria-label="サイト"><a href="../../#news"><span class="cap">NEWS</span></a><a href="../../#board"><span class="cap">BOARD GAME</span></a><a href="../../#movie"><span class="cap">MOVIE</span></a><a href="../../#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="../../#about"><span class="cap">ABOUT</span></a></nav>
     <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true"><span class="cap">JA</span></button><button type="button" data-l="en" aria-pressed="false"><span class="cap">EN</span></button></div>
   </div>
@@ -642,8 +654,8 @@
     <div class="hero-art"></div>
     <div class="hero-copy">
       <div class="hero-main">
-        <div class="stage" aria-hidden="true"><img class="ly0 m-rise" style="--dl:0.10s;--bd:1.20s" src="../img/trico_bdg.png?v=c2531daa" alt=""></div>
-        <h1 id="title"><img class="logo" src="../img/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)" width="1021" height="382"></h1>
+        <div class="stage" aria-hidden="true"><img class="ly0 m-rise" style="--dl:0.10s;--bd:1.20s" src="../../img/trico/trico_bird.webp?v=3d35976d" alt=""><img class="ly m-pop" style="--x:-11%;--y:-36%;--w:22%;--r:-14deg;--dl:0.50s;--bd:0.40s" src="../../img/trico/gem_red.webp?v=1fd26f10" alt=""><img class="ly m-pop" style="--x:78%;--y:-32%;--w:30%;--r:8deg;--dl:0.65s;--bd:-0.40s" src="../../img/trico/gem_purple.webp?v=a131a0b4" alt=""><img class="ly m-pop" style="--x:-11%;--y:71%;--w:23%;--r:-6deg;--dl:0.80s;--bd:-1.20s" src="../../img/trico/gem_yellow.webp?v=bb3d28a8" alt=""></div>
+        <h1 id="title"><img class="logo" src="../../img/trico/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)" width="1021" height="382"></h1>
         <div class="billing">
           <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">2〜3人</span><span lang="en">2–3</span></dd></div>
@@ -665,7 +677,7 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/trico_poster.webp?v=545844ee" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
+          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/trico/trico_poster.webp?v=545844ee" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
@@ -684,7 +696,7 @@
         <p><span lang="ja">どこかに生息するカラフルな鳥、トリコ。<br>3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。<br>ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。<br>見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!</span><span lang="en">Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”</span></p>
       </div>
       <figure class="chara-fig reveal-chara">
-        <div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap"><img class="solo" src="../img/t_tricoP.webp?v=ded230d8" alt="ティガ（紫トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">ティガ（紫トリコ）</span><span lang="en">Purple Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../img/t_tricoR.webp?v=6483adcb" alt="トロワ（赤トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">トロワ（赤トリコ）</span><span lang="en">Red Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../img/t_tricoY.webp?v=a2e3f70f" alt="サン（黄トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">サン（黄トリコ）</span><span lang="en">Yellow Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../img/t_nico.webp?v=c1b4542c" alt="ニコ" width="406" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">ニコ</span><span lang="en">Nico</span></span></figcaption></div></div><button class="cnav prev js-only" type="button" aria-label="前のキャラクター"></button><button class="cnav next js-only" type="button" aria-label="次のキャラクター"></button><div class="cdots js-only"><i class="on"></i><i></i><i></i><i></i></div>
+        <div class="chara-slides"><div class="chara-slide cur"><div class="fig-wrap"><img class="solo" src="../../img/trico/t_tricoP.webp?v=ded230d8" alt="ティガ（紫トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">ティガ（紫トリコ）</span><span lang="en">Purple Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../../img/trico/t_tricoR.webp?v=6483adcb" alt="トロワ（赤トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">トロワ（赤トリコ）</span><span lang="en">Red Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../../img/trico/t_tricoY.webp?v=a2e3f70f" alt="サン（黄トリコ）" width="396" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">サン（黄トリコ）</span><span lang="en">Yellow Trico</span></span></figcaption></div><div class="chara-slide" aria-hidden="true"><div class="fig-wrap"><img class="solo" src="../../img/trico/t_nico.webp?v=c1b4542c" alt="ニコ" width="406" height="338" loading="lazy"></div><figcaption><span class="chara-name"><span lang="ja">ニコ</span><span lang="en">Nico</span></span></figcaption></div></div><button class="cnav prev js-only" type="button" aria-label="前のキャラクター"></button><button class="cnav next js-only" type="button" aria-label="次のキャラクター"></button><div class="cdots js-only"><i class="on"></i><i></i><i></i><i></i></div>
       </figure>
     </div>
   </section>
@@ -699,19 +711,19 @@
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
           <li class="step reveal s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1">1</span><p class="step-lead"><span><span lang="ja">リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、<em>同時に表向きに公開します。</em></span><span lang="en">The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then <em>reveal them at the same time.</em></span></span></p></div>
-            <div class="viz"><div class="tp1"><figure><img class="lead" src="../img/tc_lead_o.webp?v=0bd15a45" alt="リードプレイヤーマーカー"><img class="tcd " style="--i:0" src="../img/tc_y21.webp?v=bc8826c5" alt="黄の21"><figcaption><span lang="ja">リードプレイヤー</span><span lang="en">Lead player</span></figcaption></figure><figure><span class="lf" style="--i:1"><img class="c back" src="../img/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../img/tc_p30.webp?v=a550956f" alt="紫の30"></span><span class="lf" style="--i:2"><img class="c back" src="../img/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../img/tc_y12.webp?v=55b15df4" alt="黄の12"></span><figcaption><span lang="ja">同時に公開</span><span lang="en">Reveal together</span></figcaption></figure></div></div>
+            <div class="viz"><div class="tp1"><figure><img class="lead" src="../../img/trico/parts/tc_lead_o.webp?v=0bd15a45" alt="リードプレイヤーマーカー"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_y21.webp?v=bc8826c5" alt="黄の21"><figcaption><span lang="ja">リードプレイヤー</span><span lang="en">Lead player</span></figcaption></figure><figure><span class="lf" style="--i:1"><img class="c back" src="../../img/trico/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/trico/parts/tc_p30.webp?v=a550956f" alt="紫の30"></span><span class="lf" style="--i:2"><img class="c back" src="../../img/trico/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/trico/parts/tc_y12.webp?v=55b15df4" alt="黄の12"></span><figcaption><span lang="ja">同時に公開</span><span lang="en">Reveal together</span></figcaption></figure></div></div>
           </li>
           <li class="step reveal s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2">2</span><p class="step-lead"><span><span lang="ja">場に揃った<em>色の数</em>で勝敗を決めます。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になります。</span><span lang="en">The <em>number of colors</em> on the table decides the winner. If more than one card wins, the Appeal is void and all cards are discarded.</span></span></p></div>
-            <div class="viz"><div class="tjudge"><div class="trow" style="--i:0"><span class="tlabel"><span lang="ja">1色</span><span lang="en">1</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../img/tc_p3.webp?v=761eae70" alt="紫の3"><img class="tcd " style="--i:0" src="../img/tc_p12.webp?v=7743f0db" alt="紫の12"><span class="tw" style="--i:0"><img class="tcd " style="--i:0" src="../img/tc_p24.webp?v=3dfd348e" alt="紫の24"><b>WIN</b></span></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div><div class="trow" style="--i:1"><span class="tlabel"><span lang="ja">2色</span><span lang="en">2</span></span><span class="tcards"><span class="tw" style="--i:1"><img class="tcd " style="--i:0" src="../img/tc_p3.webp?v=761eae70" alt="紫の3"><b>WIN</b></span><img class="tcd " style="--i:0" src="../img/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="tcd " style="--i:0" src="../img/tc_r27.webp?v=2cf7026f" alt="赤の27"></span><span class="trule"><span lang="ja">同じ色の中で<br>最も小さい数</span><span lang="en">Lowest of<br>the pair color</span></span></div><div class="trow" style="--i:2"><span class="tlabel"><span lang="ja">3色</span><span lang="en">3</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../img/tc_p9.webp?v=a9dbb6fc" alt="紫の9"><span class="tw" style="--i:2"><img class="tcd " style="--i:0" src="../img/tc_y24.webp?v=e85d8da9" alt="黄の24"><b>WIN</b></span><img class="tcd " style="--i:0" src="../img/tc_r15.webp?v=1d279c82" alt="赤の15"></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div></div></div>
+            <div class="viz"><div class="tjudge"><div class="trow" style="--i:0"><span class="tlabel"><span lang="ja">1色</span><span lang="en">1</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p3.webp?v=761eae70" alt="紫の3"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p12.webp?v=7743f0db" alt="紫の12"><span class="tw" style="--i:0"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><b>WIN</b></span></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div><div class="trow" style="--i:1"><span class="tlabel"><span lang="ja">2色</span><span lang="en">2</span></span><span class="tcards"><span class="tw" style="--i:1"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p3.webp?v=761eae70" alt="紫の3"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span><span class="trule"><span lang="ja">同じ色の中で<br>最も小さい数</span><span lang="en">Lowest of<br>the pair color</span></span></div><div class="trow" style="--i:2"><span class="tlabel"><span lang="ja">3色</span><span lang="en">3</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p9.webp?v=a9dbb6fc" alt="紫の9"><span class="tw" style="--i:2"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_y24.webp?v=e85d8da9" alt="黄の24"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_r15.webp?v=1d279c82" alt="赤の15"></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div></div></div>
           </li>
           <li class="step reveal s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3">3</span><p class="step-lead"><span><span lang="ja">アピールの勝者は場に出た3枚のカードのうち、<em>好きなカードを1枚獲得</em>し、手元に表向きで置きます。</span><span lang="en">The winner of the Appeal <em>takes any one</em> of the 3 cards played and places it face up in front of them.</span></span></p></div>
-            <div class="viz"><div class="tp3"><img class="tcd " style="--i:0" src="../img/tc_p3.webp?v=761eae70" alt="紫の3"><span class="tpick"><img class="tcd " style="--i:1" src="../img/tc_r27.webp?v=2cf7026f" alt="赤の27"><b><span lang="ja">獲得!</span><span lang="en">Take!</span></b></span><img class="tcd " style="--i:2" src="../img/tc_p24.webp?v=3dfd348e" alt="紫の24"></div></div>
+            <div class="viz"><div class="tp3"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p3.webp?v=761eae70" alt="紫の3"><span class="tpick"><img class="tcd " style="--i:1" src="../../img/trico/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"><b><span lang="ja">獲得!</span><span lang="en">Take!</span></b></span><img class="tcd " style="--i:2" src="../../img/trico/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"></div></div>
           </li>
           <li class="step reveal s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4">4</span><p class="step-lead"><span><span lang="ja">獲得したカードが2色になったら「<em>ニコ</em>!」、3色になったら「<em>トリコ</em>!」と宣言します。トリコマーカーを2つ獲得したらゲーム終了!</span><span lang="en">Declare <em>“Nico!”</em> when your cards hold 2 colors, and <em>“Trico!”</em> at 3 colors. Collect 2 Trico markers to win the game!</span></span></p></div>
-            <div class="viz"><div class="tp4"><div class="thand"><img class="tcd " style="--i:0" src="../img/tc_p12.webp?v=7743f0db" alt="紫の12"><img class="tcd " style="--i:1" src="../img/tc_y6.webp?v=eedbd274" alt="黄の6"><span class="tbub nico2"><span lang="ja">ニコ!</span><span lang="en">Nico!</span></span><img class="tcd late" style="--i:2" src="../img/tc_r18.webp?v=1c956465" alt="赤の18"></div><div class="twin"><span class="tbub trico3"><span lang="ja">トリコ!</span><span lang="en">Trico!</span></span><img class="wbird" src="../img/t_tricoP.webp?v=ded230d8" alt=""><img class="mk" src="../img/t_marker.webp?v=5ae7ebe2" alt="トリコマーカー"></div></div></div>
+            <div class="viz"><div class="tp4"><div class="thand"><img class="tcd " style="--i:0" src="../../img/trico/parts/tc_p12.webp?v=7743f0db" alt="紫の12"><img class="tcd " style="--i:1" src="../../img/trico/parts/tc_y6.webp?v=eedbd274" alt="黄の6"><span class="tbub nico2"><span lang="ja">ニコ!</span><span lang="en">Nico!</span></span><img class="tcd late" style="--i:2" src="../../img/trico/parts/tc_r18.webp?v=1c956465" alt="赤の18"></div><div class="twin"><span class="tbub trico3"><span lang="ja">トリコ!</span><span lang="en">Trico!</span></span><img class="wbird" src="../../img/trico/t_tricoP.webp?v=ded230d8" alt=""><img class="mk" src="../../img/trico/t_marker.webp?v=5ae7ebe2" alt="トリコマーカー"></div></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
@@ -724,10 +736,10 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title"><span lang="ja">ギャラリー</span><span lang="en">Gallery</span></h2></div></header>
       <div class="gallery reveal">
-        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(表)を大きく見る"><img src="../img/tg_manual1.webp?v=6ca41952" alt="遊び方説明書(表)" loading="lazy"></button></figure>
-        <figure class=""><button class="gitem" type="button" aria-label="パッケージを大きく見る"><img src="../img/trico_pkg_lg.webp?v=bb6ba4aa" alt="パッケージ" loading="lazy"></button></figure>
-        <figure class=""><button class="gitem" type="button" aria-label="サマリーを大きく見る"><img src="../img/tg_summary.webp?v=b5795c5a" alt="サマリー" loading="lazy"></button></figure>
-        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(裏)を大きく見る"><img src="../img/tg_manual2.webp?v=f432653f" alt="遊び方説明書(裏)" loading="lazy"></button></figure>
+        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(表)を大きく見る"><img src="../../img/trico/tg_manual1.webp?v=6ca41952" alt="遊び方説明書(表)" loading="lazy"></button></figure>
+        <figure class=""><button class="gitem" type="button" aria-label="パッケージを大きく見る"><img src="../../img/trico/trico_pkg_lg.webp?v=bb6ba4aa" alt="パッケージ" loading="lazy"></button></figure>
+        <figure class=""><button class="gitem" type="button" aria-label="サマリーを大きく見る"><img src="../../img/trico/tg_summary.webp?v=b5795c5a" alt="サマリー" loading="lazy"></button></figure>
+        <figure class="wide"><button class="gitem" type="button" aria-label="遊び方説明書(裏)を大きく見る"><img src="../../img/trico/tg_manual2.webp?v=f432653f" alt="遊び方説明書(裏)" loading="lazy"></button></figure>
       </div>
     </div>
   </section>
@@ -736,9 +748,9 @@
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
     <div class="panel buy-box reveal">
-      <img class="pkg" src="../img/trico_pkg_lg.webp?v=bb6ba4aa" alt="TRICO!のパッケージ" width="567" height="900" loading="lazy">
+      <img class="pkg" src="../../img/trico/trico_pkg_lg.webp?v=bb6ba4aa" alt="TRICO!のパッケージ" width="567" height="900" loading="lazy">
       <div>
-        <img class="buy-logo" src="../img/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)" loading="lazy">
+        <img class="buy-logo" src="../../img/trico/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)" loading="lazy">
         <dl class="spec">
             <div><dt><span lang="ja">人数</span><span lang="en">Players</span></dt><dd><span lang="ja">2〜3人</span><span lang="en">2–3</span></dd></div>
             <div><dt><span lang="ja">時間</span><span lang="en">Time</span></dt><dd><span lang="ja">10〜15分</span><span lang="en">10–15 min</span></dd></div>
@@ -757,18 +769,18 @@
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">RELATED</p><div class="sec-row"><h2 class="pill sec-h" id="related-title"><span lang="ja">関連コンテンツ</span><span lang="en">Related</span></h2></div></header>
       <ul class="bg-row rel-row reveal">
-      <li><a class="bg-card bg-link" href="https://note.com/pandakinema/n/nd803fbd766f7" target="_blank" rel="noopener"><img class="bl-img" src="../img/ogp/9988a91c9fb6.png?v=10899489" alt="" loading="lazy"><span class="bl-t"><b>大事なのは“引き算”だった【『Trico!』 デザイナーズノート】｜ゐするぎ(パンダキネマ)</b><small>note（ノート） ↗</small></span></a></li>
+      <li><a class="bg-card bg-link" href="https://note.com/pandakinema/n/nd803fbd766f7" target="_blank" rel="noopener"><img class="bl-img" src="../../img/links/9988a91c9fb6.png?v=10899489" alt="" loading="lazy"><span class="bl-t"><b>大事なのは“引き算”だった【『Trico!』 デザイナーズノート】｜ゐするぎ(パンダキネマ)</b><small>note（ノート） ↗</small></span></a></li>
       </ul>
     </div>
   </section>
   <dialog class="lb" aria-label="写真"><img alt=""><button class="lb-x" type="button" aria-label="閉じる">×</button></dialog>
 
-  <a class="fab buy" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../img/trico_pkg.webp?v=ab9aa111" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+  <a class="fab buy" href="https://pandakinema.booth.pm/" target="_blank" rel="noopener"><img src="../../img/trico/trico_pkg.webp?v=ab9aa111" alt="" width="44" height="67"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
 </main>
 
 <!-- 5. クレジット -->
 <section class="credits wrap reveal-credits" aria-label="クレジット">
-  <img class="credits-logo" src="../img/trico_logo_white.png?v=a302ace8" alt="TRICO!(トリコ)" loading="lazy">
+  <img class="credits-logo" src="../../img/trico/trico_logo_white.png?v=a302ace8" alt="TRICO!(トリコ)" loading="lazy">
   <dl class="roll">
     <div style="--i:0"><dt><span lang="ja">デザイン・アートワーク</span><span lang="en">Design &amp; Artwork</span></dt><dd><span lang="ja">ゐするぎ</span><span lang="en">Isurugi</span></dd></div>
     <div style="--i:1"><dt><span lang="ja">印刷</span><span lang="en">Printing</span></dt><dd><span lang="ja">グラフィック</span><span lang="en">グラフィック</span></dd></div>
@@ -785,13 +797,13 @@
   <div class="wrap">
     <h2 class="lineup-h" id="lineup-title"><span class="cap">CONTENTS</span></h2>
     <ul class="bg-row">
-      <li><a class="bg-card" href="../bibilu/"><img src="../../img/bibilu_bdg.png?v=9fa8f8d5" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span class="cap">NEW</span></span></a></li>
-      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
-      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/mocochaka_bdg.png?v=5e4e8348" alt="モコチャカ" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/koikoi_bdg.png?v=7c92af56" alt="こいこいのぼり 真打" loading="lazy"></a></li>
-      <li><a class="bg-card" href="../../#board"><img src="../../img/bash_bdg.png?v=d4d42c16" alt="BASH&amp;SMASH" loading="lazy"></a></li>
-      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp?v=f35a06f0" alt=""><img class="to" src="../../img/b_tupa_orb.webp?v=3f820354" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
-      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/card-mock-maker/" target="_blank" rel="noopener" style="background:#2a3138;color:#ffffff"><img class="bt-shot" src="../../img/tool_cmm_thumb.webp?v=cb45d90f" alt="" loading="lazy"><span class="bt-name">カードモックツクール β</span></a></li>
+      <li><a class="bg-card" href="../bibilu/"><img src="../../img/bibilu/bibilu_bdg.png?v=9fa8f8d5" alt="ビビルの塔" loading="lazy"><span class="bg-new"><span class="cap">NEW</span></span></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/186696" target="_blank" rel="noopener"><img src="../../img/ikatako/ikatako_bdg.png?v=bfbb205c" alt="イカタコ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="https://gamemarket.jp/game/187698" target="_blank" rel="noopener"><img src="../../img/moko/mocochaka_bdg.png?v=5e4e8348" alt="モコチャカ" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/koikoi/koikoi_bdg.png?v=7c92af56" alt="こいこいのぼり 真打" loading="lazy"></a></li>
+      <li><a class="bg-card" href="../../#board"><img src="../../img/bash/bash_bdg.png?v=d4d42c16" alt="BASH&amp;SMASH" loading="lazy"></a></li>
+      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/bibilu-moji/" target="_blank" rel="noopener" style="background:#163f53;color:#ffffff"><span class="bt-tupa"><img class="tb" src="../../img/b_tupa_body.webp" alt=""><img class="to" src="../../img/b_tupa_orb.webp" alt=""></span><span class="bt-name"><img class="bt-title" src="../../img/tools/moji_title.png?v=ea6476ce" alt="ビビル文字ジェネレータ" loading="lazy"></span></a></li>
+      <li><a class="bg-card bg-tool" href="https://pandakinema.github.io/card-mock-maker/" target="_blank" rel="noopener" style="background:#2a3138;color:#ffffff"><img class="bt-shot" src="../../img/tools/tool_cmm_thumb.webp?v=cb45d90f" alt="" loading="lazy"><span class="bt-name">カードモックツクール β</span></a></li>
     </ul>
   </div>
 </section>

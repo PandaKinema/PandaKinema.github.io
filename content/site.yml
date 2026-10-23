@@ -5,9 +5,9 @@ gamemarket: https://gamemarket.jp/booth/6184
 note: https://note.com/pandakinema
 member_x: https://x.com/panda_kinema
 mail: pandak11415@gmail.com
-ogp_image: ogp/ogp_bibilu.png
-header_logo: img/brand.png
-about_logo: img/logo_pk_kana.png
+ogp_image: img/bibilu/ogp_bibilu.png
+header_logo: img/site/brand.png
+about_logo: img/site/logo_pk_kana.png
 member_label: DIRECTOR
 member_name_ja: ゐするぎ
 member_name_en: Isurugi
@@ -15,7 +15,7 @@ member_role: Game Design / Artwork
 member_bio_ja: '中の人。グラフィックデザイナー５年目。
 
   映画やゲームを始めとする、おもしろいものが好き。'
-icon: img/pk_icon.png
+icon: img/site/pk_icon.png
 about_ja: '世界観から遊びまでを1つの作品として制作する創作サークルです。
 
   2015年から活動しており、ゲームマーケットには2025年から出展しています。

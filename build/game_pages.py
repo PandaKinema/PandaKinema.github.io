@@ -28,8 +28,9 @@ import base64, mimetypes, os, re, sys, html as H
 mimetypes.add_type('image/webp', '.webp')
 import yaml
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WEB = os.path.join(ROOT, 'new', 'games', 'img')   # 作品ページの画像(編集画面の「作品ページの画像」)
-TOP_IMG = os.path.join(ROOT, 'new', 'img')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import media
+WEB = TOP_IMG = media.IMG   # 画像はすべて new/img(作品ごとのフォルダ)
 MANUAL_JA = '#'   # 遊び方説明書(日本語)のURLが決まったら差し替え
 MANUAL_EN = '#'   # 英語版のURL
 BOOTH = 'https://pandakinema.booth.pm/'   # 商品ページのURLが決まったら差し替え
@@ -38,19 +39,16 @@ def L(ja, en):   # 日本語/英語。切替ボタンで表示が変わる
     return '{{L:%s|%s}}' % (ja, en)
 
 def uri(f):   # 作品ページ(new/games/<key>/)から見た画像の場所
-    if not os.path.exists(os.path.join(WEB, f)):
-        sys.exit('見つからない画像があります: new/games/img/' + f)
-    return '../img/' + f
+    p = media.path(f)
+    if not os.path.isfile(os.path.join(WEB, p)):
+        sys.exit('見つからない画像があります: new/img/' + f)
+    return '../../img/' + p
 
 def load(path):
     with open(os.path.join(ROOT, path), encoding='utf-8') as fh:
         return yaml.safe_load(fh) or {}
-def imgname(v):   # 画像の欄の値(img/foo.png、/new/games/img/foo.png など)を名前だけに
-    v = str(v or '').strip().lstrip('/')
-    for pre in ('new/games/img/', 'games/img/', 'img/'):
-        if v.startswith(pre):
-            return v[len(pre):]
-    return v
+def imgname(v):   # 画像の欄の値(img/trico/foo.png、foo.png など)を new/img からの場所に
+    return media.path(v)
 def LL(d, k):   # 編集画面の _ja / _en を切替用の文字に(英語が空なら日本語)
     ja = str(d.get(k + '_ja') or ''); en = str(d.get(k + '_en') or '') or ja
     return L(ja, en) if ja else ''
@@ -81,7 +79,7 @@ def num(v, default):
 def hero(g, d, t):
     """メインビジュアル(編集画面の「メインビジュアル」)
     ・背景の絵:画面いっぱいに敷く(ビビルの塔)
-    ・部品:模様の上に画像を重ねて動かす(TRICO!)。1枚目が土台、2枚目からは土台に対する位置(%)
+    ・部品:模様の上に画像を重ねて動かす(TRICO!)。1枚目が土台、2枚目からは土台に対する位置(%)。部品があるときはトップ画像より優先(トップ画像を見本に組む)
     ・どちらもなければ、トップの閉じたカードの画像を出す"""
     h = d.get('hero') or {}
     style = []
@@ -89,11 +87,12 @@ def hero(g, d, t):
     style.append('--lw:%dpx' % min(600, round(168 * lw / lh)))   # ロゴは高さ168pxくらい(幅600pxまで)
     g['h1_cls'] = ''
     art_wide = False
-    if h.get('art'):   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
+    if h.get('art') and not [x for x in (h.get('layers') or []) if x.get('image')]:   # 部品(Claudeが設定)があればそちらを優先。トップ画像は見本   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
         from PIL import Image
         with Image.open(os.path.join(WEB, imgname(h['art']))) as im:
             aw, ah = im.size
-        art_wide = aw >= ah * 1.2
+        fit = str(h.get('fit') or '')   # cover=全面に敷く / center=置く(Claudeが設定)。空なら形で決める
+        art_wide = fit == 'cover' or (fit != 'center' and aw >= ah * 1.2)
         if not art_wide:
             h = dict(h, layers=[{'image': h['art'], 'motion': 'rise'}], pattern=h.get('pattern'))
     if art_wide:
@@ -163,6 +162,7 @@ def apply(key):
     # 動画は「動画」(一元管理)から、この作品のものだけ
     g['videos'] = [v for v in (load('content/videos.yml') or []) if v.get('work') == key]
     g['related'] = [str(x) for x in (d.get('related') or []) if x]
+    g['ogp_image'] = d.get('ogp_image') or ''
     g['related_links'] = [x for x in (d.get('related_links') or []) if x.get('url')]
     # 人数・時間・年齢は トップ(ボードゲーム)の設定と同じものを使う
     t = games.get(key)
@@ -217,19 +217,19 @@ def apply(key):
     hero(g, d, t)
     if 'bg1_image' in d:
         if d.get('bg1_image'):
-            f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
+            f, w, h = tile(d['bg1_image']); css.append('--tex-c:url(../../img/%s);--tex-size:%dpx %dpx' % (f, w, h))
         else:
             css.append('--tex-c:none')
     if d.get('bg2_image'):
-        f, w, h = tile(d['bg2_image']); css.append('--b2-img:url(../img/%s);--b2-size:%dpx %dpx' % (f, w, h))
+        f, w, h = tile(d['bg2_image']); css.append('--b2-img:url(../../img/%s);--b2-size:%dpx %dpx' % (f, w, h))
     if 'band_image' in d:
         if d.get('band_image'):
-            f, w, h = tile(d['band_image']); css.append('--band:url(../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
+            f, w, h = tile(d['band_image']); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
         else:
             css.append('--band-d:none')
     for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
         if d.get(k):
-            css.append('%s:url(../img/%s)' % (var, imgname(d[k])))
+            css.append('%s:url(../../img/%s)' % (var, imgname(d[k])))
     if css:
         g['theme'] += '\n      ' + ';'.join(css) + ';'
     # STORY のキャラクター:1体ずつ表示。複数いるときは ◀▶ で切り替え。それぞれ名前とプロフィール
@@ -484,6 +484,11 @@ TEMPLATE = r'''<!doctype html>
   <meta name="theme-color" content="#090909">
   <title>{{title}} | PANDA KINEMA</title>
   <meta name="description" content="{{description}}">
+  <meta property="og:title" content="{{title}} | PANDA KINEMA">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="{{description}}">
+  <meta name="twitter:card" content="summary_large_image">
+{{ogp_meta}}
   <style>
     :root{--bg:#090909;--line:#2a2a2a;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
@@ -565,6 +570,7 @@ TEMPLATE = r'''<!doctype html>
     .hero.hero-stage .hero-main{margin-block:auto}
     .stage{position:relative;width:min(var(--sw,380px),58vw);margin:0 auto -5%}
     .stage .ly0{position:relative;display:block;width:100%}
+    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}
@@ -658,6 +664,10 @@ TEMPLATE = r'''<!doctype html>
     .chara-slide.cur{visibility:visible;opacity:1;transition:opacity .35s ease,visibility 0s}
     .chara-slide .solo{width:100%;height:auto;animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
     .fig-wrap:has(.solo){width:min(220px,52vw)}
+    /* キャラの大きさが違っても名前の高さがそろうように、絵の枠の高さを固定して下にそろえる */
+    .chara-slide .fig-wrap{height:var(--fh,230px);display:flex;align-items:flex-end;justify-content:center}
+    .chara-slide .solo{width:auto;max-width:100%;max-height:100%}
+    .chara-slide .tupa{flex:none}
     .chara-fig{position:relative}
     .chara-fig:has(.cnav){padding-inline:58px}
     .cnav{position:absolute;top:min(110px,26vw);z-index:2;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:var(--b2-ink);cursor:pointer;translate:0 -50%}
@@ -995,6 +1005,7 @@ TEMPLATE = r'''<!doctype html>
       .chara-in{gap:28px}
       .fig-wrap{width:min(130px,36vw)}
       .chara-fig figcaption{margin-top:16px}
+      .chara-slide .fig-wrap{--fh:180px}
       .chara-fig:has(.cnav){padding-inline:44px}
       .cnav{width:34px;height:34px}
       .chara-note{font-size:12.5px}
@@ -1359,10 +1370,10 @@ def link_card(x):   # リンク(note の記事など):ページのOGPからタ�
     title = str(x.get('title') or info.get('title') or url)
     pic = imgname(x['image']) if x.get('image') else ''
     if pic:
-        src = '../img/' + pic
+        src = '../../img/' + pic
     else:
         im = info.get('image') or ''
-        src = ('../img/' + im) if im.startswith('ogp/') else im
+        src = ('../../img/' + im) if im.startswith('links/') else im
     site = info.get('site') or re.sub(r'^www\.', '', url.split('/')[2] if '//' in url else url)
     return '      <li><a class="bg-card bg-link" href="%s" target="_blank" rel="noopener">%s<span class="bl-t"><b>%s</b><small>%s ↗</small></span></a></li>' % (
         e(url), ('<img class="bl-img" src="%s" alt="" loading="lazy">' % e(src)) if src else '<span class="bl-img bl-none"></span>', e(title), e(site))
@@ -1415,12 +1426,13 @@ def render(key):
         lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),
         related_html=related_html(g, key),
         video_hidden='' if g['videos'] else ' hidden',
+        ogp_meta=('  <meta property="og:url" content="https://pandakinema.github.io/new/games/%s/">\n  <meta property="og:image" content="https://pandakinema.github.io/new/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
     )
     s = TEMPLATE
     for _ in range(3):
         s = re.sub(r'\{\{(?!img:)(\w+)\}\}', lambda m: str(v[m.group(1)]), s)
     s = re.sub(r'\{\{L:(.*?)\|(.*?)\}\}', r'<span lang="ja">\1</span><span lang="en">\2</span>', s)
-    s = re.sub(r'\{\{img:([\w.\-]+)\}\}', lambda m: uri(m.group(1)), s)
+    s = re.sub(r'\{\{img:([\w.\-/]+)\}\}', lambda m: uri(m.group(1)), s)
     assert '{{' not in s, re.findall(r'\{\{[^}]*\}\}', s)[:5]
     return s
 
@@ -1430,7 +1442,7 @@ if __name__ == '__main__':
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         from build import bust
-        open(out, 'w', encoding='utf-8').write(bust(render(key), {'../../img/': TOP_IMG, '../img/': WEB}))
+        open(out, 'w', encoding='utf-8').write(bust(render(key), {'../../img/': TOP_IMG}))
         print(out, os.path.getsize(out))
     if OGP_CACHE is not None:
         import ogp
