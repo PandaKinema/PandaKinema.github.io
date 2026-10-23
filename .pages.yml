@@ -65,9 +65,9 @@ content:
       - { name: front, label: 閉じたカードの画像, type: image, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
       - { name: pkg, label: パッケージ, type: image, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
-      - { name: logo_color, label: ロゴの色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "例:#664498。空ならロゴ画像の色のまま。色見本 → pandakinema.github.io/new/colors.html" }
-      - { name: color_face, label: 開いたカードの背景色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#fdd000 のような6けたの色コードで" }, description: "人数〜年齢の文字の色にもなります。例:#fdd000" }
-      - { name: color_band, label: 人数〜年齢の下地の色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "ジャンルの文字の色にもなります。例:#664498" }
+      - { name: logo_color, label: ロゴの色, type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "例:#664498。空ならロゴ画像の色のまま。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: color_face, label: 開いたカードの背景色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#fdd000 のような6けたの色コードで" }, description: "人数〜年齢の文字の色にもなります。例:#fdd000。色見本 → https://pandakinema.github.io/new/colors.html" }
+      - { name: color_band, label: 人数〜年齢の下地の色, type: string, pattern: { regex: "^#[0-9a-fA-F]{6}$", message: "#664498 のような6けたの色コードで" }, description: "ジャンルの文字の色にもなります。例:#664498。色見本 → https://pandakinema.github.io/new/colors.html" }
       - { name: players, label: 人数, type: string, description: "例:2〜4" }
       - { name: time, label: 時間(分), type: string, description: "例:10〜15" }
       - { name: age, label: 対象年齢, type: string, description: "例:6" }
@@ -81,11 +81,11 @@ content:
         label: バナー
         type: object
         fields:
-          - { name: bg, label: 背景色, type: string, description: "空ならキーカラー2" }
+          - { name: bg, label: 背景色, type: string, description: "空ならキーカラー2。色見本 → https://pandakinema.github.io/new/colors.html" }
           - { name: pattern, label: 背景の模様, type: string, description: "tri(トリコの三角)か、空" }
           - { name: image, label: 背景画像, type: image, description: "入れるとパッケージの代わりにこの画像を背景にします。横1920px以上、文字なし。左側に文字とボタンが重なります" }
-          - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色" }
-          - { name: text_color, label: 文字の色, type: string, description: "人数〜ジャンルと紹介文の色。例:#ffffff" }
+          - { name: logo_color, label: ロゴの色, type: string, description: "空ならカードと同じ色。色見本 → https://pandakinema.github.io/new/colors.html" }
+          - { name: text_color, label: 文字の色, type: string, description: "人数〜ジャンルと紹介文の色。例:#ffffff。色見本 → https://pandakinema.github.io/new/colors.html" }
           - { name: video, label: 動画, type: file, description: "背景で流す動画(mp4・音なしでくり返し)。入れるとパッケージの代わりに流れます。10MB以下くらいに" }
           - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
