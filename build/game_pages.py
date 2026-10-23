@@ -86,6 +86,20 @@ def hero(g, d, t):
     lw, lh = g['logo_size']
     style.append('--lw:%dpx' % min(600, round(168 * lw / lh)))   # ロゴは高さ168pxくらい(幅600pxまで)
     g['h1_cls'] = ''
+    # トップは画像が主役:背景の色はページの色ではなく、トップ画像(なければ閉じたカード)の地の色から取る
+    hbg = None
+    src = h.get('art') or t.get('front')
+    if src:
+        from PIL import Image
+        with Image.open(os.path.join(WEB, imgname(src))) as im:
+            px = im.convert('RGB').crop((0, 0, min(160, im.width), min(160, im.height))).getcolors(1 << 20) or []
+        top = [c for _, c in sorted(px, reverse=True)[:2]]
+        if top:
+            c = max(top, key=lambda x: sum(x))   # よく使われている2色のうち明るい方(模様の地)
+            hbg = '#%02x%02x%02x' % c
+            M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
+            fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hbg) >= 4.5, x in (M, A), contrast(x, hbg)))
+            style.append('--hero-bg:%s;--hero-ink:%s' % (hbg, fg))
     art_wide = False
     if h.get('art') and not [x for x in (h.get('layers') or []) if x.get('image')]:   # 部品(Claudeが設定)があればそちらを優先。トップ画像は見本   # トップ画像:横長なら全面に敷く、縦長・正方形なら背景の色の上に置く
         from PIL import Image
@@ -105,7 +119,7 @@ def hero(g, d, t):
         g['hero_cls'] = 'hero-stage'
         g['hero_art'] = '<div class="hero-art"></div>'
         if h.get('pattern') == 'tri':
-            style.append('--pat:%s;--pat-size:92px 160px' % tri_pattern(g.get('_D') or t.get('main') or '#fdd000'))
+            style.append('--pat:%s;--pat-size:92px 160px' % tri_pattern(hbg or g.get('_D') or t.get('main') or '#fdd000'))
         if h.get('width'):
             style.append('--sw:%dpx' % num(h['width'], 380))
         layers = [x for x in (h.get('layers') or []) if x.get('image')]
@@ -565,12 +579,12 @@ TEMPLATE = r'''<!doctype html>
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
-    .hero.hero-stage{color:var(--k-ink)}
-    .hero.hero-stage .hero-art{background:var(--k-bg) var(--pat,none) center top/var(--pat-size,auto)}
+    .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
+    .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}
     .hero.hero-stage .hero-main{margin-block:auto}
     .stage{position:relative;width:min(var(--sw,380px),58vw);margin:0 auto -5%}
     .stage .ly0{position:relative;display:block;width:100%}
-    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分
+    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分 */
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}

@@ -96,12 +96,12 @@
     .hero.hero-cover{color:var(--lt)}
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%)}
     .hero.hero-cover .hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--k-bg) 45%,transparent),transparent 16%,transparent 52%,color-mix(in srgb,var(--k-bg) 86%,transparent) 82%,var(--k-bg))}
-    .hero.hero-stage{color:var(--k-ink)}
-    .hero.hero-stage .hero-art{background:var(--k-bg) var(--pat,none) center top/var(--pat-size,auto)}
+    .hero.hero-stage{color:var(--hero-ink,var(--k-ink))}
+    .hero.hero-stage .hero-art{background:var(--hero-bg,var(--k-bg)) var(--pat,none) center top/var(--pat-size,auto)}
     .hero.hero-stage .hero-main{margin-block:auto}
     .stage{position:relative;width:min(var(--sw,380px),58vw);margin:0 auto -5%}
     .stage .ly0{position:relative;display:block;width:100%}
-    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分
+    .stage:has(.ly){margin-top:clamp(36px,7vw,96px)}   /* 上にはみ出す部品の分 */
     .stage .ly{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--r,0deg)}
     .stage .card-face{border-radius:14px;box-shadow:0 26px 40px -18px rgba(0,0,0,.5)}
     .stage:has(.card-face){width:min(var(--sw,300px),62vw);margin:0 auto}
@@ -601,7 +601,7 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover" style="--lw:600px;--art-pos:45% 64%" aria-labelledby="title">
+  <section class="hero hero-cover" style="--lw:600px;--hero-bg:#039497;--hero-ink:#fff5d7;--art-pos:45% 64%" aria-labelledby="title">
     <div class="hero-art"><img class="art" src="../../img/page/b_art.jpg?v=c3244d4a" alt="" fetchpriority="high"></div>
     <div class="hero-copy">
       <div class="hero-main">
