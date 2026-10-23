@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v39
+# パンダキネマ 作品ページ 共通フォーマット v40
+#     v40: 強調は選んだ色か赤、読みにくければ太字だけ/遊び方の図の下地はメインカラーの薄色
 #     v39: 文字は決めた色・白・黒だけ/強調は色を変える(基本は赤、編集画面で選べる。読みにくければ自動でほかの色)
 #     v38: 作品ページの幅に上限(1440px)。その外はサイトの黒い下地
 #     v37: トップの絵はいつも全部見せる(画面の高さに合わせる)。横長の画面では左右を模様か端の色でつなぐ
@@ -309,7 +310,7 @@ def apply(key):
         hl_want = HLC.get(str(d.get('hl_color') or 'red')) or RED
         def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ。色を変える(基本は赤)。読みにくければほかの決めた色
             fg = ink(bg, fg_pref)
-            for c in [fixed, hl_want, RED] + PAL + ['#ffffff', '#000000']:
+            for c in [fixed, hl_want, RED]:   # 選んだ色か赤。どちらも読みにくければ太字だけ
                 if c and contrast(c, fg) >= 1.8 and contrast(c, bg) >= 3:   # 地で読めて、文字の色ともはっきり違う
                     return fg, c
             return fg, fg
@@ -320,7 +321,7 @@ def apply(key):
         css.append('--sec-bg:%s;--sec-ink:%s' % (O, ink(O, D)))         # 見出しのピル
         css.append('--accent:%s;--on-accent:%s' % (O, ink(O, D)))       # ふつうのボタン
         css.append('--buy-bg:%s;--buy-ink:%s' % (M, ink(M, A)))         # BOOTHで購入:土台がメインカラー、文字がアクセントカラー
-        soft = mix(dark, '#ffffff', .07) if lum(light) >= .97 else (light if lum(light) >= .8 else mix(light, '#ffffff', .25))   # 遊び方の図の地
+        soft = mix(M, '#ffffff', .15)   # 遊び方の図の下地:メインカラーを15%だけ白に重ねた色
         css.append('--p-ink:%s;--soft:%s;--pan-bg:%s;--pan-ink:#fff' % (p_ink, soft, p_ink))
         css.append('--lt:%s;--on-lt:%s;--dk:%s;--on-dk:%s' % (light, ink(light, dark), dark, ink(dark, light)))
         g['_D'] = D
