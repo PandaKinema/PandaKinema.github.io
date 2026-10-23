@@ -12,7 +12,7 @@ hero:
   fit: cover
   art_pos: 50% 50%
 bg1_image: img/page/m_tex_c.png
-band_image: img/page/m_band.png
+band_image: img/page/saku.png
 heading_icon: img/page/m_moko_sten.png
 step_icon: img/page/m_moko_sil.png
 catch_ja: ねむりは競争だ。
@@ -30,18 +30,18 @@ intro_en: You were counting Moko in the shallows of sleep. The more accurately
   sleep grows deeper. But **Gabu** stands in the way. Who will slip past Gabu
   and reach the deepest sleep?
 characters:
-  - image: img/chara/m_moko.webp
+  - image: img/chara/moco-1.png
     name_ja: モコ
     name_en: Moko
-  - image: img/chara/m_paka.webp
+  - image: img/chara/paka.png
     name_ja: パカ
     name_en: Paka
-  - image: img/chara/m_pome.webp
+  - image: img/chara/pome.png
     name_ja: ポメ
     name_en: Pome
     note_ja: かわいいので必ず最初に呼ぶ。
     note_en: So cute that you always call it first.
-  - image: img/chara/m_gabu.webp
+  - image: img/chara/gabu.png
     name_ja: ガブ
     name_en: Gabu
     note_ja: |-
@@ -56,32 +56,37 @@ summary_ja: |-
   自分の手札からカードを山に出し、**上に見えている3枚のカードの動物を数えて素早く名前を呼ぶゲームです。**
   特定の条件が揃うとトークンの取り合いが発生し、勝った人は山のカードを自分の手札に追加します。
   誰かの手札がなくなったらゲームは終了し、**ガブを除いた**カードが1番多かった人の勝ちです。
-summary_en: Play cards from your hand onto the piles, and **count the animals
-  on the 3 cards on top and call their names fast.** When certain conditions
-  line up, everyone grabs for the token, and the winner adds pile cards to
-  their hand. When someone runs out of cards, the game ends, and the player
-  with the most cards **not counting Gabu** wins.
+summary_en: Play cards from your hand onto the piles, and **count the animals on
+  the 3 cards on top and call their names fast.** When certain conditions line
+  up, everyone grabs for the token, and the winner adds pile cards to their
+  hand. When someone runs out of cards, the game ends, and the player with the
+  most cards **not counting Gabu** wins.
 steps:
-- text_ja: 自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て**コール**を行います。
-  text_en: On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a **call**.
-- text_ja: '場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。
+  - text_ja: 自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て**コール**を行います。
+    text_en: On your turn, flip the top card of your hand and stack it on any of the
+      3 piles. Then look at the cards and make a **call**.
+  - text_ja: |-
+      場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。
+
+      **ポメはかわいいので必ず最初に呼ぶ**
+
+      **ガブの数だけモコを減らす**
+    text_en: >-
+      Looking at the cards and calling the animals’ names is a call. Calls have
+      these rules:
 
 
-    **ポメはかわいいので必ず最初に呼ぶ**
+      **Pome is cute, so always call it first**
 
 
-    **ガブの数だけモコを減らす**'
-  text_en: 'Looking at the cards and calling the animals’ names is a call. Calls have these rules:
-
-
-    **Pome is cute, so always call it first**
-
-
-    **Remove one Moko for each Gabu**'
-- text_ja: 場のカードが次の条件を満たしたとき、**「モコチャカ」**と言いながら**全員で**トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。
-  text_en: When the cards meet a condition, **everyone** grabs for the token while saying **“Mokochaka!”** The one who gets it takes 2 piles and adds them to the bottom of their hand.
-- text_ja: 誰かの手札がなくなったらゲーム終了です。**ガブを除いた**手札が最も多い人が勝ちになります。
-  text_en: When someone runs out of cards, the game ends. The player with the most cards in hand **not counting Gabu** wins.
+      **Remove one Moko for each Gabu**
+  - text_ja: 場のカードが次の条件を満たしたとき、**「モコチャカ」と言いながら全員で**トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。
+    text_en: When the cards meet a condition, **everyone** grabs for the token while
+      saying **“Mokochaka!”** The one who gets it takes 2 piles and adds them to
+      the bottom of their hand.
+  - text_ja: 誰かの手札がなくなったらゲーム終了です。**ガブを除いた**手札が最も多い人が勝ちになります。
+    text_en: When someone runs out of cards, the game ends. The player with the most
+      cards in hand **not counting Gabu** wins.
 gallery:
   - image: img/gallery/mg_summary1.webp
     caption_ja: かんたんルール(表)
