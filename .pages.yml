@@ -41,9 +41,9 @@ content:
     list: true
     fields:
       - { name: key, label: 作品の key, type: string, description: "作品やツールのバナーを出すとき:ボードゲーム・ミニシアター・ツールの key(trico, bibilu, koikoi, moji, mockmaker など)" }
-      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上。入れると key より優先" }
-      - { name: video, label: バナー動画(自分で作ったもの), type: file, description: "動画だけのバナーを出すとき(mp4・音なしでくり返し)。10MB以下くらいに" }
-      - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
+      - { name: youtube, label: 背景で流すYouTube, type: string, description: "YouTubeのURL。key と一緒に入れると、ロゴやボタンはそのままで背景に音なしで流れます" }
+      - { name: video, label: 背景で流す動画(mp4), type: file, description: "mp4 の動画。key と一緒に入れると背景で流れます(YouTubeより優先)。10MB以下くらいに" }
+      - { name: image, label: バナー画像(自分で作ったもの), type: image, description: "key を空にして、画像だけのバナーを出すとき。画面いっぱいに広がるので、大事なものは中央に。横1920px以上" }
       - { name: link, label: バナー画像のリンク先, type: string, description: "押したときに開くURL。空ならリンクなし" }
       - { name: bg, label: 読み込み中の色, type: string, description: "画像や動画が出るまでの背景色。例:#173f54。空なら黒" }
       - { name: alt, label: バナー画像の説明, type: string, description: "画像に書いてある内容を短く(読み上げ用)" }
@@ -57,7 +57,7 @@ content:
     fields:
       - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前。あとから変えない" }
       - { name: name, label: 作品名, type: string, required: true }
-      - { name: new, label: 新作マークを付ける, type: boolean }
+      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの下の中央とバナーに「新作」が出ます" }
       - { name: front, label: カード(パッケージ正面), type: image, description: "閉じたカードの画像。比率は約 1:1.41" }
       - { name: pkg, label: パッケージ(立体), type: image, description: "背景が透明なPNG/WebP" }
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG。色はロゴの色で塗られます" }
@@ -94,6 +94,7 @@ content:
     fields:
       - { name: key, label: key(英小文字), type: string, required: true }
       - { name: name, label: 作品名, type: string, required: true }
+      - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの下の中央に「新作」が出ます" }
       - { name: pkg, label: パッケージ(横長), type: image }
       - { name: logo, label: ロゴ, type: image, description: "背景が透明なPNG" }
       - { name: chara, label: キャラクター, type: image, description: "背景が透明なPNG" }

@@ -140,13 +140,15 @@ def render():
     radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
     slides = []
     for i, b in enumerate(BANNERS):
-        if b.get('image') or b.get('video') or b.get('youtube'):   # 自分で作ったバナー画像・動画をそのまま出す(画面いっぱいに広げる)
+        if not b.get('key') and (b.get('image') or b.get('video') or b.get('youtube')):   # key なし:自分で作ったバナー画像・動画だけを出す
             alt = e(b.get('alt') or '')
             pic = vid(b.get('video'), b.get('youtube')) if (b.get('video') or b.get('youtube')) else '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
             link = '<a class="b-link" href="%s"%s aria-label="%s"></a>' % (e(b['link']), ext(b['link']), alt) if b.get('link') else ''
             slides.append('      <article class="slide s%d b-custom" style="--d:%ds;background:%s">%s%s</article>' % (i + 1, i * slide, e(b.get('bg') or '#000'), pic, link))
             continue
         cls, bg, art, txt, bt, vd = banner(b['key'])
+        if b.get('video') or b.get('youtube'):   # key と一緒に入れた動画は、その作品のバナーの背景で流す
+            vd, art = vid(b.get('video'), b.get('youtube')), ''
         slides.append('      <article class="slide s%d %s%s" style="--d:%ds;%s">%s<div class="b-art">%s</div><div class="b-in">%s<div class="b-btns">%s</div></div></article>' % (
             i + 1, cls, ' has-vid' if vd else '', i * slide, e(bg), vd, art, txt, bt))
     bars = ''.join('<label for="br%d" style="--d:%ds" aria-label="%d枚目"><i></i></label>' % (i + 1, i * slide, i + 1) for i in range(n))
@@ -170,10 +172,10 @@ def render():
         cid = 'c-%s' % m['key']
         bt = btns(m, more=bool(m.get('page')))
         cards.append(('        <li class="card mini" style="--c1:%s;--c2:%s"><input class="sr" type="radio" name="board" id="%s">'
-                      '<label class="c-face m-face" for="%s"><span class="m-top">MINI THEATER SERIES %02d</span><span class="m-mid"><img class="m-chara" src="img/%s" alt="" loading="lazy"><img class="m-logo" src="img/%s" alt="%s" loading="lazy"></span></label>'
+                      '<label class="c-face m-face" for="%s"><span class="m-top">MINI THEATER SERIES %02d</span><span class="m-mid"><img class="m-chara" src="img/%s" alt="" loading="lazy"><img class="m-logo" src="img/%s" alt="%s" loading="lazy"></span>%s</label>'
                       '<div class="c-open m-open"><img class="m-pkg" src="img/%s" alt="%sのパッケージ" loading="lazy"><div class="m-info"><div class="m-l"><img class="m-ologo" src="img/%s" alt="">%s</div><div class="m-r"><p class="o-genre">%s</p><p class="o-copy">%s</p>%s</div></div>'
                       '<label class="o-x" for="board-x" aria-label="とじる"></label></div></li>')
-                     % (m['color_band'], m['color_face'], cid, cid, i + 1, img(m['chara']), img(m['logo']), e(m['name']), img(m['pkg']), e(m['name']), img(m['logo']),
+                     % (m['color_band'], m['color_face'], cid, cid, i + 1, img(m['chara']), img(m['logo']), e(m['name']), '<span class="c-new">%s</span>' % L('新作', 'NEW') if m.get('new') else '', img(m['pkg']), e(m['name']), img(m['logo']),
                         spec_pill(spec(m), m['color_band'], m['color_face']), genre(m), L(m.get('copy_ja'), m.get('copy_en')), '<div class="o-btns">%s</div>' % bt))
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
                      % (e(yt_id(v.get('youtube'))), e(v['title']), img(v['poster']), e(v['title']), L(v.get('kind_ja'), v.get('kind_en')),
