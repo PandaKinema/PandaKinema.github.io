@@ -41,14 +41,16 @@
   age: "6"
   genre_ja: セットコレクション・バッティング
   genre_en: Set collection / Simultaneous play
-  intro_ja: 場に出た色の数で勝敗が決まる「アピール」をくり返し、3色そろえて「トリコ!」。
+  intro_ja: |-
+    場に出た色の数で勝敗が決まる「アピール」をくり返し、
+    3色そろえて「トリコ!」と宣言しよう。
   intro_en: Repeat “Appeals” decided by the number of colors, and collect 3 colors
     to call “Trico!”
   page: games/trico/
   booth: https://pandakinema.booth.pm/
   banner:
     bg: key2
-    pattern: tri
+    pattern: none
     logo_color: key1
     text_color: key1
 - key: ikatako
@@ -127,7 +129,7 @@
     text_color: key1
 - key: bash
   name: BASH&SMASH
-  series: MINI THEATER SERIES 02
+  series: "MINI THEATER SERIES "
   new: false
   front: img/front_bash.webp
   pkg: img/mini_bash.webp
