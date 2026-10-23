@@ -6,11 +6,16 @@ logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
 logo_buy: img/logo/k_logo_blue.png
 logo_credits: img/logo/koikoilogo.png
 bg_color: main
-accent_color: white
+color3: "#e6f4fb"
+accent_color: third
+dark_text: true
 hero:
   art: img/page/koikoi_top.jpg
   fit: cover
+  side: img/page/koikoi_side.png
   art_pos: 50% 0%
+bg1_image: img/page/k_sei_w.png
+bg2_image: img/page/k_sei_b.png
 step_icon: img/page/k_koi_sil.png
 catch_ja: あげろ!こいのぼり
 catch_en: Raise the carp streamers!

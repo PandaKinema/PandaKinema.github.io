@@ -10,6 +10,7 @@ accent_color: accent
 hero:
   art: img/page/moko_top_bg.png
   fit: cover
+  side: img/page/moko_side.png
   art_pos: 50% 0%
   layers:
     - image: img/page/moko_top_p0.png

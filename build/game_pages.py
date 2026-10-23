@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v36
+# パンダキネマ 作品ページ 共通フォーマット v37
+#     v37: トップの絵はいつも全部見せる(画面の高さに合わせる)。横長の画面では左右を模様か端の色でつなぐ
 #     v36: 編集画面で画像を消したら、帯・模様・見出しの飾りも消える(デザインの初期値に戻らない)
 #     v35: 黒文字の代わりに作品の色を暗くした色
 #     v34: 強調の色は地と4.5以上の差があるときだけ(なければ赤→文字色+太字)/見出しの飾りの色を選べる
@@ -159,7 +160,9 @@ def hero(g, d, t):
         if h.get('zoom'):
             style.append('--zoom:%g' % num(h['zoom'], 1))
         g['hero_art'] = '<div class="hero-art"><img class="art" src="{{img:%s}}" alt="" fetchpriority="high"></div>' % imgname(h['art'])
-        if cover_layers:
+        if not cover_layers:   # 部品なしでも、絵は箱に入れて全部見せる
+            cover_layers = []
+        if True:
             pos = (str(h.get('art_pos') or '50% 50%').split() + ['50%'])[:2]
             fx, fy = (num(v.rstrip('%'), 50) / 100 for v in pos)
             out = []
@@ -167,7 +170,23 @@ def hero(g, d, t):
                 mo = str(x.get('motion') or 'none')
                 st = '--x:%g%%;--y:%g%%;--w:%g%%;--r:%gdeg;--dl:%.2fs;--sp:%gs' % (num(x.get('x'), 0), num(x.get('y'), 0), num(x.get('width'), 20), num(x.get('rotate'), 0), .2 + .12 * i, num(x.get('speed'), 0) or 26 + (i % 3) * 5)
                 out.append('<img class="aly%s" style="%s" src="{{img:%s}}" alt="">' % ('' if mo == 'none' else ' m-' + mo, st, imgname(x['image'])))
-            g['hero_art'] = '<div class="hero-art"><div class="art-box" style="--ar:%.4f;--fx:%g;--fy:%g"><img class="art-bg" src="{{img:%s}}" alt="" fetchpriority="high">%s</div></div>' % (aw_ah(h['art']), fx, fy, imgname(h['art']), ''.join(out))
+            # 絵はいつも画面の高さに合わせて全部見せる。画面が絵より横長なら、左右は背景の模様(side)か絵の端の色でつなぐ
+            fill = ''
+            if h.get('side'):
+                fill = '<div class="art-fill" style="background-image:url({{img:%s}})"></div>' % imgname(h['side'])
+            else:
+                from PIL import Image
+                with Image.open(os.path.join(WEB, imgname(h['art']))) as im:
+                    im = im.convert('RGB'); W, Hh = im.size
+                    def edge(x0):
+                        stops = []
+                        for k in range(13):
+                            y = min(Hh - 1, round(k * (Hh - 1) / 12))
+                            c = [sum(im.getpixel((x, y))[j] for x in range(x0, x0 + 6)) // 6 for j in range(3)]
+                            stops.append('#%02x%02x%02x %.1f%%' % (c[0], c[1], c[2], k * 100 / 12))
+                        return 'linear-gradient(%s)' % ','.join(stops)
+                    fill = '<div class="art-fill edge" style="--edge-l:%s;--edge-r:%s"></div>' % (edge(1), edge(W - 7))
+            g['hero_art'] = '<div class="hero-art"><div class="art-wrap" style="--ar:%.4f;--fx:%g">%s<div class="art-box"><img class="art-bg" src="{{img:%s}}" alt="" fetchpriority="high">%s</div></div></div>' % (aw_ah(h['art']), fx, fill, imgname(h['art']), ''.join(out))
         g['hero_visual'] = ''
         if h.get('art_pos'):
             style.append('--art-pos:%s' % str(h['art_pos']))
@@ -279,6 +298,8 @@ def apply(key):
     M, A = t.get('main'), t.get('accent')
     if M and A:
         HUE[0] = M if lum(M) <= lum(A) else A
+        if d.get('dark_text'):   # 編集画面「濃い文字に黒を使う」
+            HUE[0] = '#1b2228'
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()
         if re.fullmatch(r'#?[0-9a-fA-F]{6}', c3):   # 作品ページの「アクセントカラー2」
@@ -1096,9 +1117,11 @@ TEMPLATE = r'''<!doctype html>
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
     /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
-    .hero-art:has(.art-box){container-type:size;overflow:hidden}
-    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
-      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-wrap{position:absolute;inset:0;container-type:size;overflow:hidden}
+    .art-box{position:absolute;top:0;height:100cqh;width:calc(100cqh * var(--ar));left:calc((100cqw - 100cqh * var(--ar)) * var(--fx))}
+    .art-fill{position:absolute;inset:0;background-repeat:repeat-x;background-size:auto 100cqh;background-position:calc((100cqw - 100cqh * var(--ar)) * var(--fx)) 0}
+    .art-fill.edge{background:var(--edge-l) left top/50.5% 100% no-repeat,var(--edge-r) right top/50.5% 100% no-repeat}
+    .hero.hero-cover .hero-art{will-change:auto}
     .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
     .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
     @media all{

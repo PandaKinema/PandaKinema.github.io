@@ -10,6 +10,7 @@ accent_color: black
 hero:
   art: img/page/bash_top.jpg
   fit: cover
+  side: img/page/bash_side.png
   art_pos: 50% 0%
 bg1_image: img/page/s_tex_c.png
 bg2_image: img/page/s_tex_w.png

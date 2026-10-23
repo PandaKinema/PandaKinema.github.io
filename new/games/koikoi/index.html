@@ -25,7 +25,7 @@
       --orb-glow:255,255,255;
       --orn:url(../../img/page/k_koi_sten.png?v=daeee5ce); --snum:url(../../img/page/k_koi_sil.png?v=26f23d5c);   /* 見出しの飾り:こいのぼり */
     
-      --k-bg:#48b0e5;--k-ink:#1a3f52;--hl:#1a3f52;--b2-bg:#ffffff;--b2-ink:#31789c;--hl2:#d4242b;--sec-bg:#ffffff;--sec-ink:#31789c;--accent:#ffffff;--on-accent:#31789c;--buy-bg:#48b0e5;--buy-ink:#1a3f52;--p-ink:#31789c;--soft:#f2f9fd;--pan-bg:#31789c;--pan-ink:#fff;--lt:#ffffff;--on-lt:#31789c;--dk:#48b0e5;--on-dk:#1a3f52;--tex-c:none;--band-d:none;--orn-d:none;--snum:url(../../img/page/k_koi_sil.png?v=26f23d5c);}
+      --k-bg:#48b0e5;--k-ink:#1b2228;--hl:#1b2228;--b2-bg:#e6f4fb;--b2-ink:#1b2228;--hl2:#d4242b;--sec-bg:#e6f4fb;--sec-ink:#1b2228;--accent:#e6f4fb;--on-accent:#1b2228;--buy-bg:#48b0e5;--buy-ink:#1b2228;--p-ink:#31789c;--soft:#e6f4fb;--pan-bg:#31789c;--pan-ink:#fff;--lt:#e6f4fb;--on-lt:#1b2228;--dk:#48b0e5;--on-dk:#1b2228;--tex-c:url(../../img/page/k_sei_w.png?v=3984a37e);--tex-size:122px 122px;--b2-img:url(../../img/page/k_sei_b.png?v=b6b4921a);--b2-size:122px 122px;--band-d:none;--orn-d:none;--snum:url(../../img/page/k_koi_sil.png?v=26f23d5c);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -97,9 +97,11 @@
     .hero.hero-cover .art{width:100%;height:100%;object-fit:cover;object-position:var(--art-pos,50% 50%);transform:scale(var(--zoom,1));transform-origin:var(--art-pos,50% 50%)}
     .hero.hero-cover{color:var(--hero-ink,var(--lt))}
     /* 全面に敷いた絵+部品:絵と同じ切り取り方の箱の中に部品を置く(どの画面でも絵とぴったり重なる) */
-    .hero-art:has(.art-box){container-type:size;overflow:hidden}
-    .art-box{position:absolute;width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));
-      left:calc((100cqw - max(100cqw,calc(100cqh * var(--ar)))) * var(--fx));top:calc((100cqh - max(100cqh,calc(100cqw / var(--ar)))) * var(--fy))}
+    .art-wrap{position:absolute;inset:0;container-type:size;overflow:hidden}
+    .art-box{position:absolute;top:0;height:100cqh;width:calc(100cqh * var(--ar));left:calc((100cqw - 100cqh * var(--ar)) * var(--fx))}
+    .art-fill{position:absolute;inset:0;background-repeat:repeat-x;background-size:auto 100cqh;background-position:calc((100cqw - 100cqh * var(--ar)) * var(--fx)) 0}
+    .art-fill.edge{background:var(--edge-l) left top/50.5% 100% no-repeat,var(--edge-r) right top/50.5% 100% no-repeat}
+    .hero.hero-cover .hero-art{will-change:auto}
     .art-box .art-bg{position:absolute;inset:0;width:100%;height:100%}
     .art-box .aly{position:absolute;left:var(--x);top:var(--y);width:var(--w);max-width:none;rotate:var(--r,0deg)}
     @media all{
@@ -691,8 +693,8 @@
 
 <main class="key">
   <!-- 1. メインビジュアル:パッケージの絵をそのまま大きく -->
-  <section class="hero hero-cover light" style="--lw:325px;--lar:1.9330;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#173849;--art-pos:50% 0%" aria-labelledby="title">
-    <div class="hero-art"><img class="art" src="../../img/page/koikoi_top.jpg?v=341e8378" alt="" fetchpriority="high"></div>
+  <section class="hero hero-cover light" style="--lw:325px;--lar:1.9330;--hero-bg:#080403;--hero-ink:#ffffff;--hero-ink:#1b2228;--art-pos:50% 0%" aria-labelledby="title">
+    <div class="hero-art"><div class="art-wrap" style="--ar:1.4283;--fx:0.5"><div class="art-fill" style="background-image:url(../../img/page/koikoi_side.png?v=2fb714aa)"></div><div class="art-box"><img class="art-bg" src="../../img/page/koikoi_top.jpg?v=341e8378" alt="" fetchpriority="high"></div></div></div>
     <div class="hero-copy">
       <div class="hero-main">
         
