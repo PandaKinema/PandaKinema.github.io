@@ -87,7 +87,7 @@ def hero(g, d, t):
     style.append('--lw:%dpx' % min(600, round(168 * lw / lh)))   # ロゴは高さ168pxくらい(幅600pxまで)
     g['h1_cls'] = ''
     # トップは画像が主役:背景の色はページの色ではなく、トップ画像(なければ閉じたカード)の地の色から取る
-    hbg = None
+    hbg = hbg2 = None
     src = h.get('art') or t.get('front')
     if src:
         from PIL import Image
@@ -95,8 +95,9 @@ def hero(g, d, t):
             px = im.convert('RGB').crop((0, 0, min(160, im.width), min(160, im.height))).getcolors(1 << 20) or []
         top = [c for _, c in sorted(px, reverse=True)[:2]]
         if top:
-            c = max(top, key=lambda x: sum(x))   # よく使われている2色のうち明るい方(模様の地)
+            c = max(top, key=lambda x: sum(x))   # よく使われている2色のうち明るい方
             hbg = '#%02x%02x%02x' % c
+            hbg2 = '#%02x%02x%02x' % min(top, key=lambda x: sum(x)) if len(top) > 1 else None   # 暗い方(三角模様の地。トップ画像と同じ色に)
             M, A = t.get('main') or '#1b2228', t.get('accent') or '#ffffff'
             fg = max((M, A, '#1b2228', '#ffffff'), key=lambda x: (contrast(x, hbg) >= 4.5, x in (M, A), contrast(x, hbg)))
             style.append('--hero-bg:%s;--hero-ink:%s' % (hbg, fg))
@@ -119,7 +120,7 @@ def hero(g, d, t):
         g['hero_cls'] = 'hero-stage'
         g['hero_art'] = '<div class="hero-art"></div>'
         if h.get('pattern') == 'tri':
-            style.append('--pat:%s;--pat-size:92px 160px' % tri_pattern(hbg or g.get('_D') or t.get('main') or '#fdd000'))
+            style.append('--pat:%s;--pat-size:92px 160px' % tri_pattern(hbg or g.get('_D') or t.get('main') or '#fdd000', hbg2 if hbg else None))
         if h.get('width'):
             style.append('--sw:%dpx' % num(h['width'], 380))
         layers = [x for x in (h.get('layers') or []) if x.get('image')]
@@ -308,8 +309,8 @@ def ltower(nums, fall=0, ruler=5):
     rl = ''.join('<li style="--i:%d">%d</li>' % (k, k + 1) for k in range(ruler))
     return '<div class="ltw"><ol class="ruler" aria-hidden="true">%s</ol><div class="ltower" style="--n:%d;--fall:%d">%s</div></div>' % (rl, len(nums), fall, cs)
 
-def tri_pattern(c):   # TRICO のパッケージの三角模様(地は少し濃く)
-    a, b = mix(c, '#000000', .965).lstrip('#'), str(c).lstrip('#')
+def tri_pattern(c, base=None):   # TRICO のパッケージの三角模様。base = 地の色(なければ c を少し濃く)
+    a, b = (base or mix(c, '#000000', .965)).lstrip('#'), str(c).lstrip('#')
     return ("url(\"data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='160'%%3E%%3Crect width='92' height='160' fill='%%23%s'/%%3E"
             "%%3Cpolygon points='0,80 46,0 92,80' fill='%%23%s'/%%3E%%3Cpolygon points='-46,160 0,80 46,160' fill='%%23%s'/%%3E%%3Cpolygon points='46,160 92,80 138,160' fill='%%23%s'/%%3E%%3C/svg%%3E\")") % (a, b, b, b)
 
