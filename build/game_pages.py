@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v33
+# パンダキネマ 作品ページ 共通フォーマット v34
+#     v34: 強調の色は地と4.5以上の差があるときだけ(なければ赤→文字色+太字)/見出しの飾りの色を選べる
 #     v33: 全面の絵の上で部品を動かす(TRICO!=鳥と宝石、モコチャカ=アイコンが回る)
 #     v32: トップは画面の高さいっぱい、ロゴを画面の高さに合わせて大きく
 #     v31: トップ画像の下からのぼかしをなくす
@@ -278,10 +279,8 @@ def apply(key):
         def text_hl(bg, fg_pref, fixed=None):   # (文字の色, 強調の色):強調は太字にしたところ
             fg = ink(bg, fg_pref)
             hl = fixed or fg_pref
-            if hl == fg or contrast(hl, bg) < 3:
-                hl = RED if contrast(RED, bg) >= 3 else None
-            if not hl:   # 赤も読めないときは、文字を白(か濃い色)にして もう1色で強調
-                fg, hl = ink(bg), fg_pref
+            if hl == fg or contrast(hl, bg) < 4.5:   # 強調の色が地に近くて読みにくいときは、赤 → それもだめなら文字と同じ色(太字だけで強調)
+                hl = RED if contrast(RED, bg) >= 4.5 else fg
             return fg, hl
         k_ink, hl = text_hl(D, O, g.get('hl_fixed'))
         b2_ink, hl2 = text_hl(O, D)
@@ -310,6 +309,11 @@ def apply(key):
     for k, var in (('step_num_x', '--snum-x'), ('step_num_y', '--snum-y')):   # 遊び方の番号の位置(px)
         if d.get(k) not in (None, ''):
             css.append('%s:%gpx' % (var, num(d[k], 0)))
+    oc = str(d.get('heading_icon_color') or '')
+    if M and A and oc:
+        cc = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000', 'third': pick.get('third')}.get(oc)
+        if cc:
+            css.append('--orn-c:%s' % cc)   # 見出しの飾りの色(背景の色のところ。帯の色のところは自動)
     for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
         if d.get(k):
             css.append('%s:url(../../img/%s)' % (var, imgname(d[k])))
@@ -1040,7 +1044,7 @@ TEMPLATE = r'''<!doctype html>
     .en{margin:0;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
     .sec-head .en{padding-left:.34em}
     .sec-row{display:flex;align-items:center;gap:16px}
-    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:currentColor;
+    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
@@ -1159,7 +1163,7 @@ TEMPLATE = r'''<!doctype html>
     .band{position:relative;padding:68px 0 72px}
     .band.tex{padding:86px 0 90px}
     .band>.wrap{position:relative;z-index:1}
-    .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);
+    .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);--orn-c:currentColor;
       --sec-bg:var(--b2-ink);--sec-ink:var(--b2-bg);--accent:var(--b2-ink);--on-accent:var(--b2-bg)}
     /* ビビル文字の帯(素材 bibilu_line):色の境目には置かず、紺の帯の内側に */
     .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--b2-bg);pointer-events:none;
@@ -1221,6 +1225,7 @@ TEMPLATE = r'''<!doctype html>
 
     /* ===== 4. どんなゲーム?(目的の要約+図) ===== */
     .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:700;text-align:center;word-break:auto-phrase}
+    .summary em,.story em{font-style:normal;font-weight:900}
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */

@@ -25,7 +25,7 @@
       --orb-glow:150,210,255;
       --orn:url(../../img/page/i_squid_sten.png?v=c2c3394e); --snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);   /* 見出しの飾り:ロゴのイカ */
     
-      --k-bg:#001f5c;--k-ink:#ffffff;--hl:#0073bd;--b2-bg:#0073bd;--b2-ink:#ffffff;--hl2:#001f5c;--sec-bg:#0073bd;--sec-ink:#ffffff;--accent:#0073bd;--on-accent:#ffffff;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#001f5c;--soft:#bfdcee;--pan-bg:#001f5c;--pan-ink:#fff;--lt:#0073bd;--on-lt:#ffffff;--dk:#001f5c;--on-dk:#ffffff;--tex-c:url(../../img/page/i_tex_c.png?v=57cfa8f8);--tex-size:80px 48px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn:url(../../img/page/i_squid_sten.png?v=c2c3394e);--snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);}
+      --k-bg:#001f5c;--k-ink:#ffffff;--hl:#ffffff;--b2-bg:#0073bd;--b2-ink:#ffffff;--hl2:#ffffff;--sec-bg:#0073bd;--sec-ink:#ffffff;--accent:#0073bd;--on-accent:#ffffff;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#001f5c;--soft:#bfdcee;--pan-bg:#001f5c;--pan-ink:#fff;--lt:#0073bd;--on-lt:#ffffff;--dk:#001f5c;--on-dk:#ffffff;--tex-c:url(../../img/page/i_tex_c.png?v=57cfa8f8);--tex-size:80px 48px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn:url(../../img/page/i_squid_sten.png?v=c2c3394e);--snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -63,7 +63,7 @@
     .en{margin:0;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
     .sec-head .en{padding-left:.34em}
     .sec-row{display:flex;align-items:center;gap:16px}
-    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:currentColor;
+    .sec-row::before,.sec-row::after{content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
@@ -235,7 +235,7 @@
     .band{position:relative;padding:68px 0 72px}
     .band.tex{padding:86px 0 90px}
     .band>.wrap{position:relative;z-index:1}
-    .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);
+    .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);--orn-c:currentColor;
       --sec-bg:var(--b2-ink);--sec-ink:var(--b2-bg);--accent:var(--b2-ink);--on-accent:var(--b2-bg)}
     /* ビビル文字の帯(素材 bibilu_line):色の境目には置かず、紺の帯の内側に */
     .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--b2-bg);pointer-events:none;
@@ -297,6 +297,7 @@
 
     /* ===== 4. どんなゲーム?(目的の要約+図) ===== */
     .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:700;text-align:center;word-break:auto-phrase}
+    .summary em,.story em{font-style:normal;font-weight:900}
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
