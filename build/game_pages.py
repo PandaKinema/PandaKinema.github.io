@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v43
+# パンダキネマ 作品ページ 共通フォーマット v44
+#     v44: 帯の画像は1周期に自動で切りそろえてループ/強調の下線はなし
 #     v43: 本文を細く・強調を太く(同じ色なら下線)/項目ごとに背景の色を選べる
 #     v42: ページの幅はトップの絵の幅まで(左右は黒)/帯の色を自由に指定/白い文字優先のときBOOTHボタンも白文字
 #     v41: 遊び方をタブで複数(イカタコ:対戦・協力・ソロ)/トップの文字色を選べる(hero_ink)/白い文字を優先(prefer_white)
@@ -104,6 +105,37 @@ def num(v, default):
         return float(v)
     except (TypeError, ValueError):
         return default
+def loop_band(v):
+    """帯の画像を、横にきれいにつながる幅(模様の1周期ぶん)に自動で切りそろえる。つながる幅が見つからなければそのまま"""
+    from PIL import Image
+    f = imgname(v)
+    src = os.path.join(WEB, f)
+    with Image.open(src) as im:
+        im = im.convert('RGBA'); W, H = im.size
+        a = im.getchannel('A').resize((W, max(4, min(H, 24))))
+        hh = a.height; px = a.load()
+        cols = [[px[x, y] for y in range(hh)] for x in range(W)]
+        def diff(p):
+            n = W - p
+            return sum(abs(cols[x][y] - cols[x + p][y]) for x in range(0, n, 2) for y in range(hh)) / max(1, (n // 2) * hh)
+        ds = {p: diff(p) for p in range(max(8, W // 40), W // 2 + 1)}   # 2回以上くり返している幅だけ調べる
+        base = sum(ds.values()) / len(ds)
+        best = next((p for p, dv in ds.items() if dv < base * .12), None)   # いちばん短いくり返しの幅
+        if not best:
+            return f   # くり返しが見つからない=画像の幅ぴったりで作ってある
+        per = best
+        # 周期はぴったりの整数とは限らないので、何周期か先で本当にぴったり重なる幅を探す(半分くらい重なる範囲で一番長く)
+        m = max(1, (W // 2) // per)
+        L = min(range(m * per - 3, m * per + 4), key=lambda q: diff(q) if 0 < q < W else 1e9)
+        x0 = 0
+        crop = im.crop((x0, 0, x0 + L, H))
+        if L % 2:   # 半分の大きさで並べるので幅は偶数に(半端なピクセルで継ぎ目が出ないように)
+            crop = crop.resize((L + 1, H), Image.LANCZOS)
+        stem, ext = os.path.splitext(f)
+        out = stem + '_loop.png'
+        crop.save(os.path.join(WEB, out))
+        return out
+
 def aw_ah(f):
     from PIL import Image
     with Image.open(os.path.join(WEB, imgname(f))) as im:
@@ -364,7 +396,7 @@ def apply(key):
     if d.get('bg2_image'):
         f, w, h = tile(d['bg2_image']); css.append('--b2-img:url(../../img/%s);--b2-size:%dpx %dpx' % (f, w, h))
     if d.get('band_image'):
-        f, w, h = tile(d['band_image']); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
+        f, w, h = tile(loop_band(d['band_image'])); css.append('--band:url(../../img/%s);--band-h:%dpx;--band-d:block' % (f, h))
     else:
         css.append('--band-d:none')
     for k, var in (('step_num_x', '--snum-x'), ('step_num_y', '--snum-y')):   # 遊び方の番号の位置(px)
@@ -1346,7 +1378,7 @@ TEMPLATE = r'''<!doctype html>
 
     /* ===== 4. どんなゲーム?(目的の要約+図) ===== */
     .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:500;text-align:center;word-break:auto-phrase}
-    .summary em,.story em,.chara-note em{font-style:normal;font-weight:900;text-decoration:var(--hl-deco,none);text-decoration-thickness:2px;text-underline-offset:5px}
+    .summary em,.story em,.chara-note em{font-style:normal;font-weight:900;}
     .band-c{--hl-deco:var(--hl2-deco,none)}
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
