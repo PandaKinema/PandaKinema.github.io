@@ -487,7 +487,7 @@ async function shareImage(text,url,{xFallback=false}={}){
  catch{ prompt("この内容を共有してください",body+"\n"+url); }
 }
 // Xのリンクカード用サーバー(Cloudflare Workers)のURL。空のあいだは、従来どおり画像を添付する方法で共有
-const CARD_SERVER="";
+const CARD_SERVER="https://bibilu-card.pandak11415.workers.dev";
 function shareToX(text){
  const p=packed(text);
  if(CARD_SERVER && p){
