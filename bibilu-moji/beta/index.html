@@ -60,9 +60,6 @@ a{color:inherit}
 .hero{text-align:center;padding:20px 16px 4px}
 .titleLogo{display:block;width:min(86%,520px);height:auto;margin:0 auto;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .hero p{font-size:12px;letter-spacing:.24em;color:var(--ink2);margin:10px 0 0;font-weight:600}
-.challengeHead{text-align:center;padding:12px 16px 0}
-.challengeHead h1{font-size:20px;margin:0;letter-spacing:.04em}
-.challengeHead p{font-size:13px;color:var(--ink2);margin:6px 0 0}
 
 /* レイアウト */
 .layout{max-width:560px;margin:0 auto;padding:14px 16px 0}
@@ -119,8 +116,6 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .btn.primary{background:var(--pri-bg);color:var(--pri-fg);border:1.5px solid var(--pri-bg)}
 .btn.secondary{background:var(--sec-bg);color:var(--sec-fg);border:1.5px solid var(--sec-bd)}
 @media(hover:hover){.btn:hover{filter:brightness(1.08)}}
-.tupaRow{align-items:flex-end}
-.tupaRow .btn{align-self:center}
 .admin{border-top:1px dashed var(--line);margin-top:16px;padding-top:12px}
 .admin .note{margin:0}
 .admin .btn{font-size:13px;padding:10px}
@@ -155,8 +150,11 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .k i{font-style:normal;font-size:10px;font-weight:700;color:var(--ink2);line-height:1}
 .k.blank{visibility:hidden}
 .k.flash{background:var(--tile-on)}
-.hintGrid{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
-.hintGrid .k{width:calc((100% - 30px) / 11);cursor:default}
+.hintGrid{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.hintGrid .k{width:48px;padding:9px 0 6px;gap:5px;cursor:default}
+.hintGrid .k svg{width:30px}
+.hintGrid .k i{font-size:11px}
+@media(min-width:900px){.hintGrid{gap:6px}.hintGrid .k{width:56px;padding:10px 0 7px}.hintGrid .k svg{width:36px}.hintGrid .k i{font-size:12px}}
 .is-challenge .k{cursor:default}
 .keys{margin-top:10px}
 .keys .btn{font-size:13px;padding:9px}
@@ -211,17 +209,24 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
  .answer{margin-top:18px}
  .is-challenge .panel{display:flex;flex-direction:column;justify-content:center}
  .panel{margin-top:0;padding:16px 18px}
- .challengeHead{display:none}
- .panelHead{display:block!important}
  body:not(.is-challenge) .table summary{cursor:default;pointer-events:none}
  body:not(.is-challenge) .table summary::after{display:none}
  .table{margin-top:14px}
  .table summary{padding-top:10px}
  .related{padding-top:72px}
 }
-.panelHead{display:none;text-align:center;margin-bottom:4px}
-.panelHead h2{font-size:22px;margin:0;letter-spacing:.04em}
-.panelHead p{font-size:13px;color:var(--ink2);margin:8px 0 0}
+.panelHead{text-align:center;margin-bottom:2px}
+.askRow{display:flex;align-items:flex-end;justify-content:center;gap:12px}
+.askRow .tupaSlot{flex:none}
+.bubble{position:relative;flex:0 1 auto;min-width:0;margin:0 0 calc(var(--tw) * .22);padding:10px 16px;border:2px solid var(--ink);border-radius:16px;background:#fff;color:var(--ink);font-size:clamp(16px,4.4vw,20px);font-weight:800;line-height:1.4;letter-spacing:.03em;text-align:left;word-break:keep-all;overflow-wrap:anywhere}
+.bubble::before,.bubble::after{content:"";position:absolute;top:50%;width:0;height:0;border-style:solid;translate:0 -50%}
+.bubble::before{left:-12px;border-width:8px 12px 8px 0;border-color:transparent var(--ink) transparent transparent}
+.bubble::after{left:-8px;border-width:6px 9px 6px 0;border-color:transparent #fff transparent transparent}
+.bubble.pop{animation:bubblePop .28s ease}
+@keyframes bubblePop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:none}}
+.askNote{font-size:12px;color:var(--ink2);margin:10px 0 0;line-height:1.6}
+@media(min-width:900px){.askRow{--tw:90px}.bubble{font-size:21px;padding:12px 18px}}
+.askNote span{display:inline-block}
 /* PC で幅が狭いとき:座布団を少し細くして、画像と高さがそろう幅を確保 */
 @media(min-width:900px) and (max-width:1150px){
  .layout{grid-template-columns:minmax(0,1fr) 370px;gap:28px;padding-inline:24px}
@@ -263,11 +268,6 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
  <p id="secretTagline">ことばつむぎ　みらいつなぐ</p>
 </header>
 
-<div id="challengeHead" class="challengeHead hidden">
- <h1>このビビル文字、よめる？</h1>
- <p>こたえがわかったら、ボタンをおしてみよう。</p>
-</div>
-
 <main class="layout">
  <div class="stage">
   <div class="frame"><canvas id="preview" role="img" aria-label="ビビル文字のプレビュー"></canvas></div>
@@ -305,18 +305,20 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 
   <section id="challenge" class="hidden">
    <div class="panelHead">
-    <h2>このビビル文字、よめる？</h2>
-    <p>こたえがわかったら、ボタンをおしてみよう。</p>
+    <div class="askRow">
+     <div id="tupaSlot2" class="tupaSlot"></div>
+     <h2 id="bubble" class="bubble" aria-live="polite">このビビル文字、よめる？</h2>
+    </div>
+    <p class="askNote"><span>こたえがわかったらボタンを、</span><span>わからなかったらトゥーパをおしてみよう。</span></p>
    </div>
    <div class="row"><button id="reveal" class="btn primary">こたえをみる</button></div>
    <div id="answer" class="answer hidden" aria-live="polite">
     <div id="ansText" class="ansText"></div>
     <div id="ansTiles" class="ansTiles"></div>
    </div>
-   <div class="row tupaRow">
+   <div class="row">
     <button id="shareX" class="btn secondary">Xでシェア</button>
     <button id="makeMine" class="btn secondary">じぶんもつくる</button>
-    <div id="tupaSlot2" class="tupaSlot"></div>
    </div>
   </section>
 
@@ -523,12 +525,38 @@ function playTupaAction(action="tupaBounce"){
  tupa.classList.add(action);
  setTimeout(()=>tupa.classList.remove(action),action==="haloRush"?2300:1100);
 }
+/* お題のとき:トゥーパをおすと、こたえを1文字ずつ教えてくれる */
+let hintN=0, revealed=false;
+const AFTER_LINES=[
+ {text:"またあそんでね！",action:"tupaHighJump"},
+ {text:"じぶんもつくってみて！",action:"tupaBounce"},
+ {text:"とうをたてにいこう！",action:"tupaDoubleJump"},
+ {text:"とぅーぱ",action:"tupaSquish"},
+ {text:"ビビル文字、おぼえた？",action:"tupaTilt"}
+];
+function say(s){ const b=$("#bubble"); b.textContent=s; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }
+function resetAsk(){ hintN=0; revealed=false; say("このビビル文字、よめる？"); $("#bubble").classList.remove("pop"); $(".askNote").classList.remove("hidden"); }
+function challengeTupa(){
+ if(rapidTaps.length>=6){ rapidTaps=[]; say("さわりすぎ！"); playTupaAction("tupaAngry"); return; }
+ if(revealed){
+   const pool=AFTER_LINES.filter(l=>l.text!==$("#bubble").textContent);
+   const l=pool[Math.floor(Math.random()*pool.length)];
+   say(l.text); playTupaAction(l.action); return;
+ }
+ const chars=Array.from(challengeText).filter(ch=>ch!=="\n");
+ const total=chars.filter(ch=>ch!==" "&&ch!=="　").length;
+ if(hintN<total) hintN++;
+ let k=0;
+ const shown=chars.map(ch=>{ if(ch===" "||ch==="　") return ch; k++; return k<=hintN?ch:"□"; }).join("");
+ if(hintN<total){ say("ヒント:"+shown); playTupaAction(hintN===1?"tupaTilt":"tupaBounce"); }
+ else { say("「"+shown+"」…いっちゃった！"); playTupaAction("tupaShake"); }
+}
 function onTupa(){
  const now=Date.now();
  rapidTaps=rapidTaps.filter(t=>now-t<2000);
  rapidTaps.push(now);
  // お題を表示しているときは、文字を変えずに跳ねるだけ
- if(challengeText!==null){ playTupaAction(rapidTaps.length>=6?"tupaAngry":["tupaBounce","tupaSquish","tupaHighJump"][Math.floor(Math.random()*3)]); return; }
+ if(challengeText!==null){ challengeTupa(); return; }
  // 2秒以内に6回触ると、ちょっと怒る。
  if(!angryLock && rapidTaps.length>=6){
    angryLock=true; rapidTaps=[];
@@ -720,11 +748,15 @@ function showTab(n){
 }
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>showTab(+b.dataset.tab)));
 showTab(0);
-// お題のヒント:使われている文字だけを五十音順で
+// お題のヒント:使われている文字だけを、必ずバラバラの順番で
 function showHint(text){
- const order=[...TABS[0].cols.join(""),...TABS[1].cols.join(""),...TABS[2].rows.join("")];
- const used=[...new Set(Array.from(text).filter(ch=>glyphs[ch]))].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
- $("#hintGrid").innerHTML=used.map(cell).join("");
+ const used=[...new Set(Array.from(text).filter(ch=>glyphs[ch]))];
+ const mixed=used.slice();
+ for(let tries=0;tries<20;tries++){
+   for(let i=mixed.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [mixed[i],mixed[j]]=[mixed[j],mixed[i]]; }
+   if(mixed.length<2||mixed.some((ch,i)=>ch!==used[i])) break;
+ }
+ $("#hintGrid").innerHTML=mixed.map(cell).join("");
 }
 function typeChar(ch){
  const ta=$("#text");
@@ -773,12 +805,12 @@ function showChallenge(text){
  document.body.classList.add("is-challenge");
  $("#maker").classList.add("hidden");
  $("#challenge").classList.remove("hidden");
- $("#challengeHead").classList.remove("hidden");
  $("#answer").classList.add("hidden");
  $("#reveal").parentElement.classList.remove("hidden");
  $("#tupaSlot2").appendChild($("#sampleTupa"));
+ resetAsk();
  $("#tableLabel").textContent="ヒント";
- $("#tableSub").textContent="このお題の文字(五十音順)";
+ $("#tableSub").textContent="このお題の文字(順番はバラバラ)";
  $("#tableKeys").classList.add("hidden");
  $("#fullTable").classList.add("hidden");
  $("#hintTable").classList.remove("hidden");
@@ -795,6 +827,8 @@ $("#reveal").onclick=()=>{
  ).join("");
  $("#answer").classList.remove("hidden");
  $("#reveal").parentElement.classList.add("hidden");
+ revealed=true; say("あたってた？");
+ $(".askNote").classList.add("hidden");
  playTupaAction("tupaDoubleJump");
  // スマホでは答えが画面の下に出るので、見える位置までスクロール
  const r=$("#answer").getBoundingClientRect();
@@ -805,7 +839,6 @@ $("#makeMine").onclick=()=>{
  challengeText=null;
  document.body.classList.remove("is-challenge");
  $("#challenge").classList.add("hidden");
- $("#challengeHead").classList.add("hidden");
  $("#maker").classList.remove("hidden");
  $("#tableLabel").textContent="もじひょう";
  $("#tableSub").textContent="タップで入力";
