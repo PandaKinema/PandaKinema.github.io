@@ -956,7 +956,8 @@ content:
       - { name: header_logo, label: ヘッダーのロゴ, type: image, options: { path: new/img/site }, description: "白いロゴ(背景透明)。正方形のアイコン。高さ30pxで表示" }
       - { name: about_logo, label: ABOUT のロゴ, type: image, options: { path: new/img/site }, description: "白いロゴ(背景透明)" }
       - { name: brand_logo, label: 看板バナーのロゴ, type: image, options: { path: new/img/site }, description: "バナーの「パンダキネマ(看板)」に出す白いロゴ(背景透明)" }
-      - { name: brand_copy_ja, label: 看板バナーの一言, type: string, description: "ロゴの下に出る1行" }
+      - { name: brand_copy_image, label: 看板バナーの一言(画像), type: image, options: { path: new/img/site }, description: "ロゴの下に出す文字の画像(白・背景透明)。あれば下の文字より優先" }
+      - { name: brand_copy_ja, label: 看板バナーの一言, type: string, description: "ロゴの下に出る1行(画像がないとき。画像があるときは読み上げ用)" }
       - { name: brand_copy_en, label: 看板バナーの一言(英語), type: string, hidden: true }
       - { name: member_label, label: メンバー欄の見出し, type: string, description: "例:MEMBER / DIRECTOR / FOUNDER" }
       - { name: member_name_ja, label: 名前, type: string }
