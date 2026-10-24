@@ -179,6 +179,7 @@ textarea:focus{outline:none;border-color:var(--cream3);box-shadow:0 0 0 3px rgba
     <button id="savePng" class="btn primary">保存する</button>
     <button id="sharePage" class="btn secondary">共有する</button>
    </div>
+   <div class="row"><button id="shareXMaker" class="btn secondary">Xでシェア</button></div>
    <div id="admin" class="admin hidden">
     <p class="note">管理者モード(収録字形:<span id="glyphCount"></span>文字)</p>
     <div class="row">
@@ -471,9 +472,22 @@ async function shareImage(text,url,{xFallback=false}={}){
  try{ await navigator.clipboard.writeText(body+"\n"+url); toast("共有用の文章とURLをコピーしました"); }
  catch{ prompt("この内容を共有してください",body+"\n"+url); }
 }
+// Xのリンクカード用サーバー(Cloudflare Workers)のURL。空のあいだは、従来どおり画像を添付する方法で共有
+const CARD_SERVER="";
+function shareToX(text){
+ const p=packed(text);
+ if(CARD_SERVER && p){
+   // カード画像つきで投稿画面を開く(画像はリンクのカードとして表示され、押すとお題ページへ)
+   const url=CARD_SERVER.replace(/\/$/,"")+"/m/"+p;
+   window.open("https://x.com/intent/tweet?"+new URLSearchParams({text:SHARE_TITLE+"\n"+SHARE_TAGS,url}).toString(),"_blank","noopener,noreferrer");
+   return;
+ }
+ shareImage(text,shareUrlFor(text),{xFallback:true});
+}
 // 何も入力していないときは、表示中のサンプルをそのまま共有する
 $("#sharePage").onclick=()=>{ const t=normalizeText(currentText()); shareImage(t,shareUrlFor(t)); };
-$("#shareX").onclick=()=>shareImage(challengeText||"",location.href,{xFallback:true});
+$("#shareXMaker").onclick=()=>shareToX(normalizeText(currentText()));
+$("#shareX").onclick=()=>shareToX(challengeText||"");
 
 /* ---- ビビル文字のSVG(こたえ・もじひょう・管理者用) ---- */
 function unionPath(g,x0,y0,u){
