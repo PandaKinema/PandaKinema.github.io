@@ -277,6 +277,7 @@
     .about .a-card{display:flex;flex-direction:column;justify-content:center}
     .about .a-text{margin-bottom:0}
     .a-logo{display:block;width:min(360px,80%)}
+    .a-copy{display:block;width:min(200px,46%);margin-top:12px;opacity:.9}   /* カタカナロゴに添える「Play, Now Showing.」 */
     .a-text{margin:20px 0 22px;font-size:15px;line-height:2;color:var(--soft);max-width:34em}
     .socials{display:flex;flex-wrap:wrap;gap:10px}
     .soc{display:grid;place-items:center;min-width:42px;height:42px;padding:0 11px;border-radius:9px;background:#fff;color:#16181a;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.02em;transition:translate .15s ease}
@@ -447,7 +448,7 @@
   <section class="sec" id="about" aria-label="ABOUT">
     <div class="about">
       <div class="a-intro">
-        <img class="a-logo" src="img/{{about_logo}}" alt="パンダキネマ PandaKinema" loading="lazy">
+        <img class="a-logo" src="img/{{about_logo}}" alt="パンダキネマ PandaKinema" loading="lazy">{{about_copy}}
         <p class="a-text">{{about}}</p>
       </div>
       <div class="a-card"><p class="lbl"><span class="cap">{{member_label}}</span></p><div class="member"><span class="ava">{{member_ava}}</span><div class="who"><p class="who-n"><b>{{member_name}}</b><a class="soc ic dk mx" href="{{member_x}}" target="_blank" rel="noopener" aria-label="ゐするぎのX"><img src="img/site/icon_x.svg" alt=""></a></p><small>{{member_role}}</small></div></div>{{member_bio}}</div>
