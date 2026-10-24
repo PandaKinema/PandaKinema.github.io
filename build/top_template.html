@@ -277,7 +277,8 @@
     .about .a-card{display:flex;flex-direction:column;justify-content:center}
     .about .a-text{margin-bottom:0}
     .a-logo{display:block;width:min(360px,80%)}
-    .a-copy{display:block;width:min(200px,46%);margin-top:12px;opacity:.9}   /* カタカナロゴに添える「Play, Now Showing.」 */
+    .a-copy{display:block;width:min(200px,46%);margin-top:30px;opacity:.9}
+    .a-copy+.a-text{margin-top:12px}   /* 一言はロゴより文章に寄せる */   /* カタカナロゴに添える「Play, Now Showing.」 */
     .a-text{margin:20px 0 22px;font-size:15px;line-height:2;color:var(--soft);max-width:34em}
     .socials{display:flex;flex-wrap:wrap;gap:10px}
     .soc{display:grid;place-items:center;min-width:42px;height:42px;padding:0 11px;border-radius:9px;background:#fff;color:#16181a;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.02em;transition:translate .15s ease}
