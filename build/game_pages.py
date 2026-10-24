@@ -1139,7 +1139,7 @@ TEMPLATE = r'''<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#1b2228">
   <title>{{title}} | PANDA KINEMA</title>
   <meta name="description" content="{{description}}">
   <meta property="og:title" content="{{title}} | PANDA KINEMA">
@@ -1148,7 +1148,7 @@ TEMPLATE = r'''<!doctype html>
   <meta name="twitter:card" content="summary_large_image">
 {{ogp_meta}}
   <style>
-    :root{--bg:#090909;--line:#2a2a2a;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
+    :root{--bg:#1b2228;--line:#3a464f;--text:#f4f4f0;--muted:#949494;--soft-text:#c9c9c5;
       --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
       --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans)}
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
