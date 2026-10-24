@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#14181c">
+<meta name="theme-color" content="#1b2228">
 <title>ビビル文字ジェネレータ</title>
 <meta name="description" content="ことばをビビル文字に変換して遊べます。ボードゲーム「ビビルの塔」の文字で、なぞのメッセージをつくってシェアしよう。">
 <meta property="og:title" content="ビビル文字ジェネレータ | PANDA KINEMA">
@@ -20,7 +20,7 @@
  --line:rgba(23,63,83,.2);--tile:rgba(23,63,83,.06);--tile-on:rgba(23,63,83,.2);--red:#c8412c;
  --pri-bg:#173f53;--pri-fg:#fef4d6;--sec-bg:#fffcf2;--sec-fg:#173f53;--sec-bd:#173f53;
  --pat-a:.05;   /* ビビル文字の模様の濃さ */
- --black:#090909;
+ --black:#1b2228;   /* 下地(作品ページ・トップと同じ) */
  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
  --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
  --tw:76px;     /* トゥーパの大きさ */
@@ -30,7 +30,7 @@
  --paper:#2c5b73;--field:rgba(9,32,45,.32);--ink:#fef4d6;--ink2:rgba(254,244,214,.78);--ink3:rgba(254,244,214,.45);
  --line:rgba(254,244,214,.26);--tile:rgba(254,244,214,.09);--tile-on:rgba(254,244,214,.26);--red:#ffb4a3;
  --pri-bg:#fef4d6;--pri-fg:#173f53;--sec-bg:transparent;--sec-fg:#fef4d6;--sec-bd:rgba(254,244,214,.7);
- --pat-a:.06;
+ --pat-a:.08;
 }
 @supports not (text-box:trim-both cap alphabetic){:root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)}}
 *{box-sizing:border-box}
@@ -41,7 +41,7 @@ a{color:inherit}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* サイト共通のヘッダー(作品ページと同じ形) */
-.site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(20,24,28,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
 .brand{flex:none;display:flex;align-items:center;height:28px}
 .brand img{height:30px;width:auto;display:block}
