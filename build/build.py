@@ -283,7 +283,7 @@ def render():
     v = dict(catw='%.2f' % catw, total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
              about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals,
-             header_logo=img(SITE.get('header_logo') or 'brand.png'), about_copy=('<img class="a-copy" src="img/%s" alt="%s" loading="lazy">' % (img(SITE['brand_copy_image']), e(str(SITE.get('brand_copy_ja') or '')))) if SITE.get('brand_copy_image') else '', about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'),
+             header_logo=img(SITE.get('header_logo') or 'brand.png'), member_handle=e('@' + (re.search(r'(?:x|twitter)\.com/([\w]+)', str(SITE.get('member_x') or '')) or re.search(r'(.*)', 'panda_kinema')).group(1)), about_copy=('<img class="a-copy" src="img/%s" alt="%s" loading="lazy">' % (img(SITE['brand_copy_image']), e(str(SITE.get('brand_copy_ja') or '')))) if SITE.get('brand_copy_image') else '', about_logo=img(SITE.get('about_logo') or 'logo_pk_kana.png'), icon=img(SITE.get('icon') or 'pk_icon.png'),
              member_label=e(SITE.get('member_label') or 'MEMBER'), member_name=T(SITE.get('member_name_ja') or 'ゐするぎ', SITE.get('member_name_en') or 'Isurugi'),
              member_role=e(SITE.get('member_role') or ''),
              member_bio=('<p class="a-bio">%s</p>' % T(SITE.get('member_bio_ja'), SITE.get('member_bio_en'))) if SITE.get('member_bio_ja') else '',
