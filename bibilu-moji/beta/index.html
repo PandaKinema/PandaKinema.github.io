@@ -25,12 +25,12 @@
  --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
  --tw:76px;     /* トゥーパの大きさ */
 }
-/* 比較用:少し薄めの紺(<html class="navy">) */
-:root.navy{
+/* 地の色:少し薄めの紺(座布団の中はアイボリー) */
+:root{
  --paper:#2c5b73;--field:rgba(9,32,45,.32);--ink:#fef4d6;--ink2:rgba(254,244,214,.78);--ink3:rgba(254,244,214,.45);
  --line:rgba(254,244,214,.26);--tile:rgba(254,244,214,.09);--tile-on:rgba(254,244,214,.26);--red:#ffb4a3;
  --pri-bg:#fef4d6;--pri-fg:#173f53;--sec-bg:transparent;--sec-fg:#fef4d6;--sec-bd:rgba(254,244,214,.7);
- --pat-a:.16;
+ --pat-a:.10;
 }
 @supports not (text-box:trim-both cap alphabetic){:root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)}}
 *{box-sizing:border-box}
@@ -44,13 +44,13 @@ a{color:inherit}
 .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(20,24,28,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
 .brand{flex:none;display:flex;align-items:center;height:28px}
-.brand img{height:24px;width:auto;display:block}
+.brand img{height:30px;width:auto;display:block}
 .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font-family:var(--cond);font-size:clamp(14px,1.6vw,19px);font-weight:700;text-transform:uppercase;letter-spacing:.01em}
 .site-nav::-webkit-scrollbar{display:none}
 .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9;text-decoration:none}
 .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
 .cap{display:block;line-height:1;text-box:trim-both cap alphabetic}
-@media(max-width:650px){.brand img{height:18px}.site-nav{gap:12px;font-size:14px}}
+@media(max-width:650px){.brand img{height:26px}.site-nav{gap:12px;font-size:14px}}
 
 /* 紙(黒い下地の上に載ったレイヤー)。ビビル文字の模様を薄く乗算 */
 .paper{position:relative;isolation:isolate;max-width:1280px;margin-inline:auto;background:var(--paper)}
@@ -68,7 +68,12 @@ a{color:inherit}
 .layout{max-width:560px;margin:0 auto;padding:14px 16px 0}
 .frame{display:flex;justify-content:center}
 canvas{display:block;width:auto;height:auto;max-width:100%;border-radius:6px;box-shadow:0 14px 30px rgba(9,20,28,.24),0 2px 6px rgba(9,20,28,.14)}
-.panel{padding:18px 0 4px}
+.panel{margin-top:18px;padding:16px 14px 14px}
+.cushion{
+ --paper:#fef4d6;--field:#fffcf2;--ink:#173f53;--ink2:rgba(23,63,83,.74);--ink3:rgba(23,63,83,.42);
+ --line:rgba(23,63,83,.2);--tile:rgba(23,63,83,.06);--tile-on:rgba(23,63,83,.2);--red:#c8412c;
+ --pri-bg:#173f53;--pri-fg:#fef4d6;--sec-bg:#fffcf2;--sec-fg:#173f53;--sec-bd:#173f53;
+ background:var(--paper);color:var(--ink);border-radius:18px;box-shadow:0 14px 30px rgba(9,20,28,.2)}
 
 /* 入力欄とトゥーパ(トゥーパは入力欄の右に立つ) */
 .inputRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
@@ -103,6 +108,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 @keyframes tupaRingFloat{0%,100%{transform:translateY(-1px)}50%{transform:translateY(5px)}}
 
 .note{font-size:12px;color:var(--ink2);line-height:1.65;margin:9px 0 0;text-align:center}
+.note span{display:inline-block}
 .status{font-size:12px;color:var(--red);font-weight:700;line-height:1.6;margin:6px 0 0;text-align:center}
 .status:empty{display:none}
 
@@ -120,7 +126,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .admin .btn{font-size:13px;padding:10px}
 
 /* こたえ */
-.answer{margin-top:14px;text-align:center}
+.answer{margin-top:4px;text-align:center}
 .ansText{font-size:22px;font-weight:800;letter-spacing:.08em;word-break:break-word}
 .ansTiles{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px}
 .ansLine{display:flex;gap:6px;justify-content:center}
@@ -202,7 +208,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
  .layout{max-width:1060px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:40px;align-items:start;padding:18px 32px 0}
  .stage{position:sticky;top:74px}
  canvas{max-height:calc(100vh - 186px);min-height:360px}
- .panel{padding-top:0}
+ .panel{margin-top:0;padding:16px 18px}
  .challengeHead{display:none}
  .panelHead{display:block!important}
  body:not(.is-challenge) .table summary{cursor:default;pointer-events:none}
@@ -241,7 +247,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 <!-- サイトのトップを /new/ から入れ替えたら、このページの「/new/」を外す -->
 <header class="site-header">
  <div class="bar">
-  <a class="brand" href="/new/"><img src="/new/img/site/brand.png" alt="PANDA KINEMA"></a>
+  <a class="brand" href="/new/"><img src="/new/img/site/logo_icon.png" alt="PANDA KINEMA"></a>
   <nav class="site-nav" aria-label="サイト"><a href="/new/#news"><span class="cap">NEWS</span></a><a href="/new/#board"><span class="cap">BOARD GAME</span></a><a href="/new/#movie"><span class="cap">MOVIE</span></a><a href="/new/#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="/new/#about"><span class="cap">ABOUT</span></a></nav>
  </div>
 </header>
@@ -262,7 +268,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
   <div class="frame"><canvas id="preview" role="img" aria-label="ビビル文字のプレビュー"></canvas></div>
  </div>
 
- <div class="panel">
+ <div class="panel cushion">
   <section id="maker">
    <div class="inputRow">
     <div>
@@ -276,7 +282,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
      </div>
     </div>
    </div>
-   <p class="note">ひらがな・カタカナ・英数字・！？ー が使えます(漢字は不可)<br>6文字ごとに折り返し。トゥーパを押すと文字が消えます。</p>
+   <p class="note"><span>ひらがな・カタカナ・英数字・！？ーが使えます</span><span>(漢字は不可)</span><br><span>6文字ごとに折り返し。</span><span>トゥーパを押すと文字が消えます。</span></p>
    <p id="missing" class="status" aria-live="polite"></p>
    <div class="row">
     <button id="savePng" class="btn primary">保存する</button>
@@ -744,7 +750,7 @@ function showChallenge(text){
  $("#challenge").classList.remove("hidden");
  $("#challengeHead").classList.remove("hidden");
  $("#answer").classList.add("hidden");
- $("#reveal").classList.remove("hidden");
+ $("#reveal").parentElement.classList.remove("hidden");
  $("#tupaSlot2").appendChild($("#sampleTupa"));
  $("#tableLabel").textContent="ヒント";
  $("#tableSub").textContent="このお題の文字(五十音順)";
@@ -763,7 +769,7 @@ $("#reveal").onclick=()=>{
    `<div class="ansLine">${line.map(ch=>`<span class="at">${glyphSvg(ch)}<i style="animation-delay:${(n++)*70}ms">${ch===" "||ch==="　"?"":ch}</i></span>`).join("")}</div>`
  ).join("");
  $("#answer").classList.remove("hidden");
- $("#reveal").classList.add("hidden");
+ $("#reveal").parentElement.classList.add("hidden");
  playTupaAction("tupaDoubleJump");
  // スマホでは答えが画面の下に出るので、見える位置までスクロール
  const r=$("#answer").getBoundingClientRect();
