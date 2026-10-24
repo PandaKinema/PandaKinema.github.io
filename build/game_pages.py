@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v41
+# パンダキネマ 作品ページ 共通フォーマット v42
+#     v42: ページの幅はトップの絵の幅まで(左右は黒)/帯の色を自由に指定/白い文字優先のときBOOTHボタンも白文字
 #     v41: 遊び方をタブで複数(イカタコ:対戦・協力・ソロ)/トップの文字色を選べる(hero_ink)/白い文字を優先(prefer_white)
 #     v40: 強調は選んだ色か赤、読みにくければ太字だけ/遊び方の図の下地はメインカラーの薄色
 #     v39: 文字は決めた色・白・黒だけ/強調は色を変える(基本は赤、編集画面で選べる。読みにくければ自動でほかの色)
@@ -309,6 +310,9 @@ def apply(key):
         D = pick.get(str(d.get('bg_color') or cb), M)            # 背景(動画・遊び方・購入)。空ならカードと同じ
         O0 = 'accent' if cb == 'main' else ('main' if cb == 'accent' else max(('main', 'accent'), key=lambda k: contrast(pick[k], D)))
         O = pick.get(str(d.get('accent_color') or O0), A)        # 帯(ストーリー・ギャラリー)・見出し・ボタン。空ならもう一方
+        bc = str(d.get('band_color') or '').strip()
+        if re.fullmatch(r'#?[0-9a-fA-F]{6}', bc):   # 「帯の色」を自由に指定したとき(帯・見出しだけ)
+            O = '#' + bc.lstrip('#')
         if D == O:
             O = A if D != A else M
         dark, light = (D, O) if lum(D) < lum(O) else (O, D)
@@ -329,7 +333,7 @@ def apply(key):
         css.append('--b2-bg:%s;--b2-ink:%s;--hl2:%s' % (O, ink(O, D), hl2))
         css.append('--sec-bg:%s;--sec-ink:%s' % (O, ink(O, D)))         # 見出しのピル
         css.append('--accent:%s;--on-accent:%s' % (O, ink(O, D)))       # ふつうのボタン
-        css.append('--buy-bg:%s;--buy-ink:%s' % (M, ink(M, A)))         # BOOTHで購入:土台がメインカラー、文字がアクセントカラー
+        css.append('--buy-bg:%s;--buy-ink:%s' % (M, '#ffffff' if PREFW[0] and contrast(M, '#ffffff') >= 2 else ink(M, A)))         # BOOTHで購入:土台がメインカラー、文字がアクセントカラー
         soft = mix(M, '#ffffff', .15)   # 遊び方の図の下地:メインカラーを15%だけ白に重ねた色
         css.append('--p-ink:%s;--soft:%s;--pan-bg:%s;--pan-ink:#fff' % (p_ink, soft, p_ink))
         css.append('--lt:%s;--on-lt:%s;--dk:%s;--on-dk:%s' % (light, ink(light, dark), dark, ink(dark, light)))
@@ -1131,7 +1135,7 @@ TEMPLATE = r'''<!doctype html>
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
     /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
-    :root{--page-max:1440px}
+    :root{--page-max:min(1440px,calc(clamp(600px,calc(100svh - 56px),1200px) * 1.4283))}   /* トップの絵(2001×1401)を画面の高さで見せたときの幅まで。その外は黒 */
     main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}

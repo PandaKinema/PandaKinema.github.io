@@ -56,7 +56,7 @@
     /* ===== 共通パーツ ===== */
     .key{background:var(--k-bg);color:var(--k-ink)}
     /* 作品ページは、サイトの黒い下地の上に載った1枚のレイヤー。幅は --page-max まで、その外は下地の黒 */
-    :root{--page-max:1440px}
+    :root{--page-max:min(1440px,calc(clamp(600px,calc(100svh - 56px),1200px) * 1.4283))}   /* トップの絵(2001×1401)を画面の高さで見せたときの幅まで。その外は黒 */
     main.key{position:relative;max-width:var(--page-max);margin-inline:auto;overflow-x:clip}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em}
     .sec-h{margin-bottom:22px;background:var(--sec-bg);color:var(--sec-ink);font-size:clamp(17px,1.9vw,21px)}
