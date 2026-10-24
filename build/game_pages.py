@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v42
+# パンダキネマ 作品ページ 共通フォーマット v43
+#     v43: 本文を細く・強調を太く(同じ色なら下線)/項目ごとに背景の色を選べる
 #     v42: ページの幅はトップの絵の幅まで(左右は黒)/帯の色を自由に指定/白い文字優先のときBOOTHボタンも白文字
 #     v41: 遊び方をタブで複数(イカタコ:対戦・協力・ソロ)/トップの文字色を選べる(hero_ink)/白い文字を優先(prefer_white)
 #     v40: 強調は選んだ色か赤、読みにくければ太字だけ/遊び方の図の下地はメインカラーの薄色
@@ -338,6 +339,22 @@ def apply(key):
         css.append('--p-ink:%s;--soft:%s;--pan-bg:%s;--pan-ink:#fff' % (p_ink, soft, p_ink))
         css.append('--lt:%s;--on-lt:%s;--dk:%s;--on-dk:%s' % (light, ink(light, dark), dark, ink(dark, light)))
         g['_D'] = D
+        css.append('--hl-deco:%s;--hl2-deco:%s' % ('underline' if hl == k_ink else 'none', 'underline' if hl2 == b2_ink else 'none'))   # 強調が文字と同じ色なら下線
+        # 項目ごとの背景色(編集画面「背景の色(項目ごと)」)。空なら今までどおり
+        g['sec_style'] = {}
+        for sec, typ in (('video', 'k'), ('story', 'b'), ('rules', 'k'), ('photo', 'b'), ('buy', 'k')):
+            v = str((d.get('sections') or {}).get(sec + '_bg') or '').strip()
+            C = pick.get(v) or (('#' + v.lstrip('#')) if re.fullmatch(r'#?[0-9a-fA-F]{6}', v) else None)
+            if not C:
+                continue
+            oth = max((D, O, '#ffffff', '#000000'), key=lambda x: (x in (D, O), contrast(x, C) >= 3, contrast(x, C)))
+            fg, h = text_hl(C, oth, g.get('hl_fixed') if typ == 'k' else None)
+            deco = 'underline' if h == fg else 'none'
+            if typ == 'k':
+                st = 'background-color:%s;--k-bg:%s;--k-ink:%s;--hl:%s;--hl-deco:%s;--sec-bg:%s;--sec-ink:%s;--accent:%s;--on-accent:%s;color:%s' % (C, C, fg, h, deco, oth, ink(oth, C), oth, ink(oth, C), fg)
+            else:
+                st = '--b2-bg:%s;--b2-ink:%s;--hl2:%s;--hl2-deco:%s' % (C, fg, h, deco)
+            g['sec_style'][sec] = ' style="%s"' % st
     hero(g, d, t)
     # 編集画面がすべて:画像の欄が空(消した)なら、デザイン側の初期値も使わず「なし」
     if d.get('bg1_image'):
@@ -1320,7 +1337,7 @@ TEMPLATE = r'''<!doctype html>
     .js-only{display:none !important}
     .js .js-only.cnav{display:grid !important}
     .js .js-only.cdots{display:flex !important}
-    .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
+    .chara-note{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
     .chara-name:empty{display:none}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
@@ -1328,8 +1345,9 @@ TEMPLATE = r'''<!doctype html>
     .story .en{margin-bottom:12px;padding-left:.34em}
 
     /* ===== 4. どんなゲーム?(目的の要約+図) ===== */
-    .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:700;text-align:center;word-break:auto-phrase}
-    .summary em,.story em{font-style:normal;font-weight:900}
+    .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:500;text-align:center;word-break:auto-phrase}
+    .summary em,.story em,.chara-note em{font-style:normal;font-weight:900;text-decoration:var(--hl-deco,none);text-decoration-thickness:2px;text-underline-offset:5px}
+    .band-c{--hl-deco:var(--hl2-deco,none)}
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
@@ -1344,8 +1362,8 @@ TEMPLATE = r'''<!doctype html>
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:0;background:var(--p-ink);color:#fff;
       -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;border-radius:var(--snum-r,0);font:900 22px/1 Georgia,"Times New Roman",serif}
     .snum b{font:inherit;translate:var(--snum-x,0px) var(--snum-y,0px)}   /* 番号の位置(編集画面で微調整) */
-    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
-    .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
+    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:600;text-align:center;word-break:auto-phrase;text-wrap:pretty}
+    .step-lead em{font-style:normal;font-weight:900;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
     .ptabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 20px}
     .ptabs button{padding:8px 18px;border:2px solid var(--k-ink);border-radius:999px;background:transparent;color:var(--k-ink);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
@@ -1751,7 +1769,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title"{{video_hidden}}>
+  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title"{{video_hidden}}{{st_video}}>
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title">{{L:紹介動画|Videos}}</h2></div></header>
@@ -1770,7 +1788,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
 
   <!-- 3. キャラクター+取説の導入文(世界観+ルール) -->
-  <section class="band band-c chara" id="story" aria-labelledby="intro-title">
+  <section class="band band-c chara" id="story" aria-labelledby="intro-title"{{st_story}}>
     <div class="wrap chara-in">
       <div class="story reveal">
         <p class="en" aria-hidden="true">STORY</p>
@@ -1784,7 +1802,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
 
   <!-- 4. どんなゲーム?(目的の要約+図) -->
-  <section class="band tex" id="rules" aria-labelledby="rules-title">
+  <section class="band tex" id="rules" aria-labelledby="rules-title"{{st_rules}}>
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title">{{L:どんなゲーム?|What kind of game?}}</h2></div></header>
@@ -1798,7 +1816,7 @@ TEMPLATE = r'''<!doctype html>
     </div>
   </section>
 
-  <section class="band band-c" id="photo" aria-labelledby="photo-title">
+  <section class="band band-c" id="photo" aria-labelledby="photo-title"{{st_photo}}>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">GALLERY</p><div class="sec-row"><h2 class="pill sec-h" id="photo-title">{{L:ギャラリー|Gallery}}</h2></div></header>
       <div class="gal reveal">
@@ -1811,7 +1829,7 @@ TEMPLATE = r'''<!doctype html>
     </div>
   </section>
 
-  <section class="band tex buy" id="buy" aria-label="購入">
+  <section class="band tex buy" id="buy" aria-label="購入"{{st_buy}}>
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
     <div class="panel buy-box reveal">
@@ -2168,7 +2186,7 @@ def render(key):
         catch=br(e(g['catch'])), intro=rich_L(g['intro']), intro_img=g['intro_img'][0], intro_alt=e(g['intro_img'][1]), intro_cls=g['intro_img'][2],
         summary=rich_L(g['summary']),
         spec_html='\n'.join('            <div><dt>%s</dt><dd>%s</dd></div>' % (e(a), e(b)) for a, b in g['spec']),
-        steps_html=steps, tabs_html=tabs_html, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
+        steps_html=steps, tabs_html=tabs_html, **{'st_' + k: g.get('sec_style', {}).get(k, '') for k in ('video', 'story', 'rules', 'photo', 'buy')}, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
         gallery_html='\n'.join(['          <figure class="gslide"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button><figcaption>{{L:%s|%s}}</figcaption></figure>' % (e(t), f, e(t), e(t), e(te)) for f, t, te, c in g.get('gallery', [])]
                                 + ['          <figure class="gslide"><div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div></figure>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
         gdots_html=''.join('<button type="button" aria-label="%d枚目"%s></button>' % (i + 1, ' aria-current="true"' if i == 0 else '') for i in range(len(g.get('gallery', [])) + len(g.get('gallery_todo', [])))),

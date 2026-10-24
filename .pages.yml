@@ -122,6 +122,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object
@@ -244,6 +254,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object
@@ -366,6 +386,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object
@@ -488,6 +518,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object
@@ -610,6 +650,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object
@@ -732,6 +782,16 @@ content:
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
+          - name: sections
+            label: 背景の色(項目ごと)
+            description: "項目ごとに背景の色を変えたいときだけ。空なら「背景の色」「帯・見出しの色」のまま。文字の色は自動"
+            type: object
+            fields:
+              - { name: video_bg, label: 紹介動画, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: story_bg, label: ストーリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: rules_bg, label: どんなゲーム?, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: photo_bg, label: ギャラリー, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
+              - { name: buy_bg, label: 購入, type: select, options: { values: [ { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] } }
           - name: hero
             label: トップ画像
             type: object

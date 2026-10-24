@@ -26,7 +26,7 @@
       --orb-glow:27,185,238;
       --orn:url(../../img/page/b_tupa_sten.png?v=7bd22fa3); --snum:url(../../img/page/b_tupa_sil.png?v=e687c2a3);   /* 見出しの飾り:トゥーパ(トークン)のシルエット。反転しない */
     
-      --k-bg:#153e53;--k-ink:#fff5d7;--hl:#f2d756;--b2-bg:#fff5d7;--b2-ink:#153e53;--hl2:#d4242b;--sec-bg:#fff5d7;--sec-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--p-ink:#153e53;--soft:#dce2e5;--pan-bg:#153e53;--pan-ink:#fff;--lt:#fff5d7;--on-lt:#153e53;--dk:#153e53;--on-dk:#fff5d7;--tex-c:url(../../img/page/b_tex_c.png?v=5818d645);--tex-size:525px 175px;--band:url(../../img/page/b_band.png?v=2fbc6c74);--band-h:24px;--band-d:block;--snum-y:-2px;--orn:url(../../img/page/b_tupa_sten.png?v=7bd22fa3);--snum:url(../../img/page/b_tupa.png?v=e687c2a3);}
+      --k-bg:#153e53;--k-ink:#fff5d7;--hl:#f2d756;--b2-bg:#fff5d7;--b2-ink:#153e53;--hl2:#d4242b;--sec-bg:#fff5d7;--sec-ink:#153e53;--accent:#fff5d7;--on-accent:#153e53;--buy-bg:#153e53;--buy-ink:#fff5d7;--p-ink:#153e53;--soft:#dce2e5;--pan-bg:#153e53;--pan-ink:#fff;--lt:#fff5d7;--on-lt:#153e53;--dk:#153e53;--on-dk:#fff5d7;--hl-deco:none;--hl2-deco:none;--tex-c:url(../../img/page/b_tex_c.png?v=5818d645);--tex-size:525px 175px;--band:url(../../img/page/b_band.png?v=2fbc6c74);--band-h:24px;--band-d:block;--snum-y:-2px;--orn:url(../../img/page/b_tupa_sten.png?v=7bd22fa3);--snum:url(../../img/page/b_tupa.png?v=e687c2a3);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -242,7 +242,7 @@
     .js-only{display:none !important}
     .js .js-only.cnav{display:grid !important}
     .js .js-only.cdots{display:flex !important}
-    .chara-note{font-size:13.5px;line-height:1.8;font-weight:700;word-break:auto-phrase}
+    .chara-note{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
     .chara-name:empty{display:none}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
@@ -250,8 +250,9 @@
     .story .en{margin-bottom:12px;padding-left:.34em}
 
     /* ===== 4. どんなゲーム?(目的の要約+図) ===== */
-    .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:700;text-align:center;word-break:auto-phrase}
-    .summary em,.story em{font-style:normal;font-weight:900}
+    .summary{margin:0 auto 26px;max-width:44em;font-size:16px;line-height:1.95;font-weight:500;text-align:center;word-break:auto-phrase}
+    .summary em,.story em,.chara-note em{font-style:normal;font-weight:900;text-decoration:var(--hl-deco,none);text-decoration-thickness:2px;text-underline-offset:5px}
+    .band-c{--hl-deco:var(--hl2-deco,none)}
     .summary em{font-style:normal;color:var(--hl)}
     .band-c em{font-style:normal;color:var(--hl2)}   /* 太字にしたところ(もう1色の帯の上) */
     /* 横に流れるカード(画面の端まで。左端は本文の幅にそろえる) */
@@ -266,8 +267,8 @@
     .snum{display:grid;place-items:center;width:48px;height:46px;padding-top:0;background:var(--p-ink);color:#fff;
       -webkit-mask:var(--snum) center/contain no-repeat;mask:var(--snum) center/contain no-repeat;border-radius:var(--snum-r,0);font:900 22px/1 Georgia,"Times New Roman",serif}
     .snum b{font:inherit;translate:var(--snum-x,0px) var(--snum-y,0px)}   /* 番号の位置(編集画面で微調整) */
-    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:800;text-align:center;word-break:auto-phrase;text-wrap:pretty}
-    .step-lead em{font-style:normal;color:#d4242b}   /* 取説の赤字 */
+    .step-lead{flex:1;display:grid;place-items:center;margin:0 4px;font-size:15px;line-height:1.7;font-weight:600;text-align:center;word-break:auto-phrase;text-wrap:pretty}
+    .step-lead em{font-style:normal;font-weight:900;color:#d4242b}   /* 取説の赤字 */
     .viz{--card-w:66px;position:relative;display:flex;align-items:center;justify-content:center;height:206px;padding:12px;border-radius:14px;background:var(--soft);overflow:hidden}
     .ptabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 20px}
     .ptabs button{padding:8px 18px;border:2px solid var(--k-ink);border-radius:999px;background:transparent;color:var(--k-ink);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
