@@ -51,7 +51,7 @@ content:
     format: yaml
     list: true
     fields:
-      - { name: key, label: 作品・ツール, type: select, options: { values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "バナーに出す作品かツール。自分で作った画像だけのバナーなら空のまま" }  # AUTO:works
+      - { name: key, label: 作品・ツール, type: select, options: { values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "バナーに出す作品かツール。自分で作った画像だけのバナーなら空のまま" }  # AUTO:works
       - { name: youtube, label: 背景で流すYouTube, type: string, description: "YouTubeのURL。key と一緒に入れると、ロゴやボタンはそのままで背景に音なしで流れます" }
       - { name: video, label: 背景で流す動画(mp4), type: file, options: { path: new/img/video }, description: "mp4 の動画。key と一緒に入れると背景で流れます(YouTubeより優先)。10MB以下くらいに" }
       - { name: start, label: 動画の開始(秒), type: string, description: "動画のどこから流すか。例:30 / 1:05。空なら最初から" }
@@ -215,7 +215,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -347,7 +347,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -479,7 +479,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -611,7 +611,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -743,7 +743,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -875,7 +875,7 @@ content:
           - { name: price_ja, label: 価格, type: string, description: "例:3,300円。空なら出しません" }
           - { name: price_en, label: 価格(英語), type: string, description: "例:¥3,300", hidden: true }
           - { name: booth, label: BOOTHのURL, type: string, description: "空なら「ボードゲーム(カード)」のBOOTH、それも空ならサークルのBOOTH", hidden: true }
-          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
+          - { name: related, label: 関連コンテンツ, type: select, options: { multiple: true, values: [ { value: "brand", label: "パンダキネマ(看板)" }, { value: "bibilu", label: "ビビルの塔" }, { value: "trico", label: "TRICO!" }, { value: "ikatako", label: "イカタコ" }, { value: "moko", label: "モコチャカ" }, { value: "koikoi", label: "こいこいのぼり 真打" }, { value: "bash", label: "BASH&SMASH" }, { value: "moji", label: "ビビル文字ジェネレータ" }, { value: "mockmaker", label: "カードモックツクール β" } ] }, description: "ページの下に出す関連コンテンツ(例:ビビル文字ジェネレータ)。空なら出ません" }  # AUTO:works
           - name: related_links
             label: 関連リンク
             description: "note の記事などのURLを入れると、そのページのタイトル・画像から自動でカードにします(関連コンテンツの後ろに並びます)"
@@ -953,8 +953,11 @@ content:
       - { name: member_x, label: ゐするぎの X, type: string }
       - { name: mail, label: 連絡先メール, type: string }
       - { name: ogp_image, label: X共有画像(トップ), type: image, options: { path: new/img/share }, description: "1200×630" }
-      - { name: header_logo, label: ヘッダーのロゴ, type: image, options: { path: new/img/site }, description: "白い文字のロゴ(背景透明)。高さ24pxで表示" }
+      - { name: header_logo, label: ヘッダーのロゴ, type: image, options: { path: new/img/site }, description: "白いロゴ(背景透明)。正方形のアイコン。高さ30pxで表示" }
       - { name: about_logo, label: ABOUT のロゴ, type: image, options: { path: new/img/site }, description: "白いロゴ(背景透明)" }
+      - { name: brand_logo, label: 看板バナーのロゴ, type: image, options: { path: new/img/site }, description: "バナーの「パンダキネマ(看板)」に出す白いロゴ(背景透明)" }
+      - { name: brand_copy_ja, label: 看板バナーの一言, type: string, description: "ロゴの下に出る1行" }
+      - { name: brand_copy_en, label: 看板バナーの一言(英語), type: string, hidden: true }
       - { name: member_label, label: メンバー欄の見出し, type: string, description: "例:MEMBER / DIRECTOR / FOUNDER" }
       - { name: member_name_ja, label: 名前, type: string }
       - { name: member_name_en, label: 名前(英語), type: string, hidden: true }

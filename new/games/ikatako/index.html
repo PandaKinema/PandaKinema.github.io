@@ -39,7 +39,7 @@
     .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
     .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
     .brand{flex:none;display:flex;align-items:center;height:28px}
-    .brand img{height:24px;width:auto}
+    .brand img{height:30px;width:auto}
     .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font-family:var(--cond);font-size:clamp(14px,1.6vw,19px);font-weight:700;text-transform:uppercase;letter-spacing:.01em}
     .site-nav::-webkit-scrollbar{display:none}
     .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9}
@@ -657,7 +657,7 @@
     /* ===== スマホ ===== */
     @media (max-width:650px){
       .wrap{width:calc(100% - 28px)}
-      .brand img{height:18px}
+      .brand img{height:26px}
       .site-nav{gap:12px;font-size:14px}
       html{scroll-padding-top:calc(66px + env(safe-area-inset-top,0px))}
       .hero{min-height:clamp(540px,calc(100svh - 56px),900px)}
@@ -726,7 +726,7 @@
 <body>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../../"><img src="../../img/site/brand.png?v=329028a3" alt="PANDA KINEMA"></a>
+    <a class="brand" href="../../"><img src="../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA"></a>
     <nav class="site-nav" aria-label="サイト"><a href="../../#news"><span class="cap">NEWS</span></a><a href="../../#board"><span class="cap">BOARD GAME</span></a><a href="../../#movie"><span class="cap">MOVIE</span></a><a href="../../#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="../../#about"><span class="cap">ABOUT</span></a></nav>
     <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true"><span class="cap">JA</span></button><button type="button" data-l="en" aria-pressed="false"><span class="cap">EN</span></button></div>
   </div>

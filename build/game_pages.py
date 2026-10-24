@@ -1167,7 +1167,7 @@ TEMPLATE = r'''<!doctype html>
     .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
     .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
     .brand{flex:none;display:flex;align-items:center;height:28px}
-    .brand img{height:24px;width:auto}
+    .brand img{height:30px;width:auto}
     .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font-family:var(--cond);font-size:clamp(14px,1.6vw,19px);font-weight:700;text-transform:uppercase;letter-spacing:.01em}
     .site-nav::-webkit-scrollbar{display:none}
     .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9}
@@ -1707,7 +1707,7 @@ TEMPLATE = r'''<!doctype html>
     /* ===== スマホ ===== */
     @media (max-width:650px){
       .wrap{width:calc(100% - 28px)}
-      .brand img{height:18px}
+      .brand img{height:26px}
       .site-nav{gap:12px;font-size:14px}
       html{scroll-padding-top:calc(66px + env(safe-area-inset-top,0px))}
       .hero{min-height:clamp(540px,calc(100svh - 56px),900px)}

@@ -10,7 +10,7 @@ def q(v):
 games, tools = load('games'), load('tools')
 sets = {
     'games': [(g['key'], g['name']) for g in games],
-    'works': [(g['key'], g['name']) for g in games] + [(t['key'], t['name']) for t in tools],
+    'works': [('brand', 'パンダキネマ(看板)')] + [(g['key'], g['name']) for g in games] + [(t['key'], t['name']) for t in tools],
     'categories': [(c['name'], c['name']) for c in load('categories') if c.get('name')],
     'roles': [(r['name'], r['name']) for r in load('roles') if r.get('name')],
 }

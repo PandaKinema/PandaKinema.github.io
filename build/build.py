@@ -235,6 +235,11 @@ def render():
     radios = ''.join('<input class="br sr" type="radio" name="bn" id="br%d" aria-label="%d枚目">' % (i + 1, i + 1) for i in range(n))
     slides = []; durs = {}
     for i, b in enumerate(BANNERS):
+        if b.get('key') == 'brand':   # 看板バナー:パンダキネマの英字ロゴ
+            copy = T(SITE.get('brand_copy_ja') or str(SITE.get('about_ja') or '').split('\n')[0], SITE.get('brand_copy_en') or str(SITE.get('about_en') or '').split('\n')[0])
+            slides.append('      <article class="slide s%d b-brand" style="--d:%ds"><img class="bb-logo" src="img/%s" alt="PANDA KINEMA"%s><p class="bb-copy">%s</p><div class="bb-btns"><a class="wb" href="#board"><b class="ar" aria-hidden="true">▶︎</b>%s</a><a class="wb" href="#about"><b class="ar" aria-hidden="true">▶︎</b>%s</a></div></article>' % (
+                i + 1, i * slide, img(SITE.get('brand_logo') or 'logo_en.png'), '' if i == 0 else ' loading="lazy"', copy, L('作品を見る', 'Our games'), L('パンダキネマについて', 'About us')))
+            continue
         if not b.get('key') and (b.get('image') or b.get('video') or b.get('youtube')):   # key なし:自分で作ったバナー画像・動画だけを出す
             alt = e(b.get('alt') or '')
             pic = vid(b.get('video'), b.get('youtube')) if (b.get('video') or b.get('youtube')) else '<img class="b-img" src="img/%s" alt="%s"%s>' % (img(b['image']), alt, '' if i == 0 else ' loading="lazy"')
