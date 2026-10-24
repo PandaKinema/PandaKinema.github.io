@@ -30,7 +30,7 @@
  --paper:#2c5b73;--field:rgba(9,32,45,.32);--ink:#fef4d6;--ink2:rgba(254,244,214,.78);--ink3:rgba(254,244,214,.45);
  --line:rgba(254,244,214,.26);--tile:rgba(254,244,214,.09);--tile-on:rgba(254,244,214,.26);--red:#ffb4a3;
  --pri-bg:#fef4d6;--pri-fg:#173f53;--sec-bg:transparent;--sec-fg:#fef4d6;--sec-bd:rgba(254,244,214,.7);
- --pat-a:.10;
+ --pat-a:.06;
 }
 @supports not (text-box:trim-both cap alphabetic){:root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)}}
 *{box-sizing:border-box}
@@ -217,11 +217,13 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
  .related{padding-top:72px}
 }
 .panelHead{text-align:center;margin-bottom:2px}
-.askRow{display:flex;align-items:flex-end;justify-content:center;gap:14px}
+.askRow{display:flex;flex-direction:column;align-items:center;gap:8px}
 .askRow .tupaSlot{flex:none}
-.askH{margin:0 0 calc(var(--tw) * .2);font-size:clamp(19px,5vw,22px);font-weight:800;line-height:1.4;letter-spacing:.03em;text-align:left}
-.askH span{display:inline-block}
+.askH{margin:0;font-size:clamp(18px,5.2vw,22px);font-weight:800;line-height:1.4;letter-spacing:.03em;text-align:center;white-space:nowrap}
+/* お題では文字表(ヒント)は使わない。トゥーパのヒントで十分(戻すならこの行を消す) */
+.is-challenge #glyphTable{display:none}
 .askNote{font-size:12px;color:var(--ink2);margin:10px 0 0;line-height:1.6}
+.askRow{--tw:70px}
 @media(min-width:900px){.askRow{--tw:84px}.askH{font-size:24px}}
 .askNote span{display:inline-block}
 /* PC で幅が狭いとき:座布団を少し細くして、画像と高さがそろう幅を確保 */
@@ -304,7 +306,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
    <div class="panelHead">
     <div class="askRow">
      <div id="tupaSlot2" class="tupaSlot"></div>
-     <h2 class="askH"><span>このビビル文字、</span><span>よめる？</span></h2>
+     <h2 class="askH">このビビル文字、よめる？</h2>
     </div>
     <p class="askNote"><span>わからないときはトゥーパを押すと、</span><span>1文字ずつ答えが出ます。</span></p>
    </div>
