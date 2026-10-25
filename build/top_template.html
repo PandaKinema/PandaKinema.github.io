@@ -346,9 +346,13 @@
       .slide.has-vid .b-vid{top:15%;height:70%}
       .slide.has-vid .b-yt,.slide.has-vid .b-vid{-webkit-mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%);mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%)}
       .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 78%)}
-      .b-logo{width:min(260px,66%)}
-      img.b-logo{max-height:110px}
-      .b-art{margin:14px 10vw 0}
+      /* パッケージは全作品同じ大きさ(高さ固定)。説明は2行ぶん固定。残りの高さにロゴを合わせる */
+      .slide:not(.b-custom):not(.has-vid) .b-art{flex:none;height:clamp(180px,34svh,250px);margin:14px 10vw 0}
+      .slide:not(.b-custom):not(.has-vid) .b-in{flex:1 1 auto;min-height:0;justify-content:flex-end}
+      .b-in .b-name{flex:0 1 auto;display:flex;align-items:flex-end;min-height:36px;height:clamp(52px,12svh,96px)}
+      .b-in .b-logo,.b-in img.b-logo,.b-in .b-mtitle{width:auto;height:100%;max-width:80%;max-height:none;object-fit:contain;object-position:left bottom;-webkit-mask-position:left bottom;mask-position:left bottom}
+      .b-in .tool-name{font-size:24px;line-height:1.25}
+      .b-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:calc(2 * 1.7em)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
       .b-intro{font-size:12.5px;line-height:1.7}
       .wb{padding:7px 12px;font-size:12px;border-radius:6px}
