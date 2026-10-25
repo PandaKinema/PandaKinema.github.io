@@ -798,14 +798,14 @@ GAMES['moko'] = dict(
     /* 4コマ目:4人の手札。ガブは消える */
     .mk4{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;width:100%}
     .mk4 .pl{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0}
-    .mk4 .lab{display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:800}
+    .mk4 .lab{position:relative;display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:800}
     .mk4 .lab b{padding:0 7px;border-radius:999px;background:var(--p-ink);color:#fff}
-    .mk4 .hand{display:flex;height:48px;align-items:flex-end}
+    .mk4 .hand{display:flex;justify-content:center;height:48px;align-items:flex-end;width:100%}
     .mk4 .hand .mkc{width:32px;margin-left:-14px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
     .mk4 .hand .mkc:first-child{margin-left:0}
     .mk4 .zero{display:grid;place-items:center;width:32px;height:44px;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px;font-size:10px;font-weight:800}
-    .mk4 .win{padding:0 7px;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
-    .mk4 .n{min-width:2.6em}
+    .mk4 .win{position:absolute;left:calc(100% + 4px);padding:0 7px;white-space:nowrap;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
+    .mk4 .n{min-width:0}
     @media all{
       /* 1:手札からめくりながら左下の山へ */
       .s1 .mkmv{animation:mkmv 6s cubic-bezier(.4,0,.2,1) infinite}
@@ -840,11 +840,11 @@ GAMES['moko'] = dict(
       /* 4:ガブが消える→枚数→勝ち */
       .mk4 .pl{animation:mk4p 8s ease infinite both;animation-delay:calc(var(--i) * .25s)}
       @keyframes mk4p{0%{opacity:0;translate:0 8px}6%,86%{opacity:1;translate:0 0}94%,100%{opacity:0}}
-      .mk4 .g{animation:mk4g 8s steps(1) infinite}
-      @keyframes mk4g{0%{display:block}40%,100%{display:none}}   /* ガブはぱっと消える。残りは真ん中にそろう */
+      .mk4 .g{animation:mk4g 8s linear infinite}
+      @keyframes mk4g{0%,26%{display:block;opacity:1;translate:0 0;filter:none}28%,30%,32%,34%{translate:0 -6px;filter:drop-shadow(0 0 3px #e8467a) drop-shadow(0 0 3px #e8467a)}29%,31%,33%{translate:0 0}36%{display:block;opacity:1}36.5%,100%{display:none;opacity:0}}   /* ガブは跳ねて光ってから、ぱっと消える。残りは真ん中にそろう */
       .mk4 .n .a{animation:mk4a 8s steps(1) infinite}.mk4 .n .b{animation:mk4b 8s steps(1) infinite}
-      @keyframes mk4a{0%{display:inline}40%,100%{display:none}}
-      @keyframes mk4b{0%{display:none}40%,100%{display:inline}}
+      @keyframes mk4a{0%{display:inline}36.5%,100%{display:none}}
+      @keyframes mk4b{0%{display:none}36.5%,100%{display:inline}}
       .mk4 .win{animation:mkpop 8s ease infinite;animation-delay:.6s}
     }
 ''',
@@ -880,7 +880,7 @@ GAMES['moko'] = dict(
                + '<span class="mkbub" style="right:0;top:44px">' + L('モコチャカ!', 'Mokochaka!') + '</span></div>'),
         # 4:誰かの手札がなくなったら終了。ガブを除いた手札が最も多い人の勝ち
         dict(cls='s4', b=L('誰かの手札がなくなったらゲーム終了です。[[ガブを除いた]]手札が最も多い人が勝ちです!', 'When someone runs out of cards, the game ends. The player with the most cards [[not counting Gabu]] wins!'),
-             v='<div class="mk4">' + mkpl(0, 'P1', ['m2', 'g1', 'p1'], 3, 2) + mkpl(1, 'P2', ['m1', 'p2', 'g2', 'o1', 'p3'], 5, 4, True) + mkpl(2, 'P3', [], 0, 0) + mkpl(3, 'P4', ['o2', 'g1', 'm3', 'g2'], 4, 2) + '</div>'),
+             v='<div class="mk4">' + mkpl(0, 'P1', ['m1', 'g1', 'p1', 'g2', 'g1'], 5, 2) + mkpl(1, 'P2', ['m2', 'p2', 'g1', 'o1'], 4, 3, True) + mkpl(2, 'P3', [], 0, 0) + mkpl(3, 'P4', ['o2', 'g2', 'm3'], 3, 2) + '</div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='pkg_moko.webp',
