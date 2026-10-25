@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#1b2228">
 <title>ビビル文字ジェネレータ</title>
 <meta name="description" content="ことばをビビル文字に変換して遊べます。ボードゲーム「ビビルの塔」の文字で、なぞのメッセージをつくってシェアしよう。">
 <meta property="og:title" content="ビビル文字ジェネレータ | PANDA KINEMA">
@@ -41,7 +41,8 @@ a{color:inherit}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* サイト共通のヘッダー(作品ページと同じ形) */
-.site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#000}
+.site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#000;transition:background .3s ease}
+.site-header.scrolled{background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
 .brand{flex:none;display:flex;align-items:center;height:28px}
 .brand img{height:30px;width:auto;display:block}
@@ -371,6 +372,8 @@ const BUILTIN={"0":[1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,0,1,1,0,0,1,0,0,1,1,0,
 let glyphs=JSON.parse(localStorage.getItem("bibilu-converter-glyphs")||"null")||JSON.parse(JSON.stringify(BUILTIN));
 const $=q=>document.querySelector(q);
 const mqPC=matchMedia("(min-width:900px)");   // PCの配置かどうか
+// ヘッダー:いちばん上は真っ黒、スクロールしたら曇りガラス(トップ・作品ページと同じ)
+(()=>{ const h=$(".site-header"); const f=()=>h.classList.toggle("scrolled",scrollY>4); addEventListener("scroll",f,{passive:true}); f(); })();
 const CELL=24,GAP=1,GLYPH=7,MAX=6;
 
 // トゥーパの輪っかは本体と同じ画像を使う(重複データを省く)
