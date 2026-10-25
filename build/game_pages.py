@@ -547,13 +547,13 @@ GAMES['trico'] = dict(
     .twin .mk{width:34px;margin-bottom:2px}
     .tbub.trico3{left:-10px;top:-32px;border:2px solid var(--p-ink);background:#fff;color:var(--p-ink)}
     /* 1コマ目:P3(リード)が表で出す → P1・P2が裏で出す → せーの!で表に。リードプレイヤーマーカーはカードの横に横向きで */
-    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:24px 0 6px}
+    .tpl{position:relative;display:flex;align-items:flex-start;justify-content:center;gap:12px;padding:24px 0 6px}
     .tpl figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
     .tlab{padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
     .tpl .lf{--card-w:48px}
     .tpl .tcd{width:48px}
-    .tlead{position:relative;display:flex;align-items:flex-end;gap:5px}
-    .tlead .lead{width:24px;rotate:90deg;margin:0 8px 6px 6px;border-radius:3px;box-shadow:0 2px 5px rgba(0,0,0,.18)}
+    .tlead{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .tlead .lead{width:44px;border-radius:3px;box-shadow:0 2px 5px rgba(0,0,0,.18)}   /* リードプレイヤーマーカーはカードの下に横向き */
     .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:16px;font-weight:900;color:var(--p-ink)}
     /* 2コマ目:勝利条件の図 */
     .s2 .viz{padding:8px}
@@ -649,7 +649,7 @@ GAMES['trico'] = dict(
              v='<div class="tpl">'
                '<figure class="t1a"><span class="tlab">P1</span>' + tlf('p3', 0) + '</figure>'
                '<figure class="t1b"><span class="tlab">P2</span>' + tlf('r27', 1) + '</figure>'
-               '<figure class="lead-col"><span class="tlab">P3</span><span class="tlead">' + tcard('p24') + '<img class="lead" src="{{img:tc_lead_o.webp}}" alt="リードプレイヤーマーカー"></span></figure>'
+               '<figure class="lead-col"><span class="tlab">P3</span><span class="tlead">' + tcard('p24') + '<img class="lead" src="{{img:tc_lead_h.webp}}" alt="リードプレイヤーマーカー"></span></figure>'
                '<span class="tsay">' + L('せーの!', 'Reveal!') + '</span></div>'),
         dict(cls='s2', b=L('場に揃った[[色の数]]で勝敗を決める!', 'The [[number of colors]] on the table decides the winner!'),
              v='<div class="tjbox" role="img" aria-label="アピールの勝利条件:場の色が1色なら最も大きい数、2色なら同じ色の中で最も小さい数、3色なら最も大きい数。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になる。"><img class="tjp" style="--i:0;top:0.00%;height:16.93%" src="{{img:t_judge_0.webp}}" alt=""><img class="tjp" style="--i:1;top:20.31%;height:20.94%" src="{{img:t_judge_1.webp}}" alt=""><img class="tjp" style="--i:2;top:44.02%;height:20.94%" src="{{img:t_judge_2.webp}}" alt=""><img class="tjp" style="--i:3;top:67.56%;height:20.94%" src="{{img:t_judge_3.webp}}" alt=""><img class="tjp" style="--i:4;top:91.18%;height:5.98%" src="{{img:t_judge_4.webp}}" alt=""></div>'),
