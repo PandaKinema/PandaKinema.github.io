@@ -70,6 +70,7 @@
     .sec-row{display:flex;align-items:center;gap:16px}
     .sec-row::before,.sec-row::after{display:var(--orn-d,block);content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
+    .sec-row::after{-webkit-mask-image:var(--orn-r,var(--orn));mask-image:var(--orn-r,var(--orn))}   /* 右側だけ別の飾りも */
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
@@ -307,7 +308,7 @@
     .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);--orn-c:currentColor;
       --sec-bg:var(--b2-ink);--sec-ink:var(--b2-bg);--accent:var(--b2-ink);--on-accent:var(--b2-bg)}
     /* ビビル文字の帯(素材 bibilu_line):色の境目には置かず、紺の帯の内側に */
-    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--b2-bg);pointer-events:none;
+    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--gband-c,var(--b2-bg));pointer-events:none;
       -webkit-mask:var(--band) repeat-x;mask:var(--band) repeat-x;-webkit-mask-size:auto var(--band-h);mask-size:auto var(--band-h);
       -webkit-mask-position:calc(var(--sx,0) * 1px) 0;mask-position:calc(var(--sx,0) * 1px) 0}
     .gband.top{top:18px}

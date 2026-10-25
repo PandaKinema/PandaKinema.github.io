@@ -430,6 +430,13 @@ def apply(key):
         cc = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000', 'third': pick.get('third')}.get(oc)
         if cc:
             css.append('--orn-c:%s' % cc)   # 見出しの飾りの色(背景の色のところ。帯の色のところは自動)
+    if d.get('heading_icon_r'):
+        css.append('--orn-r:url(../../img/%s)' % imgname(d['heading_icon_r']))   # 見出しの右側の飾り(空なら左と同じ)
+    bc = str(d.get('band_image_color') or '')
+    if bc:
+        cc = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000', 'third': pick.get('third')}.get(bc) if M and A else None
+        if cc:
+            css.append('--gband-c:%s' % cc)   # 帯の模様の色(空なら帯の色)
     for k, var in (('heading_icon', '--orn'), ('step_icon', '--snum')):
         if d.get(k):
             css.append('%s:url(../../img/%s)' % (var, imgname(d[k])))
@@ -934,6 +941,7 @@ def iring(n=14, r=64):   # ドーナツ状に並べた山札
     return '<div class="iring" aria-hidden="true">%s</div>' % ''.join(out)
 
 GAMES['ikatako'] = dict(
+    video_tex=True,   # 動画の背景にも模様
     title='イカタコ',
     description='イカタコ:めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す潜水系リアクションゲーム。1〜6人。パンダキネマ。',
     theme='''
@@ -1017,6 +1025,66 @@ GAMES['ikatako'] = dict(
       .itag{animation:lmark 6s ease infinite;animation-delay:.9s}
       .irow2>*{animation:idrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .12s)}
       .isum{animation:icap 6s ease infinite;animation-delay:1.2s}
+    }
+    /* ソロ:山札からめくって置く */
+    .io .ideck{left:16px;top:52px;width:38px;height:53px}
+    .io .icd{width:38px;border-radius:4px}
+    .io .islot{position:absolute}
+    .io .imv{position:absolute;width:38px;height:53px;z-index:2}
+    .io .imv .icd{position:absolute;left:0;top:0}
+    .io .ilab2{z-index:3}
+    .itg{position:absolute;padding:1px 8px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:900;white-space:nowrap;z-index:4;translate:-50% 0}
+    .iyaku{display:flex;flex-direction:column;gap:8px}
+    .iyaku .row{display:flex;align-items:center;gap:10px}
+    .iyaku .cs{display:flex;width:112px}
+    .iyaku .icd{width:30px;margin-right:-3px;border-radius:3px}
+    .iyaku p{margin:0;display:flex;flex-direction:column;font-size:10.5px;font-weight:800;line-height:1.3;color:var(--p-ink)}
+    .iyaku p b{align-self:flex-start;padding:1px 9px;border-radius:999px;background:#e8343d;color:#fff;font-size:11.5px;font-weight:900}
+    .ititle{display:flex;align-items:center;gap:12px}
+    .ititle .burst.ibig{width:78px;height:78px;flex:none}
+    .ititle ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+    .ititle li{display:flex;align-items:center;gap:6px;padding:2px 10px 2px 4px;border-radius:999px;font-size:12px;font-weight:900;color:var(--p-ink);white-space:nowrap}
+    .ititle li i{font-style:normal;min-width:52px;padding:1px 6px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;text-align:center}
+    @media all{
+      .io .imv{animation:imv 12s cubic-bezier(.5,0,.3,1) infinite both}
+      .io .imv.m1{animation-name:imv1}.io .imv.m2{animation-name:imv2}.io .imv.m3{animation-name:imv3}
+      .io .imv .front{animation:ifr 12s steps(1) infinite both}
+      .io .imv .back{animation:ibk 12s steps(1) infinite both}
+      .io .imv.m1 .front{animation-name:ifr1}.io .imv.m1 .back{animation-name:ibk1}
+      .io .imv.m2 .front{animation-name:ifr2}.io .imv.m2 .back{animation-name:ibk2}
+      .io .imv.m3 .front{animation-name:ifr3}.io .imv.m3 .back{animation-name:ibk3}
+      /* 1枚目 0-30% / 2枚目 30-60% / 3枚目 60-90% */
+      @keyframes imv1{0%,4%{opacity:1;translate:0 0;scale:1}7%{scale:0 1}10%{scale:1;translate:0 -6px}22%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr1{0%,6.9%{opacity:0}7%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk1{0%,6.9%{opacity:1}7%,100%{opacity:0}}
+      @keyframes imv2{0%,30%{opacity:0;translate:0 0}30.1%,34%{opacity:1;translate:0 0;scale:1}37%{scale:0 1}40%{scale:1;translate:0 -6px}52%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr2{0%,36.9%{opacity:0}37%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk2{0%,36.9%{opacity:1}37%,100%{opacity:0}}
+      @keyframes imv3{0%,60%{opacity:0;translate:0 0}60.1%,64%{opacity:1;translate:0 0;scale:1}67%{scale:0 1}70%{scale:1;translate:0 -6px}82%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr3{0%,66.9%{opacity:0}67%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk3{0%,66.9%{opacity:1}67%,100%{opacity:0}}
+      .o1 .itg{animation:itg1 12s ease infinite both}
+      .o1 .itg.t2{animation-name:itg2}.o1 .itg.t3{animation-name:itg3}
+      @keyframes itg1{0%,22%{opacity:0;scale:.3}25%{opacity:1;scale:1.15}27%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      @keyframes itg2{0%,52%{opacity:0;scale:.3}55%{opacity:1;scale:1.15}57%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      @keyframes itg3{0%,82%{opacity:0;scale:.3}85%{opacity:1;scale:1.15}87%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      /* うずしお:めくって置いたら、となりがひっくり返る */
+      .o2 .imv.m4{animation:imv4 8s cubic-bezier(.5,0,.3,1) infinite both}
+      .o2 .imv.m4 .front{animation:ifr4 8s steps(1) infinite both}
+      .o2 .imv.m4 .back{animation:ibk4 8s steps(1) infinite both}
+      @keyframes imv4{0%,6%{opacity:1;translate:0 0;scale:1}10%{scale:0 1}14%{scale:1;translate:0 -6px}30%,90%{opacity:1;translate:var(--dx) var(--dy)}96%{opacity:0;translate:var(--dx) var(--dy)}96.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr4{0%,9.9%{opacity:0}10%,96%{opacity:1}96.1%,100%{opacity:0}}
+      @keyframes ibk4{0%,9.9%{opacity:1}10%,100%{opacity:0}}
+      .o2 .iuz .icd{animation:iuz 8s cubic-bezier(.4,1.5,.5,1) infinite both}
+      @keyframes iuz{0%,40%{rotate:0deg}52%,90%{rotate:180deg}96%,100%{rotate:0deg}}
+      .o2 .itg{animation:itg4 8s ease infinite both}
+      .o2 .itg.t2{animation-name:itg5}
+      @keyframes itg4{0%,30%{opacity:0;scale:.3}34%{opacity:1;scale:1.15}37%,90%{opacity:1;scale:1}96%,100%{opacity:0}}
+      @keyframes itg5{0%,52%{opacity:0;scale:.3}56%{opacity:1;scale:1.15}59%,90%{opacity:1;scale:1}96%,100%{opacity:0}}
+      .iyaku .row{animation:idrop 9s cubic-bezier(.3,1.4,.5,1) infinite both;animation-delay:calc(var(--i) * .9s)}
+      .ititle .burst{animation:lmark 8s ease infinite both;animation-delay:-2.4s}
+      .ititle li.on{animation:ion 8s steps(1) infinite both}
+      @keyframes ion{0%,29.9%{background:transparent;color:var(--p-ink)}30%,90%{background:#e8343d;color:#fff}90.1%,100%{background:transparent;color:var(--p-ink)}}
     }''',
     logo='logo_ikatako.png', logo_size=(1270, 340), logo_alt='イカタコ IKATAKO',
     logo_buy='logo_ikatako.png', logo_credits='logo_ikatako.png',
@@ -1051,15 +1119,29 @@ GAMES['ikatako'] = dict(
              v='<div class="ia">' + burst(L('ミス!', 'Miss!'), '', 'left:10px;top:10px;--d:0') + '<div class="imiss">' + ''.join('<span class="ipile" style="--d:%d">%s%s</span>' % (k, icd('ura'), icd(c)) for k, c in enumerate(['8', '10', '18'])) + '</div><span class="ilab">' + L('ミス山', 'Miss piles') + '</span><span class="itag ito" style="--d:3">' + L('ゲームオーバー', 'Game over') + '</span></div>'),
         dict(cls='q4', b=L('ゲームオーバーにならずに、山札を全てめくり切ったらゲームクリアです! この時[[最後に宣言された数字が得点]]となります。できるだけ多くの得点を獲得し、深海から生還しましょう!', 'Flip the whole deck without a game over to clear! [[The last number declared is your score.]] Score as much as you can and make it back from the deep!'),
              v='<div class="iend"><span class="iempty"></span>' + burst(L('クリア!', 'Clear!'), 'ibig', '--d:0') + '<p class="isum">' + L('最後の宣言が得点', 'Last number = score') + '<br><b>' + L('めざせ!100点越え!', 'Aim for 100+!') + '</b></p></div>'),
-        # ---- ソロルール(取説「ソロルール」ゲームの流れ ②〜⑤)
+        # ---- ソロルール(取説「ソロルール」/ソロ用サマリー):山札からめくって、どこに置くか
         dict(cls='o1', b=L('カードを1枚引き、得点として配置します。2枚目以降は、すでにある得点の右か左、もしくは[[差し込み]]で配置します。[[トラブルカードが出た時は得点とは別に置いてください。]]', 'Draw a card and place it as points — to the right or left of your row, or [[slide it in]] between. [[Trouble cards go to one side.]]'),
-             v='<div class="ia"><span class="ipc" style="left:12px;top:4px;--d:3">' + icd('rep') + '</span><span class="ilab2" style="left:62px;top:28px">' + L('トラブルは別に', 'Trouble aside') + '</span><div class="irow">' + icd('3') + icd('4') + '<span class="ipc2" style="--d:1">' + icd('2') + '</span></div><span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
+             v='<div class="ia io">' + '<div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ilab2" style="left:14px;top:76px">' + L('山札', 'Deck') + '</span>'
+               + '<span class="islot" style="left:96px;top:116px">' + icd('3') + '</span><span class="islot" style="left:140px;top:116px">' + icd('4') + '</span>'
+               + '<span class="imv m1" style="left:16px;top:46px;--dx:168px;--dy:70px">' + icd('ura', 'back') + icd('5', 'front') + '</span><span class="imv m2" style="left:16px;top:46px;--dx:36px;--dy:70px">' + icd('ura', 'back') + icd('2', 'front') + '</span><span class="imv m3" style="left:16px;top:46px;--dx:180px;--dy:-42px">' + icd('ura', 'back') + icd('rep', 'front') + '</span>'
+               + '<span class="itg t1" style="left:190px;top:96px">' + L('右へ', 'Right') + '</span><span class="itg t2" style="left:46px;top:96px">' + L('左へ', 'Left') + '</span><span class="itg t3" style="left:120px;top:4px">' + L('トラブルは別に', 'Trouble aside') + '</span>'
+               + '<span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
         dict(cls='o2', b=L('サルベージまたはうずしおを引いた場合は特殊行動を行います。うずしお:このカードを配置した時、[[隣接する得点カードを上下逆さまにします。]]得点は減点になり、減点は得点になります。', 'Salvage or Uzushio trigger special actions. Uzushio: [[flip the neighboring point cards upside down]] — points become penalties and vice versa.'),
-             v='<div class="ia"><div class="irow">' + icd('3') + '<span class="iminus"><span class="iflip">' + icd('4') + '</span></span><span class="ipc2" style="--d:0">' + icd('6u') + '</span></div><span class="ilab2" style="left:150px;top:26px">' + L('うずしお', 'Uzushio') + '</span></div>'),
+             v='<div class="ia io">' + '<div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ilab2" style="left:14px;top:76px">' + L('山札', 'Deck') + '</span>'
+               + '<span class="islot" style="left:96px;top:116px">' + icd('3') + '</span><span class="islot iuz" style="left:140px;top:116px">' + icd('4') + '</span>'
+               + '<span class="imv m4" style="left:16px;top:46px;--dx:168px;--dy:70px">' + icd('ura', 'back') + icd('6u', 'front') + '</span>'
+               + '<span class="itg t1" style="left:203px;top:94px">' + L('うずしお!', 'Uzushio!') + '</span><span class="itg t2" style="left:159px;top:172px">' + L('減点に!', 'Penalty!') + '</span></div>'),
         dict(cls='o3', b=L('どんどんカードを引いていき、終了条件を満たすか、[[帰投]]を選択したらゲームを終了し、最終得点を計算します。[[役が成立していたらボーナス点]]を得ることができます。', 'Keep drawing until an end condition is met or you choose to [[return]]. Then total your score — [[sets earn bonus points.]]'),
-             v='<div class="iend"><div class="irow2">' + icd('3', '', '--i:0') + icd('3', '', '--i:1') + icd('3', '', '--i:2') + '</div><p class="isum">' + L('狭域', 'Narrow') + '<br><b>+15' + L('点', '') + '</b></p></div>'),
+             v='<div class="iyaku">'
+               + '<div class="row" style="--i:0"><span class="cs">' + icd('3') + icd('3') + icd('3') + '</span><p><b>' + L('狭域', 'Narrow') + '</b>' + L('同じ数字が3枚(15点)', '3 of a number (15)') + '</p></div>'
+               + '<div class="row" style="--i:1"><span class="cs">' + icd('3') + icd('4') + icd('5') + '</span><p><b>' + L('広域', 'Wide') + '</b>' + L('3枚以上の連番(10点〜)', 'Run of 3+ (10+)') + '</p></div>'
+               + '<div class="row" style="--i:2"><span class="cs">' + icd('8') + icd('10') + icd('18') + icd('8') + '</span><p><b>' + L('テンタクルズ', 'Tentacles') + '</b>' + L('危険カード4枚(20点)', '4 danger cards (20)') + '</p></div></div>'),
         dict(cls='o4', b=L('得点が確定したら、ソロルール用サマリーの「最終得点評価」の称号を確認しましょう。[[目指せ!深海の覇者!!]]', 'Once your score is set, check your title on the solo summary card. [[Become the ruler of the deep!!]]'),
-             v='<div class="iend">' + burst(L('72点!', '72 pts!'), 'ibig', '--d:0') + '<p class="isum">' + L('合計51+役30+帰投2−減点11', '51 + 30 + 2 − 11') + '<br><b>' + L('称号は…?', 'Your title…?') + '</b></p></div>'),
+             v='<div class="ititle">' + burst(L('72点!', '72 pts!'), 'ibig', '--d:0') + '<ol>'
+               + ''.join('<li%s><i>%s</i>%s</li>' % (' class="on"' if k == 2 else '', p, t) for k, (p, t) in enumerate([
+                   (L('0点以下', '≤0'), L('沈没', 'Sunk')), (L('30点', '30'), L('漂流者', 'Drifter')), (L('60点', '60'), L('探検家', 'Explorer')),
+                   (L('90点', '90'), L('キャプテン', 'Captain')), (L('150点', '150'), L('深海の覇者', 'Ruler of the Deep'))]))
+               + '</ol></div>'),
     ],
     gallery=[], gallery_todo=[],
     tabs=[(L('対戦ルール', 'Versus'), '', 0, 4), (L('協力ルール', 'Co-op'), '', 4, 8), (L('ソロルール', 'Solo'), '', 8, 12)],
@@ -1342,6 +1424,7 @@ TEMPLATE = r'''<!doctype html>
     .sec-row{display:flex;align-items:center;gap:16px}
     .sec-row::before,.sec-row::after{display:var(--orn-d,block);content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
+    .sec-row::after{-webkit-mask-image:var(--orn-r,var(--orn));mask-image:var(--orn-r,var(--orn))}   /* 右側だけ別の飾りも */
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
@@ -1465,7 +1548,7 @@ TEMPLATE = r'''<!doctype html>
     .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);--orn-c:currentColor;
       --sec-bg:var(--b2-ink);--sec-ink:var(--b2-bg);--accent:var(--b2-ink);--on-accent:var(--b2-bg)}
     /* ビビル文字の帯(素材 bibilu_line):色の境目には置かず、紺の帯の内側に */
-    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--b2-bg);pointer-events:none;
+    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--gband-c,var(--b2-bg));pointer-events:none;
       -webkit-mask:var(--band) repeat-x;mask:var(--band) repeat-x;-webkit-mask-size:auto var(--band-h);mask-size:auto var(--band-h);
       -webkit-mask-position:calc(var(--sx,0) * 1px) 0;mask-position:calc(var(--sx,0) * 1px) 0}
     .gband.top{top:18px}

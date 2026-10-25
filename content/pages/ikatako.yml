@@ -5,17 +5,19 @@ logo: img/logo/logo_ikatako.png
 logo_alt: イカタコ IKATAKO
 logo_buy: img/logo/i_logo_blue.png
 logo_credits: img/logo/logo_ikatako.png
-bg_color: third
-color3: "#001f5c"
-accent_color: main
+bg_color: main
+color3: "#00215d"
+accent_color: third
 hero:
   art: img/page/ikatako_top.jpg
   fit: cover
   art_pos: 50% 0%
-bg1_image: img/page/i_tex_c.png
+bg1_image: img/page/i_bg_tex.webp
 band_image: img/page/i_band.png
-heading_icon: img/page/i_squid_sten.png
-step_icon: img/page/i_squid_sil.png
+band_image_color: white
+heading_icon: img/page/i_ika.png
+heading_icon_r: img/page/i_tako.png
+step_icon: img/page/i_ika.png
 catch_ja: 反射神経で生還せよ
 catch_en: Survive on your reflexes
 intro_ja: |-
@@ -31,15 +33,17 @@ intro_en: React correctly to each card, collect as many points as you can, and
   and you can escape danger. Overcome every trouble and make it back from the
   deep!
 summary_ja: |-
-  イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。  
-  得点を奪い合う**「対戦ルール」**、力を合わせてクリアを目指す**「協力ルール」**、ひとりでじっくり挑む**「ソロルール」**の3つの遊び方があります。
+  イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。
 
   めくったカードの数字を最も早く叫んだ人が獲得できる争奪戦!ただし「イカ」や「タコ」が出たら名前を叫んでいずれかの手をあげなければいけない!
-summary_en: Ikatako is a game where you flip cards from the deck and react to
-  them. There are 3 ways to play — compete for points in the **“Versus rules,”**
-  work together in the **“Co-op rules,”** or take it on alone in the **“Solo
-  rules.”** In Versus, the first to shout the number takes the card! But if a
-  squid or octopus shows up, you must shout its name and raise a hand!
+
+  得点を奪い合う**「対戦ルール」**、力を合わせてクリアを目指す**「協力ルール」**、ひとりでじっくり挑む**「ソロルール」**の3つの遊び方があります。
+summary_en: |-
+  Ikatako is a game where you flip cards from the deck and react to them.
+
+  The first to shout the number on the flipped card takes it! But if a squid or octopus shows up, you must shout its name and raise one of your hands!
+
+  There are 3 ways to play: compete for points in the **“Versus rules,”** work together in the **“Co-op rules,”** or take it on alone in the **“Solo rules.”**
 steps:
 - text_ja: 手番のプレイヤーは山札から1枚カードをめくり、場に公開します。場に出たカードに応じたリアクションを全員で行います。
   text_en: The active player flips one card from the deck and reveals it. Everyone reacts to the card.

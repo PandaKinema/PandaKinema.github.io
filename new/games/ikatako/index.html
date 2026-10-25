@@ -25,7 +25,7 @@
       --orb-glow:150,210,255;
       --orn:url(../../img/page/i_squid_sten.png?v=c2c3394e); --snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);   /* 見出しの飾り:ロゴのイカ */
     
-      --k-bg:#001f5c;--k-ink:#ffffff;--hl:#d4242b;--b2-bg:#0073bd;--b2-ink:#ffffff;--hl2:#ffffff;--sec-bg:#0073bd;--sec-ink:#ffffff;--accent:#0073bd;--on-accent:#ffffff;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#001f5c;--soft:#d9eaf5;--pan-bg:#001f5c;--pan-ink:#fff;--lt:#0073bd;--on-lt:#ffffff;--dk:#001f5c;--on-dk:#ffffff;--hl-deco:none;--hl2-deco:underline;--tex-c:url(../../img/page/i_tex_c.png?v=57cfa8f8);--tex-size:80px 48px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn:url(../../img/page/i_squid_sten.png?v=c2c3394e);--snum:url(../../img/page/i_squid_sil.png?v=c2c3394e);}
+      --k-bg:#0073bd;--k-ink:#ffffff;--hl:#ffffff;--b2-bg:#00215d;--b2-ink:#ffffff;--hl2:#ffffff;--sec-bg:#00215d;--sec-ink:#ffffff;--accent:#00215d;--on-accent:#ffffff;--buy-bg:#0073bd;--buy-ink:#ffffff;--p-ink:#00215d;--soft:#d9eaf5;--pan-bg:#00215d;--pan-ink:#fff;--lt:#0073bd;--on-lt:#ffffff;--dk:#00215d;--on-dk:#ffffff;--hl-deco:underline;--hl2-deco:underline;--tex-c:url(../../img/page/i_bg_tex.webp?v=f9265eb4);--tex-size:726px 730px;--band:url(../../img/page/i_band.png?v=edcb0594);--band-h:20px;--band-d:block;--orn-r:url(../../img/page/i_tako.png?v=b9a6c517);--gband-c:#ffffff;--orn:url(../../img/page/i_ika.png?v=47808107);--snum:url(../../img/page/i_ika.png?v=47808107);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -69,6 +69,7 @@
     .sec-row{display:flex;align-items:center;gap:16px}
     .sec-row::before,.sec-row::after{display:var(--orn-d,block);content:"";flex:none;width:26px;height:26px;background:var(--orn-c,currentColor);
       -webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
+    .sec-row::after{-webkit-mask-image:var(--orn-r,var(--orn));mask-image:var(--orn-r,var(--orn))}   /* 右側だけ別の飾りも */
     .sec-head .sec-h{margin:0}
     .btn{display:inline-flex;align-items:center;gap:.6em;padding:13px 26px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:800;letter-spacing:.04em;transition:translate .15s ease,box-shadow .15s ease}
     .btn:hover{translate:0 -2px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
@@ -227,6 +228,66 @@
       .irow2>*{animation:idrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .12s)}
       .isum{animation:icap 6s ease infinite;animation-delay:1.2s}
     }
+    /* ソロ:山札からめくって置く */
+    .io .ideck{left:16px;top:52px;width:38px;height:53px}
+    .io .icd{width:38px;border-radius:4px}
+    .io .islot{position:absolute}
+    .io .imv{position:absolute;width:38px;height:53px;z-index:2}
+    .io .imv .icd{position:absolute;left:0;top:0}
+    .io .ilab2{z-index:3}
+    .itg{position:absolute;padding:1px 8px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:900;white-space:nowrap;z-index:4;translate:-50% 0}
+    .iyaku{display:flex;flex-direction:column;gap:8px}
+    .iyaku .row{display:flex;align-items:center;gap:10px}
+    .iyaku .cs{display:flex;width:112px}
+    .iyaku .icd{width:30px;margin-right:-3px;border-radius:3px}
+    .iyaku p{margin:0;display:flex;flex-direction:column;font-size:10.5px;font-weight:800;line-height:1.3;color:var(--p-ink)}
+    .iyaku p b{align-self:flex-start;padding:1px 9px;border-radius:999px;background:#e8343d;color:#fff;font-size:11.5px;font-weight:900}
+    .ititle{display:flex;align-items:center;gap:12px}
+    .ititle .burst.ibig{width:78px;height:78px;flex:none}
+    .ititle ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+    .ititle li{display:flex;align-items:center;gap:6px;padding:2px 10px 2px 4px;border-radius:999px;font-size:12px;font-weight:900;color:var(--p-ink);white-space:nowrap}
+    .ititle li i{font-style:normal;min-width:52px;padding:1px 6px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;text-align:center}
+    @media all{
+      .io .imv{animation:imv 12s cubic-bezier(.5,0,.3,1) infinite both}
+      .io .imv.m1{animation-name:imv1}.io .imv.m2{animation-name:imv2}.io .imv.m3{animation-name:imv3}
+      .io .imv .front{animation:ifr 12s steps(1) infinite both}
+      .io .imv .back{animation:ibk 12s steps(1) infinite both}
+      .io .imv.m1 .front{animation-name:ifr1}.io .imv.m1 .back{animation-name:ibk1}
+      .io .imv.m2 .front{animation-name:ifr2}.io .imv.m2 .back{animation-name:ibk2}
+      .io .imv.m3 .front{animation-name:ifr3}.io .imv.m3 .back{animation-name:ibk3}
+      /* 1枚目 0-30% / 2枚目 30-60% / 3枚目 60-90% */
+      @keyframes imv1{0%,4%{opacity:1;translate:0 0;scale:1}7%{scale:0 1}10%{scale:1;translate:0 -6px}22%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr1{0%,6.9%{opacity:0}7%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk1{0%,6.9%{opacity:1}7%,100%{opacity:0}}
+      @keyframes imv2{0%,30%{opacity:0;translate:0 0}30.1%,34%{opacity:1;translate:0 0;scale:1}37%{scale:0 1}40%{scale:1;translate:0 -6px}52%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr2{0%,36.9%{opacity:0}37%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk2{0%,36.9%{opacity:1}37%,100%{opacity:0}}
+      @keyframes imv3{0%,60%{opacity:0;translate:0 0}60.1%,64%{opacity:1;translate:0 0;scale:1}67%{scale:0 1}70%{scale:1;translate:0 -6px}82%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr3{0%,66.9%{opacity:0}67%,98%{opacity:1}98.1%,100%{opacity:0}}
+      @keyframes ibk3{0%,66.9%{opacity:1}67%,100%{opacity:0}}
+      .o1 .itg{animation:itg1 12s ease infinite both}
+      .o1 .itg.t2{animation-name:itg2}.o1 .itg.t3{animation-name:itg3}
+      @keyframes itg1{0%,22%{opacity:0;scale:.3}25%{opacity:1;scale:1.15}27%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      @keyframes itg2{0%,52%{opacity:0;scale:.3}55%{opacity:1;scale:1.15}57%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      @keyframes itg3{0%,82%{opacity:0;scale:.3}85%{opacity:1;scale:1.15}87%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      /* うずしお:めくって置いたら、となりがひっくり返る */
+      .o2 .imv.m4{animation:imv4 8s cubic-bezier(.5,0,.3,1) infinite both}
+      .o2 .imv.m4 .front{animation:ifr4 8s steps(1) infinite both}
+      .o2 .imv.m4 .back{animation:ibk4 8s steps(1) infinite both}
+      @keyframes imv4{0%,6%{opacity:1;translate:0 0;scale:1}10%{scale:0 1}14%{scale:1;translate:0 -6px}30%,90%{opacity:1;translate:var(--dx) var(--dy)}96%{opacity:0;translate:var(--dx) var(--dy)}96.1%,100%{opacity:0;translate:0 0}}
+      @keyframes ifr4{0%,9.9%{opacity:0}10%,96%{opacity:1}96.1%,100%{opacity:0}}
+      @keyframes ibk4{0%,9.9%{opacity:1}10%,100%{opacity:0}}
+      .o2 .iuz .icd{animation:iuz 8s cubic-bezier(.4,1.5,.5,1) infinite both}
+      @keyframes iuz{0%,40%{rotate:0deg}52%,90%{rotate:180deg}96%,100%{rotate:0deg}}
+      .o2 .itg{animation:itg4 8s ease infinite both}
+      .o2 .itg.t2{animation-name:itg5}
+      @keyframes itg4{0%,30%{opacity:0;scale:.3}34%{opacity:1;scale:1.15}37%,90%{opacity:1;scale:1}96%,100%{opacity:0}}
+      @keyframes itg5{0%,52%{opacity:0;scale:.3}56%{opacity:1;scale:1.15}59%,90%{opacity:1;scale:1}96%,100%{opacity:0}}
+      .iyaku .row{animation:idrop 9s cubic-bezier(.3,1.4,.5,1) infinite both;animation-delay:calc(var(--i) * .9s)}
+      .ititle .burst{animation:lmark 8s ease infinite both;animation-delay:-2.4s}
+      .ititle li.on{animation:ion 8s steps(1) infinite both}
+      @keyframes ion{0%,29.9%{background:transparent;color:var(--p-ink)}30%,90%{background:#e8343d;color:#fff}90.1%,100%{background:transparent;color:var(--p-ink)}}
+    }
 
     /* ===== 2. 動画:映画館のスクリーンと客席 ===== */
     .cinema{position:relative;isolation:isolate;padding:64px 0 80px;overflow:hidden;background:var(--k-bg)}
@@ -270,7 +331,7 @@
     .band-c{z-index:2;background:var(--b2-bg);color:var(--b2-ink);--orn-c:currentColor;
       --sec-bg:var(--b2-ink);--sec-ink:var(--b2-bg);--accent:var(--b2-ink);--on-accent:var(--b2-bg)}
     /* ビビル文字の帯(素材 bibilu_line):色の境目には置かず、紺の帯の内側に */
-    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--b2-bg);pointer-events:none;
+    .gband{position:absolute;left:0;right:0;z-index:1;height:var(--band-h);background:var(--gband-c,var(--b2-bg));pointer-events:none;
       -webkit-mask:var(--band) repeat-x;mask:var(--band) repeat-x;-webkit-mask-size:auto var(--band-h);mask-size:auto var(--band-h);
       -webkit-mask-position:calc(var(--sx,0) * 1px) 0;mask-position:calc(var(--sx,0) * 1px) 0}
     .gband.top{top:18px}
@@ -754,7 +815,7 @@
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title">
+  <section class="cinema reveal-cinema tex" id="video" aria-labelledby="video-title">
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title"><span lang="ja">紹介動画</span><span lang="en">Videos</span></h2></div></header>
@@ -791,7 +852,7 @@
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
-      <p class="summary"><span lang="ja">イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。<br>得点を奪い合う<em>「対戦ルール」</em>、力を合わせてクリアを目指す<em>「協力ルール」</em>、ひとりでじっくり挑む<em>「ソロルール」</em>の3つの遊び方があります。<br>めくったカードの数字を最も早く叫んだ人が獲得できる争奪戦!ただし「イカ」や「タコ」が出たら名前を叫んでいずれかの手をあげなければいけない!</span><span lang="en">Ikatako is a game where you flip cards from the deck and react to them. There are 3 ways to play — compete for points in the <em>“Versus rules,”</em> work together in the <em>“Co-op rules,”</em> or take it on alone in the <em>“Solo rules.”</em> In Versus, the first to shout the number takes the card! But if a squid or octopus shows up, you must shout its name and raise a hand!</span></p>
+      <p class="summary"><span lang="ja">イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。<br>めくったカードの数字を最も早く叫んだ人が獲得できる争奪戦!ただし「イカ」や「タコ」が出たら名前を叫んでいずれかの手をあげなければいけない!<br>得点を奪い合う<em>「対戦ルール」</em>、力を合わせてクリアを目指す<em>「協力ルール」</em>、ひとりでじっくり挑む<em>「ソロルール」</em>の3つの遊び方があります。</span><span lang="en">Ikatako is a game where you flip cards from the deck and react to them.<br>The first to shout the number on the flipped card takes it! But if a squid or octopus shows up, you must shout its name and raise one of your hands!<br>There are 3 ways to play: compete for points in the <em>“Versus rules,”</em> work together in the <em>“Co-op rules,”</em> or take it on alone in the <em>“Solo rules.”</em></span></p>
       <div class="ptabs reveal" role="tablist"><button type="button" role="tab" aria-selected="true"><span lang="ja">対戦ルール</span><span lang="en">Versus</span></button><button type="button" role="tab" aria-selected="false"><span lang="ja">協力ルール</span><span lang="en">Co-op</span></button><button type="button" role="tab" aria-selected="false"><span lang="ja">ソロルール</span><span lang="en">Solo</span></button></div>
       <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
@@ -833,19 +894,19 @@
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)" hidden>
           <li class="step o1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">カードを1枚引き、得点として配置します。2枚目以降は、すでにある得点の右か左、もしくは<em>差し込み</em>で配置します。<em>トラブルカードが出た時は得点とは別に置いてください。</em></span><span lang="en">Draw a card and place it as points — to the right or left of your row, or <em>slide it in</em> between. <em>Trouble cards go to one side.</em></span></span></p></div>
-            <div class="viz"><div class="ia"><span class="ipc" style="left:12px;top:4px;--d:3"><img class="icd " style="" src="../../img/parts/ic_rep.webp?v=e72b3332" alt="repのカード"></span><span class="ilab2" style="left:62px;top:28px"><span lang="ja">トラブルは別に</span><span lang="en">Trouble aside</span></span><div class="irow"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><span class="ipc2" style="--d:1"><img class="icd " style="" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"></span></div><span class="ilabel"><span lang="ja">得点</span><span lang="en">Points</span></span></div></div>
+            <div class="viz"><div class="ia io"><div class="ideck"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"></div><span class="ilab2" style="left:14px;top:76px"><span lang="ja">山札</span><span lang="en">Deck</span></span><span class="islot" style="left:96px;top:116px"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><span class="islot" style="left:140px;top:116px"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"></span><span class="imv m1" style="left:16px;top:46px;--dx:168px;--dy:70px"><img class="icd back" style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd front" style="" src="../../img/parts/ic_5.webp?v=5be5fcdc" alt="5のカード"></span><span class="imv m2" style="left:16px;top:46px;--dx:36px;--dy:70px"><img class="icd back" style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd front" style="" src="../../img/parts/ic_2.webp?v=5ad00699" alt="2のカード"></span><span class="imv m3" style="left:16px;top:46px;--dx:180px;--dy:-42px"><img class="icd back" style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd front" style="" src="../../img/parts/ic_rep.webp?v=e72b3332" alt="repのカード"></span><span class="itg t1" style="left:190px;top:96px"><span lang="ja">右へ</span><span lang="en">Right</span></span><span class="itg t2" style="left:46px;top:96px"><span lang="ja">左へ</span><span lang="en">Left</span></span><span class="itg t3" style="left:120px;top:4px"><span lang="ja">トラブルは別に</span><span lang="en">Trouble aside</span></span><span class="ilabel"><span lang="ja">得点</span><span lang="en">Points</span></span></div></div>
           </li>
           <li class="step o2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">サルベージまたはうずしおを引いた場合は特殊行動を行います。うずしお:このカードを配置した時、<em>隣接する得点カードを上下逆さまにします。</em>得点は減点になり、減点は得点になります。</span><span lang="en">Salvage or Uzushio trigger special actions. Uzushio: <em>flip the neighboring point cards upside down</em> — points become penalties and vice versa.</span></span></p></div>
-            <div class="viz"><div class="ia"><div class="irow"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><span class="iminus"><span class="iflip"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"></span></span><span class="ipc2" style="--d:0"><img class="icd " style="" src="../../img/parts/ic_6u.webp?v=3512306d" alt="6uのカード"></span></div><span class="ilab2" style="left:150px;top:26px"><span lang="ja">うずしお</span><span lang="en">Uzushio</span></span></div></div>
+            <div class="viz"><div class="ia io"><div class="ideck"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd " style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"></div><span class="ilab2" style="left:14px;top:76px"><span lang="ja">山札</span><span lang="en">Deck</span></span><span class="islot" style="left:96px;top:116px"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><span class="islot iuz" style="left:140px;top:116px"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"></span><span class="imv m4" style="left:16px;top:46px;--dx:168px;--dy:70px"><img class="icd back" style="" src="../../img/parts/ic_ura.webp?v=8ab0bfc4" alt="uraのカード"><img class="icd front" style="" src="../../img/parts/ic_6u.webp?v=3512306d" alt="6uのカード"></span><span class="itg t1" style="left:203px;top:94px"><span lang="ja">うずしお!</span><span lang="en">Uzushio!</span></span><span class="itg t2" style="left:159px;top:172px"><span lang="ja">減点に!</span><span lang="en">Penalty!</span></span></div></div>
           </li>
           <li class="step o3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">どんどんカードを引いていき、終了条件を満たすか、<em>帰投</em>を選択したらゲームを終了し、最終得点を計算します。<em>役が成立していたらボーナス点</em>を得ることができます。</span><span lang="en">Keep drawing until an end condition is met or you choose to <em>return</em>. Then total your score — <em>sets earn bonus points.</em></span></span></p></div>
-            <div class="viz"><div class="iend"><div class="irow2"><img class="icd " style="--i:0" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="--i:1" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="--i:2" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></div><p class="isum"><span lang="ja">狭域</span><span lang="en">Narrow</span><br><b>+15<span lang="ja">点</span><span lang="en"></span></b></p></div></div>
+            <div class="viz"><div class="iyaku"><div class="row" style="--i:0"><span class="cs"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"></span><p><b><span lang="ja">狭域</span><span lang="en">Narrow</span></b><span lang="ja">同じ数字が3枚(15点)</span><span lang="en">3 of a number (15)</span></p></div><div class="row" style="--i:1"><span class="cs"><img class="icd " style="" src="../../img/parts/ic_3.webp?v=b1002084" alt="3のカード"><img class="icd " style="" src="../../img/parts/ic_4.webp?v=43d656d5" alt="4のカード"><img class="icd " style="" src="../../img/parts/ic_5.webp?v=5be5fcdc" alt="5のカード"></span><p><b><span lang="ja">広域</span><span lang="en">Wide</span></b><span lang="ja">3枚以上の連番(10点〜)</span><span lang="en">Run of 3+ (10+)</span></p></div><div class="row" style="--i:2"><span class="cs"><img class="icd " style="" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"><img class="icd " style="" src="../../img/parts/ic_10.webp?v=1b34223c" alt="イカ(10)のカード"><img class="icd " style="" src="../../img/parts/ic_18.webp?v=40575bc4" alt="イカタコ(18)のカード"><img class="icd " style="" src="../../img/parts/ic_8.webp?v=604edc8b" alt="タコ(8)のカード"></span><p><b><span lang="ja">テンタクルズ</span><span lang="en">Tentacles</span></b><span lang="ja">危険カード4枚(20点)</span><span lang="en">4 danger cards (20)</span></p></div></div></div>
           </li>
           <li class="step o4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">得点が確定したら、ソロルール用サマリーの「最終得点評価」の称号を確認しましょう。<em>目指せ!深海の覇者!!</em></span><span lang="en">Once your score is set, check your title on the solo summary card. <em>Become the ruler of the deep!!</em></span></span></p></div>
-            <div class="viz"><div class="iend"><span class="burst ibig" style="--d:0"><span><span lang="ja">72点!</span><span lang="en">72 pts!</span></span></span><p class="isum"><span lang="ja">合計51+役30+帰投2−減点11</span><span lang="en">51 + 30 + 2 − 11</span><br><b><span lang="ja">称号は…?</span><span lang="en">Your title…?</span></b></p></div></div>
+            <div class="viz"><div class="ititle"><span class="burst ibig" style="--d:0"><span><span lang="ja">72点!</span><span lang="en">72 pts!</span></span></span><ol><li><i><span lang="ja">0点以下</span><span lang="en">≤0</span></i><span lang="ja">沈没</span><span lang="en">Sunk</span></li><li><i><span lang="ja">30点</span><span lang="en">30</span></i><span lang="ja">漂流者</span><span lang="en">Drifter</span></li><li class="on"><i><span lang="ja">60点</span><span lang="en">60</span></i><span lang="ja">探検家</span><span lang="en">Explorer</span></li><li><i><span lang="ja">90点</span><span lang="en">90</span></i><span lang="ja">キャプテン</span><span lang="en">Captain</span></li><li><i><span lang="ja">150点</span><span lang="en">150</span></i><span lang="ja">深海の覇者</span><span lang="en">Ruler of the Deep</span></li></ol></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
