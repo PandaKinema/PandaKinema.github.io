@@ -37,7 +37,7 @@
     /* ヘッダー */
     /* ヘッダー:バナーの上に透けて重なる。下へ進むと半透明の板になる */
     .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#000;transition:background .3s ease}
-    .jsc .site-header.solid{background:#000}
+    .site-header.scrolled{background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}   /* いちばん上=真っ黒、スクロールして下に重なったら曇りガラス */
     /* ヘッダーは作品ページと同じく、いつも地の色(バナーの上には重ねない) */
     .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:var(--side)}
     .home{flex:none;display:block}
@@ -80,7 +80,7 @@
     .b-brand .bb-copyimg{width:min(320px,46vw);height:auto;animation:rise 1s cubic-bezier(.2,.8,.2,1) .2s both}
     .b-brand .bb-btns{display:flex;gap:10px;animation:rise 1s cubic-bezier(.2,.8,.2,1) .35s both}
     .slide.has-vid::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.62) 30%,rgba(0,0,0,.25) 52%,rgba(0,0,0,0) 72%)}   /* 動画のときは文字のある左側を暗く */
-    .slide::after{content:"";position:absolute;inset:auto 0 0;height:22%;z-index:1;pointer-events:none;background:linear-gradient(rgba(27,34,40,0),rgba(27,34,40,.5) 60%,var(--bg))}
+    .slide::after{display:none}   /* バナーの下は背景とぼかさない */
     .b-in{position:absolute;left:max(20px,6vw);top:50%;translate:0 -54%;z-index:2;width:min(540px,42vw);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
     .b-logo{display:block;width:min(440px,100%);background:var(--lc);-webkit-mask:var(--lg) left center/contain no-repeat;mask:var(--lg) left center/contain no-repeat}
     .b-mlogo{width:min(400px,100%);filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
@@ -513,7 +513,7 @@
   var root=document.documentElement, $=function(s,c){ return (c||document).querySelector(s) }, $$=function(s,c){ return [].slice.call((c||document).querySelectorAll(s)) };
   root.classList.add("jsc");
   /* ヘッダー:バナーを過ぎたら板を敷く */
-  var hd=$(".site-header"); function hs(){ hd.classList.toggle("solid", scrollY > ($("#hero").offsetHeight-80)) } addEventListener("scroll",hs,{passive:true}); hs();
+  var hd=$(".site-header"); function hs(){ hd.classList.toggle("scrolled", scrollY > 4) } addEventListener("scroll",hs,{passive:true}); hs();
   /* 言語 */
   /* 言語:選んだ方を覚えておく(?lang=en でも開ける) */
   var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem("pk-lang") }catch(e){}
