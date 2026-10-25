@@ -1051,28 +1051,35 @@ GAMES['ikatako'] = dict(
     .ititle li{display:flex;align-items:center;gap:6px;padding:2px 10px 2px 4px;border-radius:999px;font-size:12px;font-weight:900;color:var(--p-ink);white-space:nowrap}
     .ititle li i{font-style:normal;min-width:52px;padding:1px 6px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;text-align:center}
     @media all{
-      .io .imv{animation:imv 12s cubic-bezier(.5,0,.3,1) infinite both}
-      .io .imv.m1{animation-name:imv1}.io .imv.m2{animation-name:imv2}.io .imv.m3{animation-name:imv3}
-      .io .imv .front{animation:ifr 12s steps(1) infinite both}
-      .io .imv .back{animation:ibk 12s steps(1) infinite both}
-      .io .imv.m1 .front{animation-name:ifr1}.io .imv.m1 .back{animation-name:ibk1}
-      .io .imv.m2 .front{animation-name:ifr2}.io .imv.m2 .back{animation-name:ibk2}
-      .io .imv.m3 .front{animation-name:ifr3}.io .imv.m3 .back{animation-name:ibk3}
-      /* 1枚目 0-30% / 2枚目 30-60% / 3枚目 60-90% */
-      @keyframes imv1{0%,4%{opacity:1;translate:0 0;scale:1}7%{scale:0 1}10%{scale:1;translate:0 -6px}22%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
-      @keyframes ifr1{0%,6.9%{opacity:0}7%,98%{opacity:1}98.1%,100%{opacity:0}}
-      @keyframes ibk1{0%,6.9%{opacity:1}7%,100%{opacity:0}}
-      @keyframes imv2{0%,30%{opacity:0;translate:0 0}30.1%,34%{opacity:1;translate:0 0;scale:1}37%{scale:0 1}40%{scale:1;translate:0 -6px}52%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
-      @keyframes ifr2{0%,36.9%{opacity:0}37%,98%{opacity:1}98.1%,100%{opacity:0}}
-      @keyframes ibk2{0%,36.9%{opacity:1}37%,100%{opacity:0}}
-      @keyframes imv3{0%,60%{opacity:0;translate:0 0}60.1%,64%{opacity:1;translate:0 0;scale:1}67%{scale:0 1}70%{scale:1;translate:0 -6px}82%,94%{opacity:1;translate:var(--dx) var(--dy)}98%{opacity:0;translate:var(--dx) var(--dy)}98.1%,100%{opacity:0;translate:0 0}}
-      @keyframes ifr3{0%,66.9%{opacity:0}67%,98%{opacity:1}98.1%,100%{opacity:0}}
-      @keyframes ibk3{0%,66.9%{opacity:1}67%,100%{opacity:0}}
-      .o1 .itg{animation:itg1 12s ease infinite both}
-      .o1 .itg.t2{animation-name:itg2}.o1 .itg.t3{animation-name:itg3}
-      @keyframes itg1{0%,22%{opacity:0;scale:.3}25%{opacity:1;scale:1.15}27%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
-      @keyframes itg2{0%,52%{opacity:0;scale:.3}55%{opacity:1;scale:1.15}57%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
-      @keyframes itg3{0%,82%{opacity:0;scale:.3}85%{opacity:1;scale:1.15}87%,94%{opacity:1;scale:1}98%,100%{opacity:0}}
+      /* 1コマ目(16秒):右へ 0-22% / 左へ 24-46% / 差し込み 48-72% / トラブル 74-94% */
+      .io .imv{animation:none}
+      .o1 .imv{animation:16s cubic-bezier(.5,0,.3,1) infinite both}
+      .o1 .imv .front,.o1 .imv .back{animation:16s steps(1) infinite both}
+      .o1 .imv.m1{animation-name:o1m1}.o1 .imv.m1 .front{animation-name:o1fm1}.o1 .imv.m1 .back{animation-name:o1bm1}
+      @keyframes o1m1{0%,4%{opacity:1;translate:0 0;scale:1}7%{scale:0 1}10%{scale:1;translate:0 -6px}20%,95%{opacity:1;translate:var(--dx) var(--dy)}98.5%{opacity:0;translate:var(--dx) var(--dy)}98.6%,100%{opacity:0;translate:0 0}}
+      @keyframes o1fm1{0%,6.9%{opacity:0}7%,98.5%{opacity:1}98.6%,100%{opacity:0}}
+      @keyframes o1bm1{0%,6.9%{opacity:1}7%,100%{opacity:0}}
+      .o1 .imv.m2{animation-name:o1m2}.o1 .imv.m2 .front{animation-name:o1fm2}.o1 .imv.m2 .back{animation-name:o1bm2}
+      @keyframes o1m2{0%,24%{opacity:0;translate:0 0}24.1%,28%{opacity:1;translate:0 0;scale:1}31%{scale:0 1}34%{scale:1;translate:0 -6px}44%,95%{opacity:1;translate:var(--dx) var(--dy)}98.5%{opacity:0;translate:var(--dx) var(--dy)}98.6%,100%{opacity:0;translate:0 0}}
+      @keyframes o1fm2{0%,30.9%{opacity:0}31%,98.5%{opacity:1}98.6%,100%{opacity:0}}
+      @keyframes o1bm2{0%,30.9%{opacity:1}31%,100%{opacity:0}}
+      .o1 .imv.mi{animation-name:o1mi}.o1 .imv.mi .front{animation-name:o1fmi}.o1 .imv.mi .back{animation-name:o1bmi}
+      @keyframes o1mi{0%,48%{opacity:0;translate:0 0}48.1%,56%{opacity:1;translate:0 0;scale:1}59%{scale:0 1}62%{scale:1;translate:0 -6px}70%,95%{opacity:1;translate:var(--dx) var(--dy)}98.5%{opacity:0;translate:var(--dx) var(--dy)}98.6%,100%{opacity:0;translate:0 0}}
+      @keyframes o1fmi{0%,58.9%{opacity:0}59%,98.5%{opacity:1}98.6%,100%{opacity:0}}
+      @keyframes o1bmi{0%,58.9%{opacity:1}59%,100%{opacity:0}}
+      .o1 .imv.m3{animation-name:o1m3}.o1 .imv.m3 .front{animation-name:o1fm3}.o1 .imv.m3 .back{animation-name:o1bm3}
+      @keyframes o1m3{0%,74%{opacity:0;translate:0 0}74.1%,78%{opacity:1;translate:0 0;scale:1}81%{scale:0 1}84%{scale:1;translate:0 -6px}94%,95%{opacity:1;translate:var(--dx) var(--dy)}98.5%{opacity:0;translate:var(--dx) var(--dy)}98.6%,100%{opacity:0;translate:0 0}}
+      @keyframes o1fm3{0%,80.9%{opacity:0}81%,98.5%{opacity:1}98.6%,100%{opacity:0}}
+      @keyframes o1bm3{0%,80.9%{opacity:1}81%,100%{opacity:0}}
+      .o1 .ish{position:absolute;inset:0;animation:16s cubic-bezier(.5,0,.3,1) infinite both}
+      .o1 .ish.l{animation-name:ishl}.o1 .ish.r{animation-name:ishr}
+      @keyframes ishl{0%,48%{translate:0 0}53%,95%{translate:-22px 0}98.6%,100%{translate:0 0}}
+      @keyframes ishr{0%,48%{translate:0 0}53%,95%{translate:22px 0}98.6%,100%{translate:0 0}}
+      .o1 .itg{animation:16s ease infinite both}
+      .o1 .itg.t1{animation-name:o1t1}@keyframes o1t1{0%,20%{opacity:0;scale:.3}22%{opacity:1;scale:1.15}23.5%,95%{opacity:1;scale:1}98.5%,100%{opacity:0}}
+      .o1 .itg.t2{animation-name:o1t2}@keyframes o1t2{0%,44%{opacity:0;scale:.3}46%{opacity:1;scale:1.15}47.5%,95%{opacity:1;scale:1}98.5%,100%{opacity:0}}
+      .o1 .itg.t3{animation-name:o1t3}@keyframes o1t3{0%,68%{opacity:0;scale:.3}70%{opacity:1;scale:1.15}71.5%,95%{opacity:1;scale:1}98.5%,100%{opacity:0}}
+      .o1 .itg.t4{animation-name:o1t4}@keyframes o1t4{0%,90%{opacity:0;scale:.3}92%{opacity:1;scale:1.15}93.5%,95%{opacity:1;scale:1}98.5%,100%{opacity:0}}
       /* うずしお:めくって置いたら、となりがひっくり返る */
       .o2 .imv.m4{animation:imv4 8s cubic-bezier(.5,0,.3,1) infinite both}
       .o2 .imv.m4 .front{animation:ifr4 8s steps(1) infinite both}
@@ -1127,9 +1134,11 @@ GAMES['ikatako'] = dict(
         # ---- ソロルール(取説「ソロルール」/ソロ用サマリー):山札からめくって、どこに置くか
         dict(cls='o1', b=L('カードを1枚引き、得点として配置します。2枚目以降は、すでにある得点の右か左、もしくは[[差し込み]]で配置します。[[トラブルカードが出た時は得点とは別に置いてください。]]', 'Draw a card and place it as points — to the right or left of your row, or [[slide it in]] between. [[Trouble cards go to one side.]]'),
              v='<div class="ia io">' + '<div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ilab2" style="left:14px;top:76px">' + L('山札', 'Deck') + '</span>'
-               + '<span class="islot" style="left:96px;top:116px">' + icd('3') + '</span><span class="islot" style="left:140px;top:116px">' + icd('4') + '</span>'
-               + '<span class="imv m1" style="left:16px;top:46px;--dx:168px;--dy:70px">' + icd('ura', 'back') + icd('5', 'front') + '</span><span class="imv m2" style="left:16px;top:46px;--dx:36px;--dy:70px">' + icd('ura', 'back') + icd('2', 'front') + '</span><span class="imv m3" style="left:16px;top:46px;--dx:180px;--dy:-42px">' + icd('ura', 'back') + icd('rep', 'front') + '</span>'
-               + '<span class="itg t1" style="left:190px;top:96px">' + L('右へ', 'Right') + '</span><span class="itg t2" style="left:46px;top:96px">' + L('左へ', 'Left') + '</span><span class="itg t3" style="left:120px;top:4px">' + L('トラブルは別に', 'Trouble aside') + '</span>'
+               + '<span class="ish l"><span class="islot" style="left:96px;top:116px">' + icd('3') + '</span><span class="imv m2" style="left:16px;top:46px;--dx:36px;--dy:70px">' + icd('ura', 'back') + icd('2', 'front') + '</span></span>'
+               + '<span class="ish r"><span class="islot" style="left:140px;top:116px">' + icd('4') + '</span><span class="imv m1" style="left:16px;top:46px;--dx:168px;--dy:70px">' + icd('ura', 'back') + icd('5', 'front') + '</span></span>'
+               + '<span class="imv mi" style="left:16px;top:46px;--dx:102px;--dy:70px">' + icd('ura', 'back') + icd('3', 'front') + '</span>'
+               + '<span class="imv m3" style="left:16px;top:46px;--dx:180px;--dy:-42px">' + icd('ura', 'back') + icd('rep', 'front') + '</span>'
+               + '<span class="itg t1" style="left:203px;top:96px">' + L('右へ', 'Right') + '</span><span class="itg t2" style="left:52px;top:96px">' + L('左へ', 'Left') + '</span><span class="itg t3" style="left:137px;top:96px">' + L('差し込み', 'Slide in') + '</span><span class="itg t4" style="left:120px;top:4px">' + L('トラブルは別に', 'Trouble aside') + '</span>'
                + '<span class="ilabel">' + L('得点', 'Points') + '</span></div>'),
         dict(cls='o2', b=L('サルベージまたはうずしおを引いた場合は特殊行動を行います。うずしお:このカードを配置した時、[[隣接する得点カードを上下逆さまにします。]]得点は減点になり、減点は得点になります。', 'Salvage or Uzushio trigger special actions. Uzushio: [[flip the neighboring point cards upside down]] — points become penalties and vice versa.'),
              v='<div class="ia io">' + '<div class="ideck">' + icd('ura') + icd('ura') + icd('ura') + '</div><span class="ilab2" style="left:14px;top:76px">' + L('山札', 'Deck') + '</span>'
