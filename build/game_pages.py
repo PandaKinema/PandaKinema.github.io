@@ -557,7 +557,8 @@ GAMES['trico'] = dict(
     .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:16px;font-weight:900;color:var(--p-ink)}
     /* 2コマ目:勝利条件の図 */
     .s2 .viz{padding:8px}
-    .tjimg{width:100%;height:100%;object-fit:contain}
+    .tjbox{position:relative;width:100%;max-height:100%;aspect-ratio:2000/1124}
+    .tjp{position:absolute;left:0;width:100%;object-fit:contain}
     /* 4コマ目:ニコとトリコ。2枚目で「ニコ!」、3枚目で「トリコ!」(同じ場所) */
     .t4{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
     .t4pair{position:relative;display:grid;width:min(190px,84%)}
@@ -578,22 +579,24 @@ GAMES['trico'] = dict(
       .tpl .lf{animation:t1flip 7s cubic-bezier(.3,1.2,.4,1) infinite}
       @keyframes t1flip{0%,48%{transform:rotateY(180deg)}58%,100%{transform:rotateY(0deg)}}
       .tsay{animation:t1say 7s ease infinite}
+      .tjp{animation:tjin 7s cubic-bezier(.3,1.3,.5,1) infinite both;animation-delay:calc(var(--i) * .55s)}
+      @keyframes tjin{0%{opacity:0;translate:-16px 0}8%,80%{opacity:1;translate:0 0}88%,100%{opacity:0;translate:0 0}}
       @keyframes t1say{0%,34%{opacity:0;scale:.4}39%{opacity:1;scale:1.15}42%,52%{opacity:1;scale:1}58%,100%{opacity:0;scale:.6}}
       .t4c{animation:t4c0 7s cubic-bezier(.3,1.4,.5,1) infinite}
       .t4c[style*="--k:1"]{animation-name:t4c1}.t4c[style*="--k:2"]{animation-name:t4c2}
       @keyframes t4c0{0%{opacity:0;translate:0 -24px}5%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
       @keyframes t4c1{0%,24%{opacity:0;translate:0 -24px}29%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
-      @keyframes t4c2{0%,48%{opacity:0;translate:0 -24px}53%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t4c2{0%,46%{opacity:0;translate:0 -24px}50.5%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
       .t4n{animation:t4n 7s ease infinite}
       @keyframes t4n{0%,26%{opacity:0;scale:.4}30%{opacity:1;scale:1.12}33%,47%{opacity:1;scale:1}50%,100%{opacity:0;scale:.6}}
       .t4t{animation:t4t 7s ease infinite}
-      @keyframes t4t{0%,50%{opacity:0;scale:.4}54%{opacity:1;scale:1.15}57%,88%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      @keyframes t4t{0%,50%{opacity:0;scale:.4}52%{opacity:1;scale:1.15}55%,88%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
       .t4pair{animation:t4pair 7s ease infinite}
       .t4p2{animation:t4look 7s steps(1) infinite}   /* トリコ!でニコがこっちを向く */
       .t4p1{animation:t4look1 7s steps(1) infinite}
-      @keyframes t4look{0%{opacity:0}53%{opacity:1}95%{opacity:0}}
-      @keyframes t4look1{0%{opacity:1}53%{opacity:0}95%{opacity:1}}
-      @keyframes t4pair{0%,50%{translate:0 0}54%{translate:0 -8px}58%{translate:0 0}62%{translate:0 -4px}66%,100%{translate:0 0}}
+      @keyframes t4look{0%{opacity:0}50.5%{opacity:1}95%{opacity:0}}
+      @keyframes t4look1{0%{opacity:1}50.5%{opacity:0}95%{opacity:1}}
+      @keyframes t4pair{0%,50.5%{translate:0 0}53%{translate:0 -8px}57%{translate:0 0}61%{translate:0 -4px}65%,100%{translate:0 0}}
     }
     /* くり返し(スクリプト不要)。土台は完成図 */
     @media all{
@@ -649,7 +652,7 @@ GAMES['trico'] = dict(
                '<figure class="lead-col"><span class="tlab">P3</span><span class="tlead">' + tcard('p24') + '<img class="lead" src="{{img:tc_lead_o.webp}}" alt="リードプレイヤーマーカー"></span></figure>'
                '<span class="tsay">' + L('せーの!', 'Reveal!') + '</span></div>'),
         dict(cls='s2', b=L('場に揃った[[色の数]]で勝敗を決める!', 'The [[number of colors]] on the table decides the winner!'),
-             v='<img class="tjimg" src="{{img:t_judge.webp}}" alt="アピールの勝利条件:場の色が1色なら最も大きい数、2色なら同じ色の中で最も小さい数、3色なら最も大きい数。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になる。">'),
+             v='<div class="tjbox" role="img" aria-label="アピールの勝利条件:場の色が1色なら最も大きい数、2色なら同じ色の中で最も小さい数、3色なら最も大きい数。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になる。"><img class="tjp" style="--i:0;top:0.00%;height:16.93%" src="{{img:t_judge_0.webp}}" alt=""><img class="tjp" style="--i:1;top:20.31%;height:20.94%" src="{{img:t_judge_1.webp}}" alt=""><img class="tjp" style="--i:2;top:44.02%;height:20.94%" src="{{img:t_judge_2.webp}}" alt=""><img class="tjp" style="--i:3;top:67.56%;height:20.94%" src="{{img:t_judge_3.webp}}" alt=""><img class="tjp" style="--i:4;top:91.18%;height:5.98%" src="{{img:t_judge_4.webp}}" alt=""></div>'),
         dict(cls='s3', b=L('場の色が2色なので、[[紫の中で最も小さい3の勝ち!]] 勝った人は場の3枚から[[好きなカードを1枚獲得]]し、手元に表向きで置く!', 'Two colors on the table, so [[the lowest purple, 3, wins!]] The winner [[takes any one]] of the 3 cards and places it face up.'),
              v='<div class="tp3">' + tcard('p3', 0) + '<span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
         dict(cls='s4', b=L('手元のカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言! [[宣言した人がラウンド勝利!]]', 'Declare [[“Nico!”]] at 2 colors and [[“Trico!”]] at 3! [[Whoever declares Trico wins the round!]]'),
