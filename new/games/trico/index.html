@@ -183,24 +183,49 @@
     .twin .wbird{width:70px}
     .twin .mk{width:34px;margin-bottom:2px}
     .tbub.trico3{left:-10px;top:-32px;border:2px solid var(--p-ink);background:#fff;color:var(--p-ink)}
-    /* 1コマ目:P1〜P3。リードプレイヤーマーカーはカードの横に置く */
-    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:14px;padding:22px 0 8px}
+    /* 1コマ目:P3(リード)が表で出す → P1・P2が裏で出す → せーの!で表に。リードプレイヤーマーカーはカードの横に横向きで */
+    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:24px 0 6px}
     .tpl figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
     .tlab{padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
-    .tpl .lf{--card-w:50px}
-    .tpl .tcd{width:50px}
-    .tlead{position:relative;display:flex;align-items:flex-end;gap:4px}
-    .tlead .lead{width:26px;rotate:0deg;box-shadow:0 2px 5px rgba(0,0,0,.18);border-radius:3px}
-    .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:15px;font-weight:900;color:var(--p-ink)}
-    .twin3{position:relative;display:block}
-    .theart{position:absolute;left:50%;top:-24px;translate:-50% 0;color:#ec6ea6;font-size:20px;line-height:1}
-    .twin .mk2{margin-left:-14px}
+    .tpl .lf{--card-w:48px}
+    .tpl .tcd{width:48px}
+    .tlead{position:relative;display:flex;align-items:flex-end;gap:5px}
+    .tlead .lead{width:24px;rotate:90deg;margin:0 8px 6px 6px;border-radius:3px;box-shadow:0 2px 5px rgba(0,0,0,.18)}
+    .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:16px;font-weight:900;color:var(--p-ink)}
+    /* 2コマ目:勝利条件の図 */
+    .s2 .viz{padding:8px}
+    .tjimg{width:100%;height:100%;object-fit:contain}
+    /* 4コマ目:ニコとトリコ。2枚目で「ニコ!」、3枚目で「トリコ!」(同じ場所) */
+    .t4{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+    .t4pair{width:min(190px,84%)}
+    .t4row{position:relative;display:flex;gap:6px;padding-right:96px}
+    .t4row .tcd{width:44px}
+    .t4say{position:absolute;right:0;top:50%;translate:0 -50%;display:grid;width:90px;text-align:center}
+    .t4say b{grid-area:1/1;padding:4px 0;border-radius:999px;font-size:15px;font-weight:900;color:#fff}
+    .t4n{background:#ec6ea6}
+    .t4t{background:var(--p-ink)}
     @media all{
-      .tsay{animation:lmark 6s ease infinite;animation-delay:-.6s}
-      .tpl figure:not(.lead-col){--o:.6s}
-      .s1 .tlead{animation:tdrop 6s cubic-bezier(.3,1.4,.5,1) infinite}
-      .theart{animation:lmark 6s ease infinite;animation-delay:-1.2s}
-      .twin .mk2{animation:t4win 7s ease infinite;animation-delay:.9s}
+      .t1a,.t1b{animation:t1in 7s cubic-bezier(.3,1.4,.5,1) infinite}
+      .t1b{animation-name:t1in2}
+      @keyframes t1in{0%,10%{opacity:0;translate:0 -24px}16%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t1in2{0%,20%{opacity:0;translate:0 -24px}26%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      .s1 .tlead{animation:t1lead 7s ease infinite}
+      @keyframes t1lead{0%{opacity:0;translate:0 -20px}6%,88%{opacity:1;translate:0 0}95%,100%{opacity:0}}
+      .tpl .lf{animation:t1flip 7s cubic-bezier(.3,1.2,.4,1) infinite}
+      @keyframes t1flip{0%,48%{transform:rotateY(180deg)}58%,100%{transform:rotateY(0deg)}}
+      .tsay{animation:t1say 7s ease infinite}
+      @keyframes t1say{0%,34%{opacity:0;scale:.4}39%{opacity:1;scale:1.15}42%,52%{opacity:1;scale:1}58%,100%{opacity:0;scale:.6}}
+      .t4c{animation:t4c0 7s cubic-bezier(.3,1.4,.5,1) infinite}
+      .t4c[style*="--k:1"]{animation-name:t4c1}.t4c[style*="--k:2"]{animation-name:t4c2}
+      @keyframes t4c0{0%{opacity:0;translate:0 -24px}5%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t4c1{0%,24%{opacity:0;translate:0 -24px}29%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t4c2{0%,48%{opacity:0;translate:0 -24px}53%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      .t4n{animation:t4n 7s ease infinite}
+      @keyframes t4n{0%,26%{opacity:0;scale:.4}30%{opacity:1;scale:1.12}33%,47%{opacity:1;scale:1}50%,100%{opacity:0;scale:.6}}
+      .t4t{animation:t4t 7s ease infinite}
+      @keyframes t4t{0%,50%{opacity:0;scale:.4}54%{opacity:1;scale:1.15}57%,88%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      .t4pair{animation:t4pair 7s ease infinite}
+      @keyframes t4pair{0%,50%{translate:0 0}54%{translate:0 -8px}58%{translate:0 0}62%{translate:0 -4px}66%,100%{translate:0 0}}
     }
     /* くり返し(スクリプト不要)。土台は完成図 */
     @media all{
@@ -801,19 +826,19 @@
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
           <li class="step s1">
             <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">リードプレイヤーが1枚を表向きに出したら、他の2人は裏向きに出して<em>同時に公開!</em></span><span lang="en">The lead player plays a card face up; the other two play face down and <em>reveal at the same time!</em></span></span></p></div>
-            <div class="viz"><div class="tpl"><figure><span class="tlab">P1</span><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"></span></figure><figure><span class="tlab">P2</span><span class="lf" style="--i:2"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span></figure><figure class="lead-col"><span class="tlab">P3</span><span class="tlead"><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="lead" src="../../img/parts/tc_lead_o.webp?v=0bd15a45" alt="リードプレイヤーマーカー"></span></figure><span class="tsay"><span lang="ja">せーの!</span><span lang="en">Reveal!</span></span></div></div>
+            <div class="viz"><div class="tpl"><figure class="t1a"><span class="tlab">P1</span><span class="lf" style="--i:0"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"></span></figure><figure class="t1b"><span class="tlab">P2</span><span class="lf" style="--i:1"><img class="c back" src="../../img/parts/tc_ura.webp?v=1c6ad391" alt=""><img class="c front" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span></figure><figure class="lead-col"><span class="tlab">P3</span><span class="tlead"><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="lead" src="../../img/parts/tc_lead_o.webp?v=0bd15a45" alt="リードプレイヤーマーカー"></span></figure><span class="tsay"><span lang="ja">せーの!</span><span lang="en">Reveal!</span></span></div></div>
           </li>
           <li class="step s2">
             <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">場に揃った<em>色の数</em>で勝敗を決める!</span><span lang="en">The <em>number of colors</em> on the table decides the winner!</span></span></p></div>
-            <div class="viz"><div class="tjudge"><div class="trow" style="--i:0"><span class="tlabel"><span lang="ja">1色</span><span lang="en">1</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><img class="tcd " style="--i:0" src="../../img/parts/tc_p12.webp?v=7743f0db" alt="紫の12"><span class="tw" style="--i:0"><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><b>WIN</b></span></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div><div class="trow" style="--i:1"><span class="tlabel"><span lang="ja">2色</span><span lang="en">2</span></span><span class="tcards"><span class="tw" style="--i:1"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"><img class="tcd " style="--i:0" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span><span class="trule"><span lang="ja">同じ色の中で<br>最も小さい数</span><span lang="en">Lowest of<br>the pair color</span></span></div><div class="trow" style="--i:2"><span class="tlabel"><span lang="ja">3色</span><span lang="en">3</span></span><span class="tcards"><img class="tcd " style="--i:0" src="../../img/parts/tc_p9.webp?v=a9dbb6fc" alt="紫の9"><span class="tw" style="--i:2"><img class="tcd " style="--i:0" src="../../img/parts/tc_y24.webp?v=e85d8da9" alt="黄の24"><b>WIN</b></span><img class="tcd " style="--i:0" src="../../img/parts/tc_r15.webp?v=1d279c82" alt="赤の15"></span><span class="trule"><span lang="ja">最も大きい数</span><span lang="en">Highest</span></span></div></div></div>
+            <div class="viz"><img class="tjimg" src="../../img/parts/t_judge.webp?v=e8793a52" alt="アピールの勝利条件:場の色が1色なら最も大きい数、2色なら同じ色の中で最も小さい数、3色なら最も大きい数。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になる。"></div>
           </li>
           <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">場の色が2色なので、<em>紫の中で最も小さい3の勝ち!</em> 勝った人は場の3枚から<em>好きなカードを1枚獲得</em>し、手元に表向きで置く!</span><span lang="en">Two colors on the table, so <em>the lowest purple, 3, wins!</em> The winner <em>takes any one</em> of the 3 cards and places it face up.</span></span></p></div>
-            <div class="viz"><div class="tp3"><span class="twin3"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><b class="theart" aria-label="勝ち">♥</b></span><span class="tpick"><img class="tcd " style="--i:1" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"><b><span lang="ja">獲得!</span><span lang="en">Take!</span></b></span><img class="tcd " style="--i:2" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"></div></div>
+            <div class="viz"><div class="tp3"><img class="tcd " style="--i:0" src="../../img/parts/tc_p3.webp?v=761eae70" alt="紫の3"><span class="tpick"><img class="tcd " style="--i:1" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"><b><span lang="ja">獲得!</span><span lang="en">Take!</span></b></span><img class="tcd " style="--i:2" src="../../img/parts/tc_p24.webp?v=3dfd348e" alt="紫の24"></div></div>
           </li>
           <li class="step s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">手元のカードが2色になったら<em>「ニコ!」</em>、3色になったら<em>「トリコ!」</em>と宣言! トリコマーカーを<em>2つ集めた人がゲームの勝者!</em></span><span lang="en">Declare <em>“Nico!”</em> at 2 colors and <em>“Trico!”</em> at 3! <em>Collect 2 Trico markers to win!</em></span></span></p></div>
-            <div class="viz"><div class="tp4"><div class="thand"><img class="tcd " style="--i:0" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"><img class="tcd " style="--i:1" src="../../img/parts/tc_y21.webp?v=bc8826c5" alt="黄の21"><span class="tbub nico2"><span lang="ja">ニコ!</span><span lang="en">Nico!</span></span><img class="tcd late" style="--i:2" src="../../img/parts/tc_p9.webp?v=a9dbb6fc" alt="紫の9"></div><div class="twin"><span class="tbub trico3"><span lang="ja">トリコ!</span><span lang="en">Trico!</span></span><img class="wbird" src="../../img/chara/t_tricoP.webp?v=ded230d8" alt=""><img class="mk" src="../../img/parts/t_marker.webp?v=5ae7ebe2" alt="トリコマーカー"><img class="mk mk2" src="../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></div></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">手元のカードが2色になったら<em>「ニコ!」</em>、3色になったら<em>「トリコ!」</em>と宣言! <em>宣言した人がラウンド勝利!</em></span><span lang="en">Declare <em>“Nico!”</em> at 2 colors and <em>“Trico!”</em> at 3! <em>Whoever declares Trico wins the round!</em></span></span></p></div>
+            <div class="viz"><div class="t4"><img class="t4pair" src="../../img/chara/t_pair.webp?v=ba0fb92e" alt="ニコとトリコ"><div class="t4row"><span class="t4c" style="--k:0"><img class="tcd " style="--i:0" src="../../img/parts/tc_r27.webp?v=2cf7026f" alt="赤の27"></span><span class="t4c" style="--k:1"><img class="tcd " style="--i:0" src="../../img/parts/tc_y21.webp?v=bc8826c5" alt="黄の21"></span><span class="t4c" style="--k:2"><img class="tcd " style="--i:0" src="../../img/parts/tc_p9.webp?v=a9dbb6fc" alt="紫の9"></span><span class="t4say"><b class="t4n"><span lang="ja">ニコ!</span><span lang="en">Nico!</span></b><b class="t4t"><span lang="ja">トリコ!</span><span lang="en">Trico!</span></b></span></div></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>

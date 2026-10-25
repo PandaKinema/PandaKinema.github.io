@@ -546,24 +546,49 @@ GAMES['trico'] = dict(
     .twin .wbird{width:70px}
     .twin .mk{width:34px;margin-bottom:2px}
     .tbub.trico3{left:-10px;top:-32px;border:2px solid var(--p-ink);background:#fff;color:var(--p-ink)}
-    /* 1コマ目:P1〜P3。リードプレイヤーマーカーはカードの横に置く */
-    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:14px;padding:22px 0 8px}
+    /* 1コマ目:P3(リード)が表で出す → P1・P2が裏で出す → せーの!で表に。リードプレイヤーマーカーはカードの横に横向きで */
+    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:24px 0 6px}
     .tpl figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
     .tlab{padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
-    .tpl .lf{--card-w:50px}
-    .tpl .tcd{width:50px}
-    .tlead{position:relative;display:flex;align-items:flex-end;gap:4px}
-    .tlead .lead{width:26px;rotate:0deg;box-shadow:0 2px 5px rgba(0,0,0,.18);border-radius:3px}
-    .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:15px;font-weight:900;color:var(--p-ink)}
-    .twin3{position:relative;display:block}
-    .theart{position:absolute;left:50%;top:-24px;translate:-50% 0;color:#ec6ea6;font-size:20px;line-height:1}
-    .twin .mk2{margin-left:-14px}
+    .tpl .lf{--card-w:48px}
+    .tpl .tcd{width:48px}
+    .tlead{position:relative;display:flex;align-items:flex-end;gap:5px}
+    .tlead .lead{width:24px;rotate:90deg;margin:0 8px 6px 6px;border-radius:3px;box-shadow:0 2px 5px rgba(0,0,0,.18)}
+    .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:16px;font-weight:900;color:var(--p-ink)}
+    /* 2コマ目:勝利条件の図 */
+    .s2 .viz{padding:8px}
+    .tjimg{width:100%;height:100%;object-fit:contain}
+    /* 4コマ目:ニコとトリコ。2枚目で「ニコ!」、3枚目で「トリコ!」(同じ場所) */
+    .t4{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+    .t4pair{width:min(190px,84%)}
+    .t4row{position:relative;display:flex;gap:6px;padding-right:96px}
+    .t4row .tcd{width:44px}
+    .t4say{position:absolute;right:0;top:50%;translate:0 -50%;display:grid;width:90px;text-align:center}
+    .t4say b{grid-area:1/1;padding:4px 0;border-radius:999px;font-size:15px;font-weight:900;color:#fff}
+    .t4n{background:#ec6ea6}
+    .t4t{background:var(--p-ink)}
     @media all{
-      .tsay{animation:lmark 6s ease infinite;animation-delay:-.6s}
-      .tpl figure:not(.lead-col){--o:.6s}
-      .s1 .tlead{animation:tdrop 6s cubic-bezier(.3,1.4,.5,1) infinite}
-      .theart{animation:lmark 6s ease infinite;animation-delay:-1.2s}
-      .twin .mk2{animation:t4win 7s ease infinite;animation-delay:.9s}
+      .t1a,.t1b{animation:t1in 7s cubic-bezier(.3,1.4,.5,1) infinite}
+      .t1b{animation-name:t1in2}
+      @keyframes t1in{0%,10%{opacity:0;translate:0 -24px}16%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t1in2{0%,20%{opacity:0;translate:0 -24px}26%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      .s1 .tlead{animation:t1lead 7s ease infinite}
+      @keyframes t1lead{0%{opacity:0;translate:0 -20px}6%,88%{opacity:1;translate:0 0}95%,100%{opacity:0}}
+      .tpl .lf{animation:t1flip 7s cubic-bezier(.3,1.2,.4,1) infinite}
+      @keyframes t1flip{0%,48%{transform:rotateY(180deg)}58%,100%{transform:rotateY(0deg)}}
+      .tsay{animation:t1say 7s ease infinite}
+      @keyframes t1say{0%,34%{opacity:0;scale:.4}39%{opacity:1;scale:1.15}42%,52%{opacity:1;scale:1}58%,100%{opacity:0;scale:.6}}
+      .t4c{animation:t4c0 7s cubic-bezier(.3,1.4,.5,1) infinite}
+      .t4c[style*="--k:1"]{animation-name:t4c1}.t4c[style*="--k:2"]{animation-name:t4c2}
+      @keyframes t4c0{0%{opacity:0;translate:0 -24px}5%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t4c1{0%,24%{opacity:0;translate:0 -24px}29%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      @keyframes t4c2{0%,48%{opacity:0;translate:0 -24px}53%,88%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 0}}
+      .t4n{animation:t4n 7s ease infinite}
+      @keyframes t4n{0%,26%{opacity:0;scale:.4}30%{opacity:1;scale:1.12}33%,47%{opacity:1;scale:1}50%,100%{opacity:0;scale:.6}}
+      .t4t{animation:t4t 7s ease infinite}
+      @keyframes t4t{0%,50%{opacity:0;scale:.4}54%{opacity:1;scale:1.15}57%,88%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      .t4pair{animation:t4pair 7s ease infinite}
+      @keyframes t4pair{0%,50%{translate:0 0}54%{translate:0 -8px}58%{translate:0 0}62%{translate:0 -4px}66%,100%{translate:0 0}}
     }
     /* くり返し(スクリプト不要)。土台は完成図 */
     @media all{
@@ -614,17 +639,18 @@ GAMES['trico'] = dict(
         # 遊び方動画(trico_howto)の6つの説明を4コマに
         dict(cls='s1', b=L('リードプレイヤーが1枚を表向きに出したら、他の2人は裏向きに出して[[同時に公開!]]', 'The lead player plays a card face up; the other two play face down and [[reveal at the same time!]]'),
              v='<div class="tpl">'
-               '<figure><span class="tlab">P1</span>' + tlf('p3', 1) + '</figure>'
-               '<figure><span class="tlab">P2</span>' + tlf('r27', 2) + '</figure>'
+               '<figure class="t1a"><span class="tlab">P1</span>' + tlf('p3', 0) + '</figure>'
+               '<figure class="t1b"><span class="tlab">P2</span>' + tlf('r27', 1) + '</figure>'
                '<figure class="lead-col"><span class="tlab">P3</span><span class="tlead">' + tcard('p24') + '<img class="lead" src="{{img:tc_lead_o.webp}}" alt="リードプレイヤーマーカー"></span></figure>'
                '<span class="tsay">' + L('せーの!', 'Reveal!') + '</span></div>'),
         dict(cls='s2', b=L('場に揃った[[色の数]]で勝敗を決める!', 'The [[number of colors]] on the table decides the winner!'),
-             v='<div class="tjudge">' + trow(0, L('1色', '1'), ['p3', 'p12', 'p24'], 'p24', L('最も大きい数', 'Highest')) + trow(1, L('2色', '2'), ['p3', 'p24', 'r27'], 'p3', L('同じ色の中で<br>最も小さい数', 'Lowest of<br>the pair color')) + trow(2, L('3色', '3'), ['p9', 'y24', 'r15'], 'y24', L('最も大きい数', 'Highest')) + '</div>'),
+             v='<img class="tjimg" src="{{img:t_judge.webp}}" alt="アピールの勝利条件:場の色が1色なら最も大きい数、2色なら同じ色の中で最も小さい数、3色なら最も大きい数。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になる。">'),
         dict(cls='s3', b=L('場の色が2色なので、[[紫の中で最も小さい3の勝ち!]] 勝った人は場の3枚から[[好きなカードを1枚獲得]]し、手元に表向きで置く!', 'Two colors on the table, so [[the lowest purple, 3, wins!]] The winner [[takes any one]] of the 3 cards and places it face up.'),
-             v='<div class="tp3"><span class="twin3">' + tcard('p3', 0) + '<b class="theart" aria-label="勝ち">♥</b></span><span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
-        dict(cls='s4', b=L('手元のカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言! トリコマーカーを[[2つ集めた人がゲームの勝者!]]', 'Declare [[“Nico!”]] at 2 colors and [[“Trico!”]] at 3! [[Collect 2 Trico markers to win!]]'),
-             v='<div class="tp4"><div class="thand">' + tcard('r27', 0) + tcard('y21', 1) + '<span class="tbub nico2">' + L('ニコ!', 'Nico!') + '</span>' + tcard('p9', 2, 'late') + '</div>'
-               '<div class="twin"><span class="tbub trico3">' + L('トリコ!', 'Trico!') + '</span><img class="wbird" src="{{img:t_tricoP.webp}}" alt=""><img class="mk" src="{{img:t_marker.webp}}" alt="トリコマーカー"><img class="mk mk2" src="{{img:t_marker.webp}}" alt=""></div></div>'),
+             v='<div class="tp3">' + tcard('p3', 0) + '<span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
+        dict(cls='s4', b=L('手元のカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言! [[宣言した人がラウンド勝利!]]', 'Declare [[“Nico!”]] at 2 colors and [[“Trico!”]] at 3! [[Whoever declares Trico wins the round!]]'),
+             v='<div class="t4"><img class="t4pair" src="{{img:t_pair.webp}}" alt="ニコとトリコ"><div class="t4row">'
+               '<span class="t4c" style="--k:0">' + tcard('r27') + '</span><span class="t4c" style="--k:1">' + tcard('y21') + '</span><span class="t4c" style="--k:2">' + tcard('p9') + '</span>'
+               '<span class="t4say"><b class="t4n">' + L('ニコ!', 'Nico!') + '</b><b class="t4t">' + L('トリコ!', 'Trico!') + '</b></span></div></div>'),
     ],
     gallery=[('tg_manual1.webp', '遊び方説明書(表)', 'Rulebook (front)', 'wide'), ('trico_pkg_lg.webp', 'パッケージ', 'Box', ''),
              ('tg_summary.webp', 'サマリー', 'Summary card', ''), ('tg_manual2.webp', '遊び方説明書(裏)', 'Rulebook (back)', 'wide')],

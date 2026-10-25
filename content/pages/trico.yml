@@ -101,8 +101,8 @@ steps:
   text_en: The **number of colors** on the table decides the winner!
 - text_ja: 場の色が2色なので、**紫の中で最も小さい3の勝ち!** 勝った人は場の3枚から**好きなカードを1枚獲得**し、手元に表向きで置く!
   text_en: Two colors on the table, so **the lowest purple, 3, wins!** The winner **takes any one** of the 3 cards and places it face up.
-- text_ja: 手元のカードが2色になったら**「ニコ!」**、3色になったら**「トリコ!」**と宣言! トリコマーカーを**2つ集めた人がゲームの勝者!**
-  text_en: Declare **“Nico!”** at 2 colors and **“Trico!”** at 3! **Collect 2 Trico markers to win!**
+- text_ja: 手元のカードが2色になったら**「ニコ!」**、3色になったら**「トリコ!」**と宣言! **宣言した人がラウンド勝利!**
+  text_en: Declare **“Nico!”** at 2 colors and **“Trico!”** at 3! **Whoever declares Trico wins the round!**
 gallery:
   - image: img/gallery/tg_manual1.webp
     caption_ja: 遊び方説明書(表)
