@@ -35,8 +35,8 @@
 
     /* ヘッダー */
     /* ヘッダー:バナーの上に透けて重なる。下へ進むと半透明の板になる */
-    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .3s ease}
-    .jsc .site-header.solid{background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#000;transition:background .3s ease}
+    .jsc .site-header.solid{background:#000}
     /* ヘッダーは作品ページと同じく、いつも地の色(バナーの上には重ねない) */
     .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:var(--side)}
     .home{flex:none;display:block}
