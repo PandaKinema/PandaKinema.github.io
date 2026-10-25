@@ -560,7 +560,8 @@ GAMES['trico'] = dict(
     .tjimg{width:100%;height:100%;object-fit:contain}
     /* 4コマ目:ニコとトリコ。2枚目で「ニコ!」、3枚目で「トリコ!」(同じ場所) */
     .t4{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-    .t4pair{width:min(190px,84%)}
+    .t4pair{position:relative;display:grid;width:min(190px,84%)}
+    .t4pair img{grid-area:1/1;width:100%}
     .t4row{position:relative;display:flex;gap:6px;padding-right:96px}
     .t4row .tcd{width:44px}
     .t4say{position:absolute;right:0;top:50%;translate:0 -50%;display:grid;width:90px;text-align:center}
@@ -588,6 +589,10 @@ GAMES['trico'] = dict(
       .t4t{animation:t4t 7s ease infinite}
       @keyframes t4t{0%,50%{opacity:0;scale:.4}54%{opacity:1;scale:1.15}57%,88%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
       .t4pair{animation:t4pair 7s ease infinite}
+      .t4p2{animation:t4look 7s steps(1) infinite}   /* トリコ!でニコがこっちを向く */
+      .t4p1{animation:t4look1 7s steps(1) infinite}
+      @keyframes t4look{0%{opacity:0}53%{opacity:1}95%{opacity:0}}
+      @keyframes t4look1{0%{opacity:1}53%{opacity:0}95%{opacity:1}}
       @keyframes t4pair{0%,50%{translate:0 0}54%{translate:0 -8px}58%{translate:0 0}62%{translate:0 -4px}66%,100%{translate:0 0}}
     }
     /* くり返し(スクリプト不要)。土台は完成図 */
@@ -648,7 +653,7 @@ GAMES['trico'] = dict(
         dict(cls='s3', b=L('場の色が2色なので、[[紫の中で最も小さい3の勝ち!]] 勝った人は場の3枚から[[好きなカードを1枚獲得]]し、手元に表向きで置く!', 'Two colors on the table, so [[the lowest purple, 3, wins!]] The winner [[takes any one]] of the 3 cards and places it face up.'),
              v='<div class="tp3">' + tcard('p3', 0) + '<span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
         dict(cls='s4', b=L('手元のカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言! [[宣言した人がラウンド勝利!]]', 'Declare [[“Nico!”]] at 2 colors and [[“Trico!”]] at 3! [[Whoever declares Trico wins the round!]]'),
-             v='<div class="t4"><img class="t4pair" src="{{img:t_pair.webp}}" alt="ニコとトリコ"><div class="t4row">'
+             v='<div class="t4"><span class="t4pair"><img class="t4p1" src="{{img:t_pair_a.webp}}" alt="ニコとトリコ"><img class="t4p2" src="{{img:t_pair.webp}}" alt=""></span><div class="t4row">'
                '<span class="t4c" style="--k:0">' + tcard('r27') + '</span><span class="t4c" style="--k:1">' + tcard('y21') + '</span><span class="t4c" style="--k:2">' + tcard('p9') + '</span>'
                '<span class="t4say"><b class="t4n">' + L('ニコ!', 'Nico!') + '</b><b class="t4t">' + L('トリコ!', 'Trico!') + '</b></span></div></div>'),
     ],
