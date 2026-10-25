@@ -178,8 +178,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -313,8 +318,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -448,8 +458,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -583,8 +598,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -718,8 +738,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }
@@ -853,8 +878,13 @@ content:
             fields:
               - { name: image, label: 画像, type: image, options: { path: new/img/chara }, description: "背景透明" }
               - { name: float, label: 浮かぶ部品, type: image, options: { path: new/img/chara }, description: "キャラの上にふわふわ浮かせる画像(例:トゥーパの玉)。空ならなし" }
+              - { name: image2, label: 2枚目の画像, type: image, options: { path: new/img/chara }, description: "入れると1枚目と横に並べます(正面と横など)。空なら1枚だけ" }
+              - { name: label, label: 1枚目のラベル, type: string, description: "画像の下の小さい文字(例:FRONT)。空ならなし" }
+              - { name: label2, label: 2枚目のラベル, type: string, description: "例:SIDE" }
               - { name: name_ja, label: 名前, type: string }
               - { name: name_en, label: 名前(英語), type: string, hidden: true }
+              - { name: sub_ja, label: 名前の下の小さい文字, type: string, description: "型番など。空ならなし" }
+              - { name: sub_en, label: 名前の下の小さい文字(英語), type: string, hidden: true }
               - { name: note_ja, label: プロフィール, type: rich-text, description: "太字(B)にしたところが強調の色" }
               - { name: note_en, label: プロフィール(英語), type: text, hidden: true }
           - { name: summary_ja, label: "どんなゲーム?", type: rich-text, description: "太字(B)にしたところが強調の色になります" }

@@ -328,6 +328,14 @@
     .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
     .chara-name:empty{display:none}
+    .chara-sub{margin-top:-4px;font-size:12px;font-weight:800;letter-spacing:.08em;opacity:.85}   /* 名前の下の小さい文字(型番など) */
+    .fig-wrap:has(.duo){width:min(560px,88vw)}
+    .duo{display:flex;align-items:flex-end;justify-content:center;gap:clamp(18px,4vw,44px);height:100%;width:100%}
+    .duo figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px}
+    .duo img{animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
+    .duo figure+figure img{animation-delay:-1.8s}
+    .duo img{display:block;width:auto;max-width:100%;max-height:calc(100% - 26px);min-height:0}
+    .vlab{font-size:11px;font-weight:900;letter-spacing:.3em;padding-left:.3em;opacity:.85}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
     .story>p:not(.en){margin:0;font-size:15.5px;line-height:2.05;max-width:34em;font-weight:500;word-break:auto-phrase}

@@ -458,11 +458,16 @@ def apply(key):
             if x.get('float'):   # 浮かぶ部品(トゥーパの玉など)を上に。元のトゥーパ(本体 560×526)の枠 1164:1562 と同じ考え方
                 fig = '<div class="tupa" style="aspect-ratio:%d/%d"><span class="orb"><img src="{{img:%s}}" alt=""></span><img class="body" src="{{img:%s}}" alt="%s" loading="lazy"></div>' % (
                     1164, round(1164 * h / w * 1562 / (1164 * 526 / 560)), imgname(x['float']), f, alt)
+            elif x.get('image2'):   # 2枚並べる(正面・横など)。それぞれの下に小さいラベル
+                fig = '<div class="duo">' + ''.join('<figure><img src="{{img:%s}}" alt="%s" loading="lazy">%s</figure>' % (
+                    imgname(im_), alt, ('<span class="vlab">%s</span>' % H.escape(str(lb))) if lb else '')
+                    for im_, lb in ((x['image'], x.get('label')), (x['image2'], x.get('label2')))) + '</div>'
             else:
                 fig = '<img class="solo" src="{{img:%s}}" alt="%s" width="%d" height="%d" loading="lazy">' % (f, alt, w, h)
             note = rich_L(LL(x, 'note'))
-            slides.append('<div class="chara-slide%s"%s><div class="fig-wrap">%s</div><figcaption><span class="chara-name">%s</span>%s</figcaption></div>' % (
-                ' cur' if k == 0 else '', '' if k == 0 else ' aria-hidden="true"', fig, LL(x, 'name'), ('<span class="chara-note">%s</span>' % note) if note else ''))
+            sub = LL(x, 'sub')
+            slides.append('<div class="chara-slide%s"%s><div class="fig-wrap">%s</div><figcaption><span class="chara-name">%s</span>%s%s</figcaption></div>' % (
+                ' cur' if k == 0 else '', '' if k == 0 else ' aria-hidden="true"', fig, LL(x, 'name'), ('<span class="chara-sub">%s</span>' % sub) if sub else '', ('<span class="chara-note">%s</span>' % note) if note else ''))
         nav = ('<button class="cnav prev js-only" type="button" aria-label="前のキャラクター"></button><button class="cnav next js-only" type="button" aria-label="次のキャラクター"></button>'
                '<div class="cdots js-only">%s</div>' % ''.join('<i%s></i>' % (' class="on"' if k == 0 else '') for k in range(len(chars)))) if len(chars) > 1 else ''
         g['chara_html'] = '<div class="chara-slides">%s</div>%s' % (''.join(slides), nav)
@@ -1600,6 +1605,14 @@ TEMPLATE = r'''<!doctype html>
     .js .js-only.cdots{display:flex !important}
     .chara-note{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
     .chara-name:empty{display:none}
+    .chara-sub{margin-top:-4px;font-size:12px;font-weight:800;letter-spacing:.08em;opacity:.85}   /* 名前の下の小さい文字(型番など) */
+    .fig-wrap:has(.duo){width:min(560px,88vw)}
+    .duo{display:flex;align-items:flex-end;justify-content:center;gap:clamp(18px,4vw,44px);height:100%;width:100%}
+    .duo figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px}
+    .duo img{animation:lhop2 3.6s cubic-bezier(.3,.6,.4,1) infinite}
+    .duo figure+figure img{animation-delay:-1.8s}
+    .duo img{display:block;width:auto;max-width:100%;max-height:calc(100% - 26px);min-height:0}
+    .vlab{font-size:11px;font-weight:900;letter-spacing:.3em;padding-left:.3em;opacity:.85}
     .chara-name{display:inline-block;padding:.32em 1.3em .36em;border-radius:999px;background:var(--b2-ink);color:var(--b2-bg);font-size:20px;font-weight:900;letter-spacing:.12em}
     .chara h2{margin:0 0 20px;font-size:clamp(24px,3.1vw,34px);font-weight:900;letter-spacing:.02em;line-height:1.35}
     .story>p:not(.en){margin:0;font-size:15.5px;line-height:2.05;max-width:34em;font-weight:500;word-break:auto-phrase}

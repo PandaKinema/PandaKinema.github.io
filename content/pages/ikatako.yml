@@ -5,14 +5,15 @@ logo: img/logo/logo_ikatako.png
 logo_alt: イカタコ IKATAKO
 logo_buy: img/logo/i_logo_blue.png
 logo_credits: img/logo/logo_ikatako.png
-bg_color: main
+bg_color: third
 color3: "#00215d"
-accent_color: third
+accent_color: main
 hero:
   art: img/page/ikatako_top.jpg
   fit: cover
   art_pos: 50% 0%
-bg1_image: img/page/i_bg_tex.webp
+bg1_image: img/page/i_tex_c.png
+bg2_image: img/page/i_bg_tex2.webp
 band_image: img/page/i_band.png
 band_image_color: white
 heading_icon: img/page/i_ika.png
@@ -32,6 +33,19 @@ intro_en: React correctly to each card, collect as many points as you can, and
   squid and octopus**! But this sub has gesture controls! Raise the right hand
   and you can escape danger. Overcome every trouble and make it back from the
   deep!
+characters:
+  - image: img/chara/i_tritone_front.png
+    image2: img/chara/i_tritone_side.png
+    label: FRONT
+    label2: SIDE
+    name_ja: 小型潜水艇 トリトーン号
+    name_en: Mini submarine Tritone
+    sub_ja: Model T-01 “Tritone”
+    sub_en: Model T-01 “Tritone”
+    note_ja: |-
+      イカタコ海溝の調査用に開発された1人乗りの小型潜水艇。
+      危機に瀕した際に対応する腕を上げることで回避することができる。
+    note_en: A one-seat mini submarine built to survey the Ikatako Trench. When danger strikes, raise the matching arm to escape.
 summary_ja: |-
   イカタコとは山札からカードをめくり、対応するリアクションをしていくゲームです。
 
