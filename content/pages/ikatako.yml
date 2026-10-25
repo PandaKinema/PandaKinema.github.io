@@ -12,7 +12,6 @@ hero:
   art: img/page/ikatako_top.jpg
   fit: cover
   art_pos: 50% 0%
-bg1_image: img/page/i_tex_c.png
 bg2_image: img/page/i_bg_tex2.webp
 band_image: img/page/i_band.png
 band_image_color: white
