@@ -194,7 +194,7 @@ def banner(key, b=None):
     intro = '<p class="b-intro">%s</p>' % T(g.get('intro_ja'), g.get('intro_en')) if g.get('intro_ja') else ''
     # 区分の行:[新作] BOARD GAME(シリーズがあれば / シリーズ名)。PLAY & TOOLS と同じ位置
     label = '%s<span class="cap">BOARD GAME%s</span>' % ('<span class="b-new"><span class="cap">NEW</span></span>' if g.get('new') else '', ' / ' + e(g['series']) if g.get('series') else '')
-    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2><p class="b-meta">%s</p>%s' % (label, tlogo(g, 'b-logo'), meta(g), intro)
+    txt = '<p class="b-series">%s</p><h2 class="b-name">%s</h2>%s' % (label, tlogo(g, 'b-logo'), intro)   # 人数〜ジャンルはバナーには出さない(カードと作品ページに)
     return 'b-' + key, 'background:%s;--fg:%s' % (bg, ACC(g)), art, txt, btns(g), vid(bn.get('video'), bn.get('youtube'), bn)
 
 def clip_of(key):   # 作品の「バナー」欄に入れた動画の範囲
