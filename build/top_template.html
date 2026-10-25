@@ -330,7 +330,7 @@
       .o-btns .wb{padding:5px 8px;font-size:10.5px;border-radius:5px}
     }
     @media (max-width:700px){
-      .hero{height:clamp(520px,72svh,620px)}
+      .hero{height:calc(clamp(520px,72svh,620px) + 56px + env(safe-area-inset-top,0px));margin-top:calc(-56px - env(safe-area-inset-top,0px))}   /* ヘッダーの下にもぐる(動画のタイトルをヘッダーで隠す) */
       /* スマホ:上にパッケージ・動画、その下にロゴと情報(重ならないように縦に積む) */
       .slide:not(.b-custom){display:flex;flex-direction:column;padding-top:calc(56px + env(safe-area-inset-top,0px))}
       .b-art{position:relative;inset:auto;flex:1 1 auto;min-height:0;width:auto;height:auto;margin:10px 8vw 0}
@@ -343,14 +343,14 @@
       /* 動画:画面いっぱいに敷いて、動画の真ん中を見せる。文字は下に重ねる */
       .slide.has-vid .b-in{margin-top:auto}
       .slide.has-vid{background:#000 !important}
-      .slide.has-vid .b-yt iframe{top:calc(56px + env(safe-area-inset-top,0px));translate:-50% 0;width:max(100cqw,124.4cqh);height:max(70cqh,56.25cqw)}   /* 動画は上寄り。高さの7割:拡大しすぎてぼけないように */
-      .slide.has-vid .b-vid{top:calc(56px + env(safe-area-inset-top,0px));height:70%}
+      .slide.has-vid .b-yt iframe{top:calc(env(safe-area-inset-top,0px) - 6px);translate:-50% 0;width:max(100cqw,124.4cqh);height:max(70cqh,56.25cqw)}   /* 動画は上寄り。高さの7割:拡大しすぎてぼけないように */
+      .slide.has-vid .b-vid{top:calc(56px + env(safe-area-inset-top,0px));height:62%}
       .slide.has-vid::before{display:block;background:linear-gradient(rgba(0,0,0,0) 42%,rgba(0,0,0,.85) 66%,#000 80%)}   /* 下は黒グラデでなじませる */
       /* パッケージは全作品同じ大きさ(高さ固定)。説明は2行ぶん固定。残りの高さにロゴを合わせる */
       .slide:not(.b-custom):not(.has-vid) .b-art{flex:none;height:clamp(170px,31svh,240px);margin:4px 10vw 0}
       .slide:not(.b-custom):not(.has-vid) .b-in{flex:1 1 auto;min-height:0;justify-content:flex-end;padding-top:6px}
-      .b-in .b-name{flex:0 1 auto;display:flex;align-items:flex-end;min-height:44px;height:clamp(70px,16svh,128px)}
-      .b-in .b-logo,.b-in img.b-logo,.b-in .b-mtitle{width:auto;height:100%;max-width:92%;max-height:none;object-fit:contain;object-position:left bottom;-webkit-mask-position:left bottom;mask-position:left bottom}
+      .b-in .b-name{flex:0 1 auto;display:flex;align-items:flex-end;min-height:44px}
+      .b-in .b-logo,.b-in img.b-logo,.b-in .b-mtitle{width:min(92%,340px);height:auto;max-height:clamp(84px,17svh,140px);object-fit:contain;object-position:left bottom;-webkit-mask-position:left bottom;mask-position:left bottom}   /* 既定はTRICO!くらいの大きさ(横幅基準)。縦長のロゴは高さの上限まで */
       .b-in .tool-name{font-size:24px;line-height:1.25}
       .b-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:calc(2 * 1.7em)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
