@@ -178,13 +178,14 @@
     .mk2 .mkbub::before{content:"";position:absolute;left:-5px;top:50%;translate:0 -50%;border:5px solid transparent;border-right-color:#e8467a;border-left:0}
     /* 3コマ目:モコチャカ!→トークンを取って手札の横へ、山2つが手札の下に入る */
     .mk3 .mkp.take{z-index:2}
+    .mkp .mkbk{opacity:0;translate:0 0;rotate:0deg}
     /* 4コマ目:4人の手札。ガブは消える */
     .mk4{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;width:100%}
     .mk4 .pl{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0}
     .mk4 .lab{display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:800}
     .mk4 .lab b{padding:0 7px;border-radius:999px;background:var(--p-ink);color:#fff}
     .mk4 .hand{display:flex;height:48px;align-items:flex-end}
-    .mk4 .hand .mkc{width:32px;margin-left:-11px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+    .mk4 .hand .mkc{width:32px;margin-left:-14px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
     .mk4 .hand .mkc:first-child{margin-left:0}
     .mk4 .zero{display:grid;place-items:center;width:32px;height:44px;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px;font-size:10px;font-weight:800}
     .mk4 .win{padding:0 7px;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
@@ -213,18 +214,21 @@
       @keyframes mk3t{0%,14%{translate:0 0;rotate:0deg}16%{rotate:-10deg}18%{rotate:8deg}20%{rotate:0deg}34%,84%{opacity:1;translate:var(--tdx) var(--tdy)}92%,100%{opacity:0;translate:var(--tdx) var(--tdy)}}
       .s3 .mkp.take{animation:mk3p 8s cubic-bezier(.5,0,.3,1) infinite}
       .s3 .mkp.take.t2{animation-name:mk3p2}
-      @keyframes mk3p{0%,38%{opacity:1;translate:0 0;rotate:var(--r)}56%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}62%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
-      @keyframes mk3p2{0%,48%{opacity:1;translate:0 0;rotate:var(--r)}66%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}72%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
+      @keyframes mk3p{0%,38%{opacity:1;translate:0 0;rotate:var(--r);scale:1 1}43%{scale:0 1}48%{scale:1 1}58%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}64%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
+      @keyframes mk3p2{0%,48%{opacity:1;translate:0 0;rotate:var(--r);scale:1 1}53%{scale:0 1}58%{scale:1 1}68%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}74%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
       .s3 .mkp.take .mkc{outline:2px solid transparent;animation:mk3o 8s ease infinite}
+      .s3 .mkp.take .mkbk{animation:mk3k 8s steps(1) infinite;outline:none}.s3 .mkp.take.t2 .mkbk{animation-name:mk3k2}
+      @keyframes mk3k{0%{opacity:0}43%{opacity:1}100%{opacity:1}}
+      @keyframes mk3k2{0%{opacity:0}53%{opacity:1}100%{opacity:1}}
       @keyframes mk3o{0%,30%{outline-color:transparent}33%,50%{outline-color:#e8467a}56%,100%{outline-color:transparent}}
       /* 4:ガブが消える→枚数→勝ち */
       .mk4 .pl{animation:mk4p 8s ease infinite both;animation-delay:calc(var(--i) * .25s)}
       @keyframes mk4p{0%{opacity:0;translate:0 8px}6%,86%{opacity:1;translate:0 0}94%,100%{opacity:0}}
-      .mk4 .g{animation:mk4g 8s ease infinite}
-      @keyframes mk4g{0%,28%{opacity:1;translate:0 0;filter:none}32%{filter:brightness(1.8)}42%,100%{opacity:0;translate:0 -14px;width:0;margin-left:0}}
+      .mk4 .g{animation:mk4g 8s steps(1) infinite}
+      @keyframes mk4g{0%{display:block}40%,100%{display:none}}   /* ガブはぱっと消える。残りは真ん中にそろう */
       .mk4 .n .a{animation:mk4a 8s steps(1) infinite}.mk4 .n .b{animation:mk4b 8s steps(1) infinite}
-      @keyframes mk4a{0%{display:inline}42%,100%{display:none}}
-      @keyframes mk4b{0%{display:none}42%,100%{display:inline}}
+      @keyframes mk4a{0%{display:inline}40%,100%{display:none}}
+      @keyframes mk4b{0%{display:none}40%,100%{display:inline}}
       .mk4 .win{animation:mkpop 8s ease infinite;animation-delay:.6s}
     }
 
@@ -806,7 +810,7 @@
           </li>
           <li class="step s3">
             <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">場のカードが条件を満たしたとき、<em>「モコチャカ」</em>と言いながら<em>全員で</em>トークンを取り合います。取った人は場の山を2つ選んで獲得し、手札の下に加えます。</span><span lang="en">When the cards meet a condition, <em>everyone</em> grabs for the token while saying <em>“Mokochaka!”</em> The one who gets it takes 2 piles and adds them to the bottom of their hand.</span></span></p></div>
-            <div class="viz"><div class="mkf mk3"><div class="mkdeck"><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mkcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mkp take" style="--cx:150px;--cy:33px;--r:180deg;--pdx:-127px;--pdy:63px"><img class="mkc " src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"><img class="mkc " src="../../img/parts/mc_m3.webp?v=cbe36c13" alt="モコが3匹のカード"><img class="mkc " src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"></div><div class="mkp take t2" style="--cx:94px;--cy:134px;--r:60deg;--pdx:-71px;--pdy:-38px"><img class="mkc " src="../../img/parts/mc_p1.webp?v=c727d89c" alt="パカが1匹のカード"><img class="mkc " src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"><img class="mkc " src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"></div><div class="mkp" style="--cx:206px;--cy:134px;--r:-60deg"><img class="mkc " src="../../img/parts/mc_o3.webp?v=a006c9e3" alt="ポメが3匹のカード"><img class="mkc " src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"><img class="mkc " src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><img class="mktok" style="--tx:150px;--ty:96px;--tdx:-127px;--tdy:60px" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mkbub" style="right:0;top:44px"><span lang="ja">モコチャカ!</span><span lang="en">Mokochaka!</span></span></div></div>
+            <div class="viz"><div class="mkf mk3"><div class="mkdeck"><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="mkc" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt="手札"></div><span class="mkcap"><span lang="ja">手札</span><span lang="en">Hand</span></span><div class="mkp take" style="--cx:150px;--cy:33px;--r:180deg;--pdx:-127px;--pdy:63px"><img class="mkc " src="../../img/parts/mc_m1.webp?v=3b059d4b" alt="モコが1匹のカード"><img class="mkc " src="../../img/parts/mc_m3.webp?v=cbe36c13" alt="モコが3匹のカード"><img class="mkc " src="../../img/parts/mc_m2.webp?v=16b56ce4" alt="モコが2匹のカード"><img class="mkc mkbk" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></div><div class="mkp take t2" style="--cx:94px;--cy:134px;--r:60deg;--pdx:-71px;--pdy:-38px"><img class="mkc " src="../../img/parts/mc_p1.webp?v=c727d89c" alt="パカが1匹のカード"><img class="mkc " src="../../img/parts/mc_p3.webp?v=76b8ce61" alt="パカが3匹のカード"><img class="mkc " src="../../img/parts/mc_p2.webp?v=99f60a12" alt="パカが2匹のカード"><img class="mkc mkbk" src="../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></div><div class="mkp" style="--cx:206px;--cy:134px;--r:-60deg"><img class="mkc " src="../../img/parts/mc_o3.webp?v=a006c9e3" alt="ポメが3匹のカード"><img class="mkc " src="../../img/parts/mc_o1.webp?v=c87dbe38" alt="ポメが1匹のカード"><img class="mkc " src="../../img/parts/mc_o2.webp?v=4e86d656" alt="ポメが2匹のカード"></div><img class="mktok" style="--tx:150px;--ty:96px;--tdx:-127px;--tdy:60px" src="../../img/parts/m_token.webp?v=dccd8947" alt="トークン"><span class="mkbub" style="right:0;top:44px"><span lang="ja">モコチャカ!</span><span lang="en">Mokochaka!</span></span></div></div>
           </li>
           <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">誰かの手札がなくなったらゲーム終了です。<em>ガブを除いた</em>手札が最も多い人が勝ちです!</span><span lang="en">When someone runs out of cards, the game ends. The player with the most cards <em>not counting Gabu</em> wins!</span></span></p></div>
