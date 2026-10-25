@@ -23,9 +23,9 @@
       --band:url(../../img/page/k_band.png?v=f54d3fb7); --band-h:16px;            /* 帯の模様:青海波 */
       --tex-c:url(../../img/page/k_tex_c.png?v=722aa565); --tex-size:64px 32px;    /* 背景:青海波 */
       --orb-glow:255,255,255;
-      --orn:url(../../img/page/k_koi_sten.png?v=daeee5ce); --snum:url(../../img/page/k_koi_sil.png?v=26f23d5c);   /* 見出しの飾り:こいのぼり */
+      --orn:url(../../img/page/k_koi_sten.png?v=daeee5ce); --snum:url(../../img/page/k_fish.png?v=08973631);   /* 見出しの飾り:こいのぼり */
     
-      --k-bg:#48b0e5;--k-ink:#0a0c0c;--hl:#0a0c0c;--b2-bg:#0a0c0c;--b2-ink:#ffffff;--hl2:#d4242b;--sec-bg:#0a0c0c;--sec-ink:#ffffff;--accent:#0a0c0c;--on-accent:#ffffff;--buy-bg:#48b0e5;--buy-ink:#ffffff;--p-ink:#0a0c0c;--soft:#e4f3fb;--pan-bg:#0a0c0c;--pan-ink:#fff;--lt:#48b0e5;--on-lt:#0a0c0c;--dk:#0a0c0c;--on-dk:#ffffff;--hl-deco:underline;--hl2-deco:none;--tex-c:url(../../img/page/k_sei_top.png?v=e25a8083);--tex-size:122px 122px;--b2-img:url(../../img/page/k_sei_ura.png?v=b05f33d6);--b2-size:122px 122px;--band-d:none;--orn-d:none;--snum:url(../../img/page/k_koi_sil.png?v=26f23d5c);}
+      --k-bg:#0a0c0c;--k-ink:#ffffff;--hl:#d4242b;--b2-bg:#48b0e5;--b2-ink:#0a0c0c;--hl2:#0a0c0c;--sec-bg:#48b0e5;--sec-ink:#0a0c0c;--accent:#48b0e5;--on-accent:#0a0c0c;--buy-bg:#48b0e5;--buy-ink:#ffffff;--p-ink:#0a0c0c;--soft:#e4f3fb;--pan-bg:#0a0c0c;--pan-ink:#fff;--lt:#48b0e5;--on-lt:#0a0c0c;--dk:#0a0c0c;--on-dk:#ffffff;--hl-deco:none;--hl2-deco:underline;--tex-c:url(../../img/page/k_sei_ura.png?v=b05f33d6);--tex-size:122px 122px;--b2-img:url(../../img/page/k_sei_top.png?v=e25a8083);--b2-size:122px 122px;--band-d:none;--snum-x:-4px;--orn-d:none;--snum:url(../../img/page/k_fish.png?v=08973631);}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
@@ -156,47 +156,73 @@
     @media (max-width:650px){ .buy-box.buy-box .pkg{width:min(340px,92%)} .buy-box .buy-logo{width:min(200px,70%)} }
     /* ===== こいこいのぼり:遊び方の図 ===== */
     .kcd{display:block;width:38px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
-    .ka{position:relative;flex:none;width:240px;height:180px}
-    .kfield{position:absolute;left:0;right:0;top:4px;display:flex;justify-content:center;gap:6px}
     .kcap{position:absolute;padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800;white-space:nowrap}
-    .kmove{position:absolute;left:var(--x0);top:var(--y0)}
-    .kdeck{position:absolute;left:14px;top:104px;width:38px}
-    .kdeck .kcd{position:absolute;left:0;top:0}
-    .kdeck .kcd:nth-child(2){top:-3px}.kdeck .kcd:nth-child(3){top:-6px}
-    .kbub{position:absolute;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900;white-space:nowrap}
-    .kyaku{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .kyaku .row{display:flex;gap:6px}
-    .kyaku .kcd{width:48px}
-    .kyaku p{margin:0;padding:3px 12px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900}
+    .kbub{position:absolute;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900;white-space:nowrap;z-index:3}
+    /* 1:手札と山札からペア */
+    .ka{position:relative;flex:none;width:240px;height:182px}
+    .ka>.kcd,.ka .kmv{position:absolute}
+    .ka .kmv{z-index:2}
+    .ka .kmv .kcd{position:absolute;left:0;top:0}
+    /* 2:役の一覧 */
+    .kyaku{display:flex;flex-direction:column;gap:9px}
+    .kyaku .row{display:flex;align-items:center;gap:10px}
+    .kyaku .cs{display:flex;width:128px}
+    .kyaku .kcd{width:28px;margin-right:-4px}
+    .kyaku p{margin:0;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:900;white-space:nowrap}
+    /* 3・4:そらカードとおさかなトークン */
+    .ksk{position:relative;flex:none;width:234px;display:flex;flex-direction:column;align-items:center;gap:8px}
     .ksora{position:relative;display:flex;gap:2px}
-    .ksora img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
-    .kfish{position:absolute;left:107px;top:28px;width:30px}
-    .k5{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
-    .kround{padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900}
-    .kfish.kfin{left:200px}
-    .kbub.kwin{position:relative;font-size:14px;margin-left:120px}
-    .k4{display:flex;flex-direction:column;align-items:center;gap:20px}
-    .k4 .kbub{position:relative;font-size:14px}
+    .ksora>img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .ksora>img.kfish{position:absolute;left:var(--fx,100px);top:24px;width:34px;border-radius:0;box-shadow:none;z-index:2;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+    .kside{display:flex;justify-content:space-between;width:100%;margin-top:-4px}
+    .kside span{padding:0 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
+    .kchoice{display:flex;gap:8px}
+    .kchoice b{padding:3px 12px;border-radius:999px;background:#fff;color:var(--p-ink);border:2px solid var(--p-ink);font-size:13px;font-weight:900}
+    .kmsg{position:relative;width:100%;height:34px}
+    .kmsg p{position:absolute;inset:0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:800;line-height:1.35;color:var(--p-ink);text-align:center}
+    .kmsg p em{font-style:normal;color:#e8343d}
+    .kround{position:relative;height:22px;width:100%}
+    .kround b{position:absolute;left:50%;translate:-50% 0;padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900;white-space:nowrap}
+    .ksk .kwin{right:22px;bottom:86px}
     @media all{
-      .s1 .kmove{animation:k1 6s cubic-bezier(.5,0,.3,1) infinite}
-      @keyframes k1{0%{opacity:0;translate:0 20px}8%,30%{opacity:1;translate:0 0}50%,86%{opacity:1;translate:var(--dx) var(--dy)}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
-      .s1 .kbub,.s2 .kbub{animation:lmark 6s ease infinite;animation-delay:.9s}
-      .s1 .kpair{outline:3px solid transparent;outline-offset:1px;animation:kring 6s ease infinite}
-      @keyframes kring{0%,46%{outline-color:transparent}52%,86%{outline-color:#e8343d}94%,100%{outline-color:transparent}}
-      .s2 .kmove{animation:k2 6s cubic-bezier(.5,0,.3,1) infinite}
-      .s2 .kmove .back{position:absolute;inset:0;animation:kback 6s linear infinite}
-      .s2 .kmove .front{animation:kfront 6s linear infinite}
-      @keyframes k2{0%,10%{opacity:1;translate:0 0;scale:1 1}20%{scale:0 1}30%{translate:0 -10px;scale:1 1}50%,86%{opacity:1;translate:var(--dx) var(--dy);scale:1 1}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
-      @keyframes kback{0%,19.9%{opacity:1}20%,100%{opacity:0}}
-      @keyframes kfront{0%,19.9%{opacity:0}20%,100%{opacity:1}}
-      .kyaku .kcd{animation:kdrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .3s)}
-      @keyframes kdrop{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
-      .kyaku p{animation:lmark 6s ease infinite;animation-delay:.4s}
-      .k4 .kbub{animation:lmark 7s ease infinite;animation-delay:-1.6s}
-      .kfish{animation:kfish 7s cubic-bezier(.5,0,.3,1) infinite}
-      .kfish.kfin{animation:none}
-      .kbub.kwin{animation:lmark 6s ease infinite;animation-delay:-.8s}
-      @keyframes kfish{0%,40%{translate:0 0}60%,86%{translate:57px 0}94%,100%{translate:0 0}}
+      /* 1:手札→ペア、山札をめくる→ペア */
+      .s1 .kmv.h{animation:kmh 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kmh{0%,8%{translate:0 0;opacity:1}24%,90%{translate:var(--dx) var(--dy);opacity:1}96%{translate:var(--dx) var(--dy);opacity:0}96.1%,100%{translate:0 0;opacity:0}}
+      .s1 .kmv.d{animation:kmd 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kmd{0%,44%{translate:0 0;opacity:1;scale:1 1}48%{scale:0 1;translate:0 -6px}52%{scale:1 1;translate:0 -10px}68%,90%{translate:var(--dx) var(--dy);opacity:1;scale:1 1}96%{translate:var(--dx) var(--dy);opacity:0}96.1%,100%{translate:0 0;opacity:0}}
+      .s1 .kmv.d .back{animation:kback 10s steps(1) infinite}
+      .s1 .kmv.d .front{animation:kfront 10s steps(1) infinite}
+      @keyframes kback{0%,47.9%{opacity:1}48%,96%{opacity:0}96.1%,100%{opacity:1}}
+      @keyframes kfront{0%,47.9%{opacity:0}48%,96%{opacity:1}96.1%,100%{opacity:0}}
+      .s1 .kbub.p1{animation:kp1 10s ease infinite both}
+      .s1 .kbub.p2{animation:kp2 10s ease infinite both}
+      @keyframes kp1{0%,24%{opacity:0;scale:.3}27%{opacity:1;scale:1.18}30%,90%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      @keyframes kp2{0%,68%{opacity:0;scale:.3}71%{opacity:1;scale:1.18}74%,90%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      /* 2:役が1つずつ */
+      .kyaku .row{animation:kdrop 9s cubic-bezier(.3,1.4,.5,1) infinite both;animation-delay:calc(var(--i) * .9s)}
+      @keyframes kdrop{0%{opacity:0;translate:0 -14px}6%{opacity:1;translate:0 0}80%{opacity:1;translate:0 0}88%,100%{opacity:0;translate:0 0}}
+      /* 3:あがり と こいこい */
+      .s4 .kchoice b{animation:kc1 10s steps(1) infinite both}
+      .s4 .kchoice b+b{animation-name:kc2}
+      @keyframes kc1{0%,49.9%{background:#e8343d;color:#fff;border-color:#e8343d}50%,100%{background:#fff;color:var(--p-ink);border-color:var(--p-ink)}}
+      @keyframes kc2{0%,49.9%{background:#fff;color:var(--p-ink);border-color:var(--p-ink)}50%,100%{background:#e8343d;color:#fff;border-color:#e8343d}}
+      .s4 .kmsg p{animation:km1 10s steps(1) infinite both}
+      .s4 .kmsg p+p{animation-name:km2}
+      @keyframes km1{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+      @keyframes km2{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+      .s4 .kfish{animation:kf3 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kf3{0%,12%{left:100px;opacity:1}26%,46%{left:126px;opacity:1}49.9%{left:126px;opacity:0}50%,100%{left:100px;opacity:1}}
+      /* 4:3局のつなひき */
+      .s5 .kfish{animation:kf4 12s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kf4{0%,6%{left:100px;opacity:1}16%,30%{left:126px}40%,54%{left:55px}66%,92%{left:163px;opacity:1}97%{left:163px;opacity:0}97.1%,100%{left:100px;opacity:0}}
+      .s5 .kround b{animation:kr1 12s steps(1) infinite both}
+      .s5 .kround b+b{animation-name:kr2}
+      .s5 .kround b+b+b{animation-name:kr3}
+      @keyframes kr1{0%,33.2%{opacity:1}33.3%,100%{opacity:0}}
+      @keyframes kr2{0%,33.2%{opacity:0}33.3%,63.2%{opacity:1}63.3%,100%{opacity:0}}
+      @keyframes kr3{0%,63.2%{opacity:0}63.3%,96.9%{opacity:1}97%,100%{opacity:0}}
+      .s5 .kwin{animation:kp4 12s ease infinite both}
+      @keyframes kp4{0%,68%{opacity:0;scale:.3}71%{opacity:1;scale:1.18}74%,92%{opacity:1;scale:1}97%,100%{opacity:0;scale:.6}}
     }
 
     /* ===== 2. 動画:映画館のスクリーンと客席 ===== */
@@ -725,7 +751,7 @@
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title">
+  <section class="cinema reveal-cinema tex" id="video" aria-labelledby="video-title">
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title"><span lang="ja">紹介動画</span><span lang="en">Videos</span></h2></div></header>
@@ -762,25 +788,25 @@
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
-      <p class="summary"><span lang="ja">このゲームでは以下の手順を交互に行います。<br>そして、得点が確定してトークンを移動するまでを1局とし、これを<em>3局</em>行います。<br>3局終了時、<em>トークンが自分側にあるプレイヤーの勝利</em>です。</span><span lang="en">Players take turns doing the steps below. One hand lasts until the score is settled and the token moves, and you play <em>3 hands</em>. After 3 hands, <em>the player with the token on their side wins.</em></span></p>
+      <p class="summary"><span lang="ja">同じ色のこいのぼりをペアで獲得し、役を作ることを目指します。<br>得点を確定させると、トークンを自分の側に引き寄せることができます。<br>これを３局行い、終了時にトークンが自分の側にあるプレイヤーの勝利です。</span><span lang="en">Collect carp streamers of the same color in pairs and aim to make sets.<br>When you lock in your points, you can pull the token to your side.<br>Play 3 hands; the player with the token on their side at the end wins.</span></p>
 
       <div class="flow reveal-flow">
         <ol class="steps" tabindex="0" aria-label="遊び方の流れ(横にスクロール)">
           <li class="step s1">
-            <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja"><em>カードは同じ色のペアで取る!</em><br>場札に同じ色があれば、ペアにして獲得できる!</span><span lang="en"><em>Take cards in same-color pairs!</em><br>If the table has a card of the same color, pair it up and take it!</span></span></p></div>
-            <div class="viz"><div class="ka"><div class="kfield"><img class="kcd " style="" src="../../img/parts/kc_b1.webp?v=5d6dc5da" alt="青の1"><img class="kcd " style="" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"><img class="kcd " style="" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"><img class="kcd kpair" style="" src="../../img/parts/kc_r1.webp?v=1c0bd412" alt="赤の1"></div><span class="kcap" style="left:200px;top:24px"><span lang="ja">場札</span><span lang="en">Table</span></span><span class="kmove" style="--x0:101px;--y0:104px;--dx:48px;--dy:-86px"><img class="kcd " style="" src="../../img/parts/kc_r3.webp?v=f96ecfda" alt="赤の3"></span><span class="kcap" style="left:96px;top:166px"><span lang="ja">手札から</span><span lang="en">From hand</span></span><span class="kbub" style="left:150px;top:78px"><span lang="ja">ペア!</span><span lang="en">Pair!</span></span></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ1"><b>1</b></span><p class="step-lead"><span><span lang="ja">手札から1枚選び、場に出します。続けて山札を上から1枚めくります。どちらも<em>場に同じ色があれば、ペアで獲得します。</em></span><span lang="en">Play 1 card from your hand, then flip the top card of the deck. Either way, <em>if the table has the same color, take them as a pair.</em></span></span></p></div>
+            <div class="viz"><div class="ka"><img class="kcd " style="left:35px;top:0" src="../../img/parts/kc_b1.webp?v=5d6dc5da" alt="青の1"><img class="kcd " style="left:79px;top:0" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"><img class="kcd " style="left:123px;top:0" src="../../img/parts/kc_r1.webp?v=1c0bd412" alt="赤の1"><img class="kcd " style="left:167px;top:0" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"><span class="kcap" style="left:0;top:24px"><span lang="ja">場札</span><span lang="en">Table</span></span><img class="kcd " style="left:50px;top:98px" src="../../img/parts/kc_b5.webp?v=176f9345" alt="青の5"><img class="kcd " style="left:80px;top:98px" src="../../img/parts/kc_k3.webp?v=e48aec66" alt="黒の3"><span class="kmv h" style="left:20px;top:98px;--dx:117px;--dy:-78px;width:38px;height:63px"><img class="kcd " style="" src="../../img/parts/kc_r3.webp?v=f96ecfda" alt="赤の3"></span><img class="kcd " style="left:184px;top:104px" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><img class="kcd " style="left:184px;top:101px" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><span class="kmv d" style="left:184px;top:98px;--dx:-91px;--dy:-78px;width:38px;height:63px"><img class="kcd back" style="" src="../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""><img class="kcd front" style="" src="../../img/parts/kc_g1.webp?v=7d18401d" alt="緑の1"></span><span class="kcap" style="left:44px;top:166px"><span lang="ja">手札</span><span lang="en">Hand</span></span><span class="kcap" style="left:184px;top:166px"><span lang="ja">山札</span><span lang="en">Deck</span></span><span class="kbub p1" style="left:156px;top:76px"><span lang="ja">ペア!</span><span lang="en">Pair!</span></span><span class="kbub p2" style="left:68px;top:76px"><span lang="ja">ペア!</span><span lang="en">Pair!</span></span></div></div>
           </li>
           <li class="step s3">
-            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja"><em>同じ数字を揃えると役になる!</em><br>同じ数字を複数枚獲得すると役になる!</span><span lang="en"><em>Match numbers to make a set!</em><br>Collect several cards of the same number to make a set!</span></span></p></div>
-            <div class="viz"><div class="kyaku"><div class="row"><img class="kcd " style="--i:0" src="../../img/parts/kc_b5.webp?v=176f9345" alt="青の5"><img class="kcd " style="--i:1" src="../../img/parts/kc_r5.webp?v=ea676835" alt="赤の5"><img class="kcd " style="--i:2" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"></div><p><span lang="ja">5:色の異なる3枚(5点)</span><span lang="en">5: three different colors (5 pts)</span></p></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ2"><b>2</b></span><p class="step-lead"><span><span lang="ja">獲得したカードで役を作ります。<br><em>1:5枚(1点)</em><br><em>3:4枚(3点)</em><br><em>5:色の異なる3枚(5点)</em><br>※5以外は色の数は何色でもOK<br>※役は複数同時に成立することもあります</span><span lang="en">Make sets with the cards you took.<br><em>1: five cards (1 pt)</em><br><em>3: four cards (3 pts)</em><br><em>5: three cards of different colors (5 pts)</em><br>* Except for 5, any colors are OK<br>* You can make several sets at once</span></span></p></div>
+            <div class="viz"><div class="kyaku"><div class="row" style="--i:0"><span class="cs"><img class="kcd " style="" src="../../img/parts/kc_b1.webp?v=5d6dc5da" alt="青の1"><img class="kcd " style="" src="../../img/parts/kc_r1.webp?v=1c0bd412" alt="赤の1"><img class="kcd " style="" src="../../img/parts/kc_g1.webp?v=7d18401d" alt="緑の1"><img class="kcd " style="" src="../../img/parts/kc_k1.webp?v=b4702d8e" alt="黒の1"><img class="kcd " style="" src="../../img/parts/kc_r1.webp?v=1c0bd412" alt="赤の1"></span><p><span lang="ja">1:5枚(1点)</span><span lang="en">1: five (1 pt)</span></p></div><div class="row" style="--i:1"><span class="cs"><img class="kcd " style="" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"><img class="kcd " style="" src="../../img/parts/kc_g3.webp?v=e1da7497" alt="緑の3"><img class="kcd " style="" src="../../img/parts/kc_k3.webp?v=e48aec66" alt="黒の3"><img class="kcd " style="" src="../../img/parts/kc_b3.webp?v=145adfb4" alt="青の3"></span><p><span lang="ja">3:4枚(3点)</span><span lang="en">3: four (3 pts)</span></p></div><div class="row" style="--i:2"><span class="cs"><img class="kcd " style="" src="../../img/parts/kc_b5.webp?v=176f9345" alt="青の5"><img class="kcd " style="" src="../../img/parts/kc_r5.webp?v=ea676835" alt="赤の5"><img class="kcd " style="" src="../../img/parts/kc_k5.webp?v=da2c0a63" alt="黒の5"></span><p><span lang="ja">5:色の異なる3枚(5点)</span><span lang="en">5: 3 colors (5 pts)</span></p></div></div></div>
           </li>
           <li class="step s4">
-            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">成立していた場合は<em>「あがり」か「こいこい」</em>を宣言します。<br>局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。</span><span lang="en">If you made a set, declare <em>“Agari” or “Koi-Koi.”</em><br>At the end of a hand, the winner pulls the token toward their side by their score.</span></span></p></div>
-            <div class="viz"><div class="k4"><span class="kbub"><span lang="ja">あがり!</span><span lang="en">Agari!</span></span><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><svg class="kfish" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg></div></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ3"><b>3</b></span><p class="step-lead"><span><span lang="ja">役が成立したら<em>「あがり」か「こいこい」</em>を宣言します。<br><em>あがり</em>:得点を確定し、トークンを移動して局を終了します。<br><em>こいこい</em>:局を続行します。次に自分が役を作れば成功(得点の合計+2)、相手に先に作られると失敗(相手が合計を獲得)です。</span><span lang="en">When you make a set, declare <em>“Agari” or “Koi-Koi.”</em><br><em>Agari</em>: lock in your points, move the token, and end the hand.<br><em>Koi-Koi</em>: keep playing. If you make the next set, you succeed (total +2); if your opponent makes one first, you fail (they take the total).</span></span></p></div>
+            <div class="viz"><div class="ksk"><div class="kchoice"><b><span lang="ja">あがり</span><span lang="en">Agari</span></b><b><span lang="ja">こいこい</span><span lang="en">Koi-Koi</span></b></div><div class="kmsg"><p><span><span lang="ja">得点を確定!</span><span lang="en">Lock in your points!</span></span><em><span lang="ja">トークンを引き寄せて局を終了</span><span lang="en">Pull the token and end the hand</span></em></p><p><span><span lang="ja">局を続行! 次も先に役を作れば</span><span lang="en">Keep going! Make the next set first:</span></span><em><span lang="ja">成功:合計+2点 / 失敗:相手が獲得</span><span lang="en">Success: +2 / Fail: opponent scores</span></em></p></div><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><img class="kfish" src="../../img/parts/k_fish.webp?v=5c22b4e7" alt="おさかなトークン"></div><div class="kside"><span><span lang="ja">相手</span><span lang="en">Opp.</span></span><span><span lang="ja">自分</span><span lang="en">You</span></span></div></div></div>
           </li>
           <li class="step s5">
-            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">得点が確定してトークンを移動するまでを1局とし、これを3局行います。<em>3局終了時、トークンが自分側にあるプレイヤーの勝利です。</em></span><span lang="en">One hand lasts until the score is settled and the token moves; play 3 hands. <em>After 3 hands, the player with the token on their side wins.</em></span></span></p></div>
-            <div class="viz"><div class="k5"><span class="kround"><span lang="ja">3局終了</span><span lang="en">After 3 hands</span></span><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><svg class="kfish kfin" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg></div><span class="kbub kwin"><span lang="ja">勝ち!</span><span lang="en">Win!</span></span></div></div>
+            <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">得点に応じてトークンを自分側に引き寄せます(1〜4点:1マス、5〜9点:3マス、10点以上:5マス)。<br>これを3局行い、<em>3局終了時、トークンが自分側にあるプレイヤーの勝利です。</em></span><span lang="en">Pull the token toward you by your score (1–4 pts: 1 space, 5–9: 3, 10+: 5).<br>Play 3 hands. <em>After 3 hands, the player with the token on their side wins.</em></span></span></p></div>
+            <div class="viz"><div class="ksk"><div class="kround"><b><span lang="ja">第1局 自分 +1点</span><span lang="en">Hand 1: You +1</span></b><b><span lang="ja">第2局 相手 +5点</span><span lang="en">Hand 2: Opp. +5</span></b><b><span lang="ja">第3局 自分 +10点</span><span lang="en">Hand 3: You +10</span></b></div><div class="ksora"><img src="../../img/parts/kc_sl.webp?v=c05392f3" alt="そらカード"><img src="../../img/parts/kc_sr.webp?v=7233a647" alt="そらカード"><img class="kfish" src="../../img/parts/k_fish.webp?v=5c22b4e7" alt="おさかなトークン"></div><div class="kside"><span><span lang="ja">相手</span><span lang="en">Opp.</span></span><span><span lang="ja">自分</span><span lang="en">You</span></span></div><span class="kbub kwin"><span lang="ja">勝ち!</span><span lang="en">Win!</span></span></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>

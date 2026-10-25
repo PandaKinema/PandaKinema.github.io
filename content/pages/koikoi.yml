@@ -5,9 +5,9 @@ logo: img/logo/koikoilogo.png
 logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
 logo_buy: img/logo/k_logo_blue.png
 logo_credits: img/logo/koikoilogo.png
-bg_color: main
+bg_color: third
 color3: "#0a0c0c"
-accent_color: third
+accent_color: main
 prefer_white: true
 hero_ink: white
 hero:
@@ -15,9 +15,10 @@ hero:
   fit: cover
   side: img/page/koikoi_side.png
   art_pos: 50% 0%
-bg1_image: img/page/k_sei_top.png
-bg2_image: img/page/k_sei_ura.png
-step_icon: img/page/k_koi_sil.png
+bg1_image: img/page/k_sei_ura.png
+bg2_image: img/page/k_sei_top.png
+step_icon: img/page/k_fish.png
+step_num_x: -4
 catch_ja: あげろ!こいのぼり
 catch_en: Raise the carp streamers!
 intro_ja: |-
@@ -32,42 +33,60 @@ intro_en: A carp-streamer card game based on the hanafuda game **“Koi-Koi.”*
 characters:
   - image: img/chara/k_koi.webp
 summary_ja: |-
-  このゲームでは以下の手順を交互に行います。  
-  そして、得点が確定してトークンを移動するまでを1局とし、これを**3局**行います。  
-  3局終了時、**トークンが自分側にあるプレイヤーの勝利**です。
-summary_en: Players take turns doing the steps below. One hand lasts until the
-  score is settled and the token moves, and you play **3 hands**. After 3 hands,
-  **the player with the token on their side wins.**
+  同じ色のこいのぼりをペアで獲得し、役を作ることを目指します。
+  得点を確定させると、トークンを自分の側に引き寄せることができます。
+  これを３局行い、終了時にトークンが自分の側にあるプレイヤーの勝利です。
+summary_en: |-
+  Collect carp streamers of the same color in pairs and aim to make sets.
+  When you lock in your points, you can pull the token to your side.
+  Play 3 hands; the player with the token on their side at the end wins.
 steps:
+  - text_ja: 手札から1枚選び、場に出します。続けて山札を上から1枚めくります。どちらも**場に同じ色があれば、ペアで獲得します。**
+    text_en: Play 1 card from your hand, then flip the top card of the deck. Either way, **if the table has the same color, take them as a pair.**
   - text_ja: |-
-      **カードは同じ色のペアで取る!**
+      獲得したカードで役を作ります。
 
-      場札に同じ色があれば、ペアにして獲得できる!
+      **1:5枚(1点)**
+
+      **3:4枚(3点)**
+
+      **5:色の異なる3枚(5点)**
+
+      ※5以外は色の数は何色でもOK
+
+      ※役は複数同時に成立することもあります
     text_en: |-
-      **Take cards in same-color pairs!**
+      Make sets with the cards you took.
 
-      If the table has a card of the same color, pair it up and take it!
+      **1: five cards (1 pt)**
+
+      **3: four cards (3 pts)**
+
+      **5: three cards of different colors (5 pts)**
+
+      * Except for 5, any colors are OK
+
+      * You can make several sets at once
   - text_ja: |-
-      **同じ数字を揃えると役になる!**
+      役が成立したら**「あがり」か「こいこい」**を宣言します。
 
-      同じ数字を複数枚獲得すると役になる!
+      **あがり**:得点を確定し、トークンを移動して局を終了します。
+
+      **こいこい**:局を続行します。次に自分が役を作れば成功(得点の合計+2)、相手に先に作られると失敗(相手が合計を獲得)です。
     text_en: |-
-      **Match numbers to make a set!**
+      When you make a set, declare **“Agari” or “Koi-Koi.”**
 
-      Collect several cards of the same number to make a set!
+      **Agari**: lock in your points, move the token, and end the hand.
+
+      **Koi-Koi**: keep playing. If you make the next set, you succeed (total +2); if your opponent makes one first, you fail (they take the total).
   - text_ja: |-
-      成立していた場合は**「あがり」か「こいこい」**を宣言します。
+      得点に応じてトークンを自分側に引き寄せます(1〜4点:1マス、5〜9点:3マス、10点以上:5マス)。
 
-      局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。
-    text_en: >-
-      If you made a set, declare **“Agari” or “Koi-Koi.”**
+      これを3局行い、**3局終了時、トークンが自分側にあるプレイヤーの勝利です。**
+    text_en: |-
+      Pull the token toward you by your score (1–4 pts: 1 space, 5–9: 3, 10+: 5).
 
-
-      At the end of a hand, the winner pulls the token toward their side by
-      their score.
-  - text_ja: 得点が確定してトークンを移動するまでを1局とし、これを3局行います。**3局終了時、トークンが自分側にあるプレイヤーの勝利です。**
-    text_en: One hand lasts until the score is settled and the token moves; play 3
-      hands. **After 3 hands, the player with the token on their side wins.**
+      Play 3 hands. **After 3 hands, the player with the token on their side wins.**
 gallery:
   - image: img/gallery/kg_manual1.webp
     caption_ja: 遊び方説明書(表)

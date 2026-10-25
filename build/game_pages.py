@@ -1069,9 +1069,10 @@ GAMES['ikatako'] = dict(
 KCN = {'b': '青', 'g': '緑', 'r': '赤', 'k': '黒'}
 def kcd(k, cls='', st=''):
     return pic('kc_%s.webp' % k, 'kcd ' + cls, st, ('%sの%s' % (KCN[k[0]], k[1:])) if k[0] in KCN and k != 'ura' else '')
-FISH = '<svg class="kfish" viewBox="0 0 40 22" aria-label="おさかなトークン"><path d="M2 11C8 2 22 1 30 9l8-7v18l-8-7C22 21 8 20 2 11z" fill="#1d6fa5" stroke="#fff" stroke-width="2"/><circle cx="11" cy="9" r="2.2" fill="#fff"/></svg>'
-
+FISH = '<img class="kfish" src="{{img:k_fish.webp}}" alt="おさかなトークン">'
+SKY = '<img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">'
 GAMES['koikoi'] = dict(
+    video_tex=True,   # 動画の背景にも模様
     title='こいこいのぼり 真打',
     description='こいこいのぼり 真打:花札の「こいこい」をもとにした、鯉のぼりのカードゲーム。2人用。パンダキネマ。',
     theme='''
@@ -1079,7 +1080,7 @@ GAMES['koikoi'] = dict(
       --band:url({{img:k_band.png}}); --band-h:16px;            /* 帯の模様:青海波 */
       --tex-c:url({{img:k_tex_c.png}}); --tex-size:64px 32px;    /* 背景:青海波 */
       --orb-glow:255,255,255;
-      --orn:url({{img:k_koi_sten.png}}); --snum:url({{img:k_koi_sil.png}});   /* 見出しの飾り:こいのぼり */
+      --orn:url({{img:k_koi_sten.png}}); --snum:url({{img:k_fish.png}});   /* 見出しの飾り:こいのぼり */
     ''',
     hero_css='''
 
@@ -1089,47 +1090,73 @@ GAMES['koikoi'] = dict(
     @media (max-width:650px){ .buy-box.buy-box .pkg{width:min(340px,92%)} .buy-box .buy-logo{width:min(200px,70%)} }
     /* ===== こいこいのぼり:遊び方の図 ===== */
     .kcd{display:block;width:38px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
-    .ka{position:relative;flex:none;width:240px;height:180px}
-    .kfield{position:absolute;left:0;right:0;top:4px;display:flex;justify-content:center;gap:6px}
     .kcap{position:absolute;padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800;white-space:nowrap}
-    .kmove{position:absolute;left:var(--x0);top:var(--y0)}
-    .kdeck{position:absolute;left:14px;top:104px;width:38px}
-    .kdeck .kcd{position:absolute;left:0;top:0}
-    .kdeck .kcd:nth-child(2){top:-3px}.kdeck .kcd:nth-child(3){top:-6px}
-    .kbub{position:absolute;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900;white-space:nowrap}
-    .kyaku{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .kyaku .row{display:flex;gap:6px}
-    .kyaku .kcd{width:48px}
-    .kyaku p{margin:0;padding:3px 12px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900}
+    .kbub{position:absolute;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:12px;font-weight:900;white-space:nowrap;z-index:3}
+    /* 1:手札と山札からペア */
+    .ka{position:relative;flex:none;width:240px;height:182px}
+    .ka>.kcd,.ka .kmv{position:absolute}
+    .ka .kmv{z-index:2}
+    .ka .kmv .kcd{position:absolute;left:0;top:0}
+    /* 2:役の一覧 */
+    .kyaku{display:flex;flex-direction:column;gap:9px}
+    .kyaku .row{display:flex;align-items:center;gap:10px}
+    .kyaku .cs{display:flex;width:128px}
+    .kyaku .kcd{width:28px;margin-right:-4px}
+    .kyaku p{margin:0;padding:2px 10px;border-radius:999px;background:#e8343d;color:#fff;font-size:11px;font-weight:900;white-space:nowrap}
+    /* 3・4:そらカードとおさかなトークン */
+    .ksk{position:relative;flex:none;width:234px;display:flex;flex-direction:column;align-items:center;gap:8px}
     .ksora{position:relative;display:flex;gap:2px}
-    .ksora img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
-    .kfish{position:absolute;left:107px;top:28px;width:30px}
-    .k5{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
-    .kround{padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900}
-    .kfish.kfin{left:200px}
-    .kbub.kwin{position:relative;font-size:14px;margin-left:120px}
-    .k4{display:flex;flex-direction:column;align-items:center;gap:20px}
-    .k4 .kbub{position:relative;font-size:14px}
+    .ksora>img{width:116px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .ksora>img.kfish{position:absolute;left:var(--fx,100px);top:24px;width:34px;border-radius:0;box-shadow:none;z-index:2;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+    .kside{display:flex;justify-content:space-between;width:100%;margin-top:-4px}
+    .kside span{padding:0 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
+    .kchoice{display:flex;gap:8px}
+    .kchoice b{padding:3px 12px;border-radius:999px;background:#fff;color:var(--p-ink);border:2px solid var(--p-ink);font-size:13px;font-weight:900}
+    .kmsg{position:relative;width:100%;height:34px}
+    .kmsg p{position:absolute;inset:0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:800;line-height:1.35;color:var(--p-ink);text-align:center}
+    .kmsg p em{font-style:normal;color:#e8343d}
+    .kround{position:relative;height:22px;width:100%}
+    .kround b{position:absolute;left:50%;translate:-50% 0;padding:2px 12px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:12px;font-weight:900;white-space:nowrap}
+    .ksk .kwin{right:22px;bottom:86px}
     @media all{
-      .s1 .kmove{animation:k1 6s cubic-bezier(.5,0,.3,1) infinite}
-      @keyframes k1{0%{opacity:0;translate:0 20px}8%,30%{opacity:1;translate:0 0}50%,86%{opacity:1;translate:var(--dx) var(--dy)}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
-      .s1 .kbub,.s2 .kbub{animation:lmark 6s ease infinite;animation-delay:.9s}
-      .s1 .kpair{outline:3px solid transparent;outline-offset:1px;animation:kring 6s ease infinite}
-      @keyframes kring{0%,46%{outline-color:transparent}52%,86%{outline-color:#e8343d}94%,100%{outline-color:transparent}}
-      .s2 .kmove{animation:k2 6s cubic-bezier(.5,0,.3,1) infinite}
-      .s2 .kmove .back{position:absolute;inset:0;animation:kback 6s linear infinite}
-      .s2 .kmove .front{animation:kfront 6s linear infinite}
-      @keyframes k2{0%,10%{opacity:1;translate:0 0;scale:1 1}20%{scale:0 1}30%{translate:0 -10px;scale:1 1}50%,86%{opacity:1;translate:var(--dx) var(--dy);scale:1 1}94%,100%{opacity:0;translate:var(--dx) var(--dy)}}
-      @keyframes kback{0%,19.9%{opacity:1}20%,100%{opacity:0}}
-      @keyframes kfront{0%,19.9%{opacity:0}20%,100%{opacity:1}}
-      .kyaku .kcd{animation:kdrop 6s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .3s)}
-      @keyframes kdrop{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
-      .kyaku p{animation:lmark 6s ease infinite;animation-delay:.4s}
-      .k4 .kbub{animation:lmark 7s ease infinite;animation-delay:-1.6s}
-      .kfish{animation:kfish 7s cubic-bezier(.5,0,.3,1) infinite}
-      .kfish.kfin{animation:none}
-      .kbub.kwin{animation:lmark 6s ease infinite;animation-delay:-.8s}
-      @keyframes kfish{0%,40%{translate:0 0}60%,86%{translate:57px 0}94%,100%{translate:0 0}}
+      /* 1:手札→ペア、山札をめくる→ペア */
+      .s1 .kmv.h{animation:kmh 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kmh{0%,8%{translate:0 0;opacity:1}24%,90%{translate:var(--dx) var(--dy);opacity:1}96%{translate:var(--dx) var(--dy);opacity:0}96.1%,100%{translate:0 0;opacity:0}}
+      .s1 .kmv.d{animation:kmd 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kmd{0%,44%{translate:0 0;opacity:1;scale:1 1}48%{scale:0 1;translate:0 -6px}52%{scale:1 1;translate:0 -10px}68%,90%{translate:var(--dx) var(--dy);opacity:1;scale:1 1}96%{translate:var(--dx) var(--dy);opacity:0}96.1%,100%{translate:0 0;opacity:0}}
+      .s1 .kmv.d .back{animation:kback 10s steps(1) infinite}
+      .s1 .kmv.d .front{animation:kfront 10s steps(1) infinite}
+      @keyframes kback{0%,47.9%{opacity:1}48%,96%{opacity:0}96.1%,100%{opacity:1}}
+      @keyframes kfront{0%,47.9%{opacity:0}48%,96%{opacity:1}96.1%,100%{opacity:0}}
+      .s1 .kbub.p1{animation:kp1 10s ease infinite both}
+      .s1 .kbub.p2{animation:kp2 10s ease infinite both}
+      @keyframes kp1{0%,24%{opacity:0;scale:.3}27%{opacity:1;scale:1.18}30%,90%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      @keyframes kp2{0%,68%{opacity:0;scale:.3}71%{opacity:1;scale:1.18}74%,90%{opacity:1;scale:1}95%,100%{opacity:0;scale:.6}}
+      /* 2:役が1つずつ */
+      .kyaku .row{animation:kdrop 9s cubic-bezier(.3,1.4,.5,1) infinite both;animation-delay:calc(var(--i) * .9s)}
+      @keyframes kdrop{0%{opacity:0;translate:0 -14px}6%{opacity:1;translate:0 0}80%{opacity:1;translate:0 0}88%,100%{opacity:0;translate:0 0}}
+      /* 3:あがり と こいこい */
+      .s4 .kchoice b{animation:kc1 10s steps(1) infinite both}
+      .s4 .kchoice b+b{animation-name:kc2}
+      @keyframes kc1{0%,49.9%{background:#e8343d;color:#fff;border-color:#e8343d}50%,100%{background:#fff;color:var(--p-ink);border-color:var(--p-ink)}}
+      @keyframes kc2{0%,49.9%{background:#fff;color:var(--p-ink);border-color:var(--p-ink)}50%,100%{background:#e8343d;color:#fff;border-color:#e8343d}}
+      .s4 .kmsg p{animation:km1 10s steps(1) infinite both}
+      .s4 .kmsg p+p{animation-name:km2}
+      @keyframes km1{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+      @keyframes km2{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+      .s4 .kfish{animation:kf3 10s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kf3{0%,12%{left:100px;opacity:1}26%,46%{left:126px;opacity:1}49.9%{left:126px;opacity:0}50%,100%{left:100px;opacity:1}}
+      /* 4:3局のつなひき */
+      .s5 .kfish{animation:kf4 12s cubic-bezier(.5,0,.3,1) infinite both}
+      @keyframes kf4{0%,6%{left:100px;opacity:1}16%,30%{left:126px}40%,54%{left:55px}66%,92%{left:163px;opacity:1}97%{left:163px;opacity:0}97.1%,100%{left:100px;opacity:0}}
+      .s5 .kround b{animation:kr1 12s steps(1) infinite both}
+      .s5 .kround b+b{animation-name:kr2}
+      .s5 .kround b+b+b{animation-name:kr3}
+      @keyframes kr1{0%,33.2%{opacity:1}33.3%,100%{opacity:0}}
+      @keyframes kr2{0%,33.2%{opacity:0}33.3%,63.2%{opacity:1}63.3%,100%{opacity:0}}
+      @keyframes kr3{0%,63.2%{opacity:0}63.3%,96.9%{opacity:1}97%,100%{opacity:0}}
+      .s5 .kwin{animation:kp4 12s ease infinite both}
+      @keyframes kp4{0%,68%{opacity:0;scale:.3}71%{opacity:1;scale:1.18}74%,92%{opacity:1;scale:1}97%,100%{opacity:0;scale:.6}}
     }''',
     logo='koikoilogo.png', logo_size=(1009, 522), logo_alt='こいこいのぼり 真打 KOIKOINOBORI SHINUCHI',
     logo_buy='koikoilogo.png', logo_credits='koikoilogo.png',
@@ -1137,20 +1164,32 @@ GAMES['koikoi'] = dict(
     catch=L('あげろ!こいのぼり', 'Raise the carp streamers!'),
     intro=L('花札の『こいこい』をもとにした、鯉のぼりのカードゲーム。', 'A carp-streamer card game based on the hanafuda game Koi-Koi.'),
     intro_img=('k_koi.webp', '', ''),
-    summary=L('このゲームでは以下の手順を交互に行います。', 'Players take turns.'),
+    summary=L('同じ色のこいのぼりをペアで獲得し、役を作ることを目指します。', 'Collect same-colored carp streamers in pairs to make sets.'),
     spec=[], poster='kc_ura.webp',
     # 遊び方:取説の表(1・2)と「ゲームの進め方」から(文は取説のまま、[[ ]] = 赤字・見出し)
     steps=[
-        dict(cls='s1', b=L('[[カードは同じ色のペアで取る!]]\n場札に同じ色があれば、ペアにして獲得できる!', '[[Take cards in pairs of the same color!]]\nIf the table has the same color, pair them up and take them!'),
-             v='<div class="ka"><div class="kfield">' + kcd('b1') + kcd('k5') + kcd('g3') + kcd('r1', 'kpair') + '</div><span class="kcap" style="left:200px;top:24px">' + L('場札', 'Table') + '</span>'
-               + '<span class="kmove" style="--x0:101px;--y0:104px;--dx:48px;--dy:-86px">' + kcd('r3') + '</span><span class="kcap" style="left:96px;top:166px">' + L('手札から', 'From hand') + '</span>'
-               + '<span class="kbub" style="left:150px;top:78px">' + L('ペア!', 'Pair!') + '</span></div>'),
-        dict(cls='s3', b=L('[[同じ数字を揃えると役になる!]]\n同じ数字を複数枚獲得すると役になる!', '[[Match the same number to make a set!]]\nCollect several cards of the same number to score a set!'),
-             v='<div class="kyaku"><div class="row">' + kcd('b5', '', '--i:0') + kcd('r5', '', '--i:1') + kcd('k5', '', '--i:2') + '</div><p>' + L('5:色の異なる3枚(5点)', '5: three different colors (5 pts)') + '</p></div>'),
-        dict(cls='s4', b=L('成立していた場合は[[「あがり」か「こいこい」]]を宣言します。\n局の終了時、勝者は得点に応じてそらカードの中央にあるトークンを自分側に引き寄せます。', 'If a set is made, declare [[“Agari” or “Koi-Koi.”]]\nAgari: lock in your points, move the token, and end the hand.'),
-             v='<div class="k4"><span class="kbub">' + L('あがり!', 'Agari!') + '</span><div class="ksora"><img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">' + FISH + '</div></div>'),
-        dict(cls='s5', b=L('得点が確定してトークンを移動するまでを1局とし、これを3局行います。[[3局終了時、トークンが自分側にあるプレイヤーの勝利です。]]', 'One hand lasts until the token moves; play 3 hands. [[After 3 hands, the player with the token on their side wins.]]'),
-             v='<div class="k5"><span class="kround">' + L('3局終了', 'After 3 hands') + '</span><div class="ksora"><img src="{{img:kc_sl.webp}}" alt="そらカード"><img src="{{img:kc_sr.webp}}" alt="そらカード">' + FISH.replace('class="kfish"', 'class="kfish kfin"') + '</div><span class="kbub kwin">' + L('勝ち!', 'Win!') + '</span></div>'),
+        dict(cls='s1', b=L('手札から1枚選び、場に出します。続けて山札を上から1枚めくります。どちらも[[場に同じ色があれば、ペアで獲得します。]]', 'Play 1 card from your hand, then flip the top card of the deck. Either way, [[if the table has the same color, take them as a pair.]]'),
+             v='<div class="ka">' + kcd('b1', '', 'left:35px;top:0') + kcd('g3', '', 'left:79px;top:0') + kcd('r1', '', 'left:123px;top:0') + kcd('k5', '', 'left:167px;top:0')
+               + '<span class="kcap" style="left:0;top:24px">' + L('場札', 'Table') + '</span>'
+               + kcd('b5', '', 'left:50px;top:98px') + kcd('k3', '', 'left:80px;top:98px')
+               + '<span class="kmv h" style="left:20px;top:98px;--dx:117px;--dy:-78px;width:38px;height:63px">' + kcd('r3') + '</span>'
+               + kcd('ura', '', 'left:184px;top:104px') + kcd('ura', '', 'left:184px;top:101px')
+               + '<span class="kmv d" style="left:184px;top:98px;--dx:-91px;--dy:-78px;width:38px;height:63px">' + kcd('ura', 'back') + kcd('g1', 'front') + '</span>'
+               + '<span class="kcap" style="left:44px;top:166px">' + L('手札', 'Hand') + '</span><span class="kcap" style="left:184px;top:166px">' + L('山札', 'Deck') + '</span>'
+               + '<span class="kbub p1" style="left:156px;top:76px">' + L('ペア!', 'Pair!') + '</span><span class="kbub p2" style="left:68px;top:76px">' + L('ペア!', 'Pair!') + '</span></div>'),
+        dict(cls='s3', b=L('獲得したカードで役を作ります。\n[[1:5枚(1点)\n3:4枚(3点)\n5:色の異なる3枚(5点)]]\n※5以外は色の数は何色でもOK\n※役は複数同時に成立することもあります', 'Make sets with the cards you took.\n[[1: five cards (1 pt)\n3: four cards (3 pts)\n5: three different colors (5 pts)]]'),
+             v='<div class="kyaku">'
+               + '<div class="row" style="--i:0"><span class="cs">' + kcd('b1') + kcd('r1') + kcd('g1') + kcd('k1') + kcd('r1') + '</span><p>' + L('1:5枚(1点)', '1: five (1 pt)') + '</p></div>'
+               + '<div class="row" style="--i:1"><span class="cs">' + kcd('g3') + kcd('g3') + kcd('k3') + kcd('b3') + '</span><p>' + L('3:4枚(3点)', '3: four (3 pts)') + '</p></div>'
+               + '<div class="row" style="--i:2"><span class="cs">' + kcd('b5') + kcd('r5') + kcd('k5') + '</span><p>' + L('5:色の異なる3枚(5点)', '5: 3 colors (5 pts)') + '</p></div></div>'),
+        dict(cls='s4', b=L('役が成立したら[[「あがり」か「こいこい」]]を宣言します。', 'When you make a set, declare [[“Agari” or “Koi-Koi.”]]'),
+             v='<div class="ksk"><div class="kchoice"><b>' + L('あがり', 'Agari') + '</b><b>' + L('こいこい', 'Koi-Koi') + '</b></div>'
+               + '<div class="kmsg"><p><span>' + L('得点を確定!', 'Lock in your points!') + '</span><em>' + L('トークンを引き寄せて局を終了', 'Pull the token and end the hand') + '</em></p>'
+               + '<p><span>' + L('局を続行! 次も先に役を作れば', 'Keep going! Make the next set first:') + '</span><em>' + L('成功:合計+2点 / 失敗:相手が獲得', 'Success: +2 / Fail: opponent scores') + '</em></p></div>'
+               + '<div class="ksora">' + SKY + FISH + '</div><div class="kside"><span>' + L('相手', 'Opp.') + '</span><span>' + L('自分', 'You') + '</span></div></div>'),
+        dict(cls='s5', b=L('得点に応じてトークンを自分側に引き寄せます。これを3局行い、[[3局終了時、トークンが自分側にあるプレイヤーの勝利です。]]', 'Pull the token toward you by your score. Play 3 hands; [[after 3 hands, the player with the token on their side wins.]]'),
+             v='<div class="ksk"><div class="kround"><b>' + L('第1局 自分 +1点', 'Hand 1: You +1') + '</b><b>' + L('第2局 相手 +5点', 'Hand 2: Opp. +5') + '</b><b>' + L('第3局 自分 +10点', 'Hand 3: You +10') + '</b></div>'
+               + '<div class="ksora">' + SKY + FISH + '</div><div class="kside"><span>' + L('相手', 'Opp.') + '</span><span>' + L('自分', 'You') + '</span></div><span class="kbub kwin">' + L('勝ち!', 'Win!') + '</span></div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='mini_koikoi.webp', pkg='mini_koikoi.webp', pkg_size=(900, 529),
@@ -1165,6 +1204,7 @@ def sduel(a, b, ta='', tb='', extra=''):
     return '<div class="sduel"><span class="sside a">%s%s</span><b class="svs">VS</b><span class="sside b">%s%s</span>%s</div>' % (scd(a), ta, scd(b), tb, extra)
 
 GAMES['bash'] = dict(
+    video_tex=True,   # 動画の背景にも模様
     title='BASH&SMASH',
     description='BASH&SMASH(バッシュ&スマッシュ):手札から1枚出すだけの、格闘ゲーム風の読み合いゲーム。2人用。パンダキネマ。',
     theme='''
@@ -1904,7 +1944,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title"{{video_hidden}}{{st_video}}>
+  <section class="cinema reveal-cinema{{video_tex}}" id="video" aria-labelledby="video-title"{{video_hidden}}{{st_video}}>
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title">{{L:紹介動画|Videos}}</h2></div></header>
@@ -2339,6 +2379,7 @@ def render(key):
         lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),
         related_html=related_html(g, key),
         video_hidden='' if g['videos'] else ' hidden',
+        video_tex=' tex' if g.get('video_tex') else '',
         ogp_meta=('  <meta property="og:url" content="https://pandakinema.github.io/new/games/%s/">\n  <meta property="og:image" content="https://pandakinema.github.io/new/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
     )
     s = TEMPLATE
