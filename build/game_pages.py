@@ -728,6 +728,31 @@ def mfield(top, bl, br, extra=''):   # 場:3つの山(上・左下・右下)と�
 def mdeck(label):   # 手札(裏向きの束)
     return '<div class="mdeck"><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt="手札"></div><span class="mcap">%s</span>' % label
 
+# ---- モコチャカ:場はトークンを中心に放射状(上は縦、左下・右下は斜め)。カードの頭はトークンへ向ける
+MK_T = (156, 94)   # トークンの中心
+MK_P = [(156, 32, '180deg'), (100, 130, '60deg'), (212, 130, '-60deg')]   # 上・左下・右下の山(中心x, 中心y, 向き)
+def mkc(code, cls=''):
+    return '<img class="mkc %s" src="{{img:mc_%s.webp}}" alt="%sが%s匹のカード">' % (cls, code, MN[code[0]], code[1:])
+def mkdeck():
+    return '<div class="mkdeck"><img class="mkc" src="{{img:mc_ura.webp}}" alt=""><img class="mkc" src="{{img:mc_ura.webp}}" alt=""><img class="mkc" src="{{img:mc_ura.webp}}" alt="手札"></div><span class="mkcap">' + L('手札', 'Hand') + '</span>'
+def mkfield(top, bl, br, piles=1, take=False):
+    out = []
+    under = {'m': ['m1', 'm3'], 'p': ['p1', 'p3'], 'o': ['o3', 'o1']}
+    for k, ((cx, cy, r), code) in enumerate(zip(MK_P, (top, bl, br))):
+        cards = (under.get(code[0], [code, code])[:piles - 1] if piles > 1 else []) + [code]
+        cls = ''
+        st = '--cx:%dpx;--cy:%dpx;--r:%s' % (cx, cy, r)
+        if take and k in (0, 1):   # 取った人が選ぶ山(上と左下)→手札の位置へ
+            cls = ' take' + (' t2' if k == 1 else '')
+            st += ';--pdx:%dpx;--pdy:%dpx' % (28 - cx, 91 - cy)
+        out.append('<div class="mkp%s" style="%s">%s</div>' % (cls, st, ''.join(mkc(c) for c in cards)))
+    tok = '<img class="mktok" style="--tx:%dpx;--ty:%dpx;--tdx:%dpx;--tdy:%dpx" src="{{img:m_token.webp}}" alt="トークン">' % (MK_T[0], MK_T[1], 64 - MK_T[0], 160 - MK_T[1])
+    return ''.join(out) + tok
+def mkpl(i, name, cards, n0, n1, win=False):
+    hand = ''.join(mkc(c, 'g' if c[0] == 'g' else '') for c in cards) if cards else '<span class="zero">0</span>'
+    n = '<span class="n"><span class="a">%s</span><span class="b">%s</span></span>' % (L('%d枚' % n0, '%d' % n0), L('%d枚' % n1, '%d' % n1))
+    return '<div class="pl" style="--i:%d"><span class="lab"><b>%s</b>%s</span><div class="hand">%s</div>%s</div>' % (i, name, n, hand, ('<span class="win">' + L('勝ち!', 'Win!') + '</span>') if win else '')
+
 GAMES['moko'] = dict(
     title='モコチャカ',
     description='モコチャカ:場に見えている3枚のカードの動物を数えて、素早く名前を呼ぶ2〜4人用のカードゲーム。パンダキネマ。',
@@ -745,85 +770,79 @@ GAMES['moko'] = dict(
     .hero.hero-stage{padding-bottom:22px}
     .hero.hero-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;   /* カードの縁と同じ波で、下の帯と区切る */
       background:radial-gradient(circle at 50% 0,transparent 10.5px,var(--k-bg) 11.5px) 0 0/26px 22px repeat-x}
-    /* ===== モコチャカ:遊び方の図(かんたんルールの図を動かしたもの) ===== */
-    .mf{position:relative;flex:none;width:240px;height:178px}
-    .mcd{display:block;width:44px;border-radius:4px;box-shadow:0 3px 7px rgba(0,0,0,.16)}
-    .mpile{position:absolute;width:44px}
-    .mpile .mcd{position:absolute;left:0;top:0}
-    .mpile .mcd:first-child{position:relative}
-    .mt{left:140px;top:2px}.ml{left:98px;top:108px}.mr{left:182px;top:108px}
-    .mtok{position:absolute;left:143px;top:72px;width:40px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
-    .mdeck{position:absolute;left:6px;top:58px;width:44px;height:64px}
-    .mdeck .mcd{position:absolute;left:0;top:0}
-    .mdeck .mcd:nth-child(2){top:-3px}.mdeck .mcd:nth-child(3){top:-6px}
-    .mcap{position:absolute;left:28px;top:132px;translate:-50% 0;padding:2px 10px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:11px;font-weight:800;white-space:nowrap}
-    .mmove{position:absolute;left:6px;top:52px;width:44px}
-    .mmove .back{position:absolute;inset:0}
-    .mbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
-    .mbub::after{content:"";position:absolute;left:14px;bottom:-6px;border:6px solid transparent;border-top-color:#e8467a;border-bottom:0}
-    /* 2. コール:数えて、多い順に呼ぶ */
-    .m2{display:flex;flex-direction:column;align-items:center;gap:10px}
-    .m2 .row{display:flex;gap:6px}
-    .m2 .mcd{width:52px}
-    .mtally{display:flex;gap:8px}
-    .mtally span{display:flex;align-items:center;gap:4px;padding:2px 9px 2px 3px;border-radius:999px;background:#fff;font-size:12px;font-weight:900;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-    .mtally img{width:22px}
-    .m2 .mbub{position:relative}
-    .m2 .mbub::after{left:50%;translate:-50% 0;top:-6px;bottom:auto;border-top:0;border-bottom:6px solid #e8467a}
-    /* 3. コールのルール:2つの例 */
-    .m3{display:grid;gap:12px;width:100%}
-    .m3 .row{display:flex;align-items:center;justify-content:center;gap:4px}
-    .m3 .mcd{width:38px}
-    .m3 .eq{margin:0 4px;font-size:16px;font-weight:900;opacity:.5}
-    .m3 .mbub{position:relative;font-size:12px}
-    .m3 .mbub::after{left:-5px;top:50%;bottom:auto;translate:0 -50%;border:5px solid transparent;border-right-color:#e8467a;border-left:0}
-    .m3 .ate{position:relative;display:block}
-    .m3 .ate b{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:0 5px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;line-height:16px;white-space:nowrap}
-    .m3 .rn{display:block;width:100%;margin-bottom:-6px;font-size:10.5px;font-weight:800;text-align:center;opacity:.75}
-    /* 4. ゲームの終了 */
-    .mend{display:flex;align-items:flex-end;justify-content:center;gap:22px;padding-top:26px}
-    .mside{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px}
-    .mempty{display:block;width:44px;aspect-ratio:300/418;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:5px}
-    .mhand{display:flex}
-    .mhand .mcd{width:44px;margin-left:-14px;rotate:calc((var(--i) - 1.5) * 7deg)}
-    .mhand .mcd:first-child{margin-left:0}
-    .mcap2{padding:2px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap}
-    .mbub.mwin{left:50%;top:-30px;translate:-50% 0}
-    .mbub.mwin::after{left:50%;translate:-50% 0}
-    /* 3. モコチャカ!:トークンの取り合い */
-    .s4 .mbub{left:126px;top:-2px;font-size:14px}
-    .s4 .mbub::after{left:auto;right:18px}
+    /* ===== モコチャカ:遊び方の図(場はトークンを中心に放射状。カードの頭はトークンへ) ===== */
+    .mkf{position:relative;flex:none;width:260px;height:182px}
+    .mkc{display:block;width:40px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .mkp{position:absolute;left:calc(var(--cx) - 20px);top:calc(var(--cy) - 28px);width:40px;height:56px;rotate:var(--r)}
+    .mkp .mkc{position:absolute;left:0;top:0}
+    .mkp .mkc:nth-child(2){translate:1.5px -2px;rotate:3deg}
+    .mkp .mkc:nth-child(3){translate:-1.5px -4px;rotate:-2deg}
+    .mktok{position:absolute;left:calc(var(--tx) - 16px);top:calc(var(--ty) - 16px);width:32px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+    .mkdeck{position:absolute;left:8px;top:60px;width:40px;height:62px;z-index:5}
+    .mkdeck .mkc{position:absolute;left:0;top:0}
+    .mkdeck .mkc:nth-child(2){top:-3px}.mkdeck .mkc:nth-child(3){top:-6px}
+    .mkcap{position:absolute;left:28px;top:130px;translate:-50% 0;padding:1px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap;z-index:6}
+    .mkmv{position:absolute;left:calc(var(--cx) - 20px);top:calc(var(--cy) - 28px);width:40px;height:56px;z-index:6}
+    .mkmv .mkc{position:absolute;left:0;top:0}
+    .mkbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em;z-index:7}
+    /* 2コマ目:3つの例。カードを横に並べて右に吹き出し */
+    .mk2{display:grid;gap:8px;width:100%}
+    .mk2 .row{display:flex;align-items:center;justify-content:center;gap:4px}
+    .mk2 .mkc{width:34px}
+    .mk2 .mkbub{position:relative;margin-left:8px;font-size:12px}
+    .mk2 .mkbub::before{content:"";position:absolute;left:-5px;top:50%;translate:0 -50%;border:5px solid transparent;border-right-color:#e8467a;border-left:0}
+    /* 3コマ目:モコチャカ!→トークンを取って手札の横へ、山2つが手札の下に入る */
+    .mk3 .mkp.take{z-index:2}
+    /* 4コマ目:4人の手札。ガブは消える */
+    .mk4{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;width:100%}
+    .mk4 .pl{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0}
+    .mk4 .lab{display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:800}
+    .mk4 .lab b{padding:0 7px;border-radius:999px;background:var(--p-ink);color:#fff}
+    .mk4 .hand{display:flex;height:40px;align-items:flex-end}
+    .mk4 .hand .mkc{width:26px;margin-left:-9px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+    .mk4 .hand .mkc:first-child{margin-left:0}
+    .mk4 .zero{display:grid;place-items:center;width:28px;height:38px;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px;font-size:10px;font-weight:800}
+    .mk4 .win{position:absolute;right:2px;top:0;padding:1px 8px;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
+    .mk4 .n{min-width:3.2em}
     @media all{
-      .s1 .mmove{animation:m1move 6s cubic-bezier(.4,0,.2,1) infinite}
-      @keyframes m1move{0%,10%{opacity:1;translate:0 0;scale:1 1}18%{translate:0 -6px;scale:0 1}26%{translate:0 -6px;scale:1 1}44%,84%{opacity:1;translate:92px 56px;scale:1 1}92%,100%{opacity:0;translate:92px 56px}}
-      .s1 .mmove .back{animation:kback 6s linear infinite;animation-name:mback}.s1 .mmove .mcd:not(.back){animation:mfront 6s linear infinite}
-      @keyframes mback{0%,17.9%{opacity:1}18%,100%{opacity:0}}
-      @keyframes mfront{0%,17.9%{opacity:0}18%,100%{opacity:1}}
-      .m2 .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
-      @keyframes mdrop{0%{opacity:0;translate:0 -24px}7%{opacity:1;translate:0 0}86%{opacity:1;translate:0 0}93%,100%{opacity:0;translate:0 0}}
-      .mtally span{animation:mtal 7s ease infinite;animation-delay:calc(var(--i) * .35s)}
-      @keyframes mtal{0%,16%{opacity:0;translate:0 6px}22%,86%{opacity:1;translate:0 0}93%,100%{opacity:0}}
-      .m2 .mbub{animation:mpop2 7s ease infinite}
-      @keyframes mpop2{0%,38%{opacity:0;scale:.4}44%{opacity:1;scale:1.15}48%,86%{opacity:1;scale:1}93%,100%{opacity:0;scale:.6}}
-      .m3 .row{animation:mdrop 8s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * 1.2s)}
-      .m3 .mbub{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s)}
-      @keyframes mpop3{0%,14%{opacity:0;scale:.4}19%{opacity:1;scale:1.15}23%,80%{opacity:1;scale:1}88%,100%{opacity:0;scale:.6}}
-      .m3 .ate b{animation:mpop3 8s ease infinite;animation-delay:calc(var(--i) * 1.2s - .5s)}
-      .mhand .mcd{animation:mdrop 7s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i) * .15s)}
-      .mhand .mgabu{animation:mgone 7s ease infinite}
-      @keyframes mgone{0%{opacity:0;translate:0 -24px}7%,30%{opacity:1;translate:0 0}42%,100%{opacity:0;translate:0 26px}}
-      .mbub.mwin{animation:mpop2 7s ease infinite;animation-delay:.6s}
-      .s4 .mbub{animation:mpop4 8s ease infinite}
-      @keyframes mpop4{0%,6%{opacity:0;scale:.4}11%{opacity:1;scale:1.15}15%,82%{opacity:1;scale:1}90%,100%{opacity:0;scale:.6}}
-      .s4 .mtok{animation:mgrab 8s cubic-bezier(.5,0,.3,1) infinite}
-      @keyframes mgrab{0%,12%{translate:0 0;rotate:0deg}14%{rotate:-8deg}16%{rotate:8deg}18%{rotate:0deg}34%,84%{opacity:1;translate:-137px -4px}92%,100%{opacity:0;translate:-137px -4px}}
-      .s4 .ml,.s4 .mr{animation:mtake 8s cubic-bezier(.5,0,.3,1) infinite}
-      .s4 .mr{animation-name:mtake2}
-      @keyframes mtake{0%,40%{opacity:1;translate:0 0}58%{opacity:1;translate:-92px -50px}64%,100%{opacity:0;translate:-92px -50px}}
-      @keyframes mtake2{0%,46%{opacity:1;translate:0 0}64%{opacity:1;translate:-176px -50px}70%,100%{opacity:0;translate:-176px -50px}}
-      .s4 .ml .mcd:first-child,.s4 .mr .mcd:first-child{outline:3px solid transparent;outline-offset:1px;animation:mring 8s ease infinite}
-      @keyframes mring{0%,34%{outline-color:transparent}38%,58%{outline-color:#e8467a}64%,100%{outline-color:transparent}}
-    }''',
+      /* 1:手札からめくりながら左下の山へ */
+      .s1 .mkmv{animation:mkmv 6s cubic-bezier(.4,0,.2,1) infinite}
+      @keyframes mkmv{0%,10%{opacity:1;translate:var(--dx) var(--dy);rotate:0deg}42%,86%{opacity:1;translate:0 0;rotate:var(--r)}93%,100%{opacity:0;translate:0 0;rotate:var(--r)}}
+      .s1 .mkmv .mkf1{animation:mkfl 6s linear infinite}
+      .s1 .mkmv .mkb1{animation:mkbk 6s linear infinite}
+      @keyframes mkfl{0%,25.9%{opacity:0}26%,100%{opacity:1}}
+      @keyframes mkbk{0%,25.9%{opacity:1}26%,100%{opacity:0}}
+      .s1 .mkmv>span{display:block;width:40px;height:56px;position:relative;animation:mksq 6s ease-in-out infinite}
+      @keyframes mksq{0%,14%{scale:1 1}26%{scale:0 1}38%,100%{scale:1 1}}
+      .s1 .mkbub{animation:mkpop 6s ease infinite}
+      @keyframes mkpop{0%,46%{opacity:0;scale:.4}52%{opacity:1;scale:1.12}56%,86%{opacity:1;scale:1}92%,100%{opacity:0;scale:.6}}
+      /* 2:1行ずつ */
+      .mk2 .row{animation:mkrow 8s cubic-bezier(.3,1.3,.5,1) infinite both;animation-delay:calc(var(--i) * .9s)}
+      @keyframes mkrow{0%{opacity:0;translate:-14px 0}6%,78%{opacity:1;translate:0 0}86%,100%{opacity:0;translate:0 0}}
+      .mk2 .mkbub{animation:mkb2 8s ease infinite both;animation-delay:calc(var(--i) * .9s)}
+      @keyframes mkb2{0%,8%{opacity:0;scale:.4}13%{opacity:1;scale:1.12}16%,78%{opacity:1;scale:1}86%,100%{opacity:0}}
+      /* 3:モコチャカ!→トークン→山2つ */
+      .s3 .mkbub{animation:mk3b 8s ease infinite}
+      @keyframes mk3b{0%,6%{opacity:0;scale:.4}11%{opacity:1;scale:1.12}14%,80%{opacity:1;scale:1}88%,100%{opacity:0;scale:.6}}
+      .s3 .mktok{animation:mk3t 8s cubic-bezier(.5,0,.3,1) infinite}
+      @keyframes mk3t{0%,14%{translate:0 0;rotate:0deg}16%{rotate:-10deg}18%{rotate:8deg}20%{rotate:0deg}34%,84%{opacity:1;translate:var(--tdx) var(--tdy)}92%,100%{opacity:0;translate:var(--tdx) var(--tdy)}}
+      .s3 .mkp.take{animation:mk3p 8s cubic-bezier(.5,0,.3,1) infinite}
+      .s3 .mkp.take.t2{animation-name:mk3p2}
+      @keyframes mk3p{0%,38%{opacity:1;translate:0 0;rotate:var(--r)}56%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}62%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
+      @keyframes mk3p2{0%,48%{opacity:1;translate:0 0;rotate:var(--r)}66%{opacity:1;translate:var(--pdx) var(--pdy);rotate:0deg}72%,100%{opacity:0;translate:var(--pdx) var(--pdy);rotate:0deg}}
+      .s3 .mkp.take .mkc{outline:2px solid transparent;animation:mk3o 8s ease infinite}
+      @keyframes mk3o{0%,30%{outline-color:transparent}33%,50%{outline-color:#e8467a}56%,100%{outline-color:transparent}}
+      /* 4:ガブが消える→枚数→勝ち */
+      .mk4 .pl{animation:mk4p 8s ease infinite both;animation-delay:calc(var(--i) * .25s)}
+      @keyframes mk4p{0%{opacity:0;translate:0 8px}6%,86%{opacity:1;translate:0 0}94%,100%{opacity:0}}
+      .mk4 .g{animation:mk4g 8s ease infinite}
+      @keyframes mk4g{0%,28%{opacity:1;translate:0 0;filter:none}32%{filter:brightness(1.8)}42%,100%{opacity:0;translate:0 -14px;width:0;margin-left:0}}
+      .mk4 .n .a{animation:mk4a 8s steps(1) infinite}.mk4 .n .b{animation:mk4b 8s steps(1) infinite}
+      @keyframes mk4a{0%{display:inline}42%,100%{display:none}}
+      @keyframes mk4b{0%{display:none}42%,100%{display:inline}}
+      .mk4 .win{animation:mkpop 8s ease infinite;animation-delay:.6s}
+    }
+''',
     logo='m_logo_navy.png', logo_size=(1282, 240), logo_alt='モコチャカ MOKOCHAKA',
     logo_buy='m_logo_navy.png', logo_credits='logo_moko.png',
     chara_name=L('モコ', 'Moko'),
@@ -839,22 +858,24 @@ GAMES['moko'] = dict(
     poster='m_stage.png',
     # 遊び方:かんたんルール「ゲームの流れ」「コール」「コールのルール」「トークンの取り合い」から(文はルールのまま、[[ ]]=赤字)
     steps=[
-        dict(cls='s1', b=L('自分の番になったら、手札を上から1枚めくって、3つのうち好きな場所に重ねます。その後、場のカードを見て[[コール]]を行います。',
-                           'On your turn, flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a [[call]].'),
-             v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('o1'), mcd('m1'), mcd('p3'))
-               + '<span class="mmove"><img class="mcd back" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span>' + '</div>'),
-        dict(cls='s2', b=L('場にあるカードを見て、動物の名前を呼ぶことをコールと言います。コールには下記のルールがあります。\n[[ポメはかわいいので必ず最初に呼ぶ]]\n[[ガブの数だけモコを減らす]]',
-                           'Calls have these rules:\n[[Pome is cute, so always call it first]]\n[[Remove one Moko for each Gabu]]'),
-             v='<div class="m3">'
-               '<div class="row" style="--i:0">' + mcd('o1') + mcd('m2') + mcd('m2') + '<span class="eq">→</span><span class="mbub" style="--i:0">' + L('ポメモコ!', 'Pome-Moko!') + '</span></div>'
-               '<div class="row" style="--i:1"><span class="ate" style="--i:1">' + mcd('m2') + '<b>' + L('モコ0', 'Moko 0') + '</b></span>' + mcd('g2') + mcd('p3') + '<span class="eq">→</span><span class="mbub" style="--i:1">' + L('パカ!', 'Paka!') + '</span></div>'
-               '</div>'),
-        dict(cls='s4', b=L('場のカードが次の条件を満たしたとき、[[「モコチャカ」]]と言いながら[[全員で]]トークンを取り合います。トークンを取った人は場のカードの山を2つ選んで獲得し、自分の手札の下に加えます。',
-                           'When the cards meet a condition, [[everyone]] grabs for the token while saying [[“Mokochaka!”]] The one who gets it takes 2 piles and adds them to the bottom of their hand.'),
-             v='<div class="mf">' + mdeck(L('手札', 'Hand')) + mfield(mcd('m1'), mcd('p2'), mcd('o2'), '<span class="mbub">' + L('モコチャカ!', 'Mokochaka!') + '</span>') + '</div>'),
-        dict(cls='s5', b=L('誰かの手札がなくなったらゲーム終了です。[[ガブを除いた]]手札が最も多い人が勝ちになります。', 'When someone runs out of cards, the game ends. The player with the most cards in hand [[not counting Gabu]] wins.'),
-             v='<div class="mend"><div class="mside"><span class="mempty"></span><span class="mcap2">' + L('手札0で終了', 'Out of cards') + '</span></div>'
-               '<div class="mside"><div class="mhand">' + mcd('m2', '', '--i:0') + mcd('p1', '', '--i:1') + mcd('g1', 'mgabu', '--i:2') + mcd('o2', '', '--i:3') + '</div><span class="mcap2">' + L('ガブを除いて3枚', '3 without Gabu') + '</span><span class="mbub mwin">' + L('勝ち!', 'Win!') + '</span></div></div>'),
+        # 1:手札をめくって、3つのうち好きな場に重ねる(場はトークンを中心に放射状、カードの頭はトークンへ)
+        dict(cls='s1', b=L('手札を上から1枚めくって、3つのうち好きな場に重ねます。その後、場のカードを見て[[コール]]を行います。', 'Flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a [[call]].'),
+             v='<div class="mkf">' + mkdeck() + mkfield('o1', 'm1', 'p3')
+               + '<span class="mkmv" style="--cx:100px;--cy:130px;--r:60deg;--dx:-72px;--dy:-39px"><span><img class="mkc mkb1" src="{{img:mc_ura.webp}}" alt=""><img class="mkc mkf1" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span></span>'
+               + '<span class="mkbub" style="right:0;top:4px">' + L('ポメパカ!', 'Pome-Paka!') + '</span></div>'),
+        # 2:コールのルール(3つの例。どれもモコチャカにならない場)
+        dict(cls='s2', b=L('コールには下記のルールがあります。\n[[・数の多い順に呼ぶ]]\n[[・ポメはかわいいので必ず最初に呼ぶ]]\n[[・ガブの数だけモコを減らす]]', 'Calls have these rules:\n[[· Call in order of most to fewest]]\n[[· Pome is cute, so always call it first]]\n[[· Remove one Moko for each Gabu]]'),
+             v='<div class="mk2">'
+               '<div class="row" style="--i:0">' + mkc('m3') + mkc('p1') + mkc('m1') + '<span class="mkbub" style="--i:0">' + L('モコパカ!', 'Moko-Paka!') + '</span></div>'
+               '<div class="row" style="--i:1">' + mkc('p3') + mkc('o1') + mkc('p1') + '<span class="mkbub" style="--i:1">' + L('ポメパカ!', 'Pome-Paka!') + '</span></div>'
+               '<div class="row" style="--i:2">' + mkc('m3') + mkc('g2') + mkc('p2') + '<span class="mkbub" style="--i:2">' + L('パカモコ!', 'Paka-Moko!') + '</span></div></div>'),
+        # 3:モコチャカ!→トークンを取る(手札には重ねない)→山を2つ選んで手札の下へ
+        dict(cls='s3', b=L('場のカードが条件を満たしたとき、[[「モコチャカ」]]と言いながら[[全員で]]トークンを取り合います。取った人は場の山を2つ選んで獲得し、手札の下に加えます。', 'When the cards meet a condition, [[everyone]] grabs for the token while saying [[“Mokochaka!”]] The one who gets it takes 2 piles and adds them to the bottom of their hand.'),
+             v='<div class="mkf mk3">' + mkdeck() + mkfield('m2', 'p2', 'o2', piles=3, take=True)
+               + '<span class="mkbub" style="left:0;top:14px">' + L('モコチャカ!', 'Mokochaka!') + '</span></div>'),
+        # 4:誰かの手札がなくなったら終了。ガブを除いた手札が最も多い人の勝ち
+        dict(cls='s4', b=L('誰かの手札がなくなったらゲーム終了です。[[ガブを除いた]]手札が最も多い人が勝ちです!', 'When someone runs out of cards, the game ends. The player with the most cards [[not counting Gabu]] wins!'),
+             v='<div class="mk4">' + mkpl(0, 'P1', ['m2', 'g1', 'p1'], 3, 2) + mkpl(1, 'P2', ['m1', 'p2', 'g2', 'o1', 'p3'], 5, 4, True) + mkpl(2, 'P3', [], 0, 0) + mkpl(3, 'P4', ['o2', 'g1', 'm3', 'g2'], 4, 2) + '</div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='pkg_moko.webp',
