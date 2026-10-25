@@ -220,8 +220,15 @@
     .card:has(> .sr:checked){flex-basis:var(--ow)}
     .card:has(> .sr:checked) .c-face{opacity:0;pointer-events:none}
     .card:has(> .sr:checked) .c-open{opacity:1;pointer-events:auto}
-    .row{scroll-snap-type:x proximity}
-    .row .card{scroll-snap-align:start}
+    @media (hover:hover) and (pointer:fine){
+      .card{transition:flex-basis .45s cubic-bezier(.2,.8,.2,1) .1s}
+      .row:hover .card:hover{flex-basis:var(--ow)}
+      .row:hover .card:hover .c-face{opacity:0;pointer-events:none}
+      .row:hover .card:hover .c-open{opacity:1;pointer-events:auto}
+      .row:hover .card:has(> .sr:checked):not(:hover){flex-basis:var(--cw)}
+      .row:hover .card:has(> .sr:checked):not(:hover) .c-face{opacity:1;pointer-events:auto}
+      .row:hover .card:has(> .sr:checked):not(:hover) .c-open{opacity:0;pointer-events:none}
+    }
 
     /* 4. MOVIE:サムネが見えている列 */
     .vrow{position:relative;list-style:none;margin:0;padding:0 0 4px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;scroll-behavior:smooth}
@@ -537,38 +544,14 @@
   /* 列の ◀ ● ▶ */
   $$(".pager").forEach(function(pg){ var row=document.getElementById(pg.getAttribute("data-for")), pd=$(".pd",pg), prev=$(".prev",pg), next=$(".next",pg), items=[].slice.call(row.children), at=0;
     function go(k){ k=Math.max(0,Math.min(items.length-1,k)); row.scrollTo({left:items[k].offsetLeft,behavior:"smooth"}) }
-    items.forEach(function(it,k){ var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(k+1)+"番目"); b.addEventListener("click",function(){ if(row._step) row._step(k-(row._idx()<0?0:row._idx())); else go(k) }); pd.appendChild(b) });
+    items.forEach(function(it,k){ var b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(k+1)+"番目"); b.addEventListener("click",function(){ go(k) }); pd.appendChild(b) });
     function sync(){ var end=row.scrollLeft+row.clientWidth>=row.scrollWidth-4; at=0; items.forEach(function(it,k){ if(it.offsetLeft<=row.scrollLeft+8) at=k }); if(end && row.scrollLeft>4) at=items.length-1;
-      if(row._step){ var q=row._idx(); at=q<0?0:q; prev.disabled=q<=0; next.disabled=q>=row._n-1 } else { prev.disabled=row.scrollLeft<4; next.disabled=end }
-      $$("button",pd).forEach(function(b,k){ b.setAttribute("aria-current",k===at?"true":"false") });
+      $$("button",pd).forEach(function(b,k){ b.setAttribute("aria-current",k===at?"true":"false") }); prev.disabled=row.scrollLeft<4; next.disabled=end;
       pg.style.visibility=row.scrollWidth>row.clientWidth+4?"visible":"hidden" }
-    prev.addEventListener("click",function(){ if(row._step) row._step(-1); else go(at-1) }); next.addEventListener("click",function(){ if(row._step) row._step(1); else go(at+1) });
-    row.addEventListener("idx",function(){ var k=row._idx(); $$("button",pd).forEach(function(b,j){ b.setAttribute("aria-current",j===k?"true":"false") }); prev.disabled=k<=0; next.disabled=k>=row._n-1 });
+    prev.addEventListener("click",function(){ go(at-1) }); next.addEventListener("click",function(){ go(at+1) });
     row.addEventListener("scroll",function(){ requestAnimationFrame(sync) },{passive:true}); window.addEventListener("resize",sync);
     row.addEventListener("transitionend",function(e){ if(e.propertyName==="flex-basis") sync() });
     sync() });
-  /* カード:ネトフリ風の自動開閉。列を触ったら左端のカードが開き、横に送ると次のカードが開いて前のは閉じる(いつも1枚だけ) */
-  $$(".row").forEach(function(row){
-    var cards=[].slice.call(row.querySelectorAll(".card")).filter(function(c){ return $(".sr",c) }), idx=-1, settled=0, busy=false, t=null;
-    if(!cards.length) return;
-    function maxL(){ return row.scrollWidth-row.clientWidth }
-    function setIdx(k){ k=Math.max(0,Math.min(cards.length-1,k)); idx=k; var c=cards[k]; $(".sr",c).checked=true; busy=true; clearTimeout(t);
-      setTimeout(function(){ var L=Math.min(c.offsetLeft-cards[0].offsetLeft,maxL()); row.scrollTo({left:L,behavior:"smooth"}); setTimeout(function(){ settled=row.scrollLeft; busy=false; row.dispatchEvent(new Event("idx")) },520) },470) }
-    function lead(){ var b=row.getBoundingClientRect(), best=0, d=1e9; cards.forEach(function(c,k){ var x=Math.abs(c.getBoundingClientRect().left-b.left); if(x<d){ d=x; best=k } }); return best }
-    row._step=function(n){ setIdx((idx<0?lead():idx)+n) };
-    row._idx=function(){ return idx }; row._n=cards.length;
-    function wake(){ if(idx<0) setIdx(lead()) }
-    row.addEventListener("touchstart",wake,{passive:true});
-    row.addEventListener("pointerenter",function(e){ if(e.pointerType==="mouse") wake() });
-    row.addEventListener("scroll",function(){ if(busy) return; clearTimeout(t); t=setTimeout(function(){
-      var dx=row.scrollLeft-settled, unit=cards[0].offsetWidth+parseFloat(getComputedStyle(row).columnGap||16);
-      if(idx<0){ setIdx(lead()); return }
-      if(Math.abs(dx)<20) return;
-      setIdx(idx+(dx>0?1:-1)*Math.max(1,Math.round(Math.abs(dx)/unit))) },150) },{passive:true});
-    var acc=0, lock=false;   /* PCのトラックパッドの横スクロール:ひと振りで1枚 */
-    row.addEventListener("wheel",function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return; e.preventDefault(); if(lock) return; acc+=e.deltaX;
-      if(Math.abs(acc)>40){ row._step(acc>0?1:-1); acc=0; lock=true; setTimeout(function(){ lock=false },650) } },{passive:false});
-  });
   /* カード:開いたら見える位置へ */
   $$(".row .card .sr").forEach(function(r){ r.addEventListener("change",function(){ var c=r.parentNode, brow=c.parentNode; setTimeout(function(){ var a=c.getBoundingClientRect(), b=brow.getBoundingClientRect(); if(a.left<b.left||a.right>b.right) brow.scrollBy({left:a.left-b.left}) },470) }) });
   /* MOVIE:サムネを押すと再生。シャッフルでランダムに */
