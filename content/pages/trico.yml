@@ -95,18 +95,14 @@ contents_ja: ゲームカード30枚(各色10枚)、リードプレイヤーマ�
 contents_en: 30 game cards (10 per color), lead player marker, summary card, 3
   Trico markers, rulebook
 steps:
-  - text_ja: リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、**同時に表向きに公開します。**
-    text_en: The lead player reveals one card from their hand face up. The other 2
-      players each play a card face down, then **reveal them at the same time.**
-  - text_ja: 場に揃った**色の数**で勝敗を決めます。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になります。
-    text_en: The **number of colors** on the table decides the winner. If more than
-      one card wins, the Appeal is void and all cards are discarded.
-  - text_ja: アピールの勝者は場に出た3枚のカードのうち、**好きなカードを1枚獲得**し、手元に表向きで置きます。
-    text_en: The winner of the Appeal **takes any one** of the 3 cards played and
-      places it face up in front of them.
-  - text_ja: 獲得したカードが2色になったら「**ニコ**!」、3色になったら「**トリコ**!」と宣言します。トリコマーカーを2つ獲得したらゲーム終了!
-    text_en: Declare **“Nico!”** when your cards hold 2 colors, and **“Trico!”** at
-      3 colors. Collect 2 Trico markers to win the game!
+- text_ja: リードプレイヤーが1枚を表向きに出したら、他の2人は裏向きに出して**同時に公開!**
+  text_en: The lead player plays a card face up; the other two play face down and **reveal at the same time!**
+- text_ja: 場に揃った**色の数**で勝敗を決める!
+  text_en: The **number of colors** on the table decides the winner!
+- text_ja: 場の色が2色なので、**紫の中で最も小さい3の勝ち!** 勝った人は場の3枚から**好きなカードを1枚獲得**し、手元に表向きで置く!
+  text_en: Two colors on the table, so **the lowest purple, 3, wins!** The winner **takes any one** of the 3 cards and places it face up.
+- text_ja: 手元のカードが2色になったら**「ニコ!」**、3色になったら**「トリコ!」**と宣言! トリコマーカーを**2つ集めた人がゲームの勝者!**
+  text_en: Declare **“Nico!”** at 2 colors and **“Trico!”** at 3! **Collect 2 Trico markers to win!**
 gallery:
   - image: img/gallery/tg_manual1.webp
     caption_ja: 遊び方説明書(表)

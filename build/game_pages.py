@@ -3,7 +3,8 @@
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
 #
-# パンダキネマ 作品ページ 共通フォーマット v45
+# パンダキネマ 作品ページ 共通フォーマット v46
+#     v46: TRICO!の4コマを遊び方動画どおりに(リードマーカーはカードの横)
 #     v45: ビビルの塔の重ね方を説明シートどおりに(下のカードは下の4割=窓と土台が見え、真ん中の紺が隠れる)
 #     v44: 帯の画像は1周期に自動で切りそろえてループ/強調の下線はなし
 #     v43: 本文を細く・強調を太く(同じ色なら下線)/項目ごとに背景の色を選べる
@@ -545,6 +546,25 @@ GAMES['trico'] = dict(
     .twin .wbird{width:70px}
     .twin .mk{width:34px;margin-bottom:2px}
     .tbub.trico3{left:-10px;top:-32px;border:2px solid var(--p-ink);background:#fff;color:var(--p-ink)}
+    /* 1コマ目:P1〜P3。リードプレイヤーマーカーはカードの横に置く */
+    .tpl{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:14px;padding:22px 0 8px}
+    .tpl figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .tlab{padding:1px 8px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10px;font-weight:800}
+    .tpl .lf{--card-w:50px}
+    .tpl .tcd{width:50px}
+    .tlead{position:relative;display:flex;align-items:flex-end;gap:4px}
+    .tlead .lead{width:26px;rotate:0deg;box-shadow:0 2px 5px rgba(0,0,0,.18);border-radius:3px}
+    .tsay{position:absolute;left:50%;top:0;translate:-50% 0;font-size:15px;font-weight:900;color:var(--p-ink)}
+    .twin3{position:relative;display:block}
+    .theart{position:absolute;left:50%;top:-24px;translate:-50% 0;color:#ec6ea6;font-size:20px;line-height:1}
+    .twin .mk2{margin-left:-14px}
+    @media all{
+      .tsay{animation:lmark 6s ease infinite;animation-delay:-.6s}
+      .tpl figure:not(.lead-col){--o:.6s}
+      .s1 .tlead{animation:tdrop 6s cubic-bezier(.3,1.4,.5,1) infinite}
+      .theart{animation:lmark 6s ease infinite;animation-delay:-1.2s}
+      .twin .mk2{animation:t4win 7s ease infinite;animation-delay:.9s}
+    }
     /* くり返し(スクリプト不要)。土台は完成図 */
     @media all{
       .s1 .lead,.s1 .tcd{animation:tdrop 6s cubic-bezier(.3,1.4,.5,1) infinite}
@@ -591,20 +611,20 @@ GAMES['trico'] = dict(
     poster='trico_poster.webp',
     # 遊び方:取説「アピールの流れ」「ニコ!」「トリコ!」から(文は取説のまま、[[ ]]は取説の赤字)
     steps=[
-        dict(cls='s1', b=L('リードプレイヤーが手札から1枚、カードを表向きに公開します。他の2人のプレイヤーは手札から裏向きで1枚カードを出し、[[同時に表向きに公開します。]]',
-                           'The lead player reveals one card from their hand face up. The other 2 players each play a card face down, then [[reveal them at the same time.]]'),
-             v='<div class="tp1"><figure><img class="lead" src="{{img:tc_lead_o.webp}}" alt="リードプレイヤーマーカー">' + tcard('y21') + '<figcaption>' + L('リードプレイヤー', 'Lead player') + '</figcaption></figure>'
-               '<figure>' + tlf('p30', 1) + tlf('y12', 2) + '<figcaption>' + L('同時に公開', 'Reveal together') + '</figcaption></figure></div>'),
-        dict(cls='s2', b=L('場に揃った[[色の数]]で勝敗を決めます。勝ったカードが複数あった場合アピールは無効となり、全て捨て札になります。',
-                           'The [[number of colors]] on the table decides the winner. If more than one card wins, the Appeal is void and all cards are discarded.'),
+        # 遊び方動画(trico_howto)の6つの説明を4コマに
+        dict(cls='s1', b=L('リードプレイヤーが1枚を表向きに出したら、他の2人は裏向きに出して[[同時に公開!]]', 'The lead player plays a card face up; the other two play face down and [[reveal at the same time!]]'),
+             v='<div class="tpl">'
+               '<figure><span class="tlab">P1</span>' + tlf('p3', 1) + '</figure>'
+               '<figure><span class="tlab">P2</span>' + tlf('r27', 2) + '</figure>'
+               '<figure class="lead-col"><span class="tlab">P3</span><span class="tlead">' + tcard('p24') + '<img class="lead" src="{{img:tc_lead_o.webp}}" alt="リードプレイヤーマーカー"></span></figure>'
+               '<span class="tsay">' + L('せーの!', 'Reveal!') + '</span></div>'),
+        dict(cls='s2', b=L('場に揃った[[色の数]]で勝敗を決める!', 'The [[number of colors]] on the table decides the winner!'),
              v='<div class="tjudge">' + trow(0, L('1色', '1'), ['p3', 'p12', 'p24'], 'p24', L('最も大きい数', 'Highest')) + trow(1, L('2色', '2'), ['p3', 'p24', 'r27'], 'p3', L('同じ色の中で<br>最も小さい数', 'Lowest of<br>the pair color')) + trow(2, L('3色', '3'), ['p9', 'y24', 'r15'], 'y24', L('最も大きい数', 'Highest')) + '</div>'),
-        dict(cls='s3', b=L('アピールの勝者は場に出た3枚のカードのうち、[[好きなカードを1枚獲得]]し、手元に表向きで置きます。',
-                           'The winner of the Appeal [[takes any one]] of the 3 cards played and places it face up in front of them.'),
-             v='<div class="tp3">' + tcard('p3', 0) + '<span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
-        dict(cls='s4', b=L('獲得したカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言します。トリコマーカーを2つ獲得したらゲーム終了!',
-                           'Declare [[“Nico!”]] when your cards hold 2 colors, and [[“Trico!”]] at 3 colors. Collect 2 Trico markers to win the game!'),
-             v='<div class="tp4"><div class="thand">' + tcard('p12', 0) + tcard('y6', 1) + '<span class="tbub nico2">' + L('ニコ!', 'Nico!') + '</span>' + tcard('r18', 2, 'late') + '</div>'
-               '<div class="twin"><span class="tbub trico3">' + L('トリコ!', 'Trico!') + '</span><img class="wbird" src="{{img:t_tricoP.webp}}" alt=""><img class="mk" src="{{img:t_marker.webp}}" alt="トリコマーカー"></div></div>'),
+        dict(cls='s3', b=L('場の色が2色なので、[[紫の中で最も小さい3の勝ち!]] 勝った人は場の3枚から[[好きなカードを1枚獲得]]し、手元に表向きで置く!', 'Two colors on the table, so [[the lowest purple, 3, wins!]] The winner [[takes any one]] of the 3 cards and places it face up.'),
+             v='<div class="tp3"><span class="twin3">' + tcard('p3', 0) + '<b class="theart" aria-label="勝ち">♥</b></span><span class="tpick">' + tcard('r27', 1) + '<b>' + L('獲得!', 'Take!') + '</b></span>' + tcard('p24', 2) + '</div>'),
+        dict(cls='s4', b=L('手元のカードが2色になったら[[「ニコ!」]]、3色になったら[[「トリコ!」]]と宣言! トリコマーカーを[[2つ集めた人がゲームの勝者!]]', 'Declare [[“Nico!”]] at 2 colors and [[“Trico!”]] at 3! [[Collect 2 Trico markers to win!]]'),
+             v='<div class="tp4"><div class="thand">' + tcard('r27', 0) + tcard('y21', 1) + '<span class="tbub nico2">' + L('ニコ!', 'Nico!') + '</span>' + tcard('p9', 2, 'late') + '</div>'
+               '<div class="twin"><span class="tbub trico3">' + L('トリコ!', 'Trico!') + '</span><img class="wbird" src="{{img:t_tricoP.webp}}" alt=""><img class="mk" src="{{img:t_marker.webp}}" alt="トリコマーカー"><img class="mk mk2" src="{{img:t_marker.webp}}" alt=""></div></div>'),
     ],
     gallery=[('tg_manual1.webp', '遊び方説明書(表)', 'Rulebook (front)', 'wide'), ('trico_pkg_lg.webp', 'パッケージ', 'Box', ''),
              ('tg_summary.webp', 'サマリー', 'Summary card', ''), ('tg_manual2.webp', '遊び方説明書(裏)', 'Rulebook (back)', 'wide')],

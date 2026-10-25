@@ -342,15 +342,15 @@
       .b-in{position:relative;inset:auto;flex:none;width:auto;translate:none;gap:9px;padding:16px 20px 50px}
       /* 動画:画面いっぱいに敷いて、動画の真ん中を見せる。文字は下に重ねる */
       .slide.has-vid .b-in{margin-top:auto}
-      .slide.has-vid .b-yt iframe{width:max(100cqw,124.4cqh);height:max(70cqh,56.25cqw)}   /* 高さの7割:拡大しすぎてぼけないように */
-      .slide.has-vid .b-vid{top:15%;height:70%}
-      .slide.has-vid .b-yt,.slide.has-vid .b-vid{-webkit-mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%);mask:linear-gradient(transparent 14%,#000 24%,#000 76%,transparent 86%)}
-      .slide.has-vid::before{background:linear-gradient(rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 78%)}
+      .slide.has-vid{background:#000 !important}
+      .slide.has-vid .b-yt iframe{top:calc(56px + env(safe-area-inset-top,0px));translate:-50% 0;width:max(100cqw,124.4cqh);height:max(70cqh,56.25cqw)}   /* 動画は上寄り。高さの7割:拡大しすぎてぼけないように */
+      .slide.has-vid .b-vid{top:calc(56px + env(safe-area-inset-top,0px));height:70%}
+      .slide.has-vid::before{display:block;background:linear-gradient(rgba(0,0,0,0) 42%,rgba(0,0,0,.85) 66%,#000 80%)}   /* 下は黒グラデでなじませる */
       /* パッケージは全作品同じ大きさ(高さ固定)。説明は2行ぶん固定。残りの高さにロゴを合わせる */
-      .slide:not(.b-custom):not(.has-vid) .b-art{flex:none;height:clamp(180px,34svh,250px);margin:14px 10vw 0}
-      .slide:not(.b-custom):not(.has-vid) .b-in{flex:1 1 auto;min-height:0;justify-content:flex-end}
-      .b-in .b-name{flex:0 1 auto;display:flex;align-items:flex-end;min-height:36px;height:clamp(52px,12svh,96px)}
-      .b-in .b-logo,.b-in img.b-logo,.b-in .b-mtitle{width:auto;height:100%;max-width:80%;max-height:none;object-fit:contain;object-position:left bottom;-webkit-mask-position:left bottom;mask-position:left bottom}
+      .slide:not(.b-custom):not(.has-vid) .b-art{flex:none;height:clamp(170px,31svh,240px);margin:4px 10vw 0}
+      .slide:not(.b-custom):not(.has-vid) .b-in{flex:1 1 auto;min-height:0;justify-content:flex-end;padding-top:6px}
+      .b-in .b-name{flex:0 1 auto;display:flex;align-items:flex-end;min-height:44px;height:clamp(70px,16svh,128px)}
+      .b-in .b-logo,.b-in img.b-logo,.b-in .b-mtitle{width:auto;height:100%;max-width:92%;max-height:none;object-fit:contain;object-position:left bottom;-webkit-mask-position:left bottom;mask-position:left bottom}
       .b-in .tool-name{font-size:24px;line-height:1.25}
       .b-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:calc(2 * 1.7em)}
       .b-mlogo,.b-mtitle{width:min(300px,80%)}
