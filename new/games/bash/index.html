@@ -166,10 +166,12 @@
     .shit{position:absolute;left:50%;top:-24px;translate:-50% 0;padding:1px 8px;border-radius:4px;background:#e8343d;color:#fff;font-size:13px;font-weight:900;font-style:italic;white-space:nowrap}
     .shit.parry{background:#1574c4}
     .srush{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:4px 14px;rotate:-6deg;background:#ffd23f;color:#1b2228;font-size:20px;font-weight:900;font-style:italic;box-shadow:0 3px 0 #1b2228;white-space:nowrap}
-    .s3 .sside .scd+.scd{position:absolute;left:0;top:0}
+    .s3 .sside .scd+.scd{position:absolute;left:14px;top:12px}   /* 下のカードが見えるように少しずらす */
     .swin{display:flex;flex-direction:column;align-items:center;gap:10px}
     .swin img{width:200px;border-radius:6px;box-shadow:0 3px 8px rgba(0,0,0,.22)}
-    .swin b{font-size:24px;font-style:italic;font-weight:900;color:#f2a51a;-webkit-text-stroke:1.5px #1b2228;letter-spacing:.04em}
+    .swin .syw{width:170px;border-radius:0;box-shadow:none}
+    /* 遊び方の番号の星を少し大きく */
+    .snum{width:60px;height:58px;padding-top:6px;font-size:24px}
     @media all{
       .s1 .sside,.s2 .sside{animation:sslam 6s cubic-bezier(.3,1.4,.5,1) infinite}
       .sside.a{--sx:-40px}.sside.b{--sx:40px}
@@ -184,7 +186,7 @@
       @keyframes s3hit{0%,60%{opacity:0;scale:.3}66%{opacity:1;scale:1.15}70%,86%{opacity:1;scale:1}94%,100%{opacity:0}}
       .swin img{animation:kdrop2 6s cubic-bezier(.3,1.4,.5,1) infinite}
       @keyframes kdrop2{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
-      .swin b{animation:lmark 6s ease infinite;animation-delay:-.6s}
+      .swin .syw{animation:lmark 6s ease infinite;animation-delay:-.6s}
     }
 
     /* ===== 2. 動画:映画館のスクリーンと客席 ===== */
@@ -713,7 +715,7 @@
   </section>
 
   <!-- 2. 動画:画面幅いっぱいの黒帯をスクリーンに(data-yt に YouTube の動画IDを入れると再生できる) -->
-  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff">
+  <section class="cinema reveal-cinema" id="video" aria-labelledby="video-title" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff;--tex-c:url(../../img/page/s_tex_c_ffffff.png?v=bdc7d7f7)">
     <div class="gband top" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">MOVIE</p><div class="sec-row"><h2 class="pill sec-h" id="video-title"><span lang="ja">紹介動画</span><span lang="en">Videos</span></h2></div></header>
@@ -746,7 +748,7 @@
   </section>
 
   <!-- 4. どんなゲーム?(目的の要約+図) -->
-  <section class="band tex" id="rules" aria-labelledby="rules-title" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff">
+  <section class="band tex" id="rules" aria-labelledby="rules-title" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff;--tex-c:url(../../img/page/s_tex_c_ffffff.png?v=bdc7d7f7)">
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
       <header class="sec-head reveal"><p class="en" aria-hidden="true">HOW TO PLAY</p><div class="sec-row"><h2 class="pill sec-h" id="rules-title"><span lang="ja">どんなゲーム?</span><span lang="en">What kind of game?</span></h2></div></header>
@@ -768,7 +770,7 @@
           </li>
           <li class="step s4">
             <div class="step-head"><span class="snum" aria-label="ステップ4"><b>4</b></span><p class="step-lead"><span><span lang="ja">手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。<em>先に2ラウンド先取したプレイヤーがゲームの勝者です。</em></span><span lang="en">When your hands run out, the round ends. Add up the points you took; the higher score wins the round. <em>The first player to win 2 rounds wins the game.</em></span></span></p></div>
-            <div class="viz"><div class="swin"><img src="../../img/parts/sc_wbash.webp?v=510d84e3" alt="勝利セリフ(バッシュ)"><b>YOU WIN!</b></div></div>
+            <div class="viz"><div class="swin"><img src="../../img/parts/sc_wbash.webp?v=510d84e3" alt="勝利セリフ(バッシュ)"><img class="syw" src="../../img/parts/s_youwin.webp?v=80d4db30" alt="YOU WIN!"></div></div>
           </li>
         </ol>
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
@@ -794,7 +796,7 @@
     </div>
   </section>
 
-  <section class="band tex buy" id="buy" aria-label="購入" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff">
+  <section class="band tex buy" id="buy" aria-label="購入" style="background-color:#000000;--k-bg:#000000;--k-ink:#ffffff;--hl:#d4242b;--hl-deco:none;--sec-bg:#e60039;--sec-ink:#ffffff;--accent:#e60039;--on-accent:#ffffff;color:#ffffff;--tex-c:url(../../img/page/s_tex_c_ffffff.png?v=bdc7d7f7)">
     <div class="gband top" aria-hidden="true"></div><div class="gband bottom" aria-hidden="true"></div>
     <div class="wrap">
     <div class="panel buy-box reveal">

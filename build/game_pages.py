@@ -107,6 +107,22 @@ def num(v, default):
         return float(v)
     except (TypeError, ValueError):
         return default
+def tint_tile(v, color):
+    """模様の画像を同じ形のまま指定の色に(透明度はそのまま。白にするときは少し控えめに)"""
+    from PIL import Image
+    f = imgname(v)
+    stem, ext = os.path.splitext(f)
+    out = '%s_%s.png' % (stem, color.lstrip('#'))
+    with Image.open(os.path.join(WEB, f)) as im:
+        im = im.convert('RGBA')
+        a = im.getchannel('A')
+        if color.lower() == '#ffffff' and im.getpixel((0, 0))[:3] != (255, 255, 255):
+            a = a.point(lambda x: int(x * .75))
+        o = Image.new('RGBA', im.size, tuple(int(color.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+        o.putalpha(a)
+        o.save(os.path.join(WEB, out))
+    return out
+
 def loop_band(v):
     """帯の画像を、横にきれいにつながる幅(模様の1周期ぶん)に自動で切りそろえる。つながる幅が見つからなければそのまま"""
     from PIL import Image
@@ -384,8 +400,11 @@ def apply(key):
             oth = max((D, O, '#ffffff', '#000000'), key=lambda x: (x in (D, O), contrast(x, C) >= 3, contrast(x, C)))
             fg, h = text_hl(C, oth, g.get('hl_fixed') if typ == 'k' else None)
             deco = 'underline' if h == fg else 'none'
+            tex = ''
+            if typ == 'k' and d.get('bg1_image'):   # 背景の模様:地の明るさに合わせて、模様の色を白か黒に(形はそのまま)
+                tex = ';--tex-c:url(../../img/%s)' % tint_tile(d['bg1_image'], '#ffffff' if lum(C) < .2 else '#000000')
             if typ == 'k':
-                st = 'background-color:%s;--k-bg:%s;--k-ink:%s;--hl:%s;--hl-deco:%s;--sec-bg:%s;--sec-ink:%s;--accent:%s;--on-accent:%s;color:%s' % (C, C, fg, h, deco, oth, ink(oth, C), oth, ink(oth, C), fg)
+                st = 'background-color:%s;--k-bg:%s;--k-ink:%s;--hl:%s;--hl-deco:%s;--sec-bg:%s;--sec-ink:%s;--accent:%s;--on-accent:%s;color:%s' % (C, C, fg, h, deco, oth, ink(oth, C), oth, ink(oth, C), fg) + tex
             else:
                 st = '--b2-bg:%s;--b2-ink:%s;--hl2:%s;--hl2-deco:%s' % (C, fg, h, deco)
             g['sec_style'][sec] = ' style="%s"' % st
@@ -1169,10 +1188,12 @@ GAMES['bash'] = dict(
     .shit{position:absolute;left:50%;top:-24px;translate:-50% 0;padding:1px 8px;border-radius:4px;background:#e8343d;color:#fff;font-size:13px;font-weight:900;font-style:italic;white-space:nowrap}
     .shit.parry{background:#1574c4}
     .srush{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:4px 14px;rotate:-6deg;background:#ffd23f;color:#1b2228;font-size:20px;font-weight:900;font-style:italic;box-shadow:0 3px 0 #1b2228;white-space:nowrap}
-    .s3 .sside .scd+.scd{position:absolute;left:0;top:0}
+    .s3 .sside .scd+.scd{position:absolute;left:14px;top:12px}   /* 下のカードが見えるように少しずらす */
     .swin{display:flex;flex-direction:column;align-items:center;gap:10px}
     .swin img{width:200px;border-radius:6px;box-shadow:0 3px 8px rgba(0,0,0,.22)}
-    .swin b{font-size:24px;font-style:italic;font-weight:900;color:#f2a51a;-webkit-text-stroke:1.5px #1b2228;letter-spacing:.04em}
+    .swin .syw{width:170px;border-radius:0;box-shadow:none}
+    /* 遊び方の番号の星を少し大きく */
+    .snum{width:60px;height:58px;padding-top:6px;font-size:24px}
     @media all{
       .s1 .sside,.s2 .sside{animation:sslam 6s cubic-bezier(.3,1.4,.5,1) infinite}
       .sside.a{--sx:-40px}.sside.b{--sx:40px}
@@ -1187,7 +1208,7 @@ GAMES['bash'] = dict(
       @keyframes s3hit{0%,60%{opacity:0;scale:.3}66%{opacity:1;scale:1.15}70%,86%{opacity:1;scale:1}94%,100%{opacity:0}}
       .swin img{animation:kdrop2 6s cubic-bezier(.3,1.4,.5,1) infinite}
       @keyframes kdrop2{0%{opacity:0;translate:0 -24px}8%{opacity:1;translate:0 0}84%{opacity:1;translate:0 0}92%,100%{opacity:0;translate:0 0}}
-      .swin b{animation:lmark 6s ease infinite;animation-delay:-.6s}
+      .swin .syw{animation:lmark 6s ease infinite;animation-delay:-.6s}
     }''',
     logo='bashlogo_4C.png', logo_size=(620, 490), logo_alt='BASH&SMASH! バッシュ&スマッシュ',
     logo_buy='bashlogo_4C.png', logo_credits='bashlogo_4C.png',
@@ -1206,7 +1227,7 @@ GAMES['bash'] = dict(
         dict(cls='s3', b=L('お互いがヒット(攻め)で出した[[カードの合計が10になったとき、ラッシュが発生します。]]ラッシュ中はルールが反転し、小さい数字がヒット成功となります!', 'When both players attack and [[the cards add up to 10, a Rush begins.]] During a Rush the rule flips, and the smaller number hits!'),
              v='<div class="sduel"><span class="sside a">' + scd('r6') + scd('r1') + '<b class="shit">HIT!</b></span><b class="svs">VS</b><span class="sside b">' + scd('b4') + scd('b2') + '</span><span class="srush">RUSH!</span></div>'),
         dict(cls='s4', b=L('手札がなくなったら、そのラウンドは終了です。それぞれが獲得した得点を合計し、得点の高いプレイヤーがラウンドの勝者となります。[[先に2ラウンド先取したプレイヤーがゲームの勝者です。]]', 'When hands run out, the round ends. Add up your points; the higher score wins the round. [[The first player to win 2 rounds wins the game.]]'),
-             v='<div class="swin"><img src="{{img:sc_wbash.webp}}" alt="勝利セリフ(バッシュ)"><b>YOU WIN!</b></div>'),
+             v='<div class="swin"><img src="{{img:sc_wbash.webp}}" alt="勝利セリフ(バッシュ)"><img class="syw" src="{{img:s_youwin.webp}}" alt="YOU WIN!"></div>'),
     ],
     gallery=[], gallery_todo=[],
     fab_pkg='mini_bash.webp', pkg='mini_bash.webp', pkg_size=(900, 529),
