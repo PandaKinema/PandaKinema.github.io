@@ -120,6 +120,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections
@@ -252,6 +253,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections
@@ -384,6 +386,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections
@@ -516,6 +519,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections
@@ -648,6 +652,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections
@@ -780,6 +785,7 @@ content:
           - { name: accent_color, label: 帯・見出しの色, type: select, options: { values: [ { value: accent, label: "アクセントカラー" }, { value: main, label: "メインカラー" }, { value: white, label: "白" }, { value: black, label: "黒" }, { value: third, label: "アクセントカラー2" } ] }, description: "空ならカードの背景ではない方の色。文字の色は自動" }
           - { name: hl_color, label: 強調の色, type: select, options: { values: [ { value: red, label: "赤(取説の赤字)" }, { value: main, label: "メインカラー" }, { value: accent, label: "アクセントカラー" }, { value: third, label: "アクセントカラー2" }, { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "太字にしたところの色。空なら赤。地の色で読みにくいところは自動でほかの決めた色に" }
           - { name: prefer_white, label: 白い文字を優先, type: boolean, description: "オンにすると、白で読めるところは文字を白に(帯・見出しなど)" }
+          - { name: text_white, label: 文字はすべて白, type: boolean, description: "オンにすると、背景の色の項目も帯の色の項目も、文字を白に(少し読みにくい色でも白)" }
           - { name: hero_ink, label: トップの文字の色, type: select, options: { values: [ { value: white, label: "白" }, { value: black, label: "黒" } ] }, description: "トップの人数・時間・購入ボタンの色。空なら自動" }
           - { name: band_color, label: 帯の色(自由に), type: string, pattern: { regex: "^(#[0-9a-fA-F]{6})?$", message: "#664498 のような6けたの色コードで" }, description: "帯・見出しの色だけを好きな色に。入れると「帯・見出しの色」より優先。空ならそちら" }
           - name: sections

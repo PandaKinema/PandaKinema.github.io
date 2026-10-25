@@ -86,8 +86,9 @@ def contrast(a, b):
     return (max(la, lb) + .05) / (min(la, lb) + .05)
 PAL = ['#ffffff', '#000000']   # 作品で決めた色(メイン・アクセント・アクセントカラー2)。apply で設定
 PREFW = [False]   # 作品ページ「白い文字を優先」
+WMIN = [4.5]   # 白にする読みやすさの下限(「文字はすべて白」なら低く)
 def ink(bg, other=None):   # 文字の色:決めた色・白・黒だけを使う。もう1色 → 白 → 決めた色 → 黒 の順で読めるもの
-    if PREFW[0] and contrast(bg, '#ffffff') >= 4.5:
+    if PREFW[0] and contrast(bg, '#ffffff') >= WMIN[0]:
         return '#ffffff'
     for c in ([other] if other else []) + ['#ffffff'] + PAL + ['#000000']:
         if c and contrast(bg, c) >= 4.5:
@@ -351,7 +352,8 @@ def apply(key):
     t = games.get(key) or {}
     M, A = t.get('main'), t.get('accent')
     if M and A:
-        PREFW[0] = bool(d.get('prefer_white'))
+        PREFW[0] = bool(d.get('prefer_white') or d.get('text_white'))
+        WMIN[0] = 2.0 if d.get('text_white') else 4.5
         PAL[:] =[c for c in (M, A, '#' + str(d.get('color3')).lstrip('#') if d.get('color3') else None) if c]
         pick = {'main': M, 'accent': A, 'white': '#ffffff', 'black': '#000000'}
         c3 = str(d.get('color3') or '').strip()

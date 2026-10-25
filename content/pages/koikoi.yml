@@ -9,6 +9,7 @@ bg_color: third
 color3: "#0a0c0c"
 accent_color: main
 prefer_white: true
+text_white: true
 hero_ink: white
 hero:
   art: img/page/koikoi_top.jpg
@@ -67,26 +68,10 @@ steps:
       * Except for 5, any colors are OK
 
       * You can make several sets at once
-  - text_ja: |-
-      役が成立したら**「あがり」か「こいこい」**を宣言します。
-
-      **あがり**:得点を確定し、トークンを移動して局を終了します。
-
-      **こいこい**:局を続行します。次に自分が役を作れば成功(得点の合計+2)、相手に先に作られると失敗(相手が合計を獲得)です。
-    text_en: |-
-      When you make a set, declare **“Agari” or “Koi-Koi.”**
-
-      **Agari**: lock in your points, move the token, and end the hand.
-
-      **Koi-Koi**: keep playing. If you make the next set, you succeed (total +2); if your opponent makes one first, you fail (they take the total).
-  - text_ja: |-
-      得点に応じてトークンを自分側に引き寄せます(1〜4点:1マス、5〜9点:3マス、10点以上:5マス)。
-
-      これを3局行い、**3局終了時、トークンが自分側にあるプレイヤーの勝利です。**
-    text_en: |-
-      Pull the token toward you by your score (1–4 pts: 1 space, 5–9: 3, 10+: 5).
-
-      Play 3 hands. **After 3 hands, the player with the token on their side wins.**
+  - text_ja: 役ができたら**「あがり」**で得点を確定するか、**「こいこい」**で続けて得点アップを狙います。
+    text_en: When you make a set, lock in your points with **“Agari”**, or keep going with **“Koi-Koi”** for more.
+  - text_ja: 得点に応じてトークンを引き寄せます。**3局終了時、トークンが自分側にあれば勝利です。**
+    text_en: Pull the token by your score. **After 3 hands, if the token is on your side, you win.**
 gallery:
   - image: img/gallery/kg_manual1.webp
     caption_ja: 遊び方説明書(表)
