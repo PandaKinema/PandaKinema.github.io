@@ -729,8 +729,8 @@ def mdeck(label):   # 手札(裏向きの束)
     return '<div class="mdeck"><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt=""><img class="mcd" src="{{img:mc_ura.webp}}" alt="手札"></div><span class="mcap">%s</span>' % label
 
 # ---- モコチャカ:場はトークンを中心に放射状(上は縦、左下・右下は斜め)。カードの頭はトークンへ向ける
-MK_T = (156, 94)   # トークンの中心
-MK_P = [(156, 32, '180deg'), (100, 130, '60deg'), (212, 130, '-60deg')]   # 上・左下・右下の山(中心x, 中心y, 向き)
+MK_T = (150, 96)   # トークンの中心
+MK_P = [(150, 33, '180deg'), (94, 134, '60deg'), (206, 134, '-60deg')]   # 上・左下・右下の山(中心x, 中心y, 向き)
 def mkc(code, cls=''):
     return '<img class="mkc %s" src="{{img:mc_%s.webp}}" alt="%sが%s匹のカード">' % (cls, code, MN[code[0]], code[1:])
 def mkdeck():
@@ -744,14 +744,14 @@ def mkfield(top, bl, br, piles=1, take=False):
         st = '--cx:%dpx;--cy:%dpx;--r:%s' % (cx, cy, r)
         if take and k in (0, 1):   # 取った人が選ぶ山(上と左下)→手札の位置へ
             cls = ' take' + (' t2' if k == 1 else '')
-            st += ';--pdx:%dpx;--pdy:%dpx' % (28 - cx, 91 - cy)
+            st += ';--pdx:%dpx;--pdy:%dpx' % (23 - cx, 96 - cy)
         out.append('<div class="mkp%s" style="%s">%s</div>' % (cls, st, ''.join(mkc(c) for c in cards)))
-    tok = '<img class="mktok" style="--tx:%dpx;--ty:%dpx;--tdx:%dpx;--tdy:%dpx" src="{{img:m_token.webp}}" alt="トークン">' % (MK_T[0], MK_T[1], 64 - MK_T[0], 160 - MK_T[1])
+    tok = '<img class="mktok" style="--tx:%dpx;--ty:%dpx;--tdx:%dpx;--tdy:%dpx" src="{{img:m_token.webp}}" alt="トークン">' % (MK_T[0], MK_T[1], 23 - MK_T[0], 156 - MK_T[1])   # 取ったトークンは手札の下へ
     return ''.join(out) + tok
 def mkpl(i, name, cards, n0, n1, win=False):
     hand = ''.join(mkc(c, 'g' if c[0] == 'g' else '') for c in cards) if cards else '<span class="zero">0</span>'
     n = '<span class="n"><span class="a">%s</span><span class="b">%s</span></span>' % (L('%d枚' % n0, '%d' % n0), L('%d枚' % n1, '%d' % n1))
-    return '<div class="pl" style="--i:%d"><span class="lab"><b>%s</b>%s</span><div class="hand">%s</div>%s</div>' % (i, name, n, hand, ('<span class="win">' + L('勝ち!', 'Win!') + '</span>') if win else '')
+    return '<div class="pl" style="--i:%d"><span class="lab"><b>%s</b>%s%s</span><div class="hand">%s</div></div>' % (i, name, n, ('<span class="win">' + L('勝ち!', 'Win!') + '</span>') if win else '', hand)
 
 GAMES['moko'] = dict(
     title='モコチャカ',
@@ -771,39 +771,39 @@ GAMES['moko'] = dict(
     .hero.hero-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;   /* カードの縁と同じ波で、下の帯と区切る */
       background:radial-gradient(circle at 50% 0,transparent 10.5px,var(--k-bg) 11.5px) 0 0/26px 22px repeat-x}
     /* ===== モコチャカ:遊び方の図(場はトークンを中心に放射状。カードの頭はトークンへ) ===== */
-    .mkf{position:relative;flex:none;width:260px;height:182px}
-    .mkc{display:block;width:40px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
-    .mkp{position:absolute;left:calc(var(--cx) - 20px);top:calc(var(--cy) - 28px);width:40px;height:56px;rotate:var(--r)}
+    .mkf{position:relative;flex:none;width:252px;height:182px}
+    .mkc{display:block;width:46px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .mkp{position:absolute;left:calc(var(--cx) - 23px);top:calc(var(--cy) - 32px);width:46px;height:64px;rotate:var(--r)}
     .mkp .mkc{position:absolute;left:0;top:0}
     .mkp .mkc:nth-child(2){translate:1.5px -2px;rotate:3deg}
     .mkp .mkc:nth-child(3){translate:-1.5px -4px;rotate:-2deg}
-    .mktok{position:absolute;left:calc(var(--tx) - 16px);top:calc(var(--ty) - 16px);width:32px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
-    .mkdeck{position:absolute;left:8px;top:60px;width:40px;height:62px;z-index:5}
+    .mktok{position:absolute;left:calc(var(--tx) - 18px);top:calc(var(--ty) - 18px);width:36px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+    .mkdeck{position:absolute;left:0;top:62px;width:46px;height:68px;z-index:5}
     .mkdeck .mkc{position:absolute;left:0;top:0}
     .mkdeck .mkc:nth-child(2){top:-3px}.mkdeck .mkc:nth-child(3){top:-6px}
-    .mkcap{position:absolute;left:28px;top:130px;translate:-50% 0;padding:1px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap;z-index:6}
-    .mkmv{position:absolute;left:calc(var(--cx) - 20px);top:calc(var(--cy) - 28px);width:40px;height:56px;z-index:6}
+    .mkcap{position:absolute;left:23px;top:36px;translate:-50% 0;padding:1px 9px;border-radius:999px;background:var(--p-ink);color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap;z-index:6}
+    .mkmv{position:absolute;left:calc(var(--cx) - 23px);top:calc(var(--cy) - 32px);width:46px;height:64px;z-index:6}
     .mkmv .mkc{position:absolute;left:0;top:0}
     .mkbub{position:absolute;padding:3px 11px;border-radius:999px;background:#e8467a;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em;z-index:7}
     /* 2コマ目:3つの例。カードを横に並べて右に吹き出し */
-    .mk2{display:grid;gap:8px;width:100%}
-    .mk2 .row{display:flex;align-items:center;justify-content:center;gap:4px}
-    .mk2 .mkc{width:34px}
+    .mk2{display:grid;gap:6px;width:100%}
+    .mk2 .row{display:flex;align-items:center;justify-content:center;gap:3px}
+    .mk2 .mkc{width:40px}
     .mk2 .mkbub{position:relative;margin-left:8px;font-size:12px}
     .mk2 .mkbub::before{content:"";position:absolute;left:-5px;top:50%;translate:0 -50%;border:5px solid transparent;border-right-color:#e8467a;border-left:0}
     /* 3コマ目:モコチャカ!→トークンを取って手札の横へ、山2つが手札の下に入る */
     .mk3 .mkp.take{z-index:2}
     /* 4コマ目:4人の手札。ガブは消える */
-    .mk4{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;width:100%}
+    .mk4{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;width:100%}
     .mk4 .pl{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0}
     .mk4 .lab{display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:800}
     .mk4 .lab b{padding:0 7px;border-radius:999px;background:var(--p-ink);color:#fff}
-    .mk4 .hand{display:flex;height:40px;align-items:flex-end}
-    .mk4 .hand .mkc{width:26px;margin-left:-9px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+    .mk4 .hand{display:flex;height:48px;align-items:flex-end}
+    .mk4 .hand .mkc{width:32px;margin-left:-11px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
     .mk4 .hand .mkc:first-child{margin-left:0}
-    .mk4 .zero{display:grid;place-items:center;width:28px;height:38px;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px;font-size:10px;font-weight:800}
-    .mk4 .win{position:absolute;right:2px;top:0;padding:1px 8px;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
-    .mk4 .n{min-width:3.2em}
+    .mk4 .zero{display:grid;place-items:center;width:32px;height:44px;border:2px dashed color-mix(in srgb,var(--p-ink) 40%,transparent);border-radius:4px;font-size:10px;font-weight:800}
+    .mk4 .win{padding:0 7px;border-radius:999px;background:#e8467a;color:#fff;font-size:11px;font-weight:900}
+    .mk4 .n{min-width:2.6em}
     @media all{
       /* 1:手札からめくりながら左下の山へ */
       .s1 .mkmv{animation:mkmv 6s cubic-bezier(.4,0,.2,1) infinite}
@@ -812,7 +812,7 @@ GAMES['moko'] = dict(
       .s1 .mkmv .mkb1{animation:mkbk 6s linear infinite}
       @keyframes mkfl{0%,25.9%{opacity:0}26%,100%{opacity:1}}
       @keyframes mkbk{0%,25.9%{opacity:1}26%,100%{opacity:0}}
-      .s1 .mkmv>span{display:block;width:40px;height:56px;position:relative;animation:mksq 6s ease-in-out infinite}
+      .s1 .mkmv>span{display:block;width:46px;height:64px;position:relative;animation:mksq 6s ease-in-out infinite}
       @keyframes mksq{0%,14%{scale:1 1}26%{scale:0 1}38%,100%{scale:1 1}}
       .s1 .mkbub{animation:mkpop 6s ease infinite}
       @keyframes mkpop{0%,46%{opacity:0;scale:.4}52%{opacity:1;scale:1.12}56%,86%{opacity:1;scale:1}92%,100%{opacity:0;scale:.6}}
@@ -861,7 +861,7 @@ GAMES['moko'] = dict(
         # 1:手札をめくって、3つのうち好きな場に重ねる(場はトークンを中心に放射状、カードの頭はトークンへ)
         dict(cls='s1', b=L('手札を上から1枚めくって、3つのうち好きな場に重ねます。その後、場のカードを見て[[コール]]を行います。', 'Flip the top card of your hand and stack it on any of the 3 piles. Then look at the cards and make a [[call]].'),
              v='<div class="mkf">' + mkdeck() + mkfield('o1', 'm1', 'p3')
-               + '<span class="mkmv" style="--cx:100px;--cy:130px;--r:60deg;--dx:-72px;--dy:-39px"><span><img class="mkc mkb1" src="{{img:mc_ura.webp}}" alt=""><img class="mkc mkf1" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span></span>'
+               + '<span class="mkmv" style="--cx:94px;--cy:134px;--r:60deg;--dx:-71px;--dy:-38px"><span><img class="mkc mkb1" src="{{img:mc_ura.webp}}" alt=""><img class="mkc mkf1" src="{{img:mc_p2.webp}}" alt="パカが2匹のカード"></span></span>'
                + '<span class="mkbub" style="right:0;top:4px">' + L('ポメパカ!', 'Pome-Paka!') + '</span></div>'),
         # 2:コールのルール(3つの例。どれもモコチャカにならない場)
         dict(cls='s2', b=L('コールには下記のルールがあります。\n[[・数の多い順に呼ぶ]]\n[[・ポメはかわいいので必ず最初に呼ぶ]]\n[[・ガブの数だけモコを減らす]]', 'Calls have these rules:\n[[· Call in order of most to fewest]]\n[[· Pome is cute, so always call it first]]\n[[· Remove one Moko for each Gabu]]'),
@@ -872,7 +872,7 @@ GAMES['moko'] = dict(
         # 3:モコチャカ!→トークンを取る(手札には重ねない)→山を2つ選んで手札の下へ
         dict(cls='s3', b=L('場のカードが条件を満たしたとき、[[「モコチャカ」]]と言いながら[[全員で]]トークンを取り合います。取った人は場の山を2つ選んで獲得し、手札の下に加えます。', 'When the cards meet a condition, [[everyone]] grabs for the token while saying [[“Mokochaka!”]] The one who gets it takes 2 piles and adds them to the bottom of their hand.'),
              v='<div class="mkf mk3">' + mkdeck() + mkfield('m2', 'p2', 'o2', piles=3, take=True)
-               + '<span class="mkbub" style="left:0;top:14px">' + L('モコチャカ!', 'Mokochaka!') + '</span></div>'),
+               + '<span class="mkbub" style="right:0;top:44px">' + L('モコチャカ!', 'Mokochaka!') + '</span></div>'),
         # 4:誰かの手札がなくなったら終了。ガブを除いた手札が最も多い人の勝ち
         dict(cls='s4', b=L('誰かの手札がなくなったらゲーム終了です。[[ガブを除いた]]手札が最も多い人が勝ちです!', 'When someone runs out of cards, the game ends. The player with the most cards [[not counting Gabu]] wins!'),
              v='<div class="mk4">' + mkpl(0, 'P1', ['m2', 'g1', 'p1'], 3, 2) + mkpl(1, 'P2', ['m1', 'p2', 'g2', 'o1', 'p3'], 5, 4, True) + mkpl(2, 'P3', [], 0, 0) + mkpl(3, 'P4', ['o2', 'g1', 'm3', 'g2'], 4, 2) + '</div>'),
