@@ -27,10 +27,10 @@
 }
 /* 地の色:少し薄めの紺(座布団の中はアイボリー) */
 :root{
- --paper:#2c5b73;--field:rgba(9,32,45,.32);--ink:#fef4d6;--ink2:rgba(254,244,214,.78);--ink3:rgba(254,244,214,.45);
+ --paper:#29566d;--field:rgba(9,32,45,.32);--ink:#fef4d6;--ink2:rgba(254,244,214,.78);--ink3:rgba(254,244,214,.45);
  --line:rgba(254,244,214,.26);--tile:rgba(254,244,214,.09);--tile-on:rgba(254,244,214,.26);--red:#ffb4a3;
  --pri-bg:#fef4d6;--pri-fg:#173f53;--sec-bg:transparent;--sec-fg:#fef4d6;--sec-bd:rgba(254,244,214,.7);
- --pat-a:.08;
+ --pat-c:#2c5b73;   /* ビビル文字の模様の色(地より少し明るい紺) */
 }
 @supports not (text-box:trim-both cap alphabetic){:root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)}}
 *{box-sizing:border-box}
@@ -55,7 +55,7 @@ a{color:inherit}
 
 /* 紙(黒い下地の上に載ったレイヤー)。ビビル文字の模様を薄く乗算 */
 .paper{position:relative;isolation:isolate;max-width:1280px;margin-inline:auto;background:var(--paper)}
-.paper::before{content:"";position:absolute;inset:0;z-index:-1;background:url(/bibilu-moji/img/b_pattern.png) 0 0/525px 175px repeat;opacity:var(--pat-a);mix-blend-mode:multiply;pointer-events:none}
+.paper::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--pat-c);-webkit-mask:url(/bibilu-moji/img/b_pattern.png) 0 0/525px 175px repeat;mask:url(/bibilu-moji/img/b_pattern.png) 0 0/525px 175px repeat;pointer-events:none}
 
 /* タイトル */
 .hero{text-align:center;padding:20px 16px 4px}
