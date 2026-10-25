@@ -52,10 +52,6 @@ steps:
       **3:4枚(3点)**
 
       **5:色の異なる3枚(5点)**
-
-      ※5以外は色の数は何色でもOK
-
-      ※役は複数同時に成立することもあります
     text_en: |-
       Make sets with the cards you took.
 
@@ -64,10 +60,6 @@ steps:
       **3: four cards (3 pts)**
 
       **5: three cards of different colors (5 pts)**
-
-      * Except for 5, any colors are OK
-
-      * You can make several sets at once
   - text_ja: 役ができたら**「あがり」**で得点を確定するか、**「こいこい」**で続けて得点アップを狙います。
     text_en: When you make a set, lock in your points with **“Agari”**, or keep going with **“Koi-Koi”** for more.
   - text_ja: 得点に応じてトークンを引き寄せます。**3局終了時、トークンが自分側にあれば勝利です。**

@@ -1179,7 +1179,7 @@ GAMES['koikoi'] = dict(
                + '<span class="kmv d" style="left:184px;top:98px;--dx:-91px;--dy:-78px;width:38px;height:63px">' + kcd('ura', 'back') + kcd('g1', 'front') + '</span>'
                + '<span class="kcap" style="left:44px;top:166px">' + L('手札', 'Hand') + '</span><span class="kcap" style="left:184px;top:166px">' + L('山札', 'Deck') + '</span>'
                + '<span class="kbub p1" style="left:156px;top:76px">' + L('ペア!', 'Pair!') + '</span><span class="kbub p2" style="left:68px;top:76px">' + L('ペア!', 'Pair!') + '</span></div>'),
-        dict(cls='s3', b=L('獲得したカードで役を作ります。\n[[1:5枚(1点)\n3:4枚(3点)\n5:色の異なる3枚(5点)]]\n※5以外は色の数は何色でもOK\n※役は複数同時に成立することもあります', 'Make sets with the cards you took.\n[[1: five cards (1 pt)\n3: four cards (3 pts)\n5: three different colors (5 pts)]]'),
+        dict(cls='s3', b=L('獲得したカードで役を作ります。\n[[1:5枚(1点)\n3:4枚(3点)\n5:色の異なる3枚(5点)]]', 'Make sets with the cards you took.\n[[1: five cards (1 pt)\n3: four cards (3 pts)\n5: three different colors (5 pts)]]'),
              v='<div class="kyaku">'
                + '<div class="row" style="--i:0"><span class="cs">' + kcd('b1') + kcd('r1') + kcd('g1') + kcd('k1') + kcd('r1') + '</span><p>' + L('1:5枚(1点)', '1: five (1 pt)') + '</p></div>'
                + '<div class="row" style="--i:1"><span class="cs">' + kcd('g3') + kcd('g3') + kcd('k3') + kcd('b3') + '</span><p>' + L('3:4枚(3点)', '3: four (3 pts)') + '</p></div>'
