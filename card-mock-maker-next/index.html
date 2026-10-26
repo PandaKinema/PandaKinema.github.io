@@ -54,6 +54,7 @@
     <button type="button" class="open-sample">見本を開く</button>
     <button type="button" class="open-bulk">表から一括作成</button>
     <button type="button" class="open-export">画像で書き出す</button>
+    <button type="button" class="open-tpl">マイテンプレート</button>
   </div>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
@@ -67,8 +68,8 @@
   <div class="modal-box">
     <div class="modal-head"><strong id="bulkTitle">表から一括作成</strong><button type="button" class="modal-close" data-bulk-close aria-label="閉じる">×</button></div>
     <div class="modal-body">
-      <div class="bulk-step"><span class="bulk-num">1</span>ひな形を選ぶ</div>
-      <div id="bulkTpl" class="bulk-tpl" role="group" aria-label="ひな形">
+      <div class="bulk-step"><span class="bulk-num">1</span>テンプレートを選ぶ</div>
+      <div id="bulkTpl" class="bulk-tpl" role="group" aria-label="テンプレート">
         <button type="button" data-tpl="playing">トランプ</button><button type="button" data-tpl="tcg">トレカ</button><button type="button" data-tpl="word">ワードゲーム</button><button type="button" data-tpl="selected">選んでいるカード</button>
       </div>
       <p id="bulkLead" class="bulk-lead no-i18n"></p>
@@ -84,7 +85,7 @@
       <div id="bulkMap" class="bulk-map no-i18n"></div>
       <div class="bulk-step"><span class="bulk-num">4</span>確認</div>
       <div id="bulkPreview" class="bulk-preview no-i18n"></div>
-      <label id="bulkKeepRow" class="bulk-keep"><input type="checkbox" id="bulkKeep"> ひな形のカードも残す</label>
+      <label id="bulkKeepRow" class="bulk-keep"><input type="checkbox" id="bulkKeep"> 元のカードも残す</label>
     </div>
     <div class="modal-foot"><span id="bulkSummary" class="bulk-summary no-i18n"></span><button type="button" data-bulk-close>やめる</button><button type="button" id="bulkApply" class="primary">作る</button></div>
   </div>
@@ -104,6 +105,21 @@
       </div>
     </div>
     <div class="modal-foot"><span id="exportSummary" class="bulk-summary no-i18n"></span><button type="button" data-export-close>やめる</button><button type="button" id="exportGo" class="primary">書き出す</button></div>
+  </div>
+</div>
+
+<div id="tplModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="tplTitle">
+  <div class="modal-box modal-narrow">
+    <div class="modal-head"><strong id="tplTitle">マイテンプレート</strong><button type="button" class="modal-close" data-tpl-close aria-label="閉じる">×</button></div>
+    <div class="modal-body">
+      <div class="tpl-save">
+        <label for="tplName" class="tpl-save-label">選んでいるカードをテンプレートにする</label>
+        <div class="tpl-save-row"><input id="tplName" type="text" maxlength="40"><button id="tplSaveBtn" type="button" class="primary">保存</button></div>
+        <p id="tplSaveNote" class="tpl-note no-i18n"></p>
+      </div>
+      <div id="tplList" class="tpl-list no-i18n"></div>
+      <p class="tpl-note">テンプレートは作品と一緒に保存されます（PDF保存にも入ります）。「ブラウザに保存」したものは、このブラウザで作るほかの作品でも使えます。</p>
+    </div>
   </div>
 </div>
 
@@ -203,6 +219,7 @@
             <button id="mobileNewProject" type="button">新規</button>
             <button id="mobileOpenSample" type="button" class="open-sample">見本を開く</button>
             <button id="mobileBulk" type="button" class="open-bulk">表から一括作成</button>
+            <button id="mobileTpl" type="button" class="open-tpl">マイテンプレート</button>
           </div>
           <div class="m-group-title">ページ</div>
           <div class="mobile-more-grid">
@@ -250,6 +267,7 @@
       <button id="unlinkCard" type="button" class="mini" hidden>このカードだけ別にする</button>
     </div>
     <p id="qtyNote" class="qty-note" hidden></p>
+    <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
 
     <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
@@ -286,6 +304,7 @@
       <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
       <button id="copyToPageSide" class="mini copy-wide">このページの同じ面にコピー</button>
       <button id="copyToAllPagesSide" class="mini copy-wide">すべてのページの同じ面にコピー</button>
+      <div class="copy-face-row tpl-row"><button id="tplSaveQuick" type="button" class="mini">テンプレートとして保存</button><button type="button" class="mini open-tpl">マイテンプレート</button></div>
     </div>
   </div>
 

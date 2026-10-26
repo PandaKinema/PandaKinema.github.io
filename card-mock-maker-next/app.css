@@ -2145,3 +2145,33 @@ header .app-brand{align-items:center}
 .bulk-tpl+.bulk-lead{margin-top:8px}
 #bulkKeepRow[hidden]{display:none!important}
 @media(max-width:720px){.bulk-tpl button{min-height:38px;padding:4px 14px;font-size:14px}}
+
+/* ---- マイテンプレート ---- */
+.tpl-status{display:flex;align-items:flex-start;gap:8px;margin:6px 0 2px;padding:6px 8px;border-radius:6px;background:rgba(36,184,242,.10);font-size:11px;line-height:1.5;color:var(--ink)}
+.tpl-status[hidden]{display:none!important}
+.tpl-status span{flex:1}
+.tpl-status button{flex:none;white-space:nowrap}
+.tpl-row{margin-top:6px}
+.tpl-save{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--ui-border)}
+.tpl-save-label{display:block;margin-bottom:6px;font-weight:700;font-size:13px}
+.tpl-save-row{display:flex;gap:8px}
+.tpl-save-row input{flex:1;min-width:0;height:34px}
+.tpl-save-row button{min-height:34px;padding:4px 18px}
+.tpl-note{margin:6px 0 0;color:var(--ui-muted);font-size:11px;line-height:1.6}
+.tpl-note:empty{display:none}
+.tpl-list{display:grid;gap:8px}
+.tpl-item{display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--ui-border);border-radius:8px}
+.tpl-item.current{border-color:rgba(36,184,242,.9);box-shadow:inset 0 0 0 1px rgba(36,184,242,.9)}
+.tpl-thumbs{display:flex;gap:4px;flex:none}
+.tpl-info{flex:1;min-width:0;display:grid;gap:4px}
+.tpl-name{height:30px;font-size:13px!important;font-weight:700}
+.tpl-meta{color:var(--ui-muted);font-size:11px}
+.tpl-acts{display:flex;gap:6px;flex-wrap:wrap}
+.tpl-acts .tpl-del{color:#c0392b}
+@media(max-width:720px){
+  .tpl-status{font-size:12px}
+  .tpl-save-row input{height:44px;font-size:16px}
+  .tpl-save-row button{min-height:44px}
+  .tpl-name{height:40px;font-size:16px!important}
+  .tpl-acts button{min-height:38px;font-size:13px}
+}

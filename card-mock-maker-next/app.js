@@ -181,9 +181,53 @@ function setCardCount(id,n){
 /* 枚数が2枚以上のカードのうち、選んでいる1枚だけを別のカードにする */
 function unlinkSelected(){
   const {slot}=slotAt(currentPage,selected),id=deck.order[slot];if(cardCount(id)<2)return;
-  const c=deck.cards[id];deck.order[slot]=addCard(deep(c.front),deep(c.back));syncPages();
+  deck.order[slot]=cloneCard(deck.cards[id]);syncPages();
 }
-function startDeck(){deck={cards:{},order:[],fmt:2,font:"gothic"};currentPage=0;selected=0;padOrder();syncPages()}
+/* ---- マイテンプレート ----
+   deck.templates[tid]={name,front,back,lib}。カードは deck.cards[id].tpl=tid でテンプレートにつながる。
+   つながったカードのどれかで見た目(色・大きさ・配置・画像)を変えると、テンプレートと同じテンプレートのカードすべてに反映する。
+   文字(と、トレカの絵・画像の面の画像)はカードごと。lib=true は、このブラウザにも保存しているもの */
+const CONTENT_KEYS={playing:["number","suit"],tcg:["name","desc","image"],word:["main"]};
+function faceKindOf(f){return !f?"":f.type==="template"?"t:"+f.template:f.type}
+function contentKeys(f){return !f?[]:f.type==="template"?(CONTENT_KEYS[f.template]||[]):f.type==="image"?["src"]:[]}
+function styleOf(f){
+  if(!f)return "";
+  const o={...f};contentKeys(f).forEach(k=>delete o[k]);
+  ["textBoxes","frameTexts"].forEach(k=>{if(Array.isArray(o[k]))o[k]=o[k].map(x=>{const y={...x};delete y.text;return y})});
+  return JSON.stringify(o,packImages);
+}
+/* 見た目は src から、文字は dst のまま(テキストボックスなどは id で対応づける) */
+function restyleFace(src,dst){
+  const out=deep(src);
+  if(dst&&faceKindOf(dst)===faceKindOf(src))contentKeys(src).forEach(k=>{if(dst[k]!==undefined)out[k]=dst[k]===null?null:deep(dst[k])});
+  ["textBoxes","frameTexts"].forEach(k=>(out[k]||[]).forEach((x,i)=>{const list=(dst&&dst[k])||[],d=x.id!=null?list.find(y=>y&&y.id===x.id):list[i];if(d&&d.text!==undefined)x.text=d.text}));
+  return out;
+}
+function tplCount(tid){let n=0;for(const id of deck.order)if(deck.cards[id]&&deck.cards[id].tpl===tid)n++;return n}
+function cloneCard(c){const id=addCard(deep(c.front),deep(c.back));if(c.tpl)deck.cards[id].tpl=c.tpl;return id}
+function newTplId(){return "t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function uniqueTplName(base){const used=new Set([...Object.values(deck.templates||{}),...myLibrary].map(t=>t.name));if(!used.has(base))return base;for(let i=2;;i++)if(!used.has(`${base} ${i}`))return `${base} ${i}`}
+function suggestTplName(card){const f=card&&card.front,k=f&&f.type==="template"?f.template:"";return T(k==="tcg"?"トレカ":k==="playing"?"トランプ":k==="word"?"ワードゲーム":"テンプレート")}
+function addTemplate(card,name,lib){deck.templates=deck.templates||{};const tid=newTplId();deck.templates[tid]={name,front:deep(card.front),back:deep(card.back),lib:!!lib};return tid}
+/* テンプレートをカードに当てる:見た目はテンプレート、文字はそのカードのまま(空のカードならテンプレートの文字) */
+function applyTemplate(tid,id){const t=deck.templates[tid],c=deck.cards[id];c.front=restyleFace(t.front,c.front);c.back=restyleFace(t.back,c.back);c.tpl=tid}
+/* 選んでいる面の見た目が変わったら(=見た目を直したら)、同じテンプレートのカードへ広げる */
+let tplWatch=null,tplNotice=null;
+function propagateTemplateStyle(){
+  if(!pages.length)return;
+  const ref=slotAt(currentPage,selected),id=deck.order[ref.slot],card=deck.cards[id];if(!card)return;
+  const t=card.tpl&&deck.templates&&deck.templates[card.tpl];
+  if(card.tpl&&!t)delete card.tpl;
+  const src=card[ref.side],key=styleOf(src),prev=tplWatch;tplWatch={id,side:ref.side,key};
+  if(!t||!prev||prev.id!==id||prev.side!==ref.side||prev.key===key||key===styleOf(t[ref.side]))return;
+  // 面の種類を変えたカードは、別のカードになったものとしてテンプレートから外す
+  if(faceKindOf(src)!==faceKindOf(t[ref.side])){delete card.tpl;tplNotice=T("面の種類を変えたので、このカードはテンプレート「{name}」から外れました。",{name:t.name});return}
+  t[ref.side]=restyleFace(src,t[ref.side]);
+  for(const cid in deck.cards){const c=deck.cards[cid];if(cid!==id&&c.tpl===card.tpl)c[ref.side]=restyleFace(src,c[ref.side])}
+  syncPages();
+  if(t.lib)scheduleLibrarySync(card.tpl);
+}
+function startDeck(){deck={cards:{},order:[],templates:{},fmt:2,font:"gothic"};tplWatch=null;currentPage=0;selected=0;padOrder();syncPages()}
 function applyCardGeometry(container){
   const f=faceMM(),q=pairMM(),g=gridRC();
   container.style.setProperty("--face-w",f.w+"mm");
@@ -790,6 +834,8 @@ function buildSheet(container,faces,selectable=true,a=arrangement()){
 
 function renderSheet(){
   syncPages();
+  propagateTemplateStyle();
+  if(tplNotice){showAppToast(tplNotice,{duration:5000});tplNotice=null}
   recordHistory();
   const blank=deck.order.every(isBlankCard);
   ["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});
@@ -1235,7 +1281,9 @@ function syncControls(){
   el("selectedLabel").textContent=faceName(selected);
   {const id=cardIdAt(currentPage,selected),n=cardCount(id);
    el("cardQty").value=n;el("qtyMinus").disabled=n<=1;el("unlinkCard").hidden=n<2;
-   const note=el("qtyNote");note.hidden=n<2;if(n>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n});}
+   const note=el("qtyNote");note.hidden=n<2;if(n>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n});
+   const c=deck.cards[id],t=c&&c.tpl&&deck.templates&&deck.templates[c.tpl];el("tplStatus").hidden=!t;
+   if(t)el("tplStatusText").textContent=T("テンプレート「{name}」（{n}枚）を使っています。見た目を変えると全部に反映されます。文字はこのカードだけ。",{name:t.name,n:tplCount(c.tpl)});}
   refreshCopyButtonLabels();
   syncDuplexUI();
   el("faceType").value=d.type;
@@ -1490,7 +1538,7 @@ function addPage(){
 function duplicatePage(p){
   if(pages.length>=MAX_PAGES)return;
   const n=cardsPerPage();padOrder();
-  const copies=deck.order.slice(p*n,(p+1)*n).map(id=>{const c=deck.cards[id];return addCard(deep(c.front),deep(c.back))});
+  const copies=deck.order.slice(p*n,(p+1)*n).map(id=>cloneCard(deck.cards[id]));
   deck.order.splice((p+1)*n,0,...copies);
   syncPages();currentPage=p+1;selected=0;renderSheet();syncControls();
 }
@@ -1508,7 +1556,8 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
-/* ---- 表から一括作成:ひな形(トランプ・トレカ・ワードゲーム、または選んでいるカード)に、表の1行を1枚のカードとして当てはめる ---- */
+/* ---- 表から一括作成:テンプレート(トランプ・トレカ・ワードゲーム、マイテンプレート、または選んでいるカード)に、表の1行を1枚のカードとして当てはめる。
+   作ったカードはテンプレートでつながるので、あとから見た目をまとめて直せる ---- */
 const BULK_ALIASES={
   number:["数字","数","ランク","number","num","rank"],
   suit:["スート","マーク","suit","mark"],
@@ -1526,7 +1575,7 @@ const BULK_EXAMPLES={
        en:[["Goblin","Look at one card in an opponent's hand.","3"],["Slime","When attacked, split into two cards.","2"],["Dragon","Draw a card.","1"]]},
   word:{ja:[["りんご"],["自転車"],["図書館"]],en:[["Apple"],["Bicycle"],["Library"]]}
 };
-/* ひな形のカードで、文字を入れられる場所の一覧 */
+/* テンプレートのカードで、文字を入れられる場所の一覧 */
 function bulkFields(card){
   const out=[];
   ["front","back"].forEach(side=>{
@@ -1585,15 +1634,21 @@ function bulkAutoMap(fields,headers,useNames){
   if(map.every(v=>v<0)){let ci=0;fields.forEach((f,fi)=>{while(used.has(ci))ci++;if(ci<headers.length){map[fi]=ci;ci++}})}
   return {map,qty};
 }
-/* 見出しからひな形を当てる(カード名・テキスト→トレカ、数字・スート→トランプ、ことば→ワードゲーム) */
+/* 見出しからテンプレートを当てる(カード名・テキスト→トレカ、数字・スート→トランプ、ことば→ワードゲーム) */
 function bulkGuessKind(headers){
   let best=null,score=0;
   Object.entries(BULK_KINDS).forEach(([k,v])=>{const n=headers.filter(h=>{const {side,base}=splitHead(h);return side!=="back"&&v.keys.some(x=>BULK_ALIASES[x].includes(base))}).length;if(n>score){best=k;score=n}});
   return best;
 }
 let bulk=null;
+function bulkMyTemplate(){const tid=bulk.kind.slice(3);return (deck.templates||{})[tid]||myLibrary.find(x=>x.id===tid)}
 function bulkTemplateCard(){
   if(bulk.kind==="selected")return deck.cards[bulk.tpl];
+  if(bulk.kind.startsWith("my:")){
+    const t=bulkMyTemplate();if(!t){bulk.kind="playing";return bulkTemplateCard()}
+    if(!bulk.builtin||bulk.builtin.kind!==bulk.kind)bulk.builtin={kind:bulk.kind,card:{front:deep(t.front),back:deep(t.back)}};
+    return bulk.builtin.card;
+  }
   if(!bulk.builtin||bulk.builtin.kind!==bulk.kind)bulk.builtin={kind:bulk.kind,card:{front:BULK_KINDS[bulk.kind].make(),back:makePlain()}};
   return bulk.builtin.card;
 }
@@ -1616,7 +1671,7 @@ function bulkCards(table){
   });
   return out;
 }
-/* 作ったカードを入れる場所:選んでいるカードがひな形ならその場所、そうでなければ今あるカードのあと */
+/* 作ったカードを入れる場所:選んでいるカードがテンプレートならその場所、そうでなければ今あるカードのあと */
 function bulkRoom(){
   let order=deck.order.slice(),pos=0;
   if(bulk.kind==="selected"){
@@ -1629,7 +1684,7 @@ function bulkRoom(){
 }
 function bulkExample(){
   const lang=window.CMMI18N&&CMMI18N.lang==="en"?"en":"ja",heads=bulk.fields.map(bulkHeadName);let rows;
-  if(bulk.kind==="selected"){const c=bulkTemplateCard();rows=[bulk.fields.map(f=>String(f.get(c[f.side])??"")).concat("1")];heads.push(T("枚数"))}
+  if(bulk.kind==="selected"||bulk.kind.startsWith("my:")){const c=bulkTemplateCard();rows=[bulk.fields.map(f=>String(f.get(c[f.side])??"")).concat("1")];heads.push(T("枚数"))}
   else{rows=BULK_EXAMPLES[bulk.kind][lang];if(rows[0].length>heads.length)heads.push(T("枚数"))}
   const cell=v=>/[\t\n"]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
   return [heads,...rows].map(r=>r.map(cell).join("\t")).join("\n");
@@ -1648,18 +1703,23 @@ function renderBulk(){
   if(!bulk)return;
   const table=bulkTable();
   if(bulk.auto&&table.head&&table.data.length){const g=bulkGuessKind(table.headers);if(g)setBulkKind(g)}
+  {const box=el("bulkTpl"),selBtn=box.querySelector('[data-tpl="selected"]');box.querySelectorAll(".my-chip").forEach(x=>x.remove());
+   allTemplates().forEach(t=>{const b=document.createElement("button");b.type="button";b.className="my-chip";b.dataset.tpl="my:"+t.id;b.textContent="★ "+t.name;box.insertBefore(b,selBtn)})}
+  if(bulk.kind.startsWith("my:")&&!bulkMyTemplate())setBulkKind("playing");
   document.querySelectorAll("#bulkTpl [data-tpl]").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.tpl===bulk.kind));if(b.dataset.tpl==="selected"){b.disabled=!bulk.own;b.title=bulk.own?"":T("選んでいるカードには文字を入れる場所がありません")}});
   const tplNo=deck.order.indexOf(bulk.tpl)+1;
   el("bulkLead").textContent=bulk.kind==="selected"
-    ?T("「カード{n}」の見た目のまま、表の1行を1枚のカードにします。作ったカードは「カード{n}」の場所に並びます。",{n:tplNo})
-    :T("{name}の基本の見た目で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並びます。色などをそろえたいときは、1枚を整えてから「選んでいるカード」をひな形にすると全部に反映できます。",{name:T(BULK_KINDS[bulk.kind].name)});
+    ?T("「カード{n}」の見た目のまま、表の1行を1枚のカードにします。作ったカードは「カード{n}」の場所に並び、同じテンプレートでつながります。",{n:tplNo})
+    :bulk.kind.startsWith("my:")
+    ?T("マイテンプレート「{name}」で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並び、このテンプレートでつながります。",{name:bulkMyTemplate().name})
+    :T("{name}の基本の見た目で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並びます。作ったカードは同じテンプレートでつながるので、どれか1枚の色などを変えると全部に反映されます。",{name:T(BULK_KINDS[bulk.kind].name)});
   el("bulkKeepRow").hidden=bulk.kind!=="selected";
   el("bulkText").placeholder=T("スプレッドシートやExcelで範囲をコピーして、ここに貼り付けます。1行目は見出し（カード名・テキスト・枚数 など）にします。");
   const sig=bulk.kind+"|"+table.headers.join("\u0001")+"|"+table.head;
   if(sig!==bulk.sig){const a=bulkAutoMap(bulk.fields,table.headers,table.head);bulk.map=a.map;bulk.qty=a.qty;bulk.sig=sig}
   const map=el("bulkMap");map.innerHTML="";
   if(!bulk.fields.length){
-    const m=document.createElement("p");m.className="bulk-msg";m.textContent=T("このカードには文字を入れる場所がありません。テンプレート（トランプ・トレカ・ワードゲーム）かテキストボックスを使ったカードを選んでから開いてください。");map.appendChild(m);
+    const m=document.createElement("p");m.className="bulk-msg";m.textContent=T("このテンプレートには文字を入れる場所がありません。トランプ・トレカ・ワードゲームか、テキストボックスのあるテンプレートを選んでください。");map.appendChild(m);
   }
   const row=(label,value,none,onChange)=>{
     const l=document.createElement("label");l.className="bulk-map-label";l.textContent=label;
@@ -1668,7 +1728,7 @@ function renderBulk(){
     sel.value=String(value<table.headers.length?value:-1);sel.addEventListener("change",()=>{onChange(Number(sel.value));renderBulk()});
     map.append(l,sel);
   };
-  bulk.fields.forEach((f,fi)=>row(bulkFieldLabel(f),bulk.map[fi],T("ひな形のまま"),v=>{bulk.map[fi]=v}));
+  bulk.fields.forEach((f,fi)=>row(bulkFieldLabel(f),bulk.map[fi],T("テンプレートのまま"),v=>{bulk.map[fi]=v}));
   if(bulk.fields.length)row(T("枚数"),bulk.qty,T("すべて1枚"),v=>{bulk.qty=v});
   // 確認:最初の数枚
   const pv=el("bulkPreview");pv.innerHTML="";
@@ -1676,11 +1736,9 @@ function renderBulk(){
   const total=cards.reduce((a,c)=>a+c.n,0),{room}=bulkRoom();
   if(!cards.length){const m=document.createElement("p");m.className="bulk-msg";m.textContent=T("表を貼り付けると、ここに最初の数枚が表示されます。");pv.appendChild(m)}
   const side=bulk.fields.some((f,fi)=>f.side==="front"&&bulk.map[fi]>=0)||!bulk.fields.some((f,fi)=>bulk.map[fi]>=0)?"front":"back";
-  const fm=faceMM(),W=mobileUIActive()?72:84,k=W/(fm.w*MM_TO_PX);
+  const W=mobileUIActive()?72:84;
   cards.slice(0,6).forEach(c=>{
-    const box=document.createElement("div");box.className="bulk-thumb "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;box.style.width=W+"px";box.style.height=Math.round(fm.h*MM_TO_PX*k)+"px";
-    const f=document.createElement("div");f.className="face";f.style.width=fm.w*MM_TO_PX+"px";f.style.height=fm.h*MM_TO_PX+"px";f.style.transform=`scale(${k})`;
-    box.appendChild(f);renderFace(f,c.card[side],false,-1);
+    const box=faceThumb(c.card[side],W);
     if(c.n>1){const q=document.createElement("span");q.className="bulk-qty";q.textContent="×"+c.n;box.appendChild(q)}
     pv.appendChild(box);
   });
@@ -1694,7 +1752,13 @@ function applyBulk(){
   if(!bulk)return;
   const cards=bulkCards(bulkTable());if(!cards.length)return;
   const {order,pos,room}=bulkRoom(),made=[];
-  for(const c of cards){if(made.length>=room)break;const id=addCard(c.card.front,c.card.back);for(let i=0;i<c.n&&made.length<room;i++)made.push(id)}
+  if(!room)return;
+  // 作ったカードをつなぐテンプレート
+  let tid;
+  if(bulk.kind==="selected"){const sc=deck.cards[bulk.tpl];if(sc.tpl&&deck.templates&&deck.templates[sc.tpl])tid=sc.tpl;else{tid=addTemplate(sc,uniqueTplName(suggestTplName(sc)),false);sc.tpl=tid}}
+  else if(bulk.kind.startsWith("my:")){tid=bulk.kind.slice(3);if(!ensureTemplateInDeck(tid))tid=null}
+  else tid=addTemplate(bulkTemplateCard(),uniqueTplName(T(BULK_KINDS[bulk.kind].name)),false);
+  for(const c of cards){if(made.length>=room)break;const id=addCard(c.card.front,c.card.back);if(tid)deck.cards[id].tpl=tid;for(let i=0;i<c.n&&made.length<room;i++)made.push(id)}
   if(!made.length)return;
   deck.order=order.slice(0,pos).concat(made,order.slice(pos));
   closeBulk();syncPages();selectSlot(pos,"front");renderSheet();syncControls();
@@ -1702,7 +1766,7 @@ function applyBulk(){
 }
 document.querySelectorAll(".open-bulk").forEach(b=>b.addEventListener("click",openBulk));
 document.querySelectorAll("[data-bulk-close]").forEach(b=>b.addEventListener("click",closeBulk));
-document.querySelectorAll("#bulkTpl [data-tpl]").forEach(b=>b.addEventListener("click",()=>{if(!bulk||b.disabled)return;bulk.auto=false;setBulkKind(b.dataset.tpl);renderBulk()}));
+el("bulkTpl").addEventListener("click",e=>{const b=e.target.closest("[data-tpl]");if(!b||!bulk||b.disabled)return;bulk.auto=false;setBulkKind(b.dataset.tpl);renderBulk()});
 el("bulkModal").addEventListener("click",e=>{if(e.target===el("bulkModal"))closeBulk()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&bulk)closeBulk()});
 el("bulkText").addEventListener("paste",()=>{if(bulk)bulk.csv=false});
@@ -1766,7 +1830,7 @@ function sampleDeck(){
     textColor:"#222222",borderColor:"#22384f",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,
     nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false},textBoxes:[],frameTexts:[],optionImages:[],shapes:[]};
   const word={type:"template",template:"word",main:T("ことば"),mainColor:"#22384f",mainStyle:{size:SIZE.word,bold:true,italic:false},bgColor:"#f4efe2",bgImage:null,bgBorderColor:"#22384f",bgBorderWidth:2,bgBorderNone:false,bgBorderAlign:"inside",textBoxes:[],frameTexts:[],optionImages:[],shapes:[]};
-  const d={cards:{},order:[],fmt:2,font:"gothic"};
+  const d={cards:{},order:[],templates:{},fmt:2,font:"gothic"};
   [playing("A","♠","#111111"),playing("7","♥","#d94a4a"),tcg,word].forEach(front=>{const id=newCardId();d.cards[id]={front:deep(front),back:back()};d.order.push(id)});
   return d;
 }
@@ -1831,12 +1895,14 @@ function deckFromPages(list,mode){
   return normalizeDeck(d);
 }
 function normalizeDeck(d){
-  const out={cards:{},order:[],fmt:2,font:(d&&d.font)||"system"};
-  (d&&d.order||[]).forEach(id=>{const c=d.cards&&d.cards[id];if(!c)return;if(!out.cards[id])out.cards[id]={front:c.front||makePlain(),back:c.back||makePlain()};out.order.push(id)});
-  const faces=Object.values(out.cards).flatMap(c=>[c.front,c.back]);
+  const out={cards:{},order:[],templates:{},fmt:2,font:(d&&d.font)||"system"};
+  Object.entries((d&&d.templates)||{}).forEach(([tid,t])=>{if(t)out.templates[tid]={name:String(t.name||T("テンプレート")),front:t.front||makePlain(),back:t.back||makePlain(),lib:!!t.lib}});
+  (d&&d.order||[]).forEach(id=>{const c=d.cards&&d.cards[id];if(!c)return;if(!out.cards[id]){out.cards[id]={front:c.front||makePlain(),back:c.back||makePlain()};if(c.tpl&&out.templates[c.tpl])out.cards[id].tpl=c.tpl}out.order.push(id)});
+  const holders=[...Object.values(out.cards),...Object.values(out.templates)];
+  const faces=holders.flatMap(c=>[c.front,c.back]);
   migrateBgBorders(migrateGenericTextBoxes({pages:[faces]}));
-  Object.values(out.cards).forEach(c=>{const pg=[c.front,c.back];normalizeFaces([pg]);c.front=pg[0];c.back=pg[1]});
-  if(!(d&&d.fmt>=2))Object.values(out.cards).forEach(c=>{migrateFaceUnits(c.front);migrateFaceUnits(c.back)});
+  holders.forEach(c=>{const pg=[c.front,c.back];normalizeFaces([pg]);c.front=pg[0];c.back=pg[1]});
+  if(!(d&&d.fmt>=2))holders.forEach(c=>{migrateFaceUnits(c.front);migrateFaceUnits(c.back)});
   return out;
 }
 function restoreProject(p){
@@ -1846,8 +1912,9 @@ function restoreProject(p){
   sheetTitle=p.sheetTitle||"";
   el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;lastArrangement=null;syncPages();setupAllColorInputs();
-  setPaper();renderSheet();syncControls();
+  tplWatch=null;setPaper();renderSheet();syncControls();
   initHistory();
+  importLibraryFromDeck().then(n=>{if(n)showAppToast(T("この作品のマイテンプレートを{n}個、このブラウザに追加しました",{n}),{duration:5000})}).catch(()=>{});
 }
 document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
 
@@ -2064,6 +2131,121 @@ async function buildEditablePdf(){
     staging.remove();
   }
 }
+
+/* ---- マイテンプレート:このブラウザの保存(IndexedDB)と、一覧の画面 ---- */
+const TPL_DB="cmm-templates";let myLibrary=[],libReady=false;
+function tplDb(){return new Promise((ok,ng)=>{if(!window.indexedDB)return ng(new Error("IndexedDB unavailable"));const r=indexedDB.open(TPL_DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("t"))r.result.createObjectStore("t",{keyPath:"id"})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)})}
+async function tplStore(mode,fn){const db=await tplDb();try{return await new Promise((ok,ng)=>{const tx=db.transaction("t",mode),req=fn(tx.objectStore("t"));tx.oncomplete=()=>ok(req&&req.result);tx.onerror=tx.onabort=()=>ng(tx.error)})}finally{db.close()}}
+async function loadLibrary(){
+  try{const rows=await tplStore("readonly",st=>st.getAll());myLibrary=(rows||[]).map(r=>{const c=JSON.parse(r.card);return {id:r.id,name:r.name,created:r.created||0,front:c.front,back:c.back}}).sort((a,b)=>a.created-b.created);libReady=true}
+  catch(err){console.warn(err);myLibrary=[];libReady=false}
+}
+async function putLibraryItem(item){
+  const old=myLibrary.find(x=>x.id===item.id),created=old?old.created:Date.now();
+  await tplStore("readwrite",st=>st.put({id:item.id,name:item.name,created,updated:Date.now(),card:JSON.stringify({front:item.front,back:item.back})}));
+  const rec={id:item.id,name:item.name,created,front:deep(item.front),back:deep(item.back)};
+  if(old)Object.assign(old,rec);else myLibrary.push(rec);
+}
+async function saveToLibrary(tid){const t=deck.templates&&deck.templates[tid];if(!t)return;await putLibraryItem({id:tid,...t});t.lib=true}
+async function removeFromLibrary(tid){await tplStore("readwrite",st=>st.delete(tid));myLibrary=myLibrary.filter(x=>x.id!==tid)}
+const libTimers={};
+function scheduleLibrarySync(tid){clearTimeout(libTimers[tid]);libTimers[tid]=setTimeout(()=>saveToLibrary(tid).catch(e=>console.warn(e)),800)}
+/* 作品を開いたとき:作品の中の「ブラウザに保存」したテンプレートが、このブラウザになければ加える(PDFで別の端末に持っていったとき) */
+async function importLibraryFromDeck(){
+  if(!libReady)await loadLibrary();if(!libReady)return 0;let n=0;
+  for(const [tid,t] of Object.entries(deck.templates||{}))if(t.lib&&!myLibrary.some(x=>x.id===tid)){try{await saveToLibrary(tid);n++}catch(e){console.warn(e)}}
+  return n;
+}
+function allTemplates(){
+  const out=Object.entries(deck.templates||{}).map(([id,t])=>({id,name:t.name,front:t.front,back:t.back,inProject:true,lib:!!t.lib&&myLibrary.some(x=>x.id===id)}));
+  myLibrary.forEach(x=>{if(!out.some(o=>o.id===x.id))out.push({id:x.id,name:x.name,front:x.front,back:x.back,inProject:false,lib:true})});
+  return out;
+}
+function ensureTemplateInDeck(tid){
+  deck.templates=deck.templates||{};if(deck.templates[tid])return true;
+  const x=myLibrary.find(y=>y.id===tid);if(!x)return false;
+  deck.templates[tid]={name:x.name,front:deep(x.front),back:deep(x.back),lib:true};return true;
+}
+/* 面の小さな絵(一括作成の確認・テンプレートの一覧) */
+function faceThumb(face,W){
+  const fm=faceMM(),k=W/(fm.w*MM_TO_PX),box=document.createElement("div");
+  box.className="bulk-thumb "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;
+  box.style.width=W+"px";box.style.height=Math.round(fm.h*MM_TO_PX*k)+"px";
+  const f=document.createElement("div");f.className="face";f.style.width=fm.w*MM_TO_PX+"px";f.style.height=fm.h*MM_TO_PX+"px";f.style.transform=`scale(${k})`;
+  box.appendChild(f);renderFace(f,face||makePlain(),false,-1);return box;
+}
+function openTplModal(focusName){
+  toggleSettings(false);closeMobilePanel();el("tplName").dataset.touched="";el("tplModal").hidden=false;renderTplModal();
+  if(focusName&&!el("tplName").disabled){el("tplName").focus();el("tplName").select()}
+  if(!libReady)loadLibrary().then(()=>{if(!el("tplModal").hidden)renderTplModal()});
+}
+function closeTplModal(){el("tplModal").hidden=true}
+function renderTplModal(){
+  const id=cardIdAt(currentPage,selected),card=deck.cards[id],blank=isBlankCard(id),nm=el("tplName");
+  if(!nm.dataset.touched)nm.value=uniqueTplName(suggestTplName(card));
+  nm.disabled=el("tplSaveBtn").disabled=blank;
+  const cur=card&&card.tpl&&deck.templates&&deck.templates[card.tpl];
+  el("tplSaveNote").textContent=blank?T("空のカードはテンプレートにできません。カードを作ってから保存してください。")
+    :cur?T("このカードはテンプレート「{name}」を使っています。保存すると、新しいテンプレートとして分かれます。",{name:cur.name}):"";
+  const list=el("tplList");list.innerHTML="";
+  const items=allTemplates();
+  if(!items.length){const m=document.createElement("p");m.className="tpl-note";m.textContent=T("まだありません。カードの見た目を整えたら、上で名前をつけて保存します。");list.appendChild(m)}
+  items.forEach(t=>{
+    const row=document.createElement("div");row.className="tpl-item"+(cur&&card.tpl===t.id?" current":"");
+    const th=document.createElement("div");th.className="tpl-thumbs";th.append(faceThumb(t.front,48));if(!isSingleMode())th.append(faceThumb(t.back,48));
+    const info=document.createElement("div");info.className="tpl-info";
+    const name=document.createElement("input");name.type="text";name.maxLength=40;name.value=t.name;name.className="tpl-name";name.setAttribute("aria-label",T("テンプレートの名前"));
+    name.addEventListener("change",()=>renameTemplate(t.id,name.value));
+    const meta=document.createElement("div");meta.className="tpl-meta";
+    meta.textContent=[t.inProject?T("この作品で{n}枚",{n:tplCount(t.id)}):T("この作品では未使用"),t.lib?T("ブラウザに保存済み"):T("この作品だけ")].join(" · ");
+    const acts=document.createElement("div");acts.className="tpl-acts";
+    const btn=(label,fn,cls)=>{const x=document.createElement("button");x.type="button";x.className="mini"+(cls?" "+cls:"");x.textContent=label;x.addEventListener("click",fn);acts.appendChild(x);return x};
+    btn(T("選んでいるカードに使う"),()=>useTemplate(t.id));
+    if(!t.lib)btn(T("ブラウザにも保存"),async()=>{try{await saveToLibrary(t.id);renderSheet();renderTplModal()}catch(e){alert(T("ブラウザに保存できませんでした。"))}});
+    btn(T("削除"),()=>deleteTemplate(t.id),"tpl-del");
+    info.append(name,meta,acts);row.append(th,info);list.appendChild(row);
+  });
+}
+async function saveTemplateFromSelected(){
+  const id=cardIdAt(currentPage,selected),card=deck.cards[id];if(!card||isBlankCard(id))return;
+  const name=el("tplName").value.trim()||uniqueTplName(suggestTplName(card)),tid=addTemplate(card,name,false);
+  card.tpl=tid;tplWatch=null;el("tplName").dataset.touched="";
+  let msg=T("テンプレート「{name}」を保存しました",{name});
+  try{await saveToLibrary(tid)}catch(e){console.warn(e);msg=T("ブラウザには保存できませんでした（この作品の中には保存されています）。")}
+  renderSheet();syncControls();renderTplModal();showAppToast(msg,{duration:4000});
+}
+function useTemplate(tid){
+  if(!ensureTemplateInDeck(tid))return;
+  const id=cardIdAt(currentPage,selected);applyTemplate(tid,id);tplWatch=null;
+  closeTplModal();syncPages();renderSheet();syncControls();
+  showAppToast(T("テンプレート「{name}」を使いました",{name:deck.templates[tid].name}),{duration:4000});
+}
+async function renameTemplate(tid,v){
+  const name=String(v||"").trim();if(!name){renderTplModal();return}
+  const t=deck.templates&&deck.templates[tid],x=myLibrary.find(y=>y.id===tid);
+  if(t){t.name=name;renderSheet();syncControls()}
+  try{if(x)await putLibraryItem({...(t||x),id:tid,name})}catch(e){console.warn(e)}
+  renderTplModal();
+}
+async function deleteTemplate(tid){
+  const t=(deck.templates||{})[tid]||myLibrary.find(x=>x.id===tid);if(!t)return;
+  const n=deck.templates&&deck.templates[tid]?tplCount(tid):0;
+  if(!confirm(n?T("テンプレート「{name}」を削除しますか？\nこの作品の{n}枚はテンプレートから外れます（見た目はそのまま）。",{name:t.name,n}):T("テンプレート「{name}」を削除しますか？",{name:t.name})))return;
+  if(deck.templates&&deck.templates[tid]){delete deck.templates[tid];for(const cid in deck.cards)if(deck.cards[cid].tpl===tid)delete deck.cards[cid].tpl}
+  try{if(myLibrary.some(x=>x.id===tid))await removeFromLibrary(tid)}catch(e){console.warn(e)}
+  tplWatch=null;renderSheet();syncControls();renderTplModal();
+}
+document.querySelectorAll(".open-tpl").forEach(b=>b.addEventListener("click",()=>openTplModal(false)));
+el("tplSaveQuick").addEventListener("click",()=>openTplModal(true));
+document.querySelectorAll("[data-tpl-close]").forEach(b=>b.addEventListener("click",closeTplModal));
+el("tplModal").addEventListener("click",e=>{if(e.target===el("tplModal"))closeTplModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("tplModal").hidden)closeTplModal()});
+el("tplName").addEventListener("input",()=>{el("tplName").dataset.touched="1"});
+el("tplName").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveTemplateFromSelected()}});
+el("tplSaveBtn").addEventListener("click",saveTemplateFromSelected);
+el("tplUnlink").addEventListener("click",()=>{const c=deck.cards[cardIdAt(currentPage,selected)];if(c&&c.tpl){delete c.tpl;tplWatch=null;renderSheet();syncControls()}});
+document.addEventListener("cmm-langchange",()=>{if(!el("tplModal").hidden)renderTplModal()});
+loadLibrary();
 
 /* ---- 画像で書き出す:カード1枚ずつのPNG / Tabletop Simulator用のシート(どちらもZIP) ---- */
 const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
