@@ -73,7 +73,7 @@ const MAX_PAGES=25;
 let deck={cards:{},order:[]};
 let pages=[],currentPage=0,selected=0,sheetTitle="";
 let viewSide="front";                 // 両面印刷モードのPC表示:オモテ面/ウラ面
-let printSettings={backFlip:"horizontal",backOffsetX:0,backOffsetY:0};
+let printSettings={binding:"long",backOffsetX:0,backOffsetY:0};   // binding:プリンタの両面設定(長辺とじ/短辺とじ)
 let lastArrangement=null,lastN=null;
 function newCardId(){return "c"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function newCardFaces(){return {front:makePlain(),back:makePlain()}}
@@ -124,8 +124,10 @@ function trimTrailingBlanks(){
 }
 function gcCards(){const used=new Set(deck.order);for(const id in deck.cards)if(!used.has(id))delete deck.cards[id]}
 function pageCount(){return Math.max(1,Math.ceil(deck.order.length/cardsPerPage()))}
-/* 両面印刷のウラ面:紙を裏返したとき重なるよう、左右(または上下)を入れ替えた位置に置く */
-function backIndex(i){const g=gridRC(),r=Math.floor(i/g.cols),c=i%g.cols;return printSettings.backFlip==="vertical"?(g.rows-1-r)*g.cols+c:r*g.cols+(g.cols-1-c)}
+/* 両面印刷のウラ面:紙を裏返したとき重なるよう、左右(または上下)を入れ替えた位置に置く。
+   紙は「長辺とじ」なら長い辺、「短辺とじ」なら短い辺を軸に裏返る。縦の紙の長辺とじ・横の紙の短辺とじは左右に裏返る */
+function backFlipDir(){const land=el("paperOrientation")?.value==="landscape",long=printSettings.binding!=="short";return long!==land?"horizontal":"vertical"}
+function backIndex(i){const g=gridRC(),r=Math.floor(i/g.cols),c=i%g.cols;return backFlipDir()==="vertical"?(g.rows-1-r)*g.cols+c:r*g.cols+(g.cols-1-c)}
 function slotAt(p,i,a=arrangement(),n=cardsPerPage()){
   if(a==="pairs")return {slot:p*n+Math.floor(i/2),side:i%2?"back":"front"};
   if(a==="back")return {slot:p*n+backIndex(i),side:"back"};
@@ -725,7 +727,7 @@ function applyHistorySnapshot(snapshot){
   el("paperSize").value=st.paperSize||"a4";
   el("paperOrientation").value=st.paperOrientation||"landscape";
   el("cardSize").value=st.cardSize||"poker";
-  el("impositionMode").value=st.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=st.cardOrientation||((el("impositionMode").value==="single")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));
+  el("impositionMode").value=st.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=st.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));
   el("sheetTitleInput").value=sheetTitle;
 
   syncPages();
@@ -769,7 +771,7 @@ function buildSheet(container,faces,selectable=true,a=arrangement()){
     const pair=document.createElement("div");pair.className="pair";
     const sides=paired?2:1;
     for(let side=0;side<sides;side++){
-      const idx=paired?c*2+side:c,f=document.createElement("div");
+      const idx=paired?c*2+side:(a==="pairs"?c*2:c),f=document.createElement("div");
       f.className="face"+(selectable&&idx===selected?" selected":"");
       if(selectable&&paired&&idx===selected)f.dataset.sideLabel=T(side===0?"オモテ面":"ウラ面");
       renderFace(f,faces[idx],selectable&&idx===selected,idx);
@@ -789,6 +791,7 @@ function renderSheet(){
   ["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});
   el("sheetTitle").textContent=sheetTitle;
   buildSheet(grid,currentFaces(),true);
+  setBackOffset(grid,layoutMode()==="both"&&arrangement()==="back");
   el("pageCount").textContent=`${currentPage+1} / ${pages.length}`;
   el("addPage").disabled=pages.length>=MAX_PAGES;
   el("dupPage").disabled=pages.length>=MAX_PAGES;
@@ -924,16 +927,24 @@ function renderMobileSheet(){
   const sheet=document.createElement("div");sheet.className="m-sheet "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
   sheet.style.width=W+"px";sheet.style.height=H+"px";
   const title=document.createElement("div");title.className="sheet-title";title.textContent=sheetTitle;sheet.appendChild(title);
-  const sa=isPairLayout()?"pairs":"front";
+  const both=layoutMode()==="both",sa=isPairLayout()?"pairs":(both&&viewSide==="back"?"back":"front");
+  if(both){
+    const seg=document.createElement("div");seg.className="seg m-view-side";seg.setAttribute("role","group");
+    seg.innerHTML=["front","back"].map(v=>`<button type="button" data-view-side="${v}" aria-pressed="${(viewSide==="back")===(v==="back")}">${esc(T(v==="back"?"ウラ面":"オモテ面"))}</button>`).join("");
+    seg.addEventListener("click",e=>{const b=e.target.closest("[data-view-side]");if(b){viewSide=b.dataset.viewSide;renderMobileSheet()}});
+    host.appendChild(seg);
+  }
   const sg=document.createElement("div");buildSheet(sg,facesOf(currentPage,sa),false,sa);sheet.appendChild(sg);
+  setBackOffset(sg,sa==="back");
   frame.appendChild(sheet);host.appendChild(frame);
+  const slotOf=i=>sa==="back"?backIndex(i):i;
   const cur=arrangement()==="pairs"?Math.floor(selected/2):selected;
   sg.querySelectorAll(".pair").forEach((pair,i)=>{
-    if(i===cur)pair.classList.add("m-current");
-    pair.addEventListener("click",()=>{selected=arrangement()==="pairs"?i*2+(selected%2):i;setMobileSheetMode(false);syncControls()});
+    if(slotOf(i)===cur)pair.classList.add("m-current");
+    pair.addEventListener("click",()=>{const k=slotOf(i);selected=arrangement()==="pairs"?k*2+(sa==="back"?1:selected%2):k;setMobileSheetMode(false);syncControls()});
   });
   // 幅いっぱい、ただし下のバー(パネルを開いていればパネル)にかからない大きさに
-  const bar=el("mobileQuickBar"),top=host.getBoundingClientRect().top;
+  const bar=el("mobileQuickBar"),top=frame.getBoundingClientRect().top;
   const limit=(bar?bar.getBoundingClientRect().top:innerHeight)-(mobilePanelOpen?228:12);
   const k=Math.max(.1,Math.min(host.clientWidth/W,(limit-top)/H));
   sheet.style.transform=`scale(${k})`;frame.style.width=W*k+"px";frame.style.height=H*k+"px";
@@ -1222,6 +1233,7 @@ function syncControls(){
    el("cardQty").value=n;el("qtyMinus").disabled=n<=1;el("unlinkCard").hidden=n<2;
    const note=el("qtyNote");note.hidden=n<2;if(n>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n});}
   refreshCopyButtonLabels();
+  syncDuplexUI();
   el("faceType").value=d.type;
   const templ=d.type==="template";
   el("templateSelector").classList.toggle("hidden",!templ);
@@ -1494,6 +1506,31 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
+/* ---- 両面印刷:表示する面・プリンタの両面設定・ウラ面のずれ補正 ---- */
+const OFFSET_STEP={mm:.1,cm:.01,inch:.01,pt:.5,px:1};
+function syncDuplexUI(){
+  const on=layoutMode()==="both";
+  el("duplexBar").hidden=!on;
+  document.querySelectorAll(".m-duplex-field").forEach(f=>f.hidden=!on);
+  if(!on)return;
+  document.querySelectorAll("#duplexBar [data-view-side]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.viewSide===(viewSide==="back"?"back":"front"))));
+  el("duplexBinding").value=printSettings.binding==="short"?"short":"long";
+  ["X","Y"].forEach(a=>{const inp=el("backOffset"+a);inp.step=OFFSET_STEP[units.len]||.1;if(document.activeElement!==inp)inp.value=fmtLen(Number(printSettings["backOffset"+a])||0,false)});
+  document.querySelectorAll(".unit-len-label").forEach(n=>n.textContent=LEN_UNITS[units.len].label);
+  const lr=backFlipDir()==="horizontal",back=arrangement()==="back";
+  const note=back?(lr?"ウラ面は、紙を左右に裏返したとき重なるように、左右を入れ替えて並べています。":"ウラ面は、紙を上下に裏返したとき重なるように、上下を入れ替えて並べています。")
+                 :(lr?"ウラ面は、紙を左右に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"ウラ面は、紙を上下に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。");
+  document.querySelectorAll(".duplex-note").forEach(n=>n.textContent=T(note));
+}
+document.querySelectorAll("#duplexBar [data-view-side]").forEach(b=>b.addEventListener("click",()=>{viewSide=b.dataset.viewSide;renderSheet();syncControls()}));
+el("duplexBinding").addEventListener("change",e=>{
+  const ref=slotAt(currentPage,selected);printSettings.binding=e.target.value;
+  syncPages();selected=indexOfSlot(ref.slot,ref.side);renderSheet();syncControls();
+});
+["X","Y"].forEach(a=>el("backOffset"+a).addEventListener("change",e=>{
+  const v=Number(e.target.value);printSettings["backOffset"+a]=Number.isFinite(v)?clamp(+(v*LEN_UNITS[units.len].k).toFixed(2),-20,20):0;
+  e.target.blur();renderSheet();syncControls();
+}));
 /* ---- 枚数の操作 ---- */
 function changeQty(n){const id=cardIdAt(currentPage,selected);if(setCardCount(id,n)){renderSheet();syncControls()}else syncControls()}
 el("qtyMinus").addEventListener("click",()=>changeQty(cardCount(cardIdAt(currentPage,selected))-1));
@@ -1586,9 +1623,9 @@ function normalizeDeck(d){
 function restoreProject(p){
   if(!p.deck&&!p.pages)throw new Error("invalid project");
   deck=p.deck?normalizeDeck(deep(p.deck)):deckFromPages(deep(p.pages),p.impositionMode);
-  printSettings={backFlip:"horizontal",backOffsetX:0,backOffsetY:0,...(p.printSettings||{})};
+  printSettings={binding:"long",backOffsetX:0,backOffsetY:0,...(p.printSettings||{})};delete printSettings.backFlip;
   sheetTitle=p.sheetTitle||"";
-  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value==="single")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
+  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;lastArrangement=null;syncPages();setupAllColorInputs();
   setPaper();renderSheet();syncControls();
   initHistory();
@@ -1950,6 +1987,11 @@ window.addEventListener("beforeunload",e=>{
 el("newProjectBtn")?.addEventListener("click",startNewProject);
 el("mobileNewProject")?.addEventListener("click",()=>{closeMobilePanel();startNewProject()});
 
+/* ウラ面のずれ補正:CSSの --bx/--by で、シートの中央からずらす */
+function setBackOffset(sg,on){
+  const x=on?Number(printSettings.backOffsetX)||0:0,y=on?Number(printSettings.backOffsetY)||0:0;
+  if(x||y){sg.style.setProperty("--bx",x+"mm");sg.style.setProperty("--by",y+"mm")}else{sg.style.removeProperty("--bx");sg.style.removeProperty("--by")}
+}
 /* 印刷・PDFに出すシートの一覧(両面印刷はページごとにオモテ→ウラの順) */
 function outputSheets(){
   const m=layoutMode(),out=[];
@@ -1967,7 +2009,7 @@ function makeOutputSheet(sh){
   sheet.style.minHeight=p.h+"mm";sheet.style.maxHeight=p.h+"mm";
   const title=document.createElement("div");title.className="sheet-title";title.textContent=sh.back?"":sheetTitle;sheet.appendChild(title);
   const sg=document.createElement("div");buildSheet(sg,sh.faces,false,sh.a);sheet.appendChild(sg);
-  if(sh.back&&(printSettings.backOffsetX||printSettings.backOffsetY))sg.style.translate=`${Number(printSettings.backOffsetX)||0}mm ${Number(printSettings.backOffsetY)||0}mm`;
+  setBackOffset(sg,!!sh.back);
   return sheet;
 }
 function preparePrintPages(){

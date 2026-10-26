@@ -65,6 +65,13 @@ const EN={
   "いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)":"Clear the current work and start over?\n(Anything not saved as a PDF can't be restored.)",
   "いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)":"Replace the current work with the sample?\n(Use “Undo” to go back.)",
   // ---- 見本・初期値の文字
+  "表示する面":"Side shown","プリンタの両面設定":"Printer duplex setting","長辺とじ":"Flip on long edge","短辺とじ":"Flip on short edge",
+  "プリンタの両面印刷の設定と同じものを選びます":"Choose the same setting as your printer's two-sided printing",
+  "ウラ面のずれ補正":"Back offset",
+  "ウラ面は、紙を左右に裏返したとき重なるように、左右を入れ替えて並べています。":"This is how the backs print: swapped left and right so they line up when the sheet is flipped sideways.",
+  "ウラ面は、紙を上下に裏返したとき重なるように、上下を入れ替えて並べています。":"This is how the backs print: swapped top and bottom so they line up when the sheet is flipped top to bottom.",
+  "ウラ面は、紙を左右に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped sideways. Do a single test print first.",
+  "ウラ面は、紙を上下に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped top to bottom. Do a single test print first.",
   "枚数":"Copies","1枚減らす":"One fewer","1枚増やす":"One more","このカードだけ別にする":"Make this one separate",
   "同じカードが{n}枚あります。どれを直しても全部に反映されます。":"There are {n} copies of this card. Editing any of them changes all.",
   "これ以上カードを増やせません（最大{n}ページ）":"Can't add more cards (up to {n} pages).",

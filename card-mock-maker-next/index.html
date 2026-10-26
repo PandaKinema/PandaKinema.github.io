@@ -37,7 +37,7 @@
     <option value="business">名刺 (55×91)</option><option value="yugioh">遊戯王サイズ (59×86)</option>
     <option value="credit">クレジット (54×86)</option><option value="half">ハーフ (44×63)</option>
   </select>
-  <select id="impositionMode" title="面付けモード"><option value="duplex">両面</option><option value="single">片面</option></select>
+  <select id="impositionMode" title="面付けモード"><option value="duplex">両面（折り）</option><option value="both">両面印刷</option><option value="single">片面</option></select>
   <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
   <span class="toolbar-spacer header-action-gap"></span>
   <button id="editablePdfBtn">PDF保存</button>
@@ -82,6 +82,14 @@
         <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
         <button type="button" class="open-sample">見本を開く</button>
       </div>
+      <div id="duplexBar" class="duplex-bar" hidden>
+        <div class="seg" role="group" aria-label="表示する面"><button type="button" data-view-side="front" aria-pressed="true">オモテ面</button><button type="button" data-view-side="back" aria-pressed="false">ウラ面</button></div>
+        <div id="duplexSettings" class="duplex-settings">
+          <label class="ds-item" title="プリンタの両面印刷の設定と同じものを選びます"><span>プリンタの両面設定</span><select id="duplexBinding"><option value="long">長辺とじ</option><option value="short">短辺とじ</option></select></label>
+          <span class="ds-item"><span>ウラ面のずれ補正</span><span class="ds-inputs"><label>X <input id="backOffsetX" type="number" step="0.1" inputmode="decimal"></label><label>Y <input id="backOffsetY" type="number" step="0.1" inputmode="decimal"></label><span class="unit-len-label">mm</span></span></span>
+        </div>
+        <p class="duplex-note"></p>
+      </div>
       <div class="paper-wrap screen-paper">
         <div id="paper" class="paper landscape-paper">
           <div id="sheetTitle" class="sheet-title"></div>
@@ -125,6 +133,7 @@
           <div class="m-field"><span class="m-label">用紙</span><div class="m-slot m-slot-pair" data-slot="paperSize paperOrientation"></div></div>
           <div class="m-field"><span class="m-label">カード</span><div class="m-slot" data-slot="cardSize"></div></div>
           <div class="m-field"><span class="m-label">面付け</span><div class="m-slot" data-slot="impositionMode"></div></div>
+          <div class="m-field m-duplex-field" hidden><span class="m-label">両面印刷</span><div class="m-slot" data-slot="duplexSettings"></div><p class="duplex-note"></p></div>
           <div class="m-field"><span class="m-label">タイトル</span><div class="m-slot" data-slot="sheetTitleInput"></div></div>
           <div class="m-field"><span class="m-label">基本のフォント</span><div class="m-slot" data-slot="deckFont"></div></div>
           <div class="m-field"><span class="m-label">長さの単位</span><div class="m-slot" data-slot="unitLen"></div></div>
