@@ -7,11 +7,11 @@ import os, re, subprocess
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMG = os.path.join(ROOT, 'new', 'img')
+IMG = os.path.join(ROOT, 'img')
 SKIP = ('unused/', 'links/')
 
 def added(rel):   # git に追加された時刻(まだ記録がなければ今)
-    out = subprocess.run(['git', 'log', '-1', '--format=%ct', '--diff-filter=AR', '--', 'new/img/' + rel],
+    out = subprocess.run(['git', 'log', '-1', '--format=%ct', '--diff-filter=AR', '--', 'img/' + rel],
                          cwd=ROOT, capture_output=True, text=True).stdout.strip()
     return int(out) if out else 10 ** 12
 
@@ -36,7 +36,7 @@ for base, rels in groups.items():
     newest = max(rels, key=added)             # いちばん新しくアップしたものの中身を使う
     if newest != keep:
         os.replace(os.path.join(IMG, newest), os.path.join(IMG, keep))
-        print('差し替え: new/img/%s ← %s' % (keep, newest))
+        print('差し替え: img/%s ← %s' % (keep, newest))
     for r in rels:
         if r != keep and os.path.exists(os.path.join(IMG, r)):
             os.remove(os.path.join(IMG, r))

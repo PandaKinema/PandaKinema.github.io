@@ -1,10 +1,10 @@
 # 関連コンテンツの「リンク」(note の記事など)を、ページのOGP(タイトル・画像・サイト名)からカードにする
-# 一度読んだものは build/ogp_cache.json に覚えておき、画像は new/img/links/ に保存します(GitHub Actions が保存)
+# 一度読んだものは build/ogp_cache.json に覚えておき、画像は img/links/ に保存します(GitHub Actions が保存)
 import hashlib, html as H, json, os, re, urllib.request, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, 'build', 'ogp_cache.json')
-IMG = os.path.join(ROOT, 'new', 'img', 'links')
+IMG = os.path.join(ROOT, 'img', 'links')
 UA = 'Mozilla/5.0 (compatible; PandaKinemaBot/1.0; +https://pandakinema.github.io/)'
 
 def _get(url, limit=3_000_000):

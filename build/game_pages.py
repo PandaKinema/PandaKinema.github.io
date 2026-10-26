@@ -1,4 +1,4 @@
-# パンダキネマ 作品ページを組み立てる(new/games/<key>/index.html)
+# パンダキネマ 作品ページを組み立てる(games/<key>/index.html)
 # 文章と画像は content/pages/<key>.yml(編集画面の「作品ページ」)、人数・時間・年齢は content/games.yml から読みます。
 # このファイルには、各作品のデザイン(色・背景・遊び方の図の動き)が入っています。新しい作品のページを足すときは GAMES に追加します。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/game_pages.py
@@ -54,7 +54,7 @@ import yaml
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import media
-WEB = TOP_IMG = media.IMG   # 画像はすべて new/img(作品ごとのフォルダ)
+WEB = TOP_IMG = media.IMG   # 画像はすべて img(作品ごとのフォルダ)
 MANUAL_JA = '#'   # 遊び方説明書(日本語)のURLが決まったら差し替え
 MANUAL_EN = '#'   # 英語版のURL
 BOOTH = 'https://pandakinema.booth.pm/'   # 商品ページのURLが決まったら差し替え
@@ -62,16 +62,16 @@ BOOTH = 'https://pandakinema.booth.pm/'   # 商品ページのURLが決まった
 def L(ja, en):   # 日本語/英語。切替ボタンで表示が変わる
     return '{{L:%s|%s}}' % (ja, en)
 
-def uri(f):   # 作品ページ(new/games/<key>/)から見た画像の場所
+def uri(f):   # 作品ページ(games/<key>/)から見た画像の場所
     p = media.path(f)
     if not os.path.isfile(os.path.join(WEB, p)):
-        sys.exit('見つからない画像があります: new/img/' + f)
+        sys.exit('見つからない画像があります: img/' + f)
     return '../../img/' + p
 
 def load(path):
     with open(os.path.join(ROOT, path), encoding='utf-8') as fh:
         return yaml.safe_load(fh) or {}
-def imgname(v):   # 画像の欄の値(img/trico/foo.png、foo.png など)を new/img からの場所に
+def imgname(v):   # 画像の欄の値(img/trico/foo.png、foo.png など)を img からの場所に
     return media.path(v)
 def LL(d, k):   # 編集画面の _ja / _en を切替用の文字に(英語が空なら日本語)
     ja = str(d.get(k + '_ja') or ''); en = str(d.get(k + '_en') or '') or ja
@@ -751,7 +751,7 @@ GAMES['bibilu'] = dict(
     credits=[(L('ゲームデザイン・アートワーク', 'Game Design & Artwork'), L('ゐするぎ', 'Isurugi')), (L('印刷', 'Printing'), L('萬印堂 様', '萬印堂')), (L('トークン製造', 'Tokens'), L('Sui Works 様', 'Sui Works')), ('Special Thanks', L('テストプレイをしてくれた皆さん', 'Everyone who playtested')), (L('発行', 'Published'), L('2026年10月', 'October 2026'))],
 )
 
-# ---- モコチャカ:くり返し動く図の部品(カードは new/img/parts/mc_*.webp)
+# ---- モコチャカ:くり返し動く図の部品(カードは img/parts/mc_*.webp)
 MN = {'m': 'モコ', 'p': 'パカ', 'o': 'ポメ', 'g': 'ガブ'}
 def mcd(code, cls='', st=''):   # 表向きのカード(m2 = モコが2匹)
     return '<img class="mcd %s" style="%s" src="{{img:mc_%s.webp}}" alt="%sが%s匹のカード">' % (cls, st, code, MN[code[0]], code[1:])
@@ -2488,7 +2488,7 @@ def render(key):
         related_html=related_html(g, key),
         video_hidden='' if g['videos'] else ' hidden',
         video_tex=' tex' if g.get('video_tex') else '',
-        ogp_meta=('  <meta property="og:url" content="https://pandakinema.github.io/new/games/%s/">\n  <meta property="og:image" content="https://pandakinema.github.io/new/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
+        ogp_meta=('  <meta property="og:url" content="https://pandakinema.github.io/games/%s/">\n  <meta property="og:image" content="https://pandakinema.github.io/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
     )
     s = TEMPLATE
     for _ in range(3):
@@ -2501,7 +2501,7 @@ def render(key):
 
 if __name__ == '__main__':
     for key in GAMES:
-        out = os.path.join(ROOT, 'new', 'games', key, 'index.html')
+        out = os.path.join(ROOT, 'games', key, 'index.html')
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         from build import bust

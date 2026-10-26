@@ -1,5 +1,5 @@
 # パンダキネマ トップページを組み立てる
-# content/*.yml(ニュース・作品・動画など)と build/top_template.html から new/index.html を作ります。
+# content/*.yml(ニュース・作品・動画など)と build/top_template.html から index.html を作ります。
 # GitHub に保存すると .github/workflows/build.yml がこれを自動で動かします。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/build.py
 import html as H, os, re, sys
@@ -9,9 +9,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import media
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_DIR = os.path.join(ROOT, 'new')          # トップと入れ替えるときはここを変える
+OUT_DIR = ROOT          # サイトの一番上(2026-10 に new/ から移動)
 IMG_DIR = os.path.join(OUT_DIR, 'img')
-SITE_URL = 'https://pandakinema.github.io/new/'
+SITE_URL = 'https://pandakinema.github.io/'
 e = H.escape
 
 def load(name):
@@ -28,7 +28,7 @@ def T(ja, en):   # 編集画面で入れた文。改行をそのまま反映す�
     return '<span lang="ja">%s</span><span lang="en">%s</span>' % (ja, en)
 
 def img(v):
-    """画像の欄の値(img/trico/foo.png、foo.png など)を new/img からの場所に(フォルダが違っても名前で見つける)"""
+    """画像の欄の値(img/trico/foo.png、foo.png など)を img からの場所に(フォルダが違っても名前で見つける)"""
     return media.path(v)
 
 def size(v):
@@ -303,7 +303,7 @@ def render():
     return s
 
 def colors():
-    """色見本:編集画面では色コードしか見えないので、今の設定の色を並べたページを作る(new/colors.html)"""
+    """色見本:編集画面では色コードしか見えないので、今の設定の色を並べたページを作る(colors.html)"""
     def sw(label, c):
         c = str(c or '').strip()
         if not c:

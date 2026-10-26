@@ -1,9 +1,9 @@
-# content/ や画像を保存したら、トップページ(new/index.html)と作品ページ(new/games/*/index.html)を自動で作り直す
+# content/ や画像を保存したら、トップページ(index.html)と作品ページ(games/*/index.html)を自動で作り直す
 name: build
 on:
   push:
     branches: [main]
-    paths: ['content/**', 'new/img/**', 'build/**', '.github/workflows/build.yml']
+    paths: ['content/**', 'img/**', 'build/**', '.github/workflows/build.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -33,7 +33,7 @@ jobs:
             python build/build.py
             python build/game_pages.py
             python build/sync_cms.py        # 編集画面の選択肢(カテゴリ・役割・作品)を最新に
-            git add -A new content build/ogp_cache.json .pages.yml
+            git add -A index.html colors.html games img content build/ogp_cache.json .pages.yml
             if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
             git commit -q -m "ページを組み立て直し"
             if git push -q origin HEAD:main; then exit 0; fi
