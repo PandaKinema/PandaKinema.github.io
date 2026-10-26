@@ -12,6 +12,9 @@
 <meta property="og:description" content="カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;700&family=Dela+Gothic+One&display=swap">
 <link rel="stylesheet" href="app.css">
 
 </head>
@@ -42,8 +45,17 @@
   <button id="loadPdfBtn">PDF読み込み</button>
   <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
   <button id="printBtn" class="primary">印刷</button>
+  <button id="settingsBtn" class="icon-btn settings-btn" type="button" title="設定" aria-label="設定" aria-expanded="false" aria-controls="settingsPop">⚙</button>
   <span id="fitStatus" class="size-note hidden"></span>
 </header>
+
+<div id="settingsPop" class="settings-pop" hidden>
+  <div class="settings-title">設定</div>
+  <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
+  <div class="settings-row" data-mslot="units"><label for="unitText">文字の単位</label><select id="unitText"><option value="pt">pt</option><option value="Q">級（Q）</option><option value="px">px</option></select></div>
+  <div class="settings-row"><label for="deckFont">基本のフォント</label><select id="deckFont"></select></div>
+  <p class="settings-note">単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。</p>
+</div>
 
 <div class="layout">
 <main>
@@ -106,6 +118,9 @@
           <div class="m-field"><span class="m-label">カード</span><div class="m-slot" data-slot="cardSize"></div></div>
           <div class="m-field"><span class="m-label">面付け</span><div class="m-slot" data-slot="impositionMode"></div></div>
           <div class="m-field"><span class="m-label">タイトル</span><div class="m-slot" data-slot="sheetTitleInput"></div></div>
+          <div class="m-field"><span class="m-label">基本のフォント</span><div class="m-slot" data-slot="deckFont"></div></div>
+          <div class="m-field"><span class="m-label">長さの単位</span><div class="m-slot" data-slot="unitLen"></div></div>
+          <div class="m-field"><span class="m-label">文字の単位</span><div class="m-slot" data-slot="unitText"></div></div>
           <p class="fit-note"></p>
         </div>
       </div>
@@ -205,14 +220,15 @@
     <div class="tool-block">
       <div class="tool-strip">
         <input id="numInput" class="tool-main-input" type="text" value="7" aria-label="数字" title="数字">
-        <div class="tool-number-wrap" title="数字の大きさ（mm）">
+        <div class="tool-number-wrap" title="数字の大きさ">
           <span class="size-icon" aria-hidden="true">A</span>
-          <input id="playingSize" class="tool-number" type="number" min="8" max="100" value="31" aria-label="数字の大きさ（mm）">
+          <input id="playingSize" class="tool-number" type="number" aria-label="数字の大きさ"><span class="unit-suffix">pt</span>
         </div>
         <label class="style-toggle" title="太字"><input id="playingBold" type="checkbox" checked><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input id="playingItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="playingUnderline" type="checkbox"><span class="underline-mark">U</span></label>
         <div class="tool-color" title="数字の色"><input id="playingNumberColor" class="palette-target" type="color" value="#d94a4a" aria-label="数字の色"></div>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select id="playingFont" class="font-select" aria-label="フォント"></select></div>
     </div>
 
     <div class="tool-block">
@@ -252,13 +268,14 @@
     <div class="tool-block">
       <div class="tool-strip">
         <input id="tcgName" class="tool-main-input" type="text" placeholder="カード名" aria-label="カード名">
-        <div class="tool-number-wrap" title="文字サイズ（px）">
+        <div class="tool-number-wrap" title="文字サイズ">
           <span class="size-icon" aria-hidden="true">A</span>
-          <input id="tcgNameSize" class="tool-number" type="number" min="8" max="60" value="15" aria-label="文字サイズ">
+          <input id="tcgNameSize" class="tool-number" type="number" aria-label="文字サイズ"><span class="unit-suffix">pt</span>
         </div>
         <label class="style-toggle" title="太字"><input id="tcgNameBold" type="checkbox" checked><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input id="tcgNameItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="tcgNameUnderline" type="checkbox"><span class="underline-mark">U</span></label>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select id="tcgNameFont" class="font-select" aria-label="フォント"></select></div>
     </div>
 
     <div class="tool-block">
@@ -271,14 +288,15 @@
     <div class="tool-block">
       <textarea id="tcgDesc" class="tool-textarea" placeholder="テキスト" aria-label="テキスト"></textarea>
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ（px）">
+        <div class="tool-number-wrap" title="文字サイズ">
           <span class="size-icon" aria-hidden="true">A</span>
-          <input id="tcgDescSize" class="tool-number" type="number" min="7" max="40" value="12" aria-label="文字サイズ">
+          <input id="tcgDescSize" class="tool-number" type="number" aria-label="文字サイズ"><span class="unit-suffix">pt</span>
         </div>
         <label class="style-toggle" title="太字"><input id="tcgDescBold" type="checkbox"><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input id="tcgDescItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="tcgDescUnderline" type="checkbox"><span class="underline-mark">U</span></label>
         <div class="tool-color" title="文字色"><input id="tcgTextColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select id="tcgDescFont" class="font-select" aria-label="フォント"></select></div>
     </div>
 
     <div id="tcgLayoutControls" class="tool-block">
@@ -319,14 +337,15 @@
     <div class="tool-block">
       <div class="tool-strip">
         <input id="wordMain" class="tool-main-input" type="text" placeholder="ことば" aria-label="メイン文字">
-        <div class="tool-number-wrap" title="文字サイズ（px）">
+        <div class="tool-number-wrap" title="文字サイズ">
           <span class="size-icon" aria-hidden="true">A</span>
-          <input id="wordMainSize" class="tool-number" type="number" min="8" max="100" value="53" aria-label="文字サイズ">
+          <input id="wordMainSize" class="tool-number" type="number" aria-label="文字サイズ"><span class="unit-suffix">pt</span>
         </div>
         <label class="style-toggle" title="太字"><input id="wordMainBold" type="checkbox" checked><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input id="wordMainItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="wordMainUnderline" type="checkbox"><span class="underline-mark">U</span></label>
         <div class="tool-color" title="文字色"><input id="wordMainColor" class="palette-target" type="color" value="#222222" aria-label="文字色"></div>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select id="wordMainFont" class="font-select" aria-label="フォント"></select></div>
     </div>
   </div>
 

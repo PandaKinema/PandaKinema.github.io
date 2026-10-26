@@ -11,13 +11,58 @@ function internImage(url,id){let k=imgIdByUrl.get(url);if(k===undefined){k=id||n
 function packImages(k,v){return isBigDataUrl(v)?IMG_TOKEN+internImage(v):v}
 function unpackImages(k,v){if(typeof v==="string"&&v.startsWith(IMG_TOKEN)){const u=imgUrlById.get(v.slice(IMG_TOKEN.length));return u===undefined?null:u}return v}
 function canonicalImage(url){return isBigDataUrl(url)?imgUrlById.get(internImage(url)):url}
+/* ---- 単位:中では 文字=pt・長さ=mm で持ち、表示だけ設定した単位に換算する ---- */
+const TEXT_UNITS={pt:{label:"pt",k:1,step:.5},Q:{label:"Q",k:72/25.4/4,step:1},px:{label:"px",k:.75,step:1}};
+const LEN_UNITS={mm:{label:"mm",k:1,dp:2},cm:{label:"cm",k:10,dp:3},inch:{label:"in",k:25.4,dp:3},pt:{label:"pt",k:25.4/72,dp:2},px:{label:"px",k:25.4/96,dp:1}};
+let units={len:"mm",text:"pt"};
+try{const u=JSON.parse(localStorage.getItem("cmm-units")||"{}");if(LEN_UNITS[u.len])units.len=u.len;if(TEXT_UNITS[u.text])units.text=u.text}catch(e){}
+function saveUnits(){try{localStorage.setItem("cmm-units",JSON.stringify(units))}catch(e){}}
+function textToDisp(pt){return +(pt/TEXT_UNITS[units.text].k).toFixed(1)}
+function dispToText(v){return +(Number(v)*TEXT_UNITS[units.text].k).toFixed(2)}
+function fmtLen(mm,withUnit=true){const u=LEN_UNITS[units.len],v=+(mm/u.k).toFixed(u.dp);return withUnit?`${v} ${u.label}`:String(v)}
+/* 文字サイズの入力欄:表示は設定の単位、読むときはptに戻す */
+function setSizeInput(input,pt){
+  if(!input)return;const u=TEXT_UNITS[units.text];
+  input.step=u.step;input.min=textToDisp(4);input.max=textToDisp(400);input.value=textToDisp(pt);
+  const suf=input.parentElement?.querySelector(".unit-suffix");if(suf)suf.textContent=u.label;
+}
+function readSizeInput(input,fallbackPt){const v=Number(input?.value);return v>0?dispToText(v):fallbackPt}
+/* ---- フォント:Google Fonts(SIL OFL、商用・印刷物に使える)。system は端末の標準書体 ---- */
+const FONTS=[
+  {id:"gothic",label:"ゴシック",css:"'Noto Sans JP',sans-serif"},
+  {id:"mincho",label:"明朝",css:"'Noto Serif JP',serif"},
+  {id:"maru",label:"丸ゴシック",css:"'Zen Maru Gothic',sans-serif"},
+  {id:"heavy",label:"極太",css:"'Dela Gothic One',sans-serif"},
+  {id:"system",label:"端末の標準",css:"-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans','Yu Gothic',sans-serif"}
+];
+function fontCss(id){return (FONTS.find(f=>f.id===id)||FONTS.find(f=>f.id===(deck.font||"system"))||FONTS[4]).css}
+function fontOptions(withDefault){return (withDefault?'<option value="">基本</option>':"")+FONTS.map(f=>`<option value="${f.id}">${f.label}</option>`).join("")}
+/* 印刷・PDFの前に、使っているフォントを読み込み終えるまで待つ(最大4秒) */
+async function fontsReady(){
+  if(!document.fonts)return;
+  const texts=new Map(),add=(id,t)=>{const css=fontCss(id||deck.font);texts.set(css,(texts.get(css)||"")+(t||""))};
+  Object.values(deck.cards).flatMap(c=>[c.front,c.back]).forEach(f=>{if(!f)return;
+    (f.textBoxes||[]).forEach(t=>add(t.style?.font,t.text));(f.frameTexts||[]).forEach(t=>add(t.style?.font,t.text));
+    add(f.nameStyle?.font,f.name);add(f.descStyle?.font,f.desc);add(f.mainStyle?.font,f.main);add(f.numberStyle?.font,f.number);add("",sheetTitle)});
+  const jobs=[];texts.forEach((t,css)=>{const sample=[...new Set((t||"Aあ").split(""))].join("").slice(0,600)||"Aあ";["400","700"].forEach(w=>jobs.push(document.fonts.load(`${w} 16px ${css}`,sample).catch(()=>{})))});
+  await Promise.race([Promise.all(jobs).then(()=>document.fonts.ready),new Promise(r=>setTimeout(r,4000))]);
+}
+/* 文字サイズの初期値(pt) */
+const SIZE={text:10.5,frame:10.5,tcgName:11,tcgDesc:9,word:40,number:88};
+/* 以前のデータ(文字はpx、トランプの数字はmm)をptに直す */
+function migrateFaceUnits(f){
+  if(!f)return;const cv=(st,k)=>{if(st&&typeof st.size==="number")st.size=+(st.size*k).toFixed(2)};
+  (f.textBoxes||[]).forEach(t=>cv(t.style,.75));(f.frameTexts||[]).forEach(t=>cv(t.style,.75));
+  ["nameStyle","descStyle","mainStyle","textStyle","subStyle"].forEach(k=>cv(f[k],.75));
+  cv(f.numberStyle,72/25.4);
+}
 const PRESET=["#111111","#ffffff","#d94a4a","#e48a2a","#e4c62a","#6bbf59","#2fa67f","#3a8dde","#5967d8","#8b5cc7","#d45aa1","#8a6b4c"];
 let recentColors=[];
 
 const makePlain=()=>({type:"plain",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside"});
 const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●",suitSize:"medium",suitCount:1,suitMode:"text",suitImage:null,cornerPlacement:"four",
   numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
-  numberStyle:{size:31,bold:true,italic:false},textStyle:{size:12,bold:false,italic:false}});
+  numberStyle:{size:SIZE.number,bold:true,italic:false}});
 const makeImageFace=()=>({type:"image",src:null,bgColor:"#ffffff",bgImage:null});
 /* ---- デッキ:カードの一覧(deck.cards)と、印刷する並び(deck.order) ----
    deck.cards[id]={front,back}。deck.order=[id,...] で、同じidが並べば同じカードを複数枚刷る。
@@ -109,7 +154,7 @@ function syncPages(){
 }
 function setFaceAt(p,i,face){const {slot,side}=slotAt(p,i);deck.cards[deck.order[slot]][side]=face;syncPages()}
 function cardIdAt(p,i){return deck.order[slotAt(p,i).slot]}
-function startDeck(){deck={cards:{},order:[]};currentPage=0;selected=0;padOrder();syncPages()}
+function startDeck(){deck={cards:{},order:[],fmt:2,font:"gothic"};currentPage=0;selected=0;padOrder();syncPages()}
 function applyCardGeometry(container){
   const f=faceMM(),q=pairMM(),g=gridRC();
   container.style.setProperty("--face-w",f.w+"mm");
@@ -129,9 +174,9 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&l
 
 
 function ensureTextBoxes(d){ if(!Array.isArray(d.textBoxes)) d.textBoxes=[]; return d.textBoxes; }
-function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"テキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
+function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"テキスト",style:{size:SIZE.text,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
 function ensureFrameTexts(d){if(!Array.isArray(d.frameTexts))d.frameTexts=[];return d.frameTexts}
-function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"フレームテキスト",style:{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
+function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"フレームテキスト",style:{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
 function ensureOptionImages(d){if(!Array.isArray(d.optionImages))d.optionImages=[];if(!Array.isArray(d.shapes))d.shapes=[];return d.optionImages}
 function ensureShapes(d){if(!Array.isArray(d.shapes))d.shapes=[];return d.shapes}
 function makeShape(type,i=0){return {id:"sh_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),type,points:(type==="star"?5:6),fillColor:"#ffffff",fillNone:false,borderColor:"#222222",borderNone:false,borderWidth:1,borderAlign:"inside",box:{x:30,y:30+i*4,w:38,h:38},centerSnap:false}}
@@ -142,10 +187,10 @@ function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
   const gx=document.createElement("div");gx.className="snap-guide-x";faceEl.appendChild(gx);
   const gy=document.createElement("div");gy.className="snap-guide-y";faceEl.appendChild(gy);
   items.forEach((item,n)=>{
-    const st=item.style||{size:14,bold:false,italic:false,color:"#222222"},b=item.box||{x:20,y:18+n*16,w:60,h:14};
+    const st=item.style||{size:SIZE.text,bold:false,italic:false,color:"#222222"},b=item.box||{x:20,y:18+n*16,w:60,h:14};
     const div=document.createElement("div");div.className="generic-textbox"+(selectable?" editable":"");
     div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
-    div.style.fontSize=st.size+"px";div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";div.style.color=st.colorNone?"transparent":(st.color||"#222");div.textContent=item.text||"";
+    div.style.fontSize=(st.size||SIZE.text)+"pt";if(st.font)div.style.fontFamily=fontCss(st.font);div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";div.style.color=st.colorNone?"transparent":(st.color||"#222");div.textContent=item.text||"";
     if(selectable){const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableGenericTextBox(div,idx,item.id)}
     faceEl.appendChild(div);
   });
@@ -157,12 +202,12 @@ function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
 function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
   const items=ensureFrameTexts(d);
   items.forEach((item,n)=>{
-    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const st=item.style||{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
     const b=item.box||{x:18,y:22+n*14,w:64,h:18};
     const div=document.createElement("div");
     div.className="frame-text"+(selectable?" editable":"");
     div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
-    div.style.fontSize=st.size+"px";div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";
+    div.style.fontSize=(st.size||SIZE.frame)+"pt";if(st.font)div.style.fontFamily=fontCss(st.font);div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";
     div.style.color=st.colorNone?"transparent":(st.color||"#222");
     div.style.border="0";if(!item.borderNone){const w=Number(item.borderWidth)||1,c=item.borderColor||"#222",a=item.borderAlign||"inside";if(a==="outside")div.style.boxShadow=`0 0 0 ${w}mm ${c}`;else if(a==="center")div.style.boxShadow=`inset 0 0 0 ${w/2}mm ${c},0 0 0 ${w/2}mm ${c}`;else div.style.boxShadow=`inset 0 0 0 ${w}mm ${c}`}
     div.style.background=item.fillNone?"transparent":(item.fillColor||"#fff");
@@ -294,11 +339,17 @@ function fitPaper(){
 
   paper.parentElement.style.height=p.h*MM_TO_PX*scale+"px";
 }
+/* 線の太さ・カードサイズの表示を、設定した長さの単位に */
+function relabelLengths(root=document){
+  root.querySelectorAll("select.stroke-width-select option").forEach(o=>{o.textContent=fmtLen(Number(o.value))});
+  const cs=el("cardSize");if(cs)[...cs.options].forEach(o=>{const c=CARD_SIZES[o.value];if(!c)return;o.textContent=`${c.label} (${fmtLen(c.w,false)}×${fmtLen(c.h,false)}${units.len==="mm"?"":" "+LEN_UNITS[units.len].label})`});
+}
 function updateFit(){
   const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2,c=cardMM();
   const paperName=(el("paperSize")?.value==="a3"?"A3":"A4")+(el("paperOrientation").value==="landscape"?"横":"縦");
-  el("fitStatus").textContent=`${paperName}：${cardsPerPage()}枚 / 余白 左右${x.toFixed(1)}mm・上下${y.toFixed(1)}mm`;
-  document.querySelectorAll(".fit-note").forEach(n=>{n.textContent=`${paperName}に${c.w}×${c.h}mmのカードが${cardsPerPage()}枚（余白 左右${x.toFixed(1)}mm・上下${y.toFixed(1)}mm）。印刷は「実際のサイズ（100%）」で。`});
+  const L=LEN_UNITS[units.len].label;
+  el("fitStatus").textContent=`${paperName}：${cardsPerPage()}枚 / 余白 左右${fmtLen(x)}・上下${fmtLen(y)}`;
+  document.querySelectorAll(".fit-note").forEach(n=>{n.textContent=`${paperName}に${fmtLen(c.w,false)}×${fmtLen(c.h,false)} ${L}のカードが${cardsPerPage()}枚（余白 左右${fmtLen(x)}・上下${fmtLen(y)}）。印刷は「実際のサイズ（100%）」で。`});
 }
 
 
@@ -466,6 +517,7 @@ function cornerVisible(pos,key){pos=pos||"four";if(pos==="top")return key==="tl"
 
 function renderFace(faceEl,d,selectable=false,idx=-1){
   faceEl.innerHTML="";
+  faceEl.style.fontFamily=fontCss(deck.font);
   faceEl.style.background=d.bgNone?"transparent":(d.bgColor||"#ffffff");
   const faceBorderW=Number(d.bgBorderWidth)||1;
   const faceBorderAlign=d.bgBorderAlign||"inside";
@@ -517,18 +569,18 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     midP=Math.min(midP,maxMid);
     wrap.style.setProperty("--tcg-top-p",topP);wrap.style.setProperty("--tcg-mid-p",midP);wrap.style.setProperty("--tcg-bottom-p",botP);
 
-    const ns=d.nameStyle||{size:15,bold:true,italic:false};
-    const ds=d.descStyle||{size:12,bold:false,italic:false};
-    wrap.innerHTML=`<div class="tcg-name" style="font-size:${ns.size}px;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${d.name?esc(d.name):'<span class="ph">カード名</span>'}</div>
+    const ns=d.nameStyle||{size:SIZE.tcgName,bold:true,italic:false};
+    const ds=d.descStyle||{size:SIZE.tcgDesc,bold:false,italic:false};
+    wrap.innerHTML=`<div class="tcg-name" style="${ns.font?`font-family:${fontCss(ns.font)};`:""}font-size:${ns.size||SIZE.tcgName}pt;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${d.name?esc(d.name):'<span class="ph">カード名</span>'}</div>
       <div class="tcg-image">${d.image?`<img src="${d.image}">`:'<span class="ph">画像</span>'}</div>
-      <div class="tcg-desc" style="font-size:${ds.size}px;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${d.desc?esc(d.desc):'<span class="ph">テキスト</span>'}</div>`;
+      <div class="tcg-desc" style="${ds.font?`font-family:${fontCss(ds.font)};`:""}font-size:${ds.size||SIZE.tcgDesc}pt;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${d.desc?esc(d.desc):'<span class="ph">テキスト</span>'}</div>`;
     faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
 
   if(d.template==="word"){
     const wrap=document.createElement("div");wrap.className="word-card";
     const main=document.createElement("div");main.className="word-main"+(!isLandscapeCard()?" vertical":"");
-    const ms=d.mainStyle||{size:53,bold:true,italic:false};main.style.fontSize=ms.size+"px";main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");if(d.main)main.textContent=d.main;else main.innerHTML='<span class="ph">ことば</span>';
+    const ms=d.mainStyle||{size:SIZE.word,bold:true,italic:false};main.style.fontSize=(ms.size||SIZE.word)+"pt";if(ms.font)main.style.fontFamily=fontCss(ms.font);main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");if(d.main)main.textContent=d.main;else main.innerHTML='<span class="ph">ことば</span>';
     wrap.appendChild(main);faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
 
@@ -537,13 +589,14 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
   }
 
   const wrap=document.createElement("div");wrap.className="card-template";
+  if(d.numberStyle?.font)wrap.style.fontFamily=fontCss(d.numberStyle.font);
   const nc=d.numberColorNone?"transparent":(d.numberColor||d.color||"#d94a4a");
   wrap.innerHTML=`
     ${cornerVisible(d.cornerPlacement,"tl")?`<div class="corner tl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
     ${cornerVisible(d.cornerPlacement,"tr")?`<div class="corner tr" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
     ${cornerVisible(d.cornerPlacement,"bl")?`<div class="corner bl" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
     ${cornerVisible(d.cornerPlacement,"br")?`<div class="corner br" style="color:${nc}">${esc(d.number||"")}${renderSuitHTML(d)}</div>`:""}
-    <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||31}mm;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>`;
+    <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||SIZE.number}pt;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>`;
   faceEl.appendChild(wrap);
   renderGenericTextBoxes(faceEl,d,selectable,idx);
 }
@@ -1017,7 +1070,7 @@ function renderTextBoxEditors(d){
   list.innerHTML="";
 
   items.forEach((item,index)=>{
-    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const st=item.style||{size:SIZE.text,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
     const wrap=document.createElement("div");
     wrap.className="textbox-editor";
     wrap.innerHTML=`
@@ -1029,13 +1082,14 @@ function renderTextBoxEditors(d){
       <div class="tool-strip tool-strip-secondary">
         <div class="tool-number-wrap" title="文字サイズ（px）">
           <span class="size-icon">A</span>
-          <input class="tb-size tool-number" type="number" min="7" max="100" value="${st.size||14}">
+          <input class="tb-size tool-number" type="number"><span class="unit-suffix"></span>
         </div>
         <label class="style-toggle" title="太字"><input class="tb-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input class="tb-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
         <label class="style-toggle" title="下線"><input class="tb-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
         <div class="tool-color" title="文字色"><input class="tb-color" type="color" value="${st.color||"#222222"}" aria-label="文字色"></div>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select class="tb-font font-select" aria-label="フォント">${fontOptions(true)}</select></div>
       <label class="checkline" style="margin:6px 0 0"><input class="tb-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;
 
     const text=wrap.querySelector(".tb-text");
@@ -1045,13 +1099,15 @@ function renderTextBoxEditors(d){
     const underline=wrap.querySelector(".tb-underline");
     const color=wrap.querySelector(".tb-color");
     const center=wrap.querySelector(".tb-center");
-    const del=wrap.querySelector(".textbox-delete");
+    const del=wrap.querySelector(".textbox-delete"),font=wrap.querySelector(".tb-font");
+    setSizeInput(size,st.size||SIZE.text);
+    font.value=st.font||"";font.onchange=()=>{item.style={...item.style,font:font.value};renderSheet()};
 
     text.oninput=()=>{item.text=text.value;renderSheet()};
     [size,bold,italic,underline].forEach(inp=>inp.oninput=()=>{
       item.style={
         ...item.style,
-        size:Number(size.value)||14,
+        size:readSizeInput(size,SIZE.text),
         bold:bold.checked,
         italic:italic.checked,
         underline:underline.checked
@@ -1092,16 +1148,17 @@ function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);
 function renderFrameTextEditors(d){
   const list=el("frameTextList"),items=ensureFrameTexts(d);list.innerHTML="";
   items.forEach((item,index)=>{
-    const st=item.style||{size:14,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
+    const st=item.style||{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
     const wrap=document.createElement("div");wrap.className="frame-editor";
     wrap.innerHTML=`<div class="frame-editor-head"><strong>フレームテキスト${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
       <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ（px）"><span class="size-icon">A</span><input class="ft-size tool-number" type="number" min="7" max="100" value="${st.size||14}"></div>
+        <div class="tool-number-wrap" title="文字サイズ（px）"><span class="size-icon">A</span><input class="ft-size tool-number" type="number"><span class="unit-suffix"></span></div>
         <label class="style-toggle"><input class="ft-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
         <label class="style-toggle"><input class="ft-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
         <label class="style-toggle"><input class="ft-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
       </div>
+      <div class="font-row"><span class="font-row-label">フォント</span><select class="ft-font font-select" aria-label="フォント">${fontOptions(true)}</select></div>
       <div class="frame-color-row">
         <div class="tool-color" title="文字色"><input class="ft-text-color" aria-label="文字色" type="color" value="${st.color||"#222222"}"></div>
         <div class="tool-color fill-color" title="面色"><input class="ft-fill-color" aria-label="面色" type="color" value="${item.fillColor||"#ffffff"}"></div>
@@ -1115,7 +1172,9 @@ function renderFrameTextEditors(d){
       <label class="checkline" style="margin:6px 0 0"><input class="ft-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;
     const text=wrap.querySelector(".ft-text"),size=wrap.querySelector(".ft-size"),bold=wrap.querySelector(".ft-bold"),italic=wrap.querySelector(".ft-italic"),underline=wrap.querySelector(".ft-underline"),tc=wrap.querySelector(".ft-text-color"),bc=wrap.querySelector(".ft-border-color"),bw=wrap.querySelector(".ft-border-width"),ba=wrap.querySelector(".ft-border-align"),fc=wrap.querySelector(".ft-fill-color"),center=wrap.querySelector(".ft-center"),del=wrap.querySelector(".textbox-delete");
     text.oninput=()=>{item.text=text.value;renderSheet()};
-    [size,bold,italic,underline].forEach(x=>x.oninput=()=>{item.style={...item.style,size:Number(size.value)||14,bold:bold.checked,italic:italic.checked,underline:underline.checked};renderSheet()});
+    setSizeInput(size,st.size||SIZE.frame);
+    const font=wrap.querySelector(".ft-font");font.value=st.font||"";font.onchange=()=>{item.style={...item.style,font:font.value};renderSheet()};
+    [size,bold,italic,underline].forEach(x=>x.oninput=()=>{item.style={...item.style,size:readSizeInput(size,SIZE.frame),bold:bold.checked,italic:italic.checked,underline:underline.checked};renderSheet()});
     tc.dataset.none=st.colorNone?"1":"0";bc.dataset.none=item.borderNone?"1":"0";fc.dataset.none=item.fillNone?"1":"0";
     tc.oninput=()=>{item.style={...item.style,color:tc.value,colorNone:false};tc.dataset.none="0";renderSheet();refreshOpenColorPopup()};
     bc.oninput=()=>{item.borderColor=bc.value;item.borderNone=false;bc.dataset.none="0";renderSheet();refreshOpenColorPopup()};bw.onchange=()=>{item.borderWidth=Number(bw.value)||1;renderSheet()};ba.onchange=()=>{item.borderAlign=ba.value;renderSheet()};
@@ -1156,8 +1215,8 @@ function syncControls(){
       el("cornerPlacement").value=d.cornerPlacement||"four";
       el("suitMode").value=d.suitMode||"text";
       el("suitImageControls").classList.toggle("hidden",(d.suitMode||"text")!=="image");
-      const st=d.numberStyle||{size:31,bold:true,italic:false};
-      el("playingSize").value=st.size;el("playingBold").checked=st.bold!==false;el("playingItalic").checked=!!st.italic;el("playingUnderline").checked=!!st.underline;
+      const st=d.numberStyle||{size:SIZE.number,bold:true,italic:false};
+      setSizeInput(el("playingSize"),st.size||SIZE.number);el("playingFont").value=st.font||"";el("playingBold").checked=st.bold!==false;el("playingItalic").checked=!!st.italic;el("playingUnderline").checked=!!st.underline;
     }else if(d.template==="tcg"){
       el("tcgControls").classList.remove("hidden");
       el("tcgName").value=d.name??"";el("tcgDesc").value=d.desc??"";
@@ -1167,15 +1226,15 @@ function syncControls(){
             el("tcgPanelColor").value=d.panelColor||"#ffffff";el("tcgPanelColor").dataset.none=d.panelNone?"1":"0";
       document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.checked=String(d.horizontalLayout||1)===r.value);
       el("tcgTopHeight").value=String(d.tcgTopHeight??16);el("tcgMiddleHeight").value=String(d.tcgMiddleHeight??50);el("tcgBottomHeight").value=String(d.tcgBottomHeight??28);
-      const ns=d.nameStyle||{size:15,bold:true,italic:false},ds=d.descStyle||{size:12,bold:false,italic:false};
-      el("tcgNameSize").value=ns.size;el("tcgNameBold").checked=!!ns.bold;el("tcgNameItalic").checked=!!ns.italic;el("tcgNameUnderline").checked=!!ns.underline;
-      el("tcgDescSize").value=ds.size;el("tcgDescBold").checked=!!ds.bold;el("tcgDescItalic").checked=!!ds.italic;el("tcgDescUnderline").checked=!!ds.underline;
+      const ns=d.nameStyle||{size:SIZE.tcgName,bold:true,italic:false},ds=d.descStyle||{size:SIZE.tcgDesc,bold:false,italic:false};
+      setSizeInput(el("tcgNameSize"),ns.size||SIZE.tcgName);el("tcgNameFont").value=ns.font||"";el("tcgDescFont").value=ds.font||"";el("tcgNameBold").checked=!!ns.bold;el("tcgNameItalic").checked=!!ns.italic;el("tcgNameUnderline").checked=!!ns.underline;
+      setSizeInput(el("tcgDescSize"),ds.size||SIZE.tcgDesc);el("tcgDescBold").checked=!!ds.bold;el("tcgDescItalic").checked=!!ds.italic;el("tcgDescUnderline").checked=!!ds.underline;
     }else if(d.template==="word"){
       el("wordControls").classList.remove("hidden");
       el("wordMain").value=d.main??"";
       el("wordMainColor").value=d.mainColor||d.color||"#222222";el("wordMainColor").dataset.none=d.mainColorNone?"1":"0";
-      const ms=d.mainStyle||{size:53,bold:true,italic:false},ss=d.subStyle||{size:12,bold:false,italic:false};
-      el("wordMainSize").value=ms.size;el("wordMainBold").checked=!!ms.bold;el("wordMainItalic").checked=!!ms.italic;el("wordMainUnderline").checked=!!ms.underline;
+      const ms=d.mainStyle||{size:SIZE.word,bold:true,italic:false};
+      setSizeInput(el("wordMainSize"),ms.size||SIZE.word);el("wordMainFont").value=ms.font||"";el("wordMainBold").checked=!!ms.bold;el("wordMainItalic").checked=!!ms.italic;el("wordMainUnderline").checked=!!ms.underline;
     }else if(d.template==="custom"){el("customControls").classList.remove("hidden");}
   }
   el("faceBgColor").value=d.bgColor||"#ffffff";el("faceBgColor").dataset.none=d.bgNone?"1":"0";
@@ -1188,6 +1247,8 @@ function syncControls(){
   setupAllColorInputs();
   const showTcgLayout = templ && d.template==="tcg" && isLandscapeCard();
   el("tcgLayoutControls").classList.toggle("hidden",!showTcgLayout);
+  relabelLengths(document);
+  if(el("deckFont"))el("deckFont").value=deck.font||"system";
   renderSwatches();
 }
 function updateSelected(patch){setFaceAt(currentPage,selected,{...currentFaces()[selected],...patch});renderSheet()}
@@ -1274,8 +1335,8 @@ el("templateType").addEventListener("change",e=>{
   if(t==="tcg")nextFace={type:"template",template:"tcg",name:"カード名",desc:"テキスト",image:null,bgColor:keepBg,bgImage:keepBgImage,
     bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,
     textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
-    nameStyle:{size:15,bold:true,italic:false},descStyle:{size:12,bold:false,italic:false}};
-  if(t==="word")nextFace={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:53,bold:true,italic:false}};
+    nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false}};
+  if(t==="word")nextFace={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:SIZE.word,bold:true,italic:false}};
   if(nextFace)setFaceAt(currentPage,selected,Object.assign(nextFace,keep));   // 図形・背景の「なし」も含めて引き継ぐ
   renderSheet();syncControls();
 });
@@ -1294,7 +1355,8 @@ el("templateType").addEventListener("change",e=>{
 el("playingNumberColor").addEventListener("input",()=>{const c=el("playingNumberColor").value;addRecentColor(c);updateSelected({numberColor:c,numberColorNone:false});renderSwatches()});
 onImagePicked(el("suitImageInput"),src=>updateSelected({suitMode:"image",suitImage:src}));
 ["playingSize","playingBold","playingItalic","playingUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
-  updateSelected({numberStyle:{size:Number(el("playingSize").value)||31,bold:el("playingBold").checked,italic:el("playingItalic").checked,underline:el("playingUnderline").checked}})
+  const cur=currentFaces()[selected].numberStyle||{};
+  updateSelected({numberStyle:{...cur,size:readSizeInput(el("playingSize"),SIZE.number),bold:el("playingBold").checked,italic:el("playingItalic").checked,underline:el("playingUnderline").checked}})
 }));
 
 ["tcgName","tcgDesc"].forEach(id=>el(id).addEventListener("input",()=>updateSelected({name:el("tcgName").value,desc:el("tcgDesc").value})));
@@ -1306,8 +1368,8 @@ document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.addEventListen
 }));
 ["tcgNameSize","tcgNameBold","tcgNameItalic","tcgNameUnderline","tcgDescSize","tcgDescBold","tcgDescItalic","tcgDescUnderline"].forEach(id=>el(id).addEventListener("input",()=>{
   updateSelected({
-    nameStyle:{size:Number(el("tcgNameSize").value)||15,bold:el("tcgNameBold").checked,italic:el("tcgNameItalic").checked,underline:el("tcgNameUnderline").checked},
-    descStyle:{size:Number(el("tcgDescSize").value)||12,bold:el("tcgDescBold").checked,italic:el("tcgDescItalic").checked,underline:el("tcgDescUnderline").checked}
+    nameStyle:{...(currentFaces()[selected].nameStyle||{}),size:readSizeInput(el("tcgNameSize"),SIZE.tcgName),bold:el("tcgNameBold").checked,italic:el("tcgNameItalic").checked,underline:el("tcgNameUnderline").checked},
+    descStyle:{...(currentFaces()[selected].descStyle||{}),size:readSizeInput(el("tcgDescSize"),SIZE.tcgDesc),bold:el("tcgDescBold").checked,italic:el("tcgDescItalic").checked,underline:el("tcgDescUnderline").checked}
   })
 }));
 ["tcgTopHeight","tcgMiddleHeight","tcgBottomHeight"].forEach(id=>el(id).addEventListener("input",()=>{
@@ -1317,7 +1379,7 @@ onImagePicked(el("tcgImageInput"),src=>updateSelected({image:src}));
 
 el("wordMain").addEventListener("input",()=>updateSelected({main:el("wordMain").value}));
 el("wordMainColor").addEventListener("input",()=>{const c=el("wordMainColor").value;addRecentColor(c);updateSelected({mainColor:c,mainColorNone:false});renderSwatches()});
-["wordMainSize","wordMainBold","wordMainItalic","wordMainUnderline"].forEach(id=>el(id).addEventListener("input",()=>{updateSelected({mainStyle:{size:Number(el("wordMainSize").value)||53,bold:el("wordMainBold").checked,italic:el("wordMainItalic").checked,underline:el("wordMainUnderline").checked}})}));
+["wordMainSize","wordMainBold","wordMainItalic","wordMainUnderline"].forEach(id=>el(id).addEventListener("input",()=>{updateSelected({mainStyle:{...(currentFaces()[selected].mainStyle||{}),size:readSizeInput(el("wordMainSize"),SIZE.word),bold:el("wordMainBold").checked,italic:el("wordMainItalic").checked,underline:el("wordMainUnderline").checked}})}));
 
 
 
@@ -1404,6 +1466,19 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
+/* ---- フォントの選択 ---- */
+document.querySelectorAll("select.font-select[id]").forEach(x=>x.innerHTML=fontOptions(true));
+if(el("deckFont")){el("deckFont").innerHTML=fontOptions(false);el("deckFont").addEventListener("change",e=>{deck.font=e.target.value;renderSheet();syncControls()})}
+[["playingFont","numberStyle"],["tcgNameFont","nameStyle"],["tcgDescFont","descStyle"],["wordMainFont","mainStyle"]].forEach(([id,key])=>el(id)?.addEventListener("change",e=>{
+  updateSelected({[key]:{...(currentFaces()[selected][key]||{}),font:e.target.value}});
+}));
+/* ---- 設定(単位) ---- */
+function applyUnits(){saveUnits();relabelLengths(document);updateFit();syncControls()}
+if(el("unitLen")){el("unitLen").value=units.len;el("unitLen").addEventListener("change",e=>{units.len=e.target.value;applyUnits()})}
+if(el("unitText")){el("unitText").value=units.text;el("unitText").addEventListener("change",e=>{units.text=e.target.value;applyUnits()})}
+function toggleSettings(force){const pop=el("settingsPop");if(!pop)return;const open=force??pop.hidden;pop.hidden=!open;el("settingsBtn")?.setAttribute("aria-expanded",String(open))}
+el("settingsBtn")?.addEventListener("click",e=>{e.stopPropagation();toggleSettings()});
+document.addEventListener("click",e=>{const pop=el("settingsPop");if(pop&&!pop.hidden&&!e.target.closest("#settingsPop,#settingsBtn"))toggleSettings(false)});
 el("dupPage").addEventListener("click",()=>duplicatePage(currentPage));
 el("deletePage").addEventListener("click",()=>deletePage(currentPage));
 
@@ -1445,11 +1520,12 @@ function deckFromPages(list,mode){
   return normalizeDeck(d);
 }
 function normalizeDeck(d){
-  const out={cards:{},order:[]};
+  const out={cards:{},order:[],fmt:2,font:(d&&d.font)||"system"};
   (d&&d.order||[]).forEach(id=>{const c=d.cards&&d.cards[id];if(!c)return;if(!out.cards[id])out.cards[id]={front:c.front||makePlain(),back:c.back||makePlain()};out.order.push(id)});
   const faces=Object.values(out.cards).flatMap(c=>[c.front,c.back]);
   migrateBgBorders(migrateGenericTextBoxes({pages:[faces]}));
   Object.values(out.cards).forEach(c=>{const pg=[c.front,c.back];normalizeFaces([pg]);c.front=pg[0];c.back=pg[1]});
+  if(!(d&&d.fmt>=2))Object.values(out.cards).forEach(c=>{migrateFaceUnits(c.front);migrateFaceUnits(c.back)});
   return out;
 }
 function restoreProject(p){
@@ -1547,6 +1623,7 @@ function showPdfReeditTip(){
 async function buildEditablePdf(){
   if(!window.html2canvas || !window.PDFLib) throw new Error("PDFライブラリを読み込めませんでした。インターネット接続を確認してください。");
   const {PDFDocument}=PDFLib;
+  await fontsReady();
   const p=paperMM();
   const ptPerMm=72/25.4;
   const pdf=await PDFDocument.create();
@@ -1766,7 +1843,7 @@ function preparePrintPages(){
   outputSheets().forEach(sh=>wrap.appendChild(makeOutputSheet(sh)));
 }
 function setExactPrintPage(){const p=paperMM(),paperName=el("paperSize").value==="a3"?"A3":"A4",orientation=el("paperOrientation").value;let st=el("printPageStyle");if(!st){st=document.createElement("style");st.id="printPageStyle";document.body.appendChild(st)}st.textContent=`@page{size:${paperName} ${orientation};margin:0}\n@media print{.print-sheet{width:${p.w}mm!important;height:${p.h}mm!important;min-width:${p.w}mm!important;max-width:${p.w}mm!important;min-height:${p.h}mm!important;max-height:${p.h}mm!important}}`}
-el("printBtn").addEventListener("click",()=>{setExactPrintPage();preparePrintPages();requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
+el("printBtn").addEventListener("click",async()=>{const b=el("printBtn"),t=b.textContent;b.disabled=true;b.textContent="準備中…";try{await fontsReady()}finally{b.disabled=false;b.textContent=t}setExactPrintPage();preparePrintPages();requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
 
 
 
