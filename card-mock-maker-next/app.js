@@ -1536,7 +1536,7 @@ function bulkFields(card){
 function bulkFieldLabel(x){return T("{side}：{name}",{side:T(x.side==="front"?"オモテ":"ウラ"),name:T(x.name)+(x.n?" "+x.n:"")})}
 /* 表の読み取り:スプレッドシートから貼り付けた表(タブ区切り)とCSV。"…" で囲んだセルの改行・区切り文字もそのまま */
 function parseTable(text,csv){
-  text=String(text||"").replace(/^﻿/,"");
+  text=String(text||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n");   // 改行はLFにそろえる(セルの中の改行も)
   let delim="\t";
   if(!text.includes("\t")){
     const lines=text.split(/\r?\n/).filter(l=>l.trim()),cnt=l=>(l.match(/,/g)||[]).length;
@@ -2125,7 +2125,7 @@ async function runExport(){
         T("3. Width・Height・Number を下のとおりに入れて Import します。"),"",...readme,"",
         T("ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードしてください（TTSの画像選択画面からできます）。"),"",
         "Card Mock Maker — https://pandakinema.github.io/card-mock-maker/"];
-      files.unshift({name:"README.txt",data:new TextEncoder().encode("﻿"+lines.join("\r\n"))});
+      files.unshift({name:"README.txt",data:new TextEncoder().encode("\uFEFF"+lines.join("\r\n"))});
       cache.forEach(c=>{c.width=c.height=0});
       downloadBlob(makeZip(files),`${base}_tts.zip`);
     }
