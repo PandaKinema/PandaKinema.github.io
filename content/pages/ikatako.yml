@@ -9,7 +9,7 @@ bg_color: third
 color3: "#00215d"
 accent_color: main
 hero:
-  art: img/page/ikatako_top.jpg
+  art: img/page/ikatako_top.webp
   fit: cover
   art_pos: 50% 0%
 bg2_image: img/page/i_bg_tex2.webp

@@ -12,7 +12,7 @@ prefer_white: true
 text_white: true
 hero_ink: white
 hero:
-  art: img/page/koikoi_top.jpg
+  art: img/page/koikoi_top.webp
   fit: cover
   side: img/page/koikoi_side.webp
   art_pos: 50% 0%

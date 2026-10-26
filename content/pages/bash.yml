@@ -8,9 +8,9 @@ logo_credits: img/logo/bashlogo_4C.png
 bg_color: main
 accent_color: black
 hero:
-  art: img/page/bash_top.jpg
+  art: img/page/bash_top.webp
   fit: cover
-  side: img/page/bash_side.png
+  side: img/page/bash_side.webp
   art_pos: 50% 0%
 bg1_image: img/page/s_tex_c.png
 bg2_image: img/page/s_tex_w.png

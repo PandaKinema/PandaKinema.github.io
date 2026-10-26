@@ -6,7 +6,7 @@ logo_alt: ビビルの塔 THE TOWER OF BIBILU
 logo_buy: img/logo/b_logo_navy.png
 logo_credits: img/logo/b_logo_white.png
 hero:
-  art: img/page/bibilu_top.jpg
+  art: img/page/bibilu_top.webp
   fit: cover
   art_pos: 50% 0%
 bg1_image: img/page/b_tex_c.png
@@ -34,9 +34,9 @@ summary_ja: |-
 
   出した数字の大きさが**1位と2位**のプレイヤーは、そのカードを自分の前に重ねて塔を建てます。
 
-  同じ数字を出したプレイヤーが複数いた場合は**バッティング**となり、そのプレイヤーだけが塔を建てます
+  同じ数字を出したプレイヤーが複数いた場合は**バッティング**となり、そのプレイヤーだけが塔を建てます。
 
-  。塔は高いほど高得点を狙えますが、**6枚になると天罰によって崩れてしまいます**。
+  塔は高いほど高得点を狙えますが、**6枚になると天罰によって崩れてしまいます**。
 
   手札がなくなったら塔の得点を計算し、最も得点の高かったプレイヤーがラウンドの勝者です。最初に**2回**ラウンド勝利をしたプレイヤーがこのゲームの勝者となります。
 summary_en: In The Tower of Bibilu, **players reveal number cards at the same
