@@ -2084,7 +2084,7 @@ header .app-brand{align-items:center}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ui-border)}
 .modal-head strong{font-size:15px}
 .modal-close{border:0!important;background:transparent!important;font-size:20px!important;min-width:0!important;min-height:0!important;padding:0 6px!important}
-.modal-body{padding:14px 16px 16px;overflow:auto;font-size:12px}
+.modal-body{flex:1 1 auto;padding:14px 16px 16px;overflow:auto;font-size:12px}
 .modal-foot{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--ui-border)}
 .modal-foot button{min-height:34px;padding:4px 16px}
 .bulk-summary{flex:1;color:var(--ui-muted);font-size:12px}
@@ -2116,3 +2116,23 @@ header .app-brand{align-items:center}
   .modal-foot button{flex:1;min-height:44px}
 }
 @media print{.modal{display:none!important}}
+
+/* ---- 画像で書き出す ---- */
+.modal-narrow{width:min(520px,100%)}
+.export-kind{display:grid;gap:8px}
+.export-opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--ui-border);border-radius:8px;cursor:pointer}
+.export-opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.export-opt input{margin-top:2px;flex:none}
+.export-opt b{display:block;font-size:13px}
+.export-opt small{display:block;margin-top:2px;color:var(--ui-muted);font-size:11px;line-height:1.5}
+.export-opts{display:flex;gap:10px 18px;flex-wrap:wrap;margin-top:12px}
+.export-opts[hidden],#exportSidesRow[hidden]{display:none!important}
+.export-face .pair::after{display:none!important}
+.export-face .ph{visibility:hidden!important}
+.export-face{position:relative!important;left:0!important;top:0!important;transform:none!important}
+@media(max-width:720px){
+  .modal-narrow{width:100%}
+  .export-opts{flex-direction:column}
+  .export-opts .ds-item{display:grid;gap:4px}
+  .export-opts select{height:40px!important;font-size:16px!important;width:100%!important}
+}

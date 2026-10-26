@@ -2016,6 +2016,135 @@ async function buildEditablePdf(){
   }
 }
 
+/* ---- 画像で書き出す:カード1枚ずつのPNG / Tabletop Simulator用のシート(どちらもZIP) ---- */
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}
+/* 圧縮なし(PNGはもともと圧縮済み)のZIP。ファイル名はUTF-8 */
+function makeZip(files){
+  const enc=new TextEncoder(),parts=[],central=[],d=new Date();let offset=0;
+  const time=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),date=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  for(const f of files){
+    const name=enc.encode(f.name),data=f.data,crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    [[0,0x04034b50,4],[4,20,2],[6,0x0800,2],[8,0,2],[10,time,2],[12,date,2],[14,crc,4],[18,data.length,4],[22,data.length,4],[26,name.length,2],[28,0,2]].forEach(([o,v,n])=>n===4?lh.setUint32(o,v,true):lh.setUint16(o,v,true));
+    parts.push(lh.buffer,name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    [[0,0x02014b50,4],[4,20,2],[6,20,2],[8,0x0800,2],[10,0,2],[12,time,2],[14,date,2],[16,crc,4],[20,data.length,4],[24,data.length,4],[28,name.length,2],[30,0,2],[32,0,2],[34,0,2],[36,0,2],[38,0,4],[42,offset,4]].forEach(([o,v,n])=>n===4?ch.setUint32(o,v,true):ch.setUint16(o,v,true));
+    central.push(ch.buffer,name);
+    offset+=30+name.length+data.length;
+  }
+  const size=central.reduce((a,b)=>a+b.byteLength,0),end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,size,true);end.setUint32(16,offset,true);
+  return new Blob([...parts,...central,end.buffer],{type:"application/zip"});
+}
+function downloadBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+function safeFileName(v){return String(v||"").replace(/[\\/:*?"<>|\u0000-\u001f]/g,"_").trim().slice(0,60)}
+const canvasBytes=c=>new Promise((ok,ng)=>c.toBlob(b=>b?b.arrayBuffer().then(x=>ok(new Uint8Array(x)),ng):ng(new Error("toBlob")),"image/png"));
+/* 1つの面を画像にする(用紙の上と同じ見た目。切り取り線は描かない) */
+async function renderFaceCanvas(face,scale,staging){
+  const fm=faceMM(),g=document.createElement("div");
+  g.className="sheet-grid single-mode export-face "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;
+  applyCardGeometry(g);
+  g.style.setProperty("--pair-w",fm.w+"mm");g.style.setProperty("--pair-h",fm.h+"mm");
+  g.style.gridTemplateColumns="var(--face-w)";g.style.gridTemplateRows="var(--face-h)";
+  const pair=document.createElement("div");pair.className="pair";const f=document.createElement("div");f.className="face";
+  pair.appendChild(f);g.appendChild(pair);staging.appendChild(g);
+  try{
+    renderFace(f,face,false,-1);
+    await prepareForRaster(g,scale);
+    return await html2canvas(f,{backgroundColor:"#ffffff",scale,width:fm.w*MM_TO_PX,height:fm.h*MM_TO_PX,useCORS:true,logging:false});
+  }finally{g.remove()}
+}
+const faceKey=f=>JSON.stringify(f,(k,v)=>k==="id"?undefined:packImages(k,v));   // 部品のidの違いは見た目に関係ないので比べない
+/* 書き出すカード:空のカードは除き、同じカードは1種類にまとめて枚数を数える */
+function exportList(){
+  const out=[],seen=new Map();
+  deck.order.forEach(id=>{if(isBlankCard(id))return;if(seen.has(id)){seen.get(id).n++;return}const it={id,n:1};seen.set(id,it);out.push(it)});
+  return out;
+}
+let exportBusy=false,exportCancel=false;
+function exportKind(){return document.querySelector('input[name="exportKind"]:checked')?.value||"cards"}
+function ttsSheets(total){return Math.ceil(total/69)}
+function syncExportUI(msg){
+  const list=exportList(),total=list.reduce((a,x)=>a+x.n,0),kind=exportKind(),single=isSingleMode();
+  el("exportCardsOpts").hidden=kind!=="cards";
+  el("exportSidesRow").hidden=single;
+  const sides=single?"front":el("exportSides").value,files=list.length*(sides==="both"?2:1);
+  el("exportSummary").textContent=msg||(!list.length?T("書き出すカードがありません。"):kind==="tts"?T("{m}枚のカードを{s}枚のシートにまとめます。",{m:total,s:ttsSheets(total)}):T("{n}種類のカードを書き出します（画像{f}枚）。",{n:list.length,f:files}));
+  el("exportGo").disabled=exportBusy||!list.length;
+}
+function openExport(){toggleSettings(false);closeMobilePanel();exportCancel=false;el("exportModal").hidden=false;syncExportUI()}
+function closeExport(){if(exportBusy){exportCancel=true;return}el("exportModal").hidden=true}
+async function runExport(){
+  if(exportBusy)return;
+  if(!window.html2canvas){alert(T("画像を作るライブラリを読み込めませんでした。インターネット接続を確認してください。"));return}
+  const list=exportList();if(!list.length)return;
+  exportBusy=true;exportCancel=false;syncExportUI(T("準備中…"));
+  const staging=document.createElement("div");staging.style.cssText="position:fixed;left:-12000px;top:0;z-index:-1;background:#fff";document.body.appendChild(staging);
+  const base=safeFileName(sheetTitle)||"cards",files=[];
+  try{
+    await fontsReady();
+    const fm=faceMM(),fw=fm.w*MM_TO_PX,fh=fm.h*MM_TO_PX;
+    if(exportKind()==="cards"){
+      const sides=isSingleMode()?["front"]:el("exportSides").value==="both"?["front","back"]:[el("exportSides").value];
+      const scale=Number(el("exportDpi").value)/96,jobs=[];
+      list.forEach((it,i)=>sides.forEach(side=>jobs.push({it,i,side})));
+      for(let j=0;j<jobs.length;j++){
+        if(exportCancel)throw new Error("cancel");
+        syncExportUI(T("書き出し中… {i} / {n}",{i:j+1,n:jobs.length}));
+        const {it,i,side}=jobs[j],c=await renderFaceCanvas(deck.cards[it.id][side],scale,staging);
+        files.push({name:`${String(i+1).padStart(3,"0")}${it.n>1?"_x"+it.n:""}_${side}.png`,data:await canvasBytes(c)});c.width=c.height=0;
+      }
+      downloadBlob(makeZip(files),`${base}_images.zip`);
+    }else{
+      // Tabletop Simulator:10×7のシート。右下の1枠はTTSが隠しカード用に使うので、1シート69枚まで
+      const COLS=10,ROWS=7,PER=69,scale=Math.min(4096/COLS/fw,4096/ROWS/fh);
+      const cw=Math.floor(fw*scale),chh=Math.floor(fh*scale);
+      const order=[];list.forEach(it=>{for(let k=0;k<it.n;k++)order.push(it.id)});
+      const single=isSingleMode(),firstBack=deck.cards[order[0]].back;
+      const uniqueBacks=!single&&new Set(list.map(it=>faceKey(deck.cards[it.id].back))).size>1;
+      const cache=new Map(),total=list.length*(uniqueBacks?2:1)+1;let done=0;
+      const faceImg=async(face)=>{const k=faceKey(face);if(!cache.has(k)){if(exportCancel)throw new Error("cancel");syncExportUI(T("書き出し中… {i} / {n}",{i:++done,n:total}));cache.set(k,await renderFaceCanvas(face,scale,staging))}return cache.get(k)};
+      const backImg=await faceImg(firstBack);
+      const sheetCount=ttsSheets(order.length),readme=[];
+      for(let sI=0;sI<sheetCount;sI++){
+        const ids=order.slice(sI*PER,(sI+1)*PER);
+        for(const side of uniqueBacks?["front","back"]:["front"]){
+          const cv=document.createElement("canvas");cv.width=cw*COLS;cv.height=chh*ROWS;
+          const ctx=cv.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,cv.width,cv.height);
+          for(let k=0;k<ids.length;k++){const im=await faceImg(deck.cards[ids[k]][side]);ctx.drawImage(im,(k%COLS)*cw,Math.floor(k/COLS)*chh,cw,chh)}
+          ctx.drawImage(backImg,(COLS-1)*cw,(ROWS-1)*chh,cw,chh);   // 隠しカード(手札を他の人から見たときの絵)はウラ面に
+          files.push({name:`${side==="front"?"deck":"back"}_${sI+1}.png`,data:await canvasBytes(cv)});cv.width=cv.height=0;
+        }
+        readme.push(T("deck_{s}.png：Width 10 / Height 7 / Number {n}",{s:sI+1,n:ids.length}));
+      }
+      if(!uniqueBacks){const bc=document.createElement("canvas");bc.width=cw;bc.height=chh;bc.getContext("2d").drawImage(backImg,0,0);files.push({name:"back.png",data:await canvasBytes(bc)})}
+      const lines=[T("Tabletop Simulator への取り込み方"),"",
+        T("1. Objects → Components → Cards → Custom Deck を置きます。"),
+        T(uniqueBacks?"2. Face に deck_1.png、Back に back_1.png を選び、「Unique backs」にチェックを入れます。":"2. Face に deck_1.png、Back に back.png を選びます。"),
+        T("3. Width・Height・Number を下のとおりに入れて Import します。"),"",...readme,"",
+        T("ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードしてください（TTSの画像選択画面からできます）。"),"",
+        "Card Mock Maker — https://pandakinema.github.io/card-mock-maker/"];
+      files.unshift({name:"README.txt",data:new TextEncoder().encode("﻿"+lines.join("\r\n"))});
+      cache.forEach(c=>{c.width=c.height=0});
+      downloadBlob(makeZip(files),`${base}_tts.zip`);
+    }
+    exportBusy=false;el("exportModal").hidden=true;
+    showAppToast(T("画像を書き出しました"),{duration:4000});
+  }catch(err){
+    exportBusy=false;
+    if(err&&err.message==="cancel"){el("exportModal").hidden=true}
+    else{console.error(err);alert(T("画像の書き出しに失敗しました。"));syncExportUI()}
+  }finally{staging.remove();exportBusy=false;if(!el("exportModal").hidden)syncExportUI()}
+}
+document.querySelectorAll(".open-export").forEach(b=>b.addEventListener("click",openExport));
+document.querySelectorAll("[data-export-close]").forEach(b=>b.addEventListener("click",closeExport));
+el("exportModal").addEventListener("click",e=>{if(e.target===el("exportModal"))closeExport()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("exportModal").hidden)closeExport()});
+document.querySelectorAll('input[name="exportKind"],#exportSides,#exportDpi').forEach(x=>x.addEventListener("change",()=>syncExportUI()));
+el("exportGo").addEventListener("click",runExport);
+document.addEventListener("cmm-langchange",()=>{if(!el("exportModal").hidden&&!exportBusy)syncExportUI()});
+
 function extractPdfAttachments(pdfDoc){
   const {PDFName,PDFDict,PDFArray,PDFStream,decodePDFRawStream}=PDFLib;
   if(!pdfDoc.catalog.has(PDFName.of("Names")))return [];

@@ -53,6 +53,7 @@
     <button id="loadPdfBtn" type="button">PDF読み込み</button>
     <button type="button" class="open-sample">見本を開く</button>
     <button type="button" class="open-bulk">表から一括作成</button>
+    <button type="button" class="open-export">画像で書き出す</button>
   </div>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
@@ -81,6 +82,23 @@
       <label class="bulk-keep"><input type="checkbox" id="bulkKeep"> ひな形のカードも残す</label>
     </div>
     <div class="modal-foot"><span id="bulkSummary" class="bulk-summary no-i18n"></span><button type="button" data-bulk-close>やめる</button><button type="button" id="bulkApply" class="primary">作る</button></div>
+  </div>
+</div>
+
+<div id="exportModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+  <div class="modal-box modal-narrow">
+    <div class="modal-head"><strong id="exportTitle">画像で書き出す</strong><button type="button" class="modal-close" data-export-close aria-label="閉じる">×</button></div>
+    <div class="modal-body">
+      <div class="export-kind">
+        <label class="export-opt"><input type="radio" name="exportKind" value="cards" checked><span><b>カード1枚ずつの画像</b><small>PNG画像をZIPにまとめます。ほかのツールで使ったり、紹介画像にしたり。</small></span></label>
+        <label class="export-opt"><input type="radio" name="exportKind" value="tts"><span><b>Tabletop Simulator用</b><small>10×7のシート画像とウラ面の画像をZIPにまとめます。カードは枚数ぶん並びます。</small></span></label>
+      </div>
+      <div id="exportCardsOpts" class="export-opts">
+        <label class="ds-item" id="exportSidesRow"><span>書き出す面</span><select id="exportSides"><option value="front">オモテ面</option><option value="back">ウラ面</option><option value="both">オモテ面とウラ面</option></select></label>
+        <label class="ds-item"><span>解像度</span><select id="exportDpi"><option value="150">150 dpi</option><option value="300" selected>300 dpi</option></select></label>
+      </div>
+    </div>
+    <div class="modal-foot"><span id="exportSummary" class="bulk-summary no-i18n"></span><button type="button" data-export-close>やめる</button><button type="button" id="exportGo" class="primary">書き出す</button></div>
   </div>
 </div>
 
@@ -172,6 +190,10 @@
             <button id="mobilePdfSave" type="button">PDF保存</button>
             <button id="mobilePdfLoad" type="button">PDF読み込み</button>
             <button id="mobilePrint" type="button">印刷</button>
+            <button id="mobileExport" type="button" class="open-export">画像で書き出す</button>
+          </div>
+          <div class="m-group-title">つくる</div>
+          <div class="mobile-more-grid">
             <button id="mobileNewProject" type="button">新規</button>
             <button id="mobileOpenSample" type="button" class="open-sample">見本を開く</button>
             <button id="mobileBulk" type="button" class="open-bulk">表から一括作成</button>
