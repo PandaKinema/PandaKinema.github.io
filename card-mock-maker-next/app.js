@@ -1279,18 +1279,21 @@ function renderFrameTextEditors(d){
 function syncControls(){
   const d=currentFaces()[selected];
   el("selectedLabel").textContent=faceName(selected);
-  {const id=cardIdAt(currentPage,selected),n=cardCount(id);
-   el("cardQty").value=n;el("qtyMinus").disabled=n<=1;el("unlinkCard").hidden=n<2;
-   const note=el("qtyNote");note.hidden=n<2;if(n>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n});
-   const c=deck.cards[id],t=c&&c.tpl&&deck.templates&&deck.templates[c.tpl];el("tplStatus").hidden=!t;
-   if(t)el("tplStatusText").textContent=T("テンプレート「{name}」（{n}枚）を使っています。見た目を変えると全部に反映されます。文字はこのカードだけ。",{name:t.name,n:tplCount(c.tpl)});}
+  const qid=cardIdAt(currentPage,selected),qn=cardCount(qid);
+  el("cardQty").value=qn;el("qtyMinus").disabled=qn<=1;el("unlinkCard").hidden=qn<2;
+  {const note=el("qtyNote");note.hidden=qn<2;if(qn>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n:qn});}
+  // 面の種類「マイテンプレート」:テンプレートにつながっているカード、または選ぼうとしているところ
+  const qcard=deck.cards[qid],qtpl=qcard&&qcard.tpl&&deck.templates&&deck.templates[qcard.tpl];
+  if(myTplPick&&myTplPick!==qid+":"+slotAt(currentPage,selected).side)myTplPick=null;
+  const pickOnly=!!myTplPick&&!qtpl;
+  syncMyTplPicker(qcard,qtpl,pickOnly);
   refreshCopyButtonLabels();
   syncDuplexUI();
-  el("faceType").value=d.type;
-  const templ=d.type==="template";
+  el("faceType").value=(qtpl||pickOnly)?"mytpl":d.type;
+  const templ=d.type==="template"&&!pickOnly;
   el("templateSelector").classList.toggle("hidden",!templ);
   el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
-  el("imageControls").classList.toggle("hidden",d.type!=="image");
+  el("imageControls").classList.toggle("hidden",d.type!=="image"||pickOnly);
   el("mobileTemplateHint")?.classList.toggle("hidden",templ);
   el("mobileTemplateBar")?.classList.toggle("hidden",!templ);
 
@@ -1406,7 +1409,16 @@ el("impositionMode").addEventListener("change",e=>{el("paperOrientation").value=
 window.addEventListener("resize",fitPaper);
 
 el("faceType").addEventListener("change",e=>{
-  const t=e.target.value,keep=keepCommon(currentFaces()[selected]);
+  const t=e.target.value,id=cardIdAt(currentPage,selected),c=deck.cards[id];
+  if(t==="mytpl"){myTplPick=id+":"+slotAt(currentPage,selected).side;syncControls();return}
+  myTplPick=null;
+  // マイテンプレートから別の種類へ:テンプレートから外す(同じ種類なら見た目はそのまま)
+  if(c&&c.tpl){
+    const tp=deck.templates&&deck.templates[c.tpl];delete c.tpl;tplWatch=null;
+    if(tp)showAppToast(T("テンプレート「{name}」から外しました",{name:tp.name}),{duration:4000});
+    if(t===currentFaces()[selected].type){renderSheet();syncControls();return}
+  }
+  const keep=keepCommon(currentFaces()[selected]);
   if(t==="plain")setFaceAt(currentPage,selected,{type:"plain",...keep});
   else if(t==="template")setFaceAt(currentPage,selected,{...makePlaying(),...keep});
   else if(t==="image")setFaceAt(currentPage,selected,{type:"image",src:null,...keep});
@@ -2174,22 +2186,46 @@ function faceThumb(face,W){
   const f=document.createElement("div");f.className="face";f.style.width=fm.w*MM_TO_PX+"px";f.style.height=fm.h*MM_TO_PX+"px";f.style.transform=`scale(${k})`;
   box.appendChild(f);renderFace(f,face||makePlain(),false,-1);return box;
 }
-function openTplModal(focusName){
-  toggleSettings(false);closeMobilePanel();el("tplName").dataset.touched="";el("tplModal").hidden=false;renderTplModal();
-  if(focusName&&!el("tplName").disabled){el("tplName").focus();el("tplName").select()}
+/* 面の種類「マイテンプレート」の選択肢(小さな絵と名前) */
+let myTplPick=null,myTplSig="";
+function syncMyTplPicker(card,t,pickOnly){
+  const show=!!t||pickOnly;el("myTplPicker").classList.toggle("hidden",!show);
+  el("tplStatus").hidden=!t;
+  if(t){const n=tplCount(card.tpl);el("tplStatusText").textContent=n>1?T("見た目を変えると、テンプレート「{name}」の{n}枚すべてに反映されます。文字はこのカードだけ。",{name:t.name,n})
+    :T("テンプレート「{name}」を使っています。ほかのカードにも使うと、見た目を変えたときに全部に反映されます。",{name:t.name})}
+  if(!show)return;
+  const items=allTemplates();el("myTplEmpty").hidden=items.length>0;
+  const sig=[card&&card.tpl,el("cardSize").value,cardOrientation,window.CMMI18N&&CMMI18N.lang,...items.map(x=>x.id+"="+x.name+"="+styleOf(x.front))].join("|");
+  if(sig===myTplSig)return;myTplSig=sig;
+  const wrap=el("myTplChoices");wrap.innerHTML="";
+  items.forEach(x=>{
+    const on=!!(card&&card.tpl===x.id),b=document.createElement("button");b.type="button";b.className="mytpl-choice"+(on?" current":"");b.setAttribute("aria-pressed",String(on));
+    b.append(faceThumb(x.front,46));const nm=document.createElement("span");nm.textContent=x.name;b.appendChild(nm);
+    b.addEventListener("click",()=>{if(!on)useTemplate(x.id)});wrap.appendChild(b);
+  });
+}
+function openTplModal(){
+  toggleSettings(false);closeMobilePanel();el("tplModal").hidden=false;renderTplModal();
   if(!libReady)loadLibrary().then(()=>{if(!el("tplModal").hidden)renderTplModal()});
 }
-function closeTplModal(){el("tplModal").hidden=true}
-function renderTplModal(){
-  const id=cardIdAt(currentPage,selected),card=deck.cards[id],blank=isBlankCard(id),nm=el("tplName");
-  if(!nm.dataset.touched)nm.value=uniqueTplName(suggestTplName(card));
-  nm.disabled=el("tplSaveBtn").disabled=blank;
-  const cur=card&&card.tpl&&deck.templates&&deck.templates[card.tpl];
+/* テンプレートとして保存(名前をつけるだけの小さな画面) */
+function openTplSave(){
+  const id=cardIdAt(currentPage,selected),card=deck.cards[id],blank=isBlankCard(id),cur=card&&card.tpl&&deck.templates&&deck.templates[card.tpl];
+  toggleSettings(false);
+  el("tplName").value=uniqueTplName(suggestTplName(card));el("tplName").disabled=el("tplSaveBtn").disabled=blank;
   el("tplSaveNote").textContent=blank?T("空のカードはテンプレートにできません。カードを作ってから保存してください。")
     :cur?T("このカードはテンプレート「{name}」を使っています。保存すると、新しいテンプレートとして分かれます。",{name:cur.name}):"";
+  const th=el("tplSaveThumbs");th.innerHTML="";if(card){th.append(faceThumb(card.front,64));if(!isSingleMode())th.append(faceThumb(card.back,64))}
+  el("tplSaveModal").hidden=false;
+  if(!blank&&!mobileUIActive()){el("tplName").focus();el("tplName").select()}
+}
+function closeTplSave(){el("tplSaveModal").hidden=true}
+function closeTplModal(){el("tplModal").hidden=true}
+function renderTplModal(){
+  const id=cardIdAt(currentPage,selected),card=deck.cards[id],cur=card&&card.tpl&&deck.templates&&deck.templates[card.tpl];
   const list=el("tplList");list.innerHTML="";
   const items=allTemplates();
-  if(!items.length){const m=document.createElement("p");m.className="tpl-note";m.textContent=T("まだありません。カードの見た目を整えたら、上で名前をつけて保存します。");list.appendChild(m)}
+  if(!items.length){const m=document.createElement("p");m.className="tpl-note";m.textContent=T("まだありません。カードの見た目を整えたら、「面」の「テンプレートとして保存」で作れます。");list.appendChild(m)}
   items.forEach(t=>{
     const row=document.createElement("div");row.className="tpl-item"+(cur&&card.tpl===t.id?" current":"");
     const th=document.createElement("div");th.className="tpl-thumbs";th.append(faceThumb(t.front,48));if(!isSingleMode())th.append(faceThumb(t.back,48));
@@ -2209,14 +2245,14 @@ function renderTplModal(){
 async function saveTemplateFromSelected(){
   const id=cardIdAt(currentPage,selected),card=deck.cards[id];if(!card||isBlankCard(id))return;
   const name=el("tplName").value.trim()||uniqueTplName(suggestTplName(card)),tid=addTemplate(card,name,false);
-  card.tpl=tid;tplWatch=null;el("tplName").dataset.touched="";
-  let msg=T("テンプレート「{name}」を保存しました",{name});
+  card.tpl=tid;tplWatch=null;myTplPick=null;
+  let msg=T("テンプレート「{name}」を保存しました。面の種類の「マイテンプレート」から使えます。",{name});
   try{await saveToLibrary(tid)}catch(e){console.warn(e);msg=T("ブラウザには保存できませんでした（この作品の中には保存されています）。")}
-  renderSheet();syncControls();renderTplModal();showAppToast(msg,{duration:4000});
+  closeTplSave();renderSheet();syncControls();showAppToast(msg,{duration:5000});
 }
 function useTemplate(tid){
   if(!ensureTemplateInDeck(tid))return;
-  const id=cardIdAt(currentPage,selected);applyTemplate(tid,id);tplWatch=null;
+  const id=cardIdAt(currentPage,selected);applyTemplate(tid,id);tplWatch=null;myTplPick=null;
   closeTplModal();syncPages();renderSheet();syncControls();
   showAppToast(T("テンプレート「{name}」を使いました",{name:deck.templates[tid].name}),{duration:4000});
 }
@@ -2235,17 +2271,18 @@ async function deleteTemplate(tid){
   try{if(myLibrary.some(x=>x.id===tid))await removeFromLibrary(tid)}catch(e){console.warn(e)}
   tplWatch=null;renderSheet();syncControls();renderTplModal();
 }
-document.querySelectorAll(".open-tpl").forEach(b=>b.addEventListener("click",()=>openTplModal(false)));
-el("tplSaveQuick").addEventListener("click",()=>openTplModal(true));
+document.querySelectorAll(".open-tpl").forEach(b=>b.addEventListener("click",openTplModal));
+el("tplSaveQuick").addEventListener("click",openTplSave);
 document.querySelectorAll("[data-tpl-close]").forEach(b=>b.addEventListener("click",closeTplModal));
+document.querySelectorAll("[data-tplsave-close]").forEach(b=>b.addEventListener("click",closeTplSave));
 el("tplModal").addEventListener("click",e=>{if(e.target===el("tplModal"))closeTplModal()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("tplModal").hidden)closeTplModal()});
-el("tplName").addEventListener("input",()=>{el("tplName").dataset.touched="1"});
+el("tplSaveModal").addEventListener("click",e=>{if(e.target===el("tplSaveModal"))closeTplSave()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!el("tplSaveModal").hidden)closeTplSave();else if(!el("tplModal").hidden)closeTplModal()});
 el("tplName").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveTemplateFromSelected()}});
 el("tplSaveBtn").addEventListener("click",saveTemplateFromSelected);
 el("tplUnlink").addEventListener("click",()=>{const c=deck.cards[cardIdAt(currentPage,selected)];if(c&&c.tpl){delete c.tpl;tplWatch=null;renderSheet();syncControls()}});
 document.addEventListener("cmm-langchange",()=>{if(!el("tplModal").hidden)renderTplModal()});
-loadLibrary();
+loadLibrary().then(()=>syncControls());
 
 /* ---- 画像で書き出す:カード1枚ずつのPNG / Tabletop Simulator用のシート(どちらもZIP) ---- */
 const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();

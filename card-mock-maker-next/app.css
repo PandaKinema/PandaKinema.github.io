@@ -2175,3 +2175,16 @@ header .app-brand{align-items:center}
   .tpl-name{height:40px;font-size:16px!important}
   .tpl-acts button{min-height:38px;font-size:13px}
 }
+
+/* ---- 面の種類「マイテンプレート」 ---- */
+.mytpl-picker{margin:8px 0 4px}
+.mytpl-picker.hidden{display:none!important}
+.mytpl-choices{display:flex;flex-wrap:wrap;gap:6px}
+.mytpl-choices:empty{display:none}
+.mytpl-choice{display:flex!important;flex-direction:column;align-items:center;gap:4px;width:72px;min-height:0!important;padding:6px 4px!important;border:1px solid var(--ui-border)!important;border-radius:8px!important;background:var(--ui-control)!important;color:var(--ink)!important;font-size:11px!important;line-height:1.3}
+.mytpl-choice span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.mytpl-choice.current{border-color:rgba(36,184,242,.95)!important;box-shadow:inset 0 0 0 1px rgba(36,184,242,.95);background:rgba(36,184,242,.08)!important}
+.mytpl-picker .tpl-status{margin-top:8px}
+.tpl-save-thumbs{display:flex;gap:8px;margin-bottom:12px}
+.tpl-save-name{width:100%;height:34px}
+@media(max-width:720px){.mytpl-choice{width:80px;font-size:12px!important}.tpl-save-name{height:44px;font-size:16px}}

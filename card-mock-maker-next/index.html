@@ -108,15 +108,24 @@
   </div>
 </div>
 
+<div id="tplSaveModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="tplSaveTitle">
+  <div class="modal-box modal-narrow">
+    <div class="modal-head"><strong id="tplSaveTitle">テンプレートとして保存</strong><button type="button" class="modal-close" data-tplsave-close aria-label="閉じる">×</button></div>
+    <div class="modal-body">
+      <div id="tplSaveThumbs" class="tpl-save-thumbs"></div>
+      <label for="tplName" class="tpl-save-label">名前</label>
+      <input id="tplName" class="tpl-save-name" type="text" maxlength="40">
+      <p id="tplSaveNote" class="tpl-note no-i18n"></p>
+      <p class="tpl-note">このカードの見た目を保存します。保存したテンプレートは、面の種類の「マイテンプレート」から選べます。このブラウザで作るほかの作品でも使えます。</p>
+    </div>
+    <div class="modal-foot"><span class="bulk-summary"></span><button type="button" data-tplsave-close>やめる</button><button id="tplSaveBtn" type="button" class="primary">保存</button></div>
+  </div>
+</div>
+
 <div id="tplModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="tplTitle">
   <div class="modal-box modal-narrow">
     <div class="modal-head"><strong id="tplTitle">マイテンプレート</strong><button type="button" class="modal-close" data-tpl-close aria-label="閉じる">×</button></div>
     <div class="modal-body">
-      <div class="tpl-save">
-        <label for="tplName" class="tpl-save-label">選んでいるカードをテンプレートにする</label>
-        <div class="tpl-save-row"><input id="tplName" type="text" maxlength="40"><button id="tplSaveBtn" type="button" class="primary">保存</button></div>
-        <p id="tplSaveNote" class="tpl-note no-i18n"></p>
-      </div>
       <div id="tplList" class="tpl-list no-i18n"></div>
       <p class="tpl-note">テンプレートは作品と一緒に保存されます（PDF保存にも入ります）。「ブラウザに保存」したものは、このブラウザで作るほかの作品でも使えます。</p>
     </div>
@@ -267,14 +276,19 @@
       <button id="unlinkCard" type="button" class="mini" hidden>このカードだけ別にする</button>
     </div>
     <p id="qtyNote" class="qty-note" hidden></p>
-    <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
 
     <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
       <option value="plain">無地</option>
       <option value="template">テンプレート</option>
       <option value="image">画像</option>
+      <option value="mytpl">マイテンプレート</option>
     </select>
+    <div id="myTplPicker" class="mytpl-picker hidden">
+      <div id="myTplChoices" class="mytpl-choices no-i18n"></div>
+      <p id="myTplEmpty" class="tpl-note" hidden>まだマイテンプレートがありません。カードの見た目を整えたら、下の「テンプレートとして保存」で作れます。</p>
+      <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
+    </div>
 
     <div class="tool-block face-bg-tool">
       <div class="tool-strip">
@@ -304,7 +318,7 @@
       <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
       <button id="copyToPageSide" class="mini copy-wide">このページの同じ面にコピー</button>
       <button id="copyToAllPagesSide" class="mini copy-wide">すべてのページの同じ面にコピー</button>
-      <div class="copy-face-row tpl-row"><button id="tplSaveQuick" type="button" class="mini">テンプレートとして保存</button><button type="button" class="mini open-tpl">マイテンプレート</button></div>
+      <button id="tplSaveQuick" type="button" class="mini copy-wide">テンプレートとして保存</button>
     </div>
   </div>
 
