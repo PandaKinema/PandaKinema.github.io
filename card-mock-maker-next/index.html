@@ -1695,8 +1695,8 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <span class="brand-en">Card Mock Maker</span>
   </div>
   <div class="history-controls" aria-label="履歴">
-    <button id="undoBtn" class="icon-btn" title="戻る（⌘Z / Ctrl+Z）" aria-label="戻る">←</button>
-    <button id="redoBtn" class="icon-btn" title="進む（⌘Y / Ctrl+Y / ⇧⌘Z）" aria-label="進む">→</button>
+    <button id="undoBtn" class="icon-btn" title="取り消し（⌘Z / Ctrl+Z）" aria-label="取り消し">←</button>
+    <button id="redoBtn" class="icon-btn" title="やり直し（⇧⌘Z / Ctrl+Y）" aria-label="やり直し">→</button>
   </div>
   <select id="paperSize" title="用紙サイズ"><option value="a4">A4</option><option value="a3">A3</option></select>
   <select id="paperOrientation" title="用紙方向"><option value="landscape">横</option><option value="portrait">縦</option></select>
@@ -1739,12 +1739,13 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
           <div id="sheetGrid" class="sheet-grid portrait-card"></div>
         </div>
       </div>
+      <p class="fit-note screen-fit-note"></p>
       
       <div id="mobileQuickBar" class="mobile-quick-bar" aria-label="スマホ用ツールバー">
-        <button id="mobileAddPage" type="button"><span class="mq-icon">＋</span><span>ページ</span></button>
         <button id="mobileFaceTab" type="button"><span class="mq-icon">▣</span><span>面</span></button>
         <button id="mobileTemplateTab" type="button"><span class="mq-icon">A</span><span>テンプレ</span></button>
         <button id="mobileOptionsJump" type="button"><span class="mq-icon">＋</span><span>オプション</span></button>
+        <button id="mobilePaperTab" type="button"><span class="mq-icon">▤</span><span>用紙</span></button>
         <button id="mobileMore" type="button"><span class="mq-icon">•••</span><span>メニュー</span></button>
       </div>
       
@@ -1754,23 +1755,43 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
       </div>
       <div id="mobileTemplatePanel" class="mobile-tool-panel" aria-hidden="true">
         <div class="mobile-panel-head"><strong>テンプレート</strong><button type="button" class="mobile-panel-close">×</button></div>
-        <div id="mobileTemplatePanelBody" class="mobile-panel-body"></div>
+        <div id="mobileTemplatePanelBody" class="mobile-panel-body">
+          <div id="mobileTemplateHint" class="m-hint hidden">
+            <p>この面は「<span id="mobileFaceTypeName">無地</span>」です。テンプレートを使うときは、面の種類を「テンプレート」にします。</p>
+            <button id="mobileMakeTemplate" type="button">この面をテンプレートにする</button>
+          </div>
+        </div>
       </div>
       <div id="mobileOptionsPanel" class="mobile-tool-panel" aria-hidden="true">
         <div class="mobile-panel-head"><strong>オプション</strong><button type="button" class="mobile-panel-close">×</button></div>
         <div id="mobileOptionsPanelBody" class="mobile-panel-body"></div>
       </div>
+      <div id="mobilePaperPanel" class="mobile-tool-panel" aria-hidden="true">
+        <div class="mobile-panel-head"><strong>用紙</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div id="mobilePaperPanelBody" class="mobile-panel-body m-form">
+          <div class="m-field"><span class="m-label">用紙</span><div class="m-slot m-slot-pair" data-slot="paperSize paperOrientation"></div></div>
+          <div class="m-field"><span class="m-label">カード</span><div class="m-slot" data-slot="cardSize"></div></div>
+          <div class="m-field"><span class="m-label">面付け</span><div class="m-slot" data-slot="impositionMode"></div></div>
+          <div class="m-field"><span class="m-label">タイトル</span><div class="m-slot" data-slot="sheetTitleInput"></div></div>
+          <p class="fit-note"></p>
+        </div>
+      </div>
       <div id="mobileMorePanel" class="mobile-tool-panel mobile-more-panel" aria-hidden="true">
         <div class="mobile-panel-head"><strong>メニュー</strong><button type="button" class="mobile-panel-close">×</button></div>
-        <div class="mobile-panel-body mobile-more-grid">
-          <button id="mobileUndo" type="button">←<small>取り消し</small></button>
-          <button id="mobileRedo" type="button">→<small>やり直し</small></button>
-          <button id="mobilePdfSave" type="button">PDF<small>保存</small></button>
-          <button id="mobilePdfLoad" type="button">PDF<small>読み込み</small></button>
-          <button id="mobilePrint" type="button">印刷<small>印刷</small></button>
-          <button id="mobileDupPage" type="button">⧉<small>ページ複製</small></button>
-          <button id="mobileDeletePage" type="button">−<small>ページ削除</small></button>
-          <button id="mobileNewProject" type="button">＋<small>新規</small></button>
+        <div class="mobile-panel-body">
+          <div class="m-group-title">ファイル</div>
+          <div class="mobile-more-grid">
+            <button id="mobilePdfSave" type="button">PDF保存</button>
+            <button id="mobilePdfLoad" type="button">PDF読み込み</button>
+            <button id="mobilePrint" type="button">印刷</button>
+            <button id="mobileNewProject" type="button">新規</button>
+          </div>
+          <div class="m-group-title">ページ</div>
+          <div class="mobile-more-grid">
+            <button id="mobileAddPage" type="button">ページを追加</button>
+            <button id="mobileDupPage" type="button">ページを複製</button>
+            <button id="mobileDeletePage" type="button">ページを削除</button>
+          </div>
         </div>
       </div>
 
@@ -1781,7 +1802,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
           <button id="mobileNextCard" type="button" aria-label="次のカード">→</button>
         </div>
         <div id="mobileCardPair" class="mobile-card-pair"></div>
-        <div class="mobile-face-labels"><span>表</span><span>裏</span></div>
+        <div class="mobile-face-labels"><span>オモテ</span><span>ウラ</span></div>
       </section>
     </div>
   </div>
@@ -1792,7 +1813,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
   <div class="group face-section">
     <div class="section-title">面</div>
-    <div id="selectedLabel" class="hint selected-face-label">カード1・表</div>
+    <div id="selectedLabel" class="hint selected-face-label">カード1（ページ内1）・オモテ</div>
 
     <select id="faceType">
       <option value="plain">無地</option>
@@ -1819,8 +1840,9 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         </div>
       </div>
       <div class="tool-file-line">
+        <span class="file-line-label">背景画像</span>
         <input id="faceBgImageInput" type="file" accept="image/*" aria-label="背景画像">
-        <button id="clearFaceBgImage" class="mini">削除</button>
+        <button id="clearFaceBgImage" class="mini" title="背景画像を削除">削除</button>
       </div>
     </div>
     <div class="copy-tools face-copy-tools">
@@ -1834,10 +1856,9 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="section-title">テンプレート</div>
     <label>種類</label>
     <select id="templateType">
-      <option value="playing">テンプレ1：トランプ</option>
-      <option value="tcg">テンプレ2：トレカ</option>
-      <option value="word">テンプレ3：ワードゲーム</option>
-      <option value="custom">テンプレ4：カスタム</option>
+      <option value="playing">トランプ</option>
+      <option value="tcg">トレカ</option>
+      <option value="word">ワードゲーム</option>
     </select>
   </div>
 
@@ -1845,9 +1866,9 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="tool-block">
       <div class="tool-strip">
         <input id="numInput" class="tool-main-input" type="text" value="7" aria-label="数字" title="数字">
-        <div class="tool-number-wrap" title="文字サイズ">
+        <div class="tool-number-wrap" title="数字の大きさ（mm）">
           <span class="size-icon" aria-hidden="true">A</span>
-          <input id="playingSize" class="tool-number" type="number" min="8" max="100" value="31" aria-label="文字サイズ">
+          <input id="playingSize" class="tool-number" type="number" min="8" max="100" value="31" aria-label="数字の大きさ（mm）">
         </div>
         <label class="style-toggle" title="太字"><input id="playingBold" type="checkbox" checked><span class="bold-mark">B</span></label>
         <label class="style-toggle" title="斜体"><input id="playingItalic" type="checkbox"><span class="italic-mark">I</span></label><label class="style-toggle" title="下線"><input id="playingUnderline" type="checkbox"><span class="underline-mark">U</span></label>
@@ -1867,12 +1888,13 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
         <select id="suitCount" class="tool-small-select" aria-label="スート個数" title="スート個数">
           <option value="1">×1</option><option value="2">×2</option><option value="3">×3</option><option value="4">×4</option><option value="5">×5</option>
         </select>
-        <select id="suitMode" class="tool-mode-select" aria-label="スート種類" title="スート種類">
-          <option value="text">規定</option><option value="image">画像</option>
+        <select id="suitMode" class="tool-mode-select" aria-label="スートの種類" title="スートの種類">
+          <option value="text">記号</option><option value="image">画像</option>
         </select>
       </div>
       <div id="suitImageControls" class="hidden tool-file-line">
-        <input id="suitImageInput" type="file" accept="image/*" aria-label="スート画像">
+        <span class="file-line-label">スートの画像</span>
+        <input id="suitImageInput" type="file" accept="image/*" aria-label="スートの画像">
       </div>
       <div class="tool-file-line" style="margin-top:6px">
         <label for="cornerPlacement" style="margin:0;white-space:nowrap">配置</label>
@@ -1892,7 +1914,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="tool-block">
       <div class="tool-strip">
         <input id="tcgName" class="tool-main-input" type="text" placeholder="カード名" aria-label="カード名">
-        <div class="tool-number-wrap" title="文字サイズ">
+        <div class="tool-number-wrap" title="文字サイズ（px）">
           <span class="size-icon" aria-hidden="true">A</span>
           <input id="tcgNameSize" class="tool-number" type="number" min="8" max="60" value="15" aria-label="文字サイズ">
         </div>
@@ -1903,14 +1925,15 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 
     <div class="tool-block">
       <div class="tool-file-line">
-        <input id="tcgImageInput" type="file" accept="image/*" aria-label="中段画像">
+        <span class="file-line-label">中段の画像</span>
+        <input id="tcgImageInput" type="file" accept="image/*" aria-label="中段の画像">
       </div>
     </div>
 
     <div class="tool-block">
       <textarea id="tcgDesc" class="tool-textarea" placeholder="テキスト" aria-label="テキスト"></textarea>
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ">
+        <div class="tool-number-wrap" title="文字サイズ（px）">
           <span class="size-icon" aria-hidden="true">A</span>
           <input id="tcgDescSize" class="tool-number" type="number" min="7" max="40" value="12" aria-label="文字サイズ">
         </div>
@@ -1958,7 +1981,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="tool-block">
       <div class="tool-strip">
         <input id="wordMain" class="tool-main-input" type="text" placeholder="ことば" aria-label="メイン文字">
-        <div class="tool-number-wrap" title="文字サイズ">
+        <div class="tool-number-wrap" title="文字サイズ（px）">
           <span class="size-icon" aria-hidden="true">A</span>
           <input id="wordMainSize" class="tool-number" type="number" min="8" max="100" value="53" aria-label="文字サイズ">
         </div>
@@ -2218,6 +2241,18 @@ function onImagePicked(input,apply){
   });
 }
 
+/* 面の種類やテンプレートを切り替えても引き継ぐもの(背景・線・オプション) */
+function keepCommon(old){
+  return {bgColor:old.bgColor||"#ffffff",bgNone:!!old.bgNone,bgImage:old.bgImage||null,
+    bgBorderColor:old.bgBorderColor||"#222222",bgBorderWidth:old.bgBorderWidth??1,bgBorderNone:old.bgBorderNone!==false,bgBorderAlign:old.bgBorderAlign||"inside",
+    textBoxes:deep(ensureTextBoxes(old)),frameTexts:deep(ensureFrameTexts(old)),optionImages:deep(ensureOptionImages(old)),shapes:deep(ensureShapes(old))};
+}
+/* 以前の「カスタム」テンプレートは無地と同じ見た目なので、無地として開く */
+function normalizeFaces(list){
+  (list||[]).forEach(pg=>(pg||[]).forEach((d,i)=>{if(d&&d.type==="template"&&d.template==="custom")pg[i]={type:"plain",...keepCommon(d)}}));
+  return list;
+}
+
 function faceName(i){
   if(isSingleMode()){const card=i+1;return `カード${currentPage*cardsPerPage()+card}（ページ内${card}）`;}
   const card=Math.floor(i/2)+1;
@@ -2254,8 +2289,10 @@ function fitPaper(){
   paper.parentElement.style.height=p.h*MM_TO_PX*scale+"px";
 }
 function updateFit(){
-  const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2;
-  el("fitStatus").textContent=`${el("paperSize")?.value==="a3"?"A3":"A4"}実寸100%想定：${cardsPerPage()}枚面付け / 左右${x.toFixed(1)}mm / 上下${y.toFixed(1)}mm余白`;
+  const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2,c=cardMM();
+  const paperName=(el("paperSize")?.value==="a3"?"A3":"A4")+(el("paperOrientation").value==="landscape"?"横":"縦");
+  el("fitStatus").textContent=`${paperName}：${cardsPerPage()}枚 / 余白 左右${x.toFixed(1)}mm・上下${y.toFixed(1)}mm`;
+  document.querySelectorAll(".fit-note").forEach(n=>{n.textContent=`${paperName}に${c.w}×${c.h}mmのカードが${cardsPerPage()}枚（余白 左右${x.toFixed(1)}mm・上下${y.toFixed(1)}mm）。印刷は「実際のサイズ（100%）」で。`});
 }
 
 
@@ -2341,7 +2378,7 @@ function refreshOpenColorPopup(){if(colorPopup&&colorPopup._renderUsed)colorPopu
 function openColorPopup(input,anchor){
   if(colorPopup && activeColorInput===input){closeColorPopup();return}
   closeColorPopup();activeColorInput=input;let rgb=hexToRgb(input.value),hsv=rgbToHsv(rgb.r,rgb.g,rgb.b),mode="CMYK";
-  const pop=document.createElement("div");pop.className="color-popup";pop.innerHTML=`<div class="color-popup-head"><strong>カラー</strong><button type="button" class="color-popup-close">×</button></div><div class="color-field"><span class="color-field-marker"></span></div><input class="color-hue" type="range" min="0" max="359" value="${Math.round(hsv.h)}"><div class="color-popup-row"><span class="color-preview"></span><select class="color-mode"><option value="CMYK">CMYK</option><option value="RGB">RGB</option></select><div class="color-values"></div></div><div class="color-bottom-row"><button type="button" class="color-none-btn"><span class="none-icon"></span><span>なし</span></button><label class="hex-wrap"><input class="color-hex" type="text" maxlength="7" spellcheck="false" aria-label="カラーコード" placeholder="#D94A4A"></label></div><div class="color-popup-section">規定色</div><div class="swatches preset-swatches"></div><div class="color-popup-section">使われている色</div><div class="swatches used-swatches"></div>`;
+  const pop=document.createElement("div");pop.className="color-popup";pop.innerHTML=`<div class="color-popup-head"><strong>カラー</strong><button type="button" class="color-popup-close">×</button></div><div class="color-field"><span class="color-field-marker"></span></div><input class="color-hue" type="range" min="0" max="359" value="${Math.round(hsv.h)}"><div class="color-popup-row"><span class="color-preview"></span><select class="color-mode"><option value="CMYK">CMYK</option><option value="RGB">RGB</option></select><div class="color-values"></div></div><div class="color-bottom-row"><button type="button" class="color-none-btn"><span class="none-icon"></span><span>なし</span></button><label class="hex-wrap"><input class="color-hex" type="text" maxlength="7" spellcheck="false" aria-label="カラーコード" placeholder="#D94A4A"></label></div><div class="color-popup-section">基本の色</div><div class="swatches preset-swatches"></div><div class="color-popup-section">使われている色</div><div class="swatches used-swatches"></div>`;
   document.body.appendChild(pop);colorPopup=pop;
   const field=pop.querySelector(".color-field"),marker=pop.querySelector(".color-field-marker"),hue=pop.querySelector(".color-hue"),preview=pop.querySelector(".color-preview"),values=pop.querySelector(".color-values"),modeSel=pop.querySelector(".color-mode"),hexInput=pop.querySelector(".color-hex");
   const currentHex=()=>{const x=hsvToRgb(hsv.h,hsv.s,hsv.v);return rgbToHex(x.r,x.g,x.b)};
@@ -2450,7 +2487,7 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
   if(d.type==="plain"){renderGenericTextBoxes(faceEl,d,selectable,idx);return;}
   if(d.type==="image"){
     if(d.src){const img=document.createElement("img");img.src=d.src;img.style.width="100%";img.style.height="100%";img.style.objectFit="cover";img.style.position="relative";img.style.zIndex="1";faceEl.appendChild(img)}
-    else faceEl.innerHTML='<div class="empty">画像未設定</div>';
+    else faceEl.innerHTML='<div class="empty ph">画像未設定</div>';
     renderGenericTextBoxes(faceEl,d,selectable,idx);
     return
   }
@@ -2476,16 +2513,16 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
 
     const ns=d.nameStyle||{size:15,bold:true,italic:false};
     const ds=d.descStyle||{size:12,bold:false,italic:false};
-    wrap.innerHTML=`<div class="tcg-name" style="font-size:${ns.size}px;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${esc(d.name||"カード名")}</div>
-      <div class="tcg-image">${d.image?`<img src="${d.image}">`:"画像"}</div>
-      <div class="tcg-desc" style="font-size:${ds.size}px;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${esc(d.desc||"テキスト")}</div>`;
+    wrap.innerHTML=`<div class="tcg-name" style="font-size:${ns.size}px;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${d.name?esc(d.name):'<span class="ph">カード名</span>'}</div>
+      <div class="tcg-image">${d.image?`<img src="${d.image}">`:'<span class="ph">画像</span>'}</div>
+      <div class="tcg-desc" style="font-size:${ds.size}px;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${d.desc?esc(d.desc):'<span class="ph">テキスト</span>'}</div>`;
     faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
 
   if(d.template==="word"){
     const wrap=document.createElement("div");wrap.className="word-card";
     const main=document.createElement("div");main.className="word-main"+(!isLandscapeCard()?" vertical":"");
-    const ms=d.mainStyle||{size:53,bold:true,italic:false};main.style.fontSize=ms.size+"px";main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");main.textContent=d.main||"ことば";
+    const ms=d.mainStyle||{size:53,bold:true,italic:false};main.style.fontSize=ms.size+"px";main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");if(d.main)main.textContent=d.main;else main.innerHTML='<span class="ph">ことば</span>';
     wrap.appendChild(main);faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
 
@@ -2503,79 +2540,6 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     <div class="center-num" style="color:${nc};font-size:${d.numberStyle?.size||31}mm;font-weight:${d.numberStyle?.bold===false?400:800};font-style:${d.numberStyle?.italic?"italic":"normal"};text-decoration:${d.numberStyle?.underline?"underline":"none"}">${esc(d.number||"")}</div>`;
   faceEl.appendChild(wrap);
   renderGenericTextBoxes(faceEl,d,selectable,idx);
-}
-
-
-function enableCustomBox(node,idx,key){
-  let mode=null,startX=0,startY=0,start=null;
-  const handle=node.querySelector(".resize-handle");
-  const pointerDown=(e,m)=>{
-    e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;
-    const d=currentFaces()[idx],b=(d.customBoxes&&d.customBoxes[key])||{x:20,y:20,w:60,h:14};
-    start={...b};
-    window.addEventListener("pointermove",move);
-    window.addEventListener("pointerup",up,{once:true});
-  };
-  node.addEventListener("pointerdown",e=>{if(e.target===handle)return;pointerDown(e,"move")});
-  handle.addEventListener("pointerdown",e=>pointerDown(e,"resize"));
-  function move(e){
-    if(!mode)return;
-    const face=node.closest(".face"),r=face.getBoundingClientRect();
-    const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;
-    const d=currentFaces()[idx];
-    d.customBoxes=d.customBoxes||{};
-    if(mode==="move"){
-      d.customBoxes[key]={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-start.h)};
-    }else{
-      if(e.shiftKey){
-        const ratio=start.w/start.h;
-        let nw=clamp(start.w+dx,12,100-start.x);
-        let nh=nw/ratio;
-        if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}
-        if(nh<6){nh=6;nw=nh*ratio}
-        d.customBoxes[key]={...start,w:nw,h:nh};
-      }else{
-        d.customBoxes[key]={...start,w:clamp(start.w+dx,12,100-start.x),h:clamp(start.h+dy,6,100-start.y)};
-      }
-    }
-    const b=d.customBoxes[key];
-    node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
-  }
-  function up(){mode=null;window.removeEventListener("pointermove",move)}
-}
-
-function enableSubtitleBox(node,idx){
-  let mode=null,startX=0,startY=0,start=null;
-  const handle=node.querySelector(".resize-handle");
-  const pointerDown=(e,m)=>{
-    e.preventDefault();e.stopPropagation();mode=m;startX=e.clientX;startY=e.clientY;
-    const d=currentFaces()[idx],b=d.subBox||{x:20,y:73,w:60,h:14};start={...b};
-    window.addEventListener("pointermove",move);window.addEventListener("pointerup",up,{once:true});
-  };
-  node.addEventListener("pointerdown",e=>{if(e.target===handle)return;pointerDown(e,"move")});
-  handle.addEventListener("pointerdown",e=>pointerDown(e,"resize"));
-  function move(e){
-    if(!mode)return;
-    const face=node.closest(".face"),r=face.getBoundingClientRect();
-    const dx=(e.clientX-startX)/r.width*100,dy=(e.clientY-startY)/r.height*100;
-    const d=currentFaces()[idx];
-    if(mode==="move"){
-      d.subBox={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-start.h)};
-    }else{
-      if(e.shiftKey){
-        const ratio=start.w/start.h;
-        let nw=clamp(start.w+dx,15,100-start.x);
-        let nh=nw/ratio;
-        if(nh>100-start.y){nh=100-start.y;nw=nh*ratio}
-        if(nh<7){nh=7;nw=nh*ratio}
-        d.subBox={...start,w:nw,h:nh};
-      }else{
-        d.subBox={...start,w:clamp(start.w+dx,15,100-start.x),h:clamp(start.h+dy,7,100-start.y)};
-      }
-    }
-    const b=d.subBox;node.style.left=b.x+"%";node.style.top=b.y+"%";node.style.width=b.w+"%";node.style.height=b.h+"%";
-  }
-  function up(){mode=null;window.removeEventListener("pointermove",move)}
 }
 
 
@@ -2671,7 +2635,7 @@ function applyHistorySnapshot(snapshot){
   const st=JSON.parse(snapshot,unpackImages);
   historyRestoring=true;
 
-  pages=st.pages;
+  pages=normalizeFaces(st.pages);
   sheetTitle=st.sheetTitle||"";
   el("paperSize").value=st.paperSize||"a4";
   el("paperOrientation").value=st.paperOrientation||"landscape";
@@ -2761,6 +2725,8 @@ function mobileAddPage(){
 
 function closeMobilePanel(){
   mobilePanelOpen="";
+  document.body.classList.remove("m-panel-open");
+  rescaleMobileFaces();
   document.querySelectorAll(".mobile-tool-panel").forEach(p=>{
     p.classList.remove("open");
     p.setAttribute("aria-hidden","true");
@@ -2775,75 +2741,70 @@ function openMobilePanel(name,buttonId){
   const p=el("mobile"+name+"Panel");
   if(!p)return;
   mobilePanelOpen=name;
+  document.body.classList.add("m-panel-open");
+  rescaleMobileFaces();
+  placeMobilePanel();
   p.classList.add("open");
   p.setAttribute("aria-hidden","false");
   el(buttonId)?.classList.add("active");
 }
 
-function cloneControlsForMobile(){
-  if(!mobileUIActive())return;
-  const aside=document.querySelector("aside");
-  if(!aside)return;
-
-  // Separate phone windows: each receives only the controls belonging to that category.
-  const sections=[...aside.children].filter(n=>!n.classList.contains("mobile-tray-close"));
-  const titleOf=n=>{
-    const h=n.matches?.(".section-title,h2,h3,h4")?n:n.querySelector?.(".section-title,h2,h3,h4");
-    return (h?.textContent||"").trim();
-  };
-  const buckets={Face:[],Template:[],Options:[]};
-  let mode="Face";
-  sections.forEach(n=>{
-    const t=titleOf(n);
-    if(/^テンプレート/.test(t)) mode="Template";
-    else if(/^オプション/.test(t)) mode="Options";
-    buckets[mode].push(n);
-  });
-
-  for(const [key,nodes] of Object.entries(buckets)){
-    const host=el("mobile"+key+"PanelBody");
-    if(!host)continue;
-    host.innerHTML="";
-    nodes.forEach(n=>{
-      const c=n.cloneNode(true);
-      // cloned controls mirror the desktop controls by forwarding input/change/click.
-      c.querySelectorAll("[id]").forEach(x=>{
-        const originalId=x.id;
-        x.removeAttribute("id");
-        const original=el(originalId);
-        if(!original)return;
-        // ファイル選択は複製側では受け取れないので、元の入力欄を開く
-        if(x.tagName==="INPUT"&&x.type==="file"){x.addEventListener("click",ev=>{ev.preventDefault();original.click()});return}
-        if("value" in x) x.value=original.value;
-        if("checked" in x) x.checked=original.checked;
-        x.addEventListener("input",()=>{
-          if("value" in original) original.value=x.value;
-          if("checked" in original) original.checked=x.checked;
-          original.dispatchEvent(new Event("input",{bubbles:true}));
-        });
-        x.addEventListener("change",()=>{
-          if("value" in original) original.value=x.value;
-          if("checked" in original) original.checked=x.checked;
-          original.dispatchEvent(new Event("change",{bubbles:true}));
-          setTimeout(cloneControlsForMobile,0);
-        });
-        if(x.tagName==="BUTTON") x.addEventListener("click",()=>original.click());
-      });
-      host.appendChild(c);
-    });
-  }
+/* スマホでは、PC用の設定パネルの部品そのものを各パネルへ移す(以前は複製していたため、
+   テキストボックスの編集・色の変更・テンプレートの切り替えがスマホで効かなかった)。PC幅に戻ったら元の場所へ戻す */
+const mobileHomes=new Map();
+let mobilePlaced=false;
+function moveForMobile(node,host){
+  if(!node||!host)return;
+  if(!mobileHomes.has(node)){const m=document.createComment("home");node.parentNode.insertBefore(m,node);mobileHomes.set(node,m)}
+  host.appendChild(node);
 }
+function cloneControlsForMobile(){
+  const want=mobileUIActive();
+  if(want===mobilePlaced)return;
+  if(want){
+    const q=s=>document.querySelector(s);
+    [[ "mobileFacePanelBody",[".face-section","#imageControls"]],
+     [ "mobileTemplatePanelBody",["#templateSelector","#playingControls","#tcgControls","#wordControls","#customControls"]],
+     [ "mobileOptionsPanelBody",["#textBoxControls","aside .public-beta-note"]]
+    ].forEach(([host,sels])=>sels.forEach(sel=>moveForMobile(q(sel),el(host))));
+    document.querySelectorAll("#mobilePaperPanelBody [data-slot]").forEach(slot=>slot.dataset.slot.split(" ").forEach(id=>moveForMobile(el(id),slot)));
+  }else{
+    closeMobilePanel();
+    mobileHomes.forEach((m,node)=>m.parentNode.insertBefore(node,m));
+  }
+  mobilePlaced=want;
+}
+window.matchMedia("(max-width:720px)").addEventListener("change",()=>{cloneControlsForMobile();fitPaper()});
 
+/* パネルはカードのすぐ下からタブの上までを使う(狭い画面でも最低220pxは確保) */
+function placeMobilePanel(){
+  if(!mobileUIActive())return;
+  const labels=document.querySelector(".mobile-face-labels"),pair=el("mobileCardPair"),bar=el("mobileQuickBar");
+  const ref=(labels&&labels.offsetParent)?labels:pair;if(!ref||!bar)return;
+  const barTop=bar.getBoundingClientRect().top;
+  const top=Math.max(56,Math.min(ref.getBoundingClientRect().bottom+8,barTop-8-220));
+  document.documentElement.style.setProperty("--m-panel-top",Math.round(top)+"px");
+  document.documentElement.style.setProperty("--m-panel-bottom",Math.round(innerHeight-barTop+8)+"px");
+}
+window.addEventListener("resize",placeMobilePanel);
+
+document.querySelectorAll('input[type=file]').forEach(inp=>{
+  if(!inp.id||inp.classList.contains("hidden"))return;
+  const lab=document.createElement("label");lab.htmlFor=inp.id;lab.className="file-btn";lab.textContent="画像を選ぶ";
+  inp.classList.add("file-native");inp.insertAdjacentElement("afterend",lab);
+});
 window.addEventListener("DOMContentLoaded",()=>{
   document.querySelectorAll(".mobile-panel-close").forEach(b=>b.addEventListener("click",closeMobilePanel));
   cloneControlsForMobile();
+  placeMobilePanel();
 });
 
 function mobileCardIndex(){
-  return currentPage*cardsPerPage() + Math.floor(selected/2);
+  return currentPage*cardsPerPage() + (isSingleMode()?selected:Math.floor(selected/2));
 }
 function goToMobileCard(delta){
   const total=pages.length*cardsPerPage();
+  if(delta>0&&mobileCardIndex()>=total-1){if(pages.length<25){const side=isSingleMode()?0:selected%2;el("addPage").click();selected=side;renderSheet();syncControls()}return}
   const side=selected%2;
   let next=clamp(mobileCardIndex()+delta,0,total-1);
   const n=cardsPerPage(); currentPage=Math.floor(next/n);
@@ -2851,17 +2812,25 @@ function goToMobileCard(delta){
   renderSheet();
   syncControls();
 }
+function rescaleMobileFaces(){
+  document.querySelectorAll("#mobileCardPair .m-face-inner").forEach(n=>{const w=n.parentElement.clientWidth;if(w)n.style.transform=`scale(${w/parseFloat(n.style.width)})`});
+}
+window.addEventListener("resize",()=>{if(mobileUIActive())rescaleMobileFaces()});
 function renderMobileCardPreview(){
   const host=el("mobileCardPair");if(!host)return;
   const faces=currentFaces(),c=cardMM(),landscape=isLandscapeCard();
   host.innerHTML="";host.className="mobile-card-pair "+(landscape?"mobile-landscape-card":"mobile-portrait-card")+(isSingleMode()?" single-mode":"");
   const indices=isSingleMode()?[selected]:[Math.floor(selected/2)*2,Math.floor(selected/2)*2+1];
-  indices.forEach(idx=>{const f=document.createElement("div");f.className="face"+(idx===selected?" selected":"");f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);renderFace(f,faces[idx],idx===selected,idx);f.addEventListener("click",()=>{selected=idx;renderMobileCardPreview();syncControls()});host.appendChild(f)});
+  indices.forEach(idx=>{const f=document.createElement("div");f.className="face"+(idx===selected?" selected":"");f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);const fm=faceMM(),inner=document.createElement("div");inner.className="m-face-inner";inner.style.width=fm.w*MM_TO_PX+"px";inner.style.height=fm.h*MM_TO_PX+"px";f.appendChild(inner);renderFace(inner,faces[idx],idx===selected,idx);f.addEventListener("click",()=>{selected=idx;renderMobileCardPreview();syncControls()});host.appendChild(f)});
+  rescaleMobileFaces();
   const absolute=isSingleMode()?currentPage*cardsPerPage()+selected:mobileCardIndex();
   const total=pages.length*cardsPerPage();
   el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;if(el("mobilePageCount"))el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
-  el("mobilePrevCard").disabled=absolute<=0;el("mobileNextCard").disabled=absolute>=total-1;
+  el("mobilePrevCard").disabled=absolute<=0;
+  const atEnd=absolute>=total-1,nb=el("mobileNextCard");
+  nb.disabled=atEnd&&pages.length>=25;nb.textContent=atEnd?"＋":"→";nb.setAttribute("aria-label",atEnd?"ページを追加":"次のカード");nb.classList.toggle("is-add",atEnd);
   const labels=document.querySelector(".mobile-face-labels");if(labels){labels.style.display=isSingleMode()?"none":"";labels.classList.toggle("stacked",landscape)}
+  if(mobilePanelOpen)requestAnimationFrame(placeMobilePanel);
 }
 
 function renderPageSidebar(){
@@ -3014,7 +2983,7 @@ function renderTextBoxEditors(d){
       </div>
       <input class="tb-text" type="text" value="${esc(item.text||"")}" placeholder="テキスト${index+1}">
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ">
+        <div class="tool-number-wrap" title="文字サイズ（px）">
           <span class="size-icon">A</span>
           <input class="tb-size tool-number" type="number" min="7" max="100" value="${st.size||14}">
         </div>
@@ -3084,7 +3053,7 @@ function renderFrameTextEditors(d){
     wrap.innerHTML=`<div class="frame-editor-head"><strong>フレームテキスト${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
       <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ"><span class="size-icon">A</span><input class="ft-size tool-number" type="number" min="7" max="100" value="${st.size||14}"></div>
+        <div class="tool-number-wrap" title="文字サイズ（px）"><span class="size-icon">A</span><input class="ft-size tool-number" type="number" min="7" max="100" value="${st.size||14}"></div>
         <label class="style-toggle"><input class="ft-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
         <label class="style-toggle"><input class="ft-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
         <label class="style-toggle"><input class="ft-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
@@ -3126,6 +3095,8 @@ function syncControls(){
   el("templateSelector").classList.toggle("hidden",!templ);
   el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
   el("imageControls").classList.toggle("hidden",d.type!=="image");
+  el("mobileTemplateHint")?.classList.toggle("hidden",templ);
+  if(el("mobileFaceTypeName"))el("mobileFaceTypeName").textContent=d.type==="image"?"画像":"無地";
 
 
   el("suitImageControls").classList.add("hidden");
@@ -3208,6 +3179,9 @@ el("mobileFaceTab")?.addEventListener("click",()=>{cloneControlsForMobile();open
 el("mobileTemplateTab")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Template","mobileTemplateTab")});
 el("mobileOptionsJump")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Options","mobileOptionsJump")});
 el("mobileMore")?.addEventListener("click",()=>openMobilePanel("More","mobileMore"));
+el("mobilePaperTab")?.addEventListener("click",()=>{cloneControlsForMobile();updateFit();openMobilePanel("Paper","mobilePaperTab")});
+el("mobileMakeTemplate")?.addEventListener("click",()=>{const f=el("faceType");f.value="template";f.dispatchEvent(new Event("change",{bubbles:true}))});
+["mobilePdfSave","mobilePdfLoad","mobilePrint","mobileDupPage","mobileDeletePage"].forEach(id=>el(id)?.addEventListener("click",closeMobilePanel));
 el("mobileUndo")?.addEventListener("click",()=>el("undoBtn")?.click());
 el("mobileRedo")?.addEventListener("click",()=>el("redoBtn")?.click());
 el("mobilePdfSave")?.addEventListener("click",()=>el("editablePdfBtn")?.click());
@@ -3216,6 +3190,12 @@ el("mobilePrint")?.addEventListener("click",()=>el("printBtn")?.click());
 el("mobileDupPage")?.addEventListener("click",()=>el("dupPage")?.click());
 el("mobileDeletePage")?.addEventListener("click",()=>el("deletePage")?.click());
 el("mobilePrevCard")?.addEventListener("click",()=>goToMobileCard(-1));
+(()=>{const pair=el("mobileCardPair");if(!pair)return;let sx=null,sy=0;
+  pair.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"||e.target.closest(".editable"))return;sx=e.clientX;sy=e.clientY});
+  pair.addEventListener("pointerup",e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0&&mobileCardIndex()>=pages.length*cardsPerPage()-1)return;goToMobileCard(dx<0?1:-1)}});
+  pair.addEventListener("pointercancel",()=>{sx=null});
+})();
 el("mobileNextCard")?.addEventListener("click",()=>goToMobileCard(1));
 el("paperSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
 el("paperOrientation").addEventListener("change",()=>{cardOrientation=(el("paperOrientation").value==="landscape")?(isSingleMode()?"landscape":"portrait"):(isSingleMode()?"portrait":"landscape");resizePagesForLayout();setPaper();syncControls()});
@@ -3224,17 +3204,14 @@ el("impositionMode").addEventListener("change",e=>{const old=e.target.dataset.pr
 window.addEventListener("resize",fitPaper);
 
 el("faceType").addEventListener("change",e=>{
-  const t=e.target.value,f=currentFaces(),old=f[selected];
-  const bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null;
-  const bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false;
-  const textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old)),optionImages=deep(ensureOptionImages(old)),shapes=deep(ensureShapes(old));
-  if(t==="plain")f[selected]={type:"plain",bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
-  else if(t==="template")f[selected]={...makePlaying(),bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
-  else if(t==="image")f[selected]={type:"image",src:null,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};
+  const t=e.target.value,f=currentFaces(),keep=keepCommon(f[selected]);
+  if(t==="plain")f[selected]={type:"plain",...keep};
+  else if(t==="template")f[selected]={...makePlaying(),...keep};
+  else if(t==="image")f[selected]={type:"image",src:null,...keep};
   renderSheet();syncControls();
 });
 el("templateType").addEventListener("change",e=>{
-  const t=e.target.value;
+  const t=e.target.value,keep=keepCommon(currentFaces()[selected]);
   const keepBg=currentFaces()[selected].bgColor||"#ffffff";
   const keepBgImage=currentFaces()[selected].bgImage||null;
   const keepBgBorderColor=currentFaces()[selected].bgBorderColor||"#222222";
@@ -3250,7 +3227,7 @@ el("templateType").addEventListener("change",e=>{
     textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
     nameStyle:{size:15,bold:true,italic:false},descStyle:{size:12,bold:false,italic:false}};
   if(t==="word")currentFaces()[selected]={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:53,bold:true,italic:false}};
-  if(t==="custom"){const boxes=keepTextBoxes.length?keepTextBoxes:[makeTextBox(0)];currentFaces()[selected]={type:"template",template:"custom",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:boxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};}
+  Object.assign(currentFaces()[selected],keep);   // 図形・背景の「なし」も含めて引き継ぐ
   renderSheet();syncControls();
 });
 
@@ -3302,7 +3279,7 @@ el("addOptionImage").addEventListener("click",()=>{if(ensureOptionImages(current
 onImagePicked(el("optionImageInput"),src=>{const items=ensureOptionImages(currentFaces()[selected]);if(items.length<5)items.push(makeOptionImage(src,items.length));renderSheet();syncControls()});
 
 onImagePicked(el("imageInput"),src=>{
-  {const old=currentFaces()[selected],bg=old.bgColor||"#ffffff",bgImage=old.bgImage||null,bgBorderColor=old.bgBorderColor||"#222222",bgBorderWidth=old.bgBorderWidth??1,bgBorderNone=old.bgBorderNone!==false,textBoxes=deep(ensureTextBoxes(old)),frameTexts=deep(ensureFrameTexts(old)),optionImages=deep(ensureOptionImages(old)),shapes=deep(ensureShapes(old));currentFaces()[selected]={type:"image",src,bgColor:bg,bgImage,bgBorderColor,bgBorderWidth,bgBorderNone,textBoxes,frameTexts,optionImages,shapes};renderSheet()}
+  currentFaces()[selected]={type:"image",src,...keepCommon(currentFaces()[selected])};renderSheet();
 });
 el("faceBgColor").addEventListener("input",()=>{const c=el("faceBgColor").value;addRecentColor(c);updateSelected({bgColor:c,bgNone:false});renderSwatches()});
 
@@ -3387,7 +3364,7 @@ function restoreProject(p){
   if(!p.pages)throw new Error("invalid project");
   p=migrateGenericTextBoxes(p);
   p=migrateBgBorders(p);
-  pages=deep(p.pages.slice(0,25));sheetTitle=p.sheetTitle||"";recentColors=(p.recentColors||[]).slice(0,12);
+  pages=normalizeFaces(deep(p.pages.slice(0,25)));sheetTitle=p.sheetTitle||"";recentColors=(p.recentColors||[]).slice(0,12);
   el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value==="single")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;setupAllColorInputs();
 document.addEventListener("click",e=>{if(colorPopup&&!e.target.closest(".color-popup")&&!e.target.closest(".color-trigger"))closeColorPopup()});
@@ -3659,7 +3636,7 @@ async function initAutosave(){
         applyHistorySnapshot(rec.json);
         initHistory();
         autosaveLastJson=rec.json;
-        showAppToast(`前回の続きを開きました(${timeLabel(rec.savedAt||Date.now())}保存)`,{action:{label:"新しく始める",run:startNewProject}});
+        showAppToast(`前回の続きを開きました(${timeLabel(rec.savedAt||Date.now())}保存)`,{action:{label:"新規",run:startNewProject}});
       }
     }
   }catch(err){console.warn("autosave unavailable",err);autosaveFailed=true}
@@ -4081,4 +4058,71 @@ header .app-brand > .beta-badge{display:inline-flex}
   #printPages .print-sheet.landscape-paper>.sheet-title{left:10mm;top:6mm}
   #printPages .print-sheet.portrait-paper>.sheet-title{left:8mm;top:8mm}
 }
+
+/* ---- 改良テスト版:プレースホルダー(未入力の仮表示)は印刷・PDFに出さない ---- */
+.print-sheet .ph{visibility:hidden!important}
+.ph{color:#b5b5b5}
+/* 面付けの情報 */
+.fit-note{margin:10px auto 0;font-size:11px;line-height:1.5;color:var(--ui-muted);text-align:center}
+.file-line-label{font-size:11px;color:var(--ui-muted);white-space:nowrap}
+@media print{.fit-note{display:none!important}}
+@media(max-width:720px){.screen-fit-note{display:none}}
+
+/* ---- 改良テスト版:スマホ ---- */
+@media(max-width:720px){
+  /* ヘッダー:ロゴと取り消し/やり直しだけ(用紙の設定は「用紙」パネルへ) */
+  header{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+  header .history-controls{display:flex!important;gap:6px;margin:0!important}
+  header .history-controls .icon-btn{width:40px!important;height:36px!important;min-width:40px!important;font-size:18px!important}
+  /* パネルはカードのすぐ下から使う */
+  .mobile-tool-panel{top:var(--m-panel-top,auto)!important;bottom:var(--m-panel-bottom,calc(68px + env(safe-area-inset-bottom)))!important;height:auto!important;max-height:none!important}
+  /* パネルの見出しと中の見出しの重複をなくす */
+  .mobile-panel-body .section-title{display:none!important}
+  /* iPhoneで入力時に画面が拡大されないよう16px以上に */
+  .mobile-panel-body input:not([type=checkbox]):not([type=radio]):not([type=range]),.mobile-panel-body select,.mobile-panel-body textarea{font-size:16px!important}
+  .mobile-panel-body .stroke-width-select{width:96px!important;flex:0 0 96px!important}
+  .mobile-panel-body .stroke-align-select{width:88px!important;flex:0 0 88px!important}
+  .mobile-panel-body .stroke-width-control{flex-wrap:nowrap}
+  /* オモテ/ウラのラベルを読みやすく */
+  .mobile-face-labels{font-size:12px!important;color:var(--ui-muted)}
+  .mobile-card-pair{touch-action:pan-y}
+  .mobile-card-nav button.is-add{font-size:22px!important;font-weight:700}
+  /* 用紙パネル */
+  .m-form{display:flex;flex-direction:column;gap:10px}
+  .m-field{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:8px}
+  .m-label{font-size:12px;font-weight:700;color:var(--ui-muted)}
+  .m-slot{display:flex;gap:6px;min-width:0}
+  .m-slot > *{flex:1 1 auto;min-width:0;width:100%!important;max-width:none!important;margin:0!important;display:block!important;height:40px}
+  .m-slot-pair > *{flex:1 1 0}
+  .m-form .fit-note{margin:2px 0 0;text-align:left}
+  /* メニュー */
+  .m-group-title{font-size:11px;font-weight:700;color:var(--ui-muted);margin:2px 2px 6px}
+  .m-group-title:not(:first-child){margin-top:14px}
+  .mobile-more-panel .mobile-more-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+  .mobile-more-panel .mobile-more-grid button{min-height:46px!important;padding:6px 8px!important;font-size:14px!important;display:flex;align-items:center;justify-content:center}
+  /* テンプレート以外の面のときの案内 */
+  .m-hint{padding:4px 2px 10px;font-size:13px;line-height:1.6}
+  .m-hint p{margin:0 0 10px}
+  .m-hint button{width:100%;min-height:44px;font-size:14px}
+}
+
+/* ファイル選択ボタン */
+.file-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;pointer-events:none}
+.file-btn{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:3px 12px;border:1px solid var(--ui-border);border-radius:6px;background:var(--ui-control);color:var(--ui-control-ink);font-size:12px;cursor:pointer;white-space:nowrap;margin:0!important}
+.file-btn:hover{background:var(--ui-panel-hover)}
+.file-native:focus-visible + .file-btn{outline:2px solid var(--cyan);outline-offset:1px}
+@media(max-width:720px){
+  .file-btn{min-height:40px;font-size:14px;padding:6px 14px}
+}
+/* 背の低いスマホでは、パネルを開いている間だけカードを小さくする */
+@media(max-width:720px) and (max-height:760px){
+  body.m-panel-open .mobile-card-pair.mobile-portrait-card .face{width:min(calc((100vw - 34px)/2.8),130px)!important}
+  body.m-panel-open .mobile-card-pair.mobile-landscape-card .face{width:min(calc(100vw - 150px),260px)!important}
+  body.m-panel-open .mobile-card-pair{justify-content:center!important}
+}
+
+/* スマホのプレビュー:実寸で描いて縮小 */
+.m-face-inner{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:#fff;color:#191919}
+.m-face-inner .resize-handle{width:22px!important;height:22px!important;right:-9px!important;bottom:-9px!important}
+.m-face-inner .rotate-handle{transform:translateX(-50%) scale(1.6)}
 </style>
