@@ -18,6 +18,7 @@ content:
     label: ニュース
     type: file
     path: content/news.yml
+    description: "保存して1〜2分すると、Xに投稿する文が https://pandakinema.com/post.html にできます"
     format: yaml
     list: true
     fields:

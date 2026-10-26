@@ -329,8 +329,47 @@ h1{font-size:22px}p.note{color:#9aa3a9;font-size:13px;line-height:1.8}section{ma
 .lbl{margin:14px 0 6px;font-size:12px;color:#9aa3a9}.pv{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;border-radius:10px}.pv span{padding:.2em .9em;border-radius:999px;font-weight:800;font-size:13px}.pv small{font-weight:800}</style></head>
 <body><main><h1>色見本</h1><p class="note">編集画面の色コードが、実際に何色かを確かめるためのページです。保存して1〜2分すると、ここも新しい色に変わります。</p>""" + ''.join(rows) + '</main></body></html>'
 
+
+def post_page():
+    """Xの告知文(post.html):ニュースごとに、そのままXに投稿できる文を作る。サイトからはリンクしない(編集画面から開く)"""
+    import re as _re
+    e = H.escape
+    items = []
+    for i, n in enumerate(NEWS or []):
+        link = str(n.get('link') or '').strip()
+        url = link if link.startswith('http') else (SITE_URL + link.lstrip('/') if link else SITE_URL)
+        tags = ['パンダキネマ']
+        m = _re.match(r'games/([\w-]+)/?', link)
+        g = next((x for x in GAMES if m and x['key'] == m.group(1)), None)
+        if not g:   # タイトルに『作品名』が入っていればその作品
+            g = next((x for x in GAMES if x['name'] and (x['name'] in str(n.get('text_ja') or '') or x['name'].replace(' ', '') in str(n.get('text_ja') or ''))), None)
+        if g:
+            tags += [t for t in _re.split(r'[\s,、#]+', str(g.get('hashtag') or '')) if t] or [_re.sub(r'[^\w]', '', g['name'])]
+        cat = str(n.get('cat_ja') or '').strip()
+        body = str(n.get('body_ja') or '').strip()
+        text = ('【%s】' % cat if cat else '') + str(n.get('text_ja') or '').strip() + ('\n\n' + body if body else '')
+        items.append(dict(date=date(n.get('date')), text=text, url=url, tags=' '.join('#' + t for t in tags)))
+    cards = ''.join('<section class="it"><p class="d">%s</p><textarea rows="6" data-i="%d">%s</textarea><p class="u">%s</p><p class="row"><span class="cnt"></span><button type="button" class="cp">コピー</button><a class="go" target="_blank" rel="noopener">Xに投稿する</a></p></section>' % (
+        e(x['date']), i, e(x['text'] + '\n\n' + x['url'] + '\n' + x['tags']), e('リンクはURLとして文の中に入っています(Xでは23文字分)')) for i, x in enumerate(items))
+    return """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Xの告知文 | PANDA KINEMA</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>body{margin:0;padding:24px 16px 48px;background:#1b2228;color:#f3f2ee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}main{max-width:720px;margin:auto}
+h1{font-size:22px}.note{color:#9aa3a9;font-size:13px;line-height:1.8}.it{margin:18px 0;padding:16px;border:1px solid #3a464f;border-radius:12px;background:#222b32}.d{margin:0 0 8px;font-size:13px;color:#9aa3a9}
+textarea{box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid #3a464f;border-radius:8px;background:#151b20;color:#f3f2ee;font-family:inherit;font-size:15px;line-height:1.7;resize:vertical}.u{display:none}
+.row{display:flex;align-items:center;gap:10px;margin:10px 0 0}.cnt{margin-right:auto;font-size:12px;color:#9aa3a9}.cnt.over{color:#ff6b6b;font-weight:700}
+button,.go{display:inline-flex;align-items:center;height:36px;padding:0 16px;border:1px solid #3a464f;border-radius:999px;background:none;color:#f3f2ee;font-family:inherit;font-size:13px;font-weight:700;white-space:nowrap;text-decoration:none;cursor:pointer}.go{border:0;background:#fff;color:#000}</style></head>
+<body><main><h1>Xの告知文</h1><p class="note">ニュースごとに、Xに投稿する文を用意しています(新しい順)。文はここで直してから「Xに投稿する」を押すと、Xの投稿画面が開きます。ニュースを保存して1〜2分すると、ここにも出ます。<br>このページはサイトからはリンクしていません(検索にも出ません)。</p>""" + cards + """</main>
+<script>
+function w(t){var n=0;t=t.replace(/https?:\\/\\/\\S+/g,function(){n+=23;return""});for(var c of t){n+=/[\\u1100-\\uffff]/.test(c)&&!/[\\u2000-\\u200d\\u2010-\\u201f\\u2032-\\u2037]/.test(c)?2:1}return n}
+document.querySelectorAll(".it").forEach(function(s){var ta=s.querySelector("textarea"),go=s.querySelector(".go"),cn=s.querySelector(".cnt");
+function up(){var n=w(ta.value);cn.textContent="あと "+Math.floor((280-n)/2)+" 文字くらい";cn.classList.toggle("over",n>280);go.href="https://x.com/intent/post?text="+encodeURIComponent(ta.value)}
+ta.addEventListener("input",up);up();
+s.querySelector(".cp").addEventListener("click",function(){navigator.clipboard.writeText(ta.value);this.textContent="コピーしました";var b=this;setTimeout(function(){b.textContent="コピー"},1500)})});
+</script></body></html>"""
+
 if __name__ == '__main__':
     out = os.path.join(OUT_DIR, 'index.html')
     open(out, 'w', encoding='utf-8').write(bust(render(), {'img/': IMG_DIR}))
     print(out, os.path.getsize(out))
     open(os.path.join(OUT_DIR, 'colors.html'), 'w', encoding='utf-8').write(colors())
+    open(os.path.join(OUT_DIR, 'post.html'), 'w', encoding='utf-8').write(post_page())

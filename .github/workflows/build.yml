@@ -34,7 +34,7 @@ jobs:
             python build/game_pages.py
             python build/sync_cms.py        # 編集画面の選択肢(カテゴリ・役割・作品)を最新に
             python build/sitemap.py         # 検索エンジン向けのページ一覧(sitemap.xml)
-            git add -A index.html colors.html games img content build/ogp_cache.json .pages.yml sitemap.xml
+            git add -A index.html colors.html post.html games img content build/ogp_cache.json .pages.yml sitemap.xml
             if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
             git commit -q -m "ページを組み立て直し"
             if git push -q origin HEAD:main; then exit 0; fi
