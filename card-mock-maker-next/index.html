@@ -96,10 +96,7 @@
   <div class="modal-box modal-narrow">
     <div class="modal-head"><strong id="exportTitle">画像で書き出す</strong><button type="button" class="modal-close" data-export-close aria-label="閉じる">×</button></div>
     <div class="modal-body">
-      <div class="export-kind">
-        <label class="export-opt"><input type="radio" name="exportKind" value="cards" checked><span><b>カード1枚ずつの画像</b><small>PNG画像をZIPにまとめます。ほかのツールで使ったり、紹介画像にしたり。</small></span></label>
-        <label class="export-opt"><input type="radio" name="exportKind" value="tts"><span><b>Tabletop Simulator用</b><small>10×7のシート画像とウラ面の画像をZIPにまとめます。カードは枚数ぶん並びます。</small></span></label>
-      </div>
+      <p class="export-lead">カードを1枚ずつPNG画像にして、ZIPファイルにまとめて保存します。ほかのツールで使ったり、紹介画像にしたりできます。</p>
       <div id="exportCardsOpts" class="export-opts">
         <label class="ds-item" id="exportSidesRow"><span>書き出す面</span><select id="exportSides"><option value="front">オモテ面</option><option value="back">ウラ面</option><option value="both">オモテ面とウラ面</option></select></label>
         <label class="ds-item"><span>解像度</span><select id="exportDpi"><option value="150">150 dpi</option><option value="300" selected>300 dpi</option></select></label>

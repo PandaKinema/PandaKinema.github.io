@@ -72,23 +72,23 @@ const EN={
   "ウラ面は、紙を上下に裏返したとき重なるように、上下を入れ替えて並べています。":"This is how the backs print: swapped top and bottom so they line up when the sheet is flipped top to bottom.",
   "ウラ面は、紙を左右に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped sideways. Do a single test print first.",
   "ウラ面は、紙を上下に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped top to bottom. Do a single test print first.",
-  "画像で書き出す":"Export images","カード1枚ずつの画像":"One image per card","Tabletop Simulator用":"For Tabletop Simulator",
-  "PNG画像をZIPにまとめます。ほかのツールで使ったり、紹介画像にしたり。":"PNG images in a ZIP, for other tools or for showing your cards.",
-  "10×7のシート画像とウラ面の画像をZIPにまとめます。カードは枚数ぶん並びます。":"10×7 sheet images and a back image in a ZIP. Each card appears as many times as its copies.",
+  "画像で書き出す":"Export images","カードを1枚ずつPNG画像にして、ZIPファイルにまとめて保存します。ほかのツールで使ったり、紹介画像にしたりできます。":"Saves each card as a PNG image, together in a ZIP file. Use them in other tools or to show off your cards.",
+  
+  
   "書き出す面":"Sides","解像度":"Resolution","オモテ面とウラ面":"Front and back","書き出す":"Export","つくる":"Create",
   "書き出すカードがありません。":"There are no cards to export.",
-  "{m}枚のカードを{s}枚のシートにまとめます。":"{m} cards on {s} sheet(s).",
+  
   "{n}種類のカードを書き出します（画像{f}枚）。":"{n} card designs ({f} images).",
   "準備中…":"Preparing…","書き出し中… {i} / {n}":"Exporting… {i} / {n}","画像を書き出しました":"Images exported",
   "画像の書き出しに失敗しました。":"Couldn't export the images.",
   "画像を作るライブラリを読み込めませんでした。インターネット接続を確認してください。":"Couldn't load the image library. Check your internet connection.",
-  "Tabletop Simulator への取り込み方":"Importing into Tabletop Simulator",
-  "1. Objects → Components → Cards → Custom Deck を置きます。":"1. Place Objects → Components → Cards → Custom Deck.",
-  "2. Face に deck_1.png、Back に back_1.png を選び、「Unique backs」にチェックを入れます。":"2. Choose deck_1.png for Face and back_1.png for Back, and tick \"Unique backs\".",
-  "2. Face に deck_1.png、Back に back.png を選びます。":"2. Choose deck_1.png for Face and back.png for Back.",
-  "3. Width・Height・Number を下のとおりに入れて Import します。":"3. Enter Width, Height and Number as below, then Import.",
-  "deck_{s}.png：Width 10 / Height 7 / Number {n}":"deck_{s}.png: Width 10 / Height 7 / Number {n}",
-  "ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードしてください（TTSの画像選択画面からできます）。":"To play with others, upload the images to the Steam Cloud or similar (you can do this from TTS's image picker).",
+  
+  
+  
+  
+  
+  
+  
   "表から一括作成":"Create from a table","表を貼り付ける":"Paste a table","1行目は見出し":"First row is headers","CSVファイルを読み込む":"Load a CSV file",
   "どの列をどこに入れるか":"Which column goes where","確認":"Check","やめる":"Cancel","作る":"Create",
   "列{n}":"Column {n}","すべて1枚":"1 copy each",

@@ -90,9 +90,6 @@
     .sec-head{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0 0 30px;text-align:center}
     .sec-head .en{padding-left:.34em;color:var(--ink2)}
     .sec-row{display:flex;align-items:center;gap:18px}
-    .sec-row::before,.sec-row::after{content:"";flex:none;width:17px;height:23px;border:2px solid var(--key);border-radius:3px;background:var(--card)}
-    .sec-row::before{rotate:-12deg}
-    .sec-row::after{rotate:12deg;background:var(--accent);border-color:var(--accent)}
     .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--key);color:#fff;font-size:clamp(17px,1.9vw,21px);font-weight:800;line-height:1.25;letter-spacing:.03em}
     .g-main h3{display:flex;align-items:center;gap:10px;margin:40px 0 14px;font-size:18px;line-height:1.45;letter-spacing:.02em}
     .g-main h3::before{content:"";flex:none;width:5px;height:1.1em;border-radius:3px;background:var(--accent)}
@@ -540,20 +537,11 @@
   
 <div class="split">
   <div>
-    <p lang="ja"><b class="ui">•••</b>の<b class="ui">画像で書き出す</b>で、カードを画像にしてZIPファイルで保存します。</p><p lang="en"><b class="ui">Export images</b> in the <b class="ui">•••</b> menu saves your cards as images in a ZIP file.</p>
-    <dl class="defs" lang="ja">
-      <dt>カード1枚ずつの画像</dt><dd>1枚ずつのPNG画像です。書き出す面（オモテ面・ウラ面・オモテ面とウラ面）と解像度（150・300 dpi）を選べます。同じカードは1つにまとめ、ファイル名に「_x3」のように枚数が入ります。</dd>
-      <dt>Tabletop Simulator用</dt><dd>Tabletop Simulator（TTS）は、Steamで売られているパソコン用のソフトで、ボードゲームをネット越しに遊べます。10×7に並べたシート画像（deck_1.png）と、ウラ面の画像（back.png）、取り込み方を書いたREADME.txtを書き出します。カードは枚数ぶん並び、69枚ごとにシートが分かれます。</dd>
-    </dl>
-    <dl class="defs" lang="en">
-      <dt>One image per card</dt><dd>A PNG for each card. Choose the sides (front, back or both) and the resolution (150 or 300 dpi). Copies are exported once, with the count in the file name, like “_x3”.</dd>
-      <dt>For Tabletop Simulator</dt><dd>Tabletop Simulator (TTS) is a PC game on Steam for playing board games online. You get 10×7 sheet images (deck_1.png), a back image (back.png) and a README.txt explaining how to import them. Each card appears as many times as its copies, with a new sheet every 69 cards.</dd>
-    </dl>
+    <p lang="ja"><b class="ui">•••</b>の<b class="ui">画像で書き出す</b>で、カードを1枚ずつPNG画像にして、ZIPファイルにまとめて保存します。ほかのツールで使ったり、紹介画像にしたりできます。</p><p lang="en"><b class="ui">Export images</b> in the <b class="ui">•••</b> menu saves each card as a PNG image, together in a ZIP file. Use them in other tools or to show off your cards.</p>
+    <ul lang="ja"><li><b class="ui">書き出す面</b>：<b class="ui">オモテ面</b>・<b class="ui">ウラ面</b>・<b class="ui">オモテ面とウラ面</b>から選べます（片面のときはオモテ面だけ）。</li><li><b class="ui">解像度</b>：150 dpi か 300 dpi。印刷に使うなら300 dpiがおすすめです。</li><li>同じカードは1つにまとめ、ファイル名に「_x3」のように枚数が入ります。空のカードは書き出しません。</li></ul><ul lang="en"><li><b class="ui">Sides</b>: <b class="ui">Front</b>, <b class="ui">Back</b> or <b class="ui">Front and back</b> (front only for single-sided).</li><li><b class="ui">Resolution</b>: 150 or 300 dpi. Use 300 dpi if you'll print them.</li><li>Copies are exported once, with the count in the file name, like “_x3”. Empty cards are skipped.</li></ul>
   </div>
   <figure class="shot "><img style="max-width:420px" lang="ja" src="img/export-ja.webp?v=20261026" width="1000" height="631" alt="画像で書き出す" loading="lazy" decoding="async"><img style="max-width:420px" lang="en" src="img/export-en.webp?v=20261026" width="1000" height="654" alt="Export images" loading="lazy" decoding="async"><figcaption><span lang="ja">画像で書き出す</span><span lang="en">Export images</span></figcaption></figure>
 </div>
-<h3><span lang="ja">TTSへの取り込み方</span><span lang="en">Importing into TTS</span></h3>
-<ol class="steps" lang="ja"><li>TTSで Objects → Components → Cards → Custom Deck を置きます。</li><li>Face に deck_1.png、Back に back.png を選びます。ウラ面がカードごとに違うときは、Back に back_1.png を選び「Unique backs」にチェックを入れます。</li><li>Width 10・Height 7・Number（カードの枚数）を入れて Import します。数字はREADME.txtに書いてあります。</li><li>ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードします（TTSの画像を選ぶ画面からできます）。</li></ol><ol class="steps" lang="en"><li>In TTS, place Objects → Components → Cards → Custom Deck.</li><li>Choose deck_1.png for Face and back.png for Back. If the backs differ per card, choose back_1.png and tick “Unique backs”.</li><li>Enter Width 10, Height 7 and Number (the card count), then Import. The numbers are in README.txt.</li><li>To play with others, upload the images to the Steam Cloud or similar (you can do this from TTS’s image picker).</li></ol>
 
 </section>
 <section class="g-sec" id="phone" aria-labelledby="phone-h">

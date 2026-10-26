@@ -2286,7 +2286,7 @@ el("tplUnlink").addEventListener("click",()=>{const c=deck.cards[cardIdAt(curren
 document.addEventListener("cmm-langchange",()=>{if(!el("tplModal").hidden)renderTplModal()});
 loadLibrary().then(()=>syncControls());
 
-/* ---- 画像で書き出す:カード1枚ずつのPNG / Tabletop Simulator用のシート(どちらもZIP) ---- */
+/* ---- 画像で書き出す:カード1枚ずつのPNGをZIPに ---- */
 const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}
 /* 圧縮なし(PNGはもともと圧縮済み)のZIP。ファイル名はUTF-8 */
@@ -2325,7 +2325,6 @@ async function renderFaceCanvas(face,scale,staging){
     return await html2canvas(f,{backgroundColor:"#ffffff",scale,width:fm.w*MM_TO_PX,height:fm.h*MM_TO_PX,useCORS:true,logging:false});
   }finally{g.remove()}
 }
-const faceKey=f=>JSON.stringify(f,(k,v)=>k==="id"?undefined:packImages(k,v));   // 部品のidの違いは見た目に関係ないので比べない
 /* 書き出すカード:空のカードは除き、同じカードは1種類にまとめて枚数を数える */
 function exportList(){
   const out=[],seen=new Map();
@@ -2333,14 +2332,11 @@ function exportList(){
   return out;
 }
 let exportBusy=false,exportCancel=false;
-function exportKind(){return document.querySelector('input[name="exportKind"]:checked')?.value||"cards"}
-function ttsSheets(total){return Math.ceil(total/69)}
 function syncExportUI(msg){
-  const list=exportList(),total=list.reduce((a,x)=>a+x.n,0),kind=exportKind(),single=isSingleMode();
-  el("exportCardsOpts").hidden=kind!=="cards";
+  const list=exportList(),single=isSingleMode();
   el("exportSidesRow").hidden=single;
   const sides=single?"front":el("exportSides").value,files=list.length*(sides==="both"?2:1);
-  el("exportSummary").textContent=msg||(!list.length?T("書き出すカードがありません。"):kind==="tts"?T("{m}枚のカードを{s}枚のシートにまとめます。",{m:total,s:ttsSheets(total)}):T("{n}種類のカードを書き出します（画像{f}枚）。",{n:list.length,f:files}));
+  el("exportSummary").textContent=msg||(!list.length?T("書き出すカードがありません。"):T("{n}種類のカードを書き出します（画像{f}枚）。",{n:list.length,f:files}));
   el("exportGo").disabled=exportBusy||!list.length;
 }
 function openExport(){toggleSettings(false);closeMobilePanel();exportCancel=false;el("exportModal").hidden=false;syncExportUI()}
@@ -2354,51 +2350,16 @@ async function runExport(){
   const base=safeFileName(sheetTitle)||"cards",files=[];
   try{
     await fontsReady();
-    const fm=faceMM(),fw=fm.w*MM_TO_PX,fh=fm.h*MM_TO_PX;
-    if(exportKind()==="cards"){
-      const sides=isSingleMode()?["front"]:el("exportSides").value==="both"?["front","back"]:[el("exportSides").value];
-      const scale=Number(el("exportDpi").value)/96,jobs=[];
-      list.forEach((it,i)=>sides.forEach(side=>jobs.push({it,i,side})));
-      for(let j=0;j<jobs.length;j++){
-        if(exportCancel)throw new Error("cancel");
-        syncExportUI(T("書き出し中… {i} / {n}",{i:j+1,n:jobs.length}));
-        const {it,i,side}=jobs[j],c=await renderFaceCanvas(deck.cards[it.id][side],scale,staging);
-        files.push({name:`${String(i+1).padStart(3,"0")}${it.n>1?"_x"+it.n:""}_${side}.png`,data:await canvasBytes(c)});c.width=c.height=0;
-      }
-      downloadBlob(makeZip(files),`${base}_images.zip`);
-    }else{
-      // Tabletop Simulator:10×7のシート。右下の1枠はTTSが隠しカード用に使うので、1シート69枚まで
-      const COLS=10,ROWS=7,PER=69,scale=Math.min(4096/COLS/fw,4096/ROWS/fh);
-      const cw=Math.floor(fw*scale),chh=Math.floor(fh*scale);
-      const order=[];list.forEach(it=>{for(let k=0;k<it.n;k++)order.push(it.id)});
-      const single=isSingleMode(),firstBack=deck.cards[order[0]].back;
-      const uniqueBacks=!single&&new Set(list.map(it=>faceKey(deck.cards[it.id].back))).size>1;
-      const cache=new Map(),total=list.length*(uniqueBacks?2:1)+1;let done=0;
-      const faceImg=async(face)=>{const k=faceKey(face);if(!cache.has(k)){if(exportCancel)throw new Error("cancel");syncExportUI(T("書き出し中… {i} / {n}",{i:++done,n:total}));cache.set(k,await renderFaceCanvas(face,scale,staging))}return cache.get(k)};
-      const backImg=await faceImg(firstBack);
-      const sheetCount=ttsSheets(order.length),readme=[];
-      for(let sI=0;sI<sheetCount;sI++){
-        const ids=order.slice(sI*PER,(sI+1)*PER);
-        for(const side of uniqueBacks?["front","back"]:["front"]){
-          const cv=document.createElement("canvas");cv.width=cw*COLS;cv.height=chh*ROWS;
-          const ctx=cv.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,cv.width,cv.height);
-          for(let k=0;k<ids.length;k++){const im=await faceImg(deck.cards[ids[k]][side]);ctx.drawImage(im,(k%COLS)*cw,Math.floor(k/COLS)*chh,cw,chh)}
-          ctx.drawImage(backImg,(COLS-1)*cw,(ROWS-1)*chh,cw,chh);   // 隠しカード(手札を他の人から見たときの絵)はウラ面に
-          files.push({name:`${side==="front"?"deck":"back"}_${sI+1}.png`,data:await canvasBytes(cv)});cv.width=cv.height=0;
-        }
-        readme.push(T("deck_{s}.png：Width 10 / Height 7 / Number {n}",{s:sI+1,n:ids.length}));
-      }
-      if(!uniqueBacks){const bc=document.createElement("canvas");bc.width=cw;bc.height=chh;bc.getContext("2d").drawImage(backImg,0,0);files.push({name:"back.png",data:await canvasBytes(bc)})}
-      const lines=[T("Tabletop Simulator への取り込み方"),"",
-        T("1. Objects → Components → Cards → Custom Deck を置きます。"),
-        T(uniqueBacks?"2. Face に deck_1.png、Back に back_1.png を選び、「Unique backs」にチェックを入れます。":"2. Face に deck_1.png、Back に back.png を選びます。"),
-        T("3. Width・Height・Number を下のとおりに入れて Import します。"),"",...readme,"",
-        T("ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードしてください（TTSの画像選択画面からできます）。"),"",
-        "Card Mock Maker — https://pandakinema.github.io/card-mock-maker/"];
-      files.unshift({name:"README.txt",data:new TextEncoder().encode("\uFEFF"+lines.join("\r\n"))});
-      cache.forEach(c=>{c.width=c.height=0});
-      downloadBlob(makeZip(files),`${base}_tts.zip`);
+    const sides=isSingleMode()?["front"]:el("exportSides").value==="both"?["front","back"]:[el("exportSides").value];
+    const scale=Number(el("exportDpi").value)/96,jobs=[];
+    list.forEach((it,i)=>sides.forEach(side=>jobs.push({it,i,side})));
+    for(let j=0;j<jobs.length;j++){
+      if(exportCancel)throw new Error("cancel");
+      syncExportUI(T("書き出し中… {i} / {n}",{i:j+1,n:jobs.length}));
+      const {it,i,side}=jobs[j],c=await renderFaceCanvas(deck.cards[it.id][side],scale,staging);
+      files.push({name:`${String(i+1).padStart(3,"0")}${it.n>1?"_x"+it.n:""}_${side}.png`,data:await canvasBytes(c)});c.width=c.height=0;
     }
+    downloadBlob(makeZip(files),`${base}_images.zip`);
     exportBusy=false;el("exportModal").hidden=true;
     showAppToast(T("画像を書き出しました"),{duration:4000});
   }catch(err){
@@ -2411,7 +2372,7 @@ document.querySelectorAll(".open-export").forEach(b=>b.addEventListener("click",
 document.querySelectorAll("[data-export-close]").forEach(b=>b.addEventListener("click",closeExport));
 el("exportModal").addEventListener("click",e=>{if(e.target===el("exportModal"))closeExport()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("exportModal").hidden)closeExport()});
-document.querySelectorAll('input[name="exportKind"],#exportSides,#exportDpi').forEach(x=>x.addEventListener("change",()=>syncExportUI()));
+document.querySelectorAll('#exportSides,#exportDpi').forEach(x=>x.addEventListener("change",()=>syncExportUI()));
 el("exportGo").addEventListener("click",runExport);
 document.addEventListener("cmm-langchange",()=>{if(!el("exportModal").hidden&&!exportBusy)syncExportUI()});
 
