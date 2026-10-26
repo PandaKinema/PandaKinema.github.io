@@ -1829,6 +1829,8 @@ TEMPLATE = r'''<!doctype html>
     .sr-row .sr-here{cursor:default}
     .btn.xshare{background:#000;color:#fff;gap:.5em}   /* Xでシェア:Xの黒 */
     .btn.xshare img{width:14px;height:14px}
+    .hshare{gap:.55em}   /* トップはXでシェアだけ(購入は右下の浮いているBOOTH) */
+    .xi{width:14px;height:14px;background:currentColor;-webkit-mask:url(../../img/site/icon_x_mark.svg) center/contain no-repeat;mask:url(../../img/site/icon_x_mark.svg) center/contain no-repeat}
     .buy-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}   /* BOOTHとXを横並び */
     .buy-box .buy-btns .btn{margin-top:0}
     @media (max-width:650px){ .buy-box .buy-btns .btn{flex:1 1 0;min-width:0;padding-inline:10px;white-space:nowrap} }
@@ -2103,7 +2105,7 @@ TEMPLATE = r'''<!doctype html>
           <dl class="spec">
 {{spec_html}}
           </dl>
-          <a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+          <a class="btn buy hshare" href="{{share_url}}" target="_blank" rel="noopener"><span class="xi" aria-hidden="true"></span>{{L:Xでシェア|Share on X}}</a>
         </div>
       </div>
     </div>

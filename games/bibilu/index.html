@@ -454,6 +454,8 @@
     .sr-row .sr-here{cursor:default}
     .btn.xshare{background:#000;color:#fff;gap:.5em}   /* Xでシェア:Xの黒 */
     .btn.xshare img{width:14px;height:14px}
+    .hshare{gap:.55em}   /* トップはXでシェアだけ(購入は右下の浮いているBOOTH) */
+    .xi{width:14px;height:14px;background:currentColor;-webkit-mask:url(../../img/site/icon_x_mark.svg?v=1f13369f) center/contain no-repeat;mask:url(../../img/site/icon_x_mark.svg?v=1f13369f) center/contain no-repeat}
     .buy-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}   /* BOOTHとXを横並び */
     .buy-box .buy-btns .btn{margin-top:0}
     @media (max-width:650px){ .buy-box .buy-btns .btn{flex:1 1 0;min-width:0;padding-inline:10px;white-space:nowrap} }
@@ -730,7 +732,7 @@
             <div><dt><span lang="ja">時間</span><span lang="en">Time</span></dt><dd><span lang="ja">10〜15分</span><span lang="en">10–15 min</span></dd></div>
             <div><dt><span lang="ja">年齢</span><span lang="en">Age</span></dt><dd><span lang="ja">6歳から</span><span lang="en">6+</span></dd></div>
           </dl>
-          <a class="btn buy" href="https://pandakinema.booth.pm/items/8795134" target="_blank" rel="noopener"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+          <a class="btn buy hshare" href="https://x.com/intent/post?text=%E3%80%8E%E3%83%93%E3%83%93%E3%83%AB%E3%81%AE%E5%A1%94%E3%80%8F%E3%83%93%E3%83%93%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%98%E3%82%83%E3%81%AA%E3%81%84&amp;url=https%3A%2F%2Fpandakinema.com%2Fgames%2Fbibilu%2F&amp;hashtags=%E3%83%91%E3%83%B3%E3%83%80%E3%82%AD%E3%83%8D%E3%83%9E%2C%E3%83%93%E3%83%93%E3%83%AB%E3%81%AE%E5%A1%94" target="_blank" rel="noopener"><span class="xi" aria-hidden="true"></span><span lang="ja">Xでシェア</span><span lang="en">Share on X</span></a>
         </div>
       </div>
     </div>
