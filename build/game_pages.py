@@ -1816,7 +1816,7 @@ TEMPLATE = r'''<!doctype html>
     .rel-row{justify-content:safe center;gap:18px}
 
     /* シリーズの共通欄(ミニシアターなど):どの作品でも同じ見た目(パンダキネマの黒) */
-    .sr-sec{position:relative;z-index:2;padding:72px 0 80px;background:#1b2228;color:#f3f2ee;text-align:center}
+    .sr-sec{position:relative;z-index:2;padding:72px 0 0;background:#1b2228;color:#f3f2ee;text-align:center}
     .sr-head{display:flex;flex-direction:column;align-items:center;gap:14px}
     .sr-logo{width:min(440px,78vw);height:auto}
     .sr-head h2{margin:6px 0 0;font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em}
@@ -1829,8 +1829,12 @@ TEMPLATE = r'''<!doctype html>
     .sr-row .sr-here{cursor:default}
     .btn.xshare{background:#000;color:#fff;gap:.5em}   /* Xでシェア:Xの黒 */
     .btn.xshare img{width:14px;height:14px}
+    .buy-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}   /* BOOTHとXを横並び */
+    .buy-box .buy-btns .btn{margin-top:0}
+    @media (max-width:650px){ .buy-box .buy-btns .btn{flex:1 1 0;min-width:0;padding-inline:10px;white-space:nowrap} }
     .sr-row .sr-here small{color:#e8343d;font-weight:800}
-    @media (max-width:650px){ .sr-sec{padding:56px 0 60px} .sr-pts{margin:26px auto 32px} }
+    .sr-dot{margin-top:64px}
+    @media (max-width:650px){ .sr-sec{padding:56px 0 0} .sr-pts{margin:26px auto 32px} .sr-dot{margin-top:48px} }
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
     /* リンクのカード(OGPの画像+タイトル+サイト名) */
     .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
@@ -2178,8 +2182,7 @@ TEMPLATE = r'''<!doctype html>
         </dl>
         <p class="contents">{{contents}}</p>
         {{price_html}}
-        <a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
-        <a class="btn xshare" href="{{share_url}}" target="_blank" rel="noopener"><img src="../../img/site/icon_x_mark.svg" alt="" width="14" height="14">{{L:Xでシェア|Share on X}}</a>
+        <div class="buy-btns"><a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a><a class="btn xshare" href="{{share_url}}" target="_blank" rel="noopener"><img src="../../img/site/icon_x_mark.svg" alt="" width="14" height="14">{{L:Xでシェア|Share on X}}</a></div>
       </div>
     </div>
     </div>
@@ -2532,6 +2535,7 @@ def series_html(g, key):   # シリーズの共通欄(ミニシアターなど):
       <ul class="bg-row rel-row sr-row reveal">
 %s
       </ul>
+      <div class="dotline sr-dot" aria-hidden="true"></div>
     </div>
   </section>''' % (logo, LL(sr, 'title'), LL(sr, 'lead'), pts, '\n'.join(cards))
     return ''

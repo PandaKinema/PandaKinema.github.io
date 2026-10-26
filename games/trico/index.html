@@ -555,7 +555,7 @@
     .rel-row{justify-content:safe center;gap:18px}
 
     /* シリーズの共通欄(ミニシアターなど):どの作品でも同じ見た目(パンダキネマの黒) */
-    .sr-sec{position:relative;z-index:2;padding:72px 0 80px;background:#1b2228;color:#f3f2ee;text-align:center}
+    .sr-sec{position:relative;z-index:2;padding:72px 0 0;background:#1b2228;color:#f3f2ee;text-align:center}
     .sr-head{display:flex;flex-direction:column;align-items:center;gap:14px}
     .sr-logo{width:min(440px,78vw);height:auto}
     .sr-head h2{margin:6px 0 0;font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em}
@@ -568,8 +568,12 @@
     .sr-row .sr-here{cursor:default}
     .btn.xshare{background:#000;color:#fff;gap:.5em}   /* Xでシェア:Xの黒 */
     .btn.xshare img{width:14px;height:14px}
+    .buy-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}   /* BOOTHとXを横並び */
+    .buy-box .buy-btns .btn{margin-top:0}
+    @media (max-width:650px){ .buy-box .buy-btns .btn{flex:1 1 0;min-width:0;padding-inline:10px;white-space:nowrap} }
     .sr-row .sr-here small{color:#e8343d;font-weight:800}
-    @media (max-width:650px){ .sr-sec{padding:56px 0 60px} .sr-pts{margin:26px auto 32px} }
+    .sr-dot{margin-top:64px}
+    @media (max-width:650px){ .sr-sec{padding:56px 0 0} .sr-pts{margin:26px auto 32px} .sr-dot{margin-top:48px} }
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
     /* リンクのカード(OGPの画像+タイトル+サイト名) */
     .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
@@ -941,8 +945,7 @@
         </dl>
         <p class="contents"><span lang="ja">ゲームカード30枚(各色10枚)、リードプレイヤーマーカー1枚、サマリー1枚、トリコマーカー3個、遊び方説明書1枚</span><span lang="en">30 game cards (10 per color), lead player marker, summary card, 3 Trico markers, rulebook</span></p>
         
-        <a class="btn buy" href="https://pandakinema.booth.pm/items/7555824" target="_blank" rel="noopener"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
-        <a class="btn xshare" href="https://x.com/intent/post?text=%E3%80%8ETRICO%21%E3%80%8F%E3%81%82%E3%81%AE%E3%82%B3%E3%82%92%E3%81%A8%E3%82%8A%E3%81%93%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB&amp;url=https%3A%2F%2Fpandakinema.com%2Fgames%2Ftrico%2F&amp;hashtags=%E3%83%91%E3%83%B3%E3%83%80%E3%82%AD%E3%83%8D%E3%83%9E%2CTRICO" target="_blank" rel="noopener"><img src="../../img/site/icon_x_mark.svg?v=1f13369f" alt="" width="14" height="14"><span lang="ja">Xでシェア</span><span lang="en">Share on X</span></a>
+        <div class="buy-btns"><a class="btn buy" href="https://pandakinema.booth.pm/items/7555824" target="_blank" rel="noopener"><span lang="ja">BOOTHで購入</span><span lang="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a><a class="btn xshare" href="https://x.com/intent/post?text=%E3%80%8ETRICO%21%E3%80%8F%E3%81%82%E3%81%AE%E3%82%B3%E3%82%92%E3%81%A8%E3%82%8A%E3%81%93%E3%81%AB%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB&amp;url=https%3A%2F%2Fpandakinema.com%2Fgames%2Ftrico%2F&amp;hashtags=%E3%83%91%E3%83%B3%E3%83%80%E3%82%AD%E3%83%8D%E3%83%9E%2CTRICO" target="_blank" rel="noopener"><img src="../../img/site/icon_x_mark.svg?v=1f13369f" alt="" width="14" height="14"><span lang="ja">Xでシェア</span><span lang="en">Share on X</span></a></div>
       </div>
     </div>
     </div>
