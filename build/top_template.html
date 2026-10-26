@@ -402,6 +402,28 @@
       .wb{height:32px;padding:0 12px;font-size:12px}
       .o-btns .wb{height:28px;padding:0 9px;font-size:10.5px}
     }
+
+    /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から */
+    .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+    .menu-btn{display:none}
+    @media (max-width:650px){
+      .bar{position:relative;gap:10px;min-height:52px}
+      .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+      .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+      .menu-btn i{position:relative}
+      .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+      .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+      .navtg:checked~.menu-btn i{background:transparent}
+      .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+      .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+      .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+      .nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+      .navtg:checked~.nav{display:flex}
+      .nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+      .nav a:first-child{border-top:0}
+      .lang{order:2}
+      .lang label,.lang button{height:22px;padding:0 7px;font-size:13px}
+    }
   </style>
 </head>
 <body>
@@ -409,8 +431,10 @@
 <header class="site-header">
   <div class="bar">
     <a class="home" href="#top"><img src="img/{{header_logo}}" alt="PANDA KINEMA"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
     <nav class="nav cond" aria-label="サイト"><a href="#news"><span class="cap">NEWS</span></a><a href="#board"><span class="cap">BOARD GAME</span></a><a href="#movie"><span class="cap">MOVIE</span></a><a href="#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="#about"><span class="cap">ABOUT</span></a></nav>
     <div class="lang cond" role="group" aria-label="言語 / Language"><label for="lang-ja"><span class="cap">JA</span></label><label for="lang-en"><span class="cap">EN</span></label></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
   </div>
 </header>
 
@@ -481,6 +505,7 @@
   var root=document.documentElement, $=function(s,c){ return (c||document).querySelector(s) }, $$=function(s,c){ return [].slice.call((c||document).querySelectorAll(s)) };
   root.classList.add("jsc");
   /* ヘッダー:バナーを過ぎたら板を敷く */
+  document.querySelectorAll(".nav a").forEach(function(a){ a.addEventListener("click",function(){ document.getElementById("navtg").checked=false }) });
   var hd=$(".site-header"); function hs(){ hd.classList.toggle("scrolled", scrollY > 4) } addEventListener("scroll",hs,{passive:true}); hs();
   /* 言語 */
   /* 言語:選んだ方を覚えておく(?lang=en でも開ける) */

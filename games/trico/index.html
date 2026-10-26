@@ -53,6 +53,28 @@
     .lang button[aria-pressed="true"]{background:#f3f2ee;color:#1b2228}
     .cap{display:block;line-height:1;text-box:trim-both cap alphabetic}
     /* 言語:表示中でない方を隠す */
+
+    /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から */
+    .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+    .menu-btn{display:none}
+    @media (max-width:650px){
+      .site-header .bar{position:relative;gap:10px;min-height:52px}
+      .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+      .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+      .menu-btn i{position:relative}
+      .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+      .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+      .navtg:checked~.menu-btn i{background:transparent}
+      .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+      .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+      .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+      .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+      .navtg:checked~.site-nav.site-nav{display:flex}
+      .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+      .site-nav a:first-child{border-top:0}
+      .lang{order:2}
+      .lang label,.lang button{height:22px;padding:0 7px;font-size:13px}
+    }
     html:not(.lang-en) [lang="en"]{display:none !important}
     html.lang-en [lang="ja"]{display:none !important}
 
@@ -775,8 +797,10 @@
 <header class="site-header">
   <div class="bar">
     <a class="brand" href="../../"><img src="../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
     <nav class="site-nav" aria-label="サイト"><a href="../../#news"><span class="cap">NEWS</span></a><a href="../../#board"><span class="cap">BOARD GAME</span></a><a href="../../#movie"><span class="cap">MOVIE</span></a><a href="../../#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="../../#about"><span class="cap">ABOUT</span></a></nav>
     <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true"><span class="cap">JA</span></button><button type="button" data-l="en" aria-pressed="false"><span class="cap">EN</span></button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
   </div>
 </header>
 
@@ -949,6 +973,7 @@
 
 <script>
 (function(){
+  document.querySelectorAll(".site-nav a").forEach(function(a){ a.addEventListener("click",function(){ document.getElementById("navtg").checked=false }) });
   var shd=document.querySelector(".site-header"); function shs(){ shd.classList.toggle("scrolled",scrollY>4) } addEventListener("scroll",shs,{passive:true}); shs();
   var root=document.documentElement, motion=!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var done=false; function lit(){ if(done) return; done=true; requestAnimationFrame(function(){ root.classList.add("lit") }) }
