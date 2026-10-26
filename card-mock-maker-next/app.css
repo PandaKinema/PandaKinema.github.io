@@ -516,7 +516,7 @@ input[type="color"].color-source{position:absolute!important;opacity:0!important
 .color-field{position:relative;height:130px;border-radius:6px;background:#f00;overflow:hidden;cursor:crosshair}.color-field:before{content:"";position:absolute;inset:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}.color-field:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,#000,rgba(0,0,0,0))}
 .color-field-marker{position:absolute;width:10px;height:10px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
 .color-hue{width:100%;margin:8px 0}
-.color-popup-row{display:flex;align-items:flex-start;gap:7px}.color-preview{width:28px;height:28px;border:1px solid #ccc;border-radius:50%;flex:0 0 auto}.color-mode{width:66px!important;flex:0 0 auto}.color-values{display:flex;gap:4px;flex:1}.color-value{flex:1;text-align:center}.color-value input{width:100%!important;padding:4px!important;text-align:center}.color-value label{font-size:9px;color:#666}
+.color-popup-row{display:flex;align-items:flex-start;gap:7px}.color-preview{width:28px;height:28px;border:1px solid #ccc;border-radius:50%;flex:0 0 auto}.color-mode{width:80px!important;flex:0 0 auto}.color-values{display:flex;gap:4px;flex:1}.color-value{flex:1;text-align:center}.color-value input{width:100%!important;padding:4px!important;text-align:center}.color-value label{font-size:9px;color:#666}
 .color-popup-section{font-size:10px;color:#666;margin:8px 0 4px}.color-popup .swatches{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.color-popup .swatch{min-height:22px;border-radius:5px;border:1px solid #ccc}.color-used-empty{font-size:10px;color:#999;grid-column:1/-1}
 
 /* Custom */
@@ -2188,3 +2188,11 @@ header .app-brand{align-items:center}
 .tpl-save-thumbs{display:flex;gap:8px;margin-bottom:12px}
 .tpl-save-name{width:100%;height:34px}
 @media(max-width:720px){.mytpl-choice{width:80px;font-size:12px!important}.tpl-save-name{height:44px;font-size:16px}}
+
+/* ---- 使い方へのリンク ---- */
+.settings-help{display:block;margin:-4px 0 12px;padding-bottom:12px;border-bottom:1px solid var(--ui-border);color:var(--ink);font-size:12px;font-weight:700;text-decoration:none}
+.settings-help::after{content:" →"}
+.settings-help:hover{text-decoration:underline}
+.empty-help{font-size:12px;color:var(--ink);text-decoration:underline}
+.m-help-link{display:block;margin:16px 0 4px;text-align:center;font-size:14px;font-weight:700;color:var(--ink)}
+@media print{.empty-help{display:none!important}}

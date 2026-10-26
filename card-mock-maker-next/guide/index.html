@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <title>カードモックツクールの使い方 | PANDA KINEMA</title>
+  <meta name="description" content="カードモックツクールの使い方。カードの作り方、テンプレート、面付けと両面印刷、表から一括作成、マイテンプレート、印刷・PDF保存・画像の書き出しまで。">
+  <style>
+    :root{--bg:#1b2228;--text:#f4f4f0;
+      --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+      --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+      /* 使い方ページの色:カードモックツクールのキーカラー(サイトのツール欄と同じ)+ツールの水色 */
+      --key:#2a3138;--paper:#eef1f2;--card:#ffffff;--ink:#2a3138;--ink2:#5d6872;--line:#d3d9dc;--accent:#24b8f2;--link:#0b78a8;--tint:#e3f4fb;--red:#d6453a;--red-tint:#fbeceb}
+    @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-feature-settings:"palt";text-rendering:optimizeLegibility;overflow-x:clip}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;height:auto}
+    a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+    .wrap{width:min(1100px,calc(100% - 40px));margin-inline:auto}
+
+    /* ヘッダー:トップページと同じ形 */
+    .site-header{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#000;transition:background .3s ease}
+    .site-header.scrolled{background:rgba(27,34,40,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+    .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:56px;padding-inline:max(16px,3vw)}
+    .brand{flex:none;display:flex;align-items:center;height:28px}
+    .brand img{height:30px;width:auto}
+    .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font-family:var(--cond);font-size:clamp(14px,1.6vw,19px);font-weight:700;text-transform:uppercase;letter-spacing:.01em}
+    .site-nav::-webkit-scrollbar{display:none}
+    .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9}
+    .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+    .lang{display:flex;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+    .lang[hidden]{display:none}
+    .lang button{display:flex;align-items:center;height:26px;padding:0 9px;border:0;border-radius:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+    .lang button[aria-pressed="true"]{background:#f3f2ee;color:#1b2228}
+    .cap{display:block;line-height:1;text-box:trim-both cap alphabetic}
+    /* 言語:表示中でない方を隠す */
+    html:not(.lang-en) [lang="en"]{display:none !important}
+    html.lang-en [lang="ja"]{display:none !important}
+
+    /* ===== 使い方ページ ===== */
+    main.guide{max-width:1440px;margin-inline:auto;background:var(--paper);color:var(--ink);overflow-x:clip}
+    .en{margin:0;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.2em;min-height:46px;padding:0 22px;border:1.5px solid currentColor;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:.03em;transition:translate .2s ease,background .2s ease}
+    .btn:hover{translate:0 -2px}
+    .btn.primary{background:#fff;border-color:#fff;color:var(--key)}
+
+    /* メインビジュアル:キーカラーの帯+重なったカード */
+    .g-hero{position:relative;display:flex;align-items:center;min-height:clamp(300px,34vw,420px);padding:56px max(24px,6vw);background:var(--key);color:#fff;overflow:hidden}
+    .g-hero-in{position:relative;z-index:1;max-width:620px}
+    .g-hero .en{padding-left:.34em;color:var(--accent);opacity:1}
+    .g-hero h1{margin:14px 0 12px;font-size:clamp(30px,4.4vw,50px);line-height:1.22;letter-spacing:.02em;font-weight:900}
+    .g-hero .lead{margin:0 0 26px;font-size:clamp(15px,1.6vw,18px);line-height:1.7;opacity:.92}
+    .g-cta{display:flex;gap:12px;flex-wrap:wrap}
+    .g-hero .beta{margin:20px 0 0;font-size:12px;opacity:.62}
+    .g-hero-art{position:absolute;right:max(24px,7vw);top:50%;width:min(34vw,380px);aspect-ratio:1;translate:0 -50%}
+    .g-hero-art i{position:absolute;left:28%;top:12%;width:44%;aspect-ratio:63/88;border-radius:7%;background:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
+    .g-hero-art i:nth-child(1){rotate:-16deg;translate:-38% 6%;background:#3a8dde}
+    .g-hero-art i:nth-child(2){rotate:-2deg;translate:0 -2%;background:#f4efe2}
+    .g-hero-art i:nth-child(3){rotate:13deg;translate:40% 8%;background:#fff}
+    .g-hero-art i:nth-child(1)::before{content:"";position:absolute;inset:9% 9% 64%;border:2px solid #22384f;border-radius:4px;background:#fff}
+    .g-hero-art i:nth-child(1)::after{content:"";position:absolute;inset:44% 9% 9%;border:2px solid #22384f;border-radius:4px;background:#fff}
+    .g-hero-art i:nth-child(2)::before{content:"A";position:absolute;inset:0;display:grid;place-items:center;font:900 clamp(40px,6vw,74px)/1 var(--sans);color:#22384f}
+    .g-hero-art i:nth-child(3)::before{content:"7";position:absolute;inset:0;display:grid;place-items:center;font:900 clamp(40px,6vw,74px)/1 var(--sans);color:#d94a4a}
+    .g-hero-art i:nth-child(3)::after{content:"";position:absolute;inset:-5px;border:2px dashed var(--accent);border-radius:9%}
+
+    /* 本文:左に目次、右に説明 */
+    .g-body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px;max-width:1220px;margin-inline:auto;padding:56px 32px 80px}
+    .toc{position:relative}
+    .toc-box{position:sticky;top:80px;max-height:calc(100vh - 100px);overflow:auto;padding:16px 14px;border-radius:12px;background:var(--card);box-shadow:0 10px 24px -20px rgba(0,0,0,.5)}
+    .toc summary{list-style:none;cursor:pointer;font-weight:800;font-size:13px;letter-spacing:.08em;color:var(--ink2)}
+    .toc summary::-webkit-details-marker{display:none}
+    .toc ol{list-style:none;margin:10px 0 0;padding:0;counter-reset:toc}
+    .toc li{counter-increment:toc}
+    .toc a{display:flex;gap:8px;padding:6px 8px;border-radius:6px;font-size:13.5px;font-weight:700;line-height:1.45;color:var(--ink2)}
+    .toc a::before{content:counter(toc,decimal-leading-zero);flex:none;font:700 12px/1.7 var(--cond);color:#9aa5ad}
+    .toc a:hover{background:var(--paper);color:var(--ink)}
+    .toc a.on{background:var(--tint);color:var(--ink)}
+    .toc a.on::before{color:var(--link)}
+    .g-main{min-width:0;font-size:15.5px;line-height:1.9}
+    .g-main p{margin:0 0 1em}
+    .g-main a:not(.btn){color:var(--link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+
+    /* 見出し:英字ラベル+ピル(サイト共通の形)。左右の飾りはカード */
+    .g-sec{margin:0 0 84px}
+    .sec-head{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0 0 30px;text-align:center}
+    .sec-head .en{padding-left:.34em;color:var(--ink2)}
+    .sec-row{display:flex;align-items:center;gap:18px}
+    .sec-row::before,.sec-row::after{content:"";flex:none;width:17px;height:23px;border:2px solid var(--key);border-radius:3px;background:var(--card)}
+    .sec-row::before{rotate:-12deg}
+    .sec-row::after{rotate:12deg;background:var(--accent);border-color:var(--accent)}
+    .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--key);color:#fff;font-size:clamp(17px,1.9vw,21px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+    .g-main h3{display:flex;align-items:center;gap:10px;margin:40px 0 14px;font-size:18px;line-height:1.45;letter-spacing:.02em}
+    .g-main h3::before{content:"";flex:none;width:5px;height:1.1em;border-radius:3px;background:var(--accent)}
+    .ui{display:inline-block;margin:0 .15em;padding:0 .4em;border-radius:5px;background:#dfe5e8;font-weight:700;font-size:.94em;line-height:1.6;white-space:nowrap}
+
+    /* 図(画面の写真) */
+    .shot{margin:0 0 6px}
+    .shot img{width:100%;margin-inline:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 14px 28px -24px rgba(0,0,0,.6)}
+    .shot figcaption{margin-top:8px;text-align:center;font-size:12.5px;line-height:1.6;color:var(--ink2)}
+    .shot.wide{margin-bottom:22px}
+    .shot.wide-md img{max-width:760px}
+    .split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px 34px;align-items:start;margin:8px 0 18px}
+    .split-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .split-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .split-3 h3{margin-top:0}
+    .split-opt{grid-template-columns:minmax(0,.8fr) minmax(0,1.3fr) minmax(0,.75fr)}
+    .split-narrow{grid-template-columns:auto minmax(0,1fr)}
+
+    /* 4ステップ */
+    .quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 26px;padding:0;list-style:none;counter-reset:q}
+    .quick li{position:relative;padding:44px 16px 14px;border-radius:12px;background:var(--card);counter-increment:q;box-shadow:0 10px 24px -22px rgba(0,0,0,.5)}
+    .quick li::before{content:counter(q);position:absolute;left:16px;top:12px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--key);color:#fff;font:800 13px/1 var(--sans)}
+    .quick li>b{display:block;margin-bottom:4px;font-size:15.5px}
+    .quick p{margin:0;font-size:14px;line-height:1.7;color:var(--ink2)}
+
+    /* 番号つきの手順 */
+    ol.steps{list-style:none;margin:6px 0 18px;padding:0;counter-reset:s}
+    ol.steps li{position:relative;padding:2px 0 10px 40px;counter-increment:s}
+    ol.steps li::before{content:counter(s);position:absolute;left:0;top:3px;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--key);color:#fff;font:800 13px/1 var(--sans)}
+    ol.steps li:not(:last-child)::after{content:"";position:absolute;left:12px;top:32px;bottom:2px;width:2px;background:var(--line)}
+    /* 画面の見かたの番号(写真の赤い丸と同じ) */
+    ol.legend{list-style:none;margin:0 0 10px;padding:0;counter-reset:l;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 26px}
+    ol.legend li{position:relative;padding:0 0 0 38px;counter-increment:l;font-size:14.5px;line-height:1.8}
+    ol.legend li::before{content:counter(l);position:absolute;left:0;top:2px;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#e0473c;color:#fff;font:800 14px/1 var(--sans);box-shadow:0 0 0 2px #fff}
+    ol.legend li>b{display:block}
+    .g-main ul{margin:0 0 16px;padding-left:1.3em}
+    .g-main ul li{margin:0 0 6px}
+    .g-main ul li::marker{color:var(--accent)}
+    dl.defs{margin:0 0 16px}
+    dl.defs dt{margin:14px 0 2px;padding-left:10px;border-left:4px solid var(--key);font-weight:800;line-height:1.4}
+    dl.defs dt:first-child{margin-top:0}
+    dl.defs dd{margin:0 0 0 14px}
+
+    /* ヒント・注意 */
+    .note{display:flex;gap:12px;align-items:baseline;margin:14px 0 20px;padding:12px 16px;border-radius:10px;background:var(--tint)}
+    .note p{margin:0;font-size:14.5px;line-height:1.75}
+    .note-l{flex:none;padding:1px 9px;border-radius:999px;background:var(--link);color:#fff;font-size:12px;line-height:1.7}
+    .note.warn{background:var(--red-tint)}
+    .note.warn .note-l{background:var(--red)}
+
+    /* 表 */
+    .table-wrap{overflow-x:auto;margin:0 0 16px}
+    .g-main table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;font-size:14.5px}
+    .g-main th,.g-main td{padding:9px 14px;border-bottom:1px solid var(--line);text-align:left}
+    .g-main th{background:var(--key);color:#fff;font-weight:800}
+    .g-main tr:last-child td{border-bottom:0}
+    table.sizes{max-width:440px}
+
+    /* テンプレート・面付けのカード */
+    .tpl-grid,.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}
+    .tpl-card,.mode{padding:18px 18px 8px;border-radius:12px;background:var(--card);box-shadow:0 10px 24px -22px rgba(0,0,0,.5)}
+    .tpl-card h3,.mode h3{margin-top:0}
+    .tpl-card .shot{margin-bottom:14px}
+    .tpl-card ul{font-size:14px;line-height:1.75}
+    .mode p{font-size:14.5px;line-height:1.8}
+
+    /* スマホの画面 */
+    .phones{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:0 0 20px}
+    .phones .shot{width:min(240px,calc(50% - 9px))}
+    .phones img{border-radius:18px}
+
+    /* ダウンロード */
+    ul.dl{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}
+    ul.dl li{margin:0}
+    .g-main ul.dl a{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px solid var(--key);border-radius:999px;background:var(--card);color:var(--ink);font-size:14px;font-weight:700;text-decoration:none}
+    .g-main ul.dl a::before{content:"↓";font-weight:900;color:var(--link)}
+    .g-main ul.dl a:hover{background:var(--tint)}
+
+    /* よくある質問 */
+    details.faq{margin:0 0 10px;border-radius:10px;background:var(--card);box-shadow:0 10px 24px -22px rgba(0,0,0,.5)}
+    details.faq summary{position:relative;list-style:none;cursor:pointer;padding:14px 48px 14px 18px;font-weight:800;line-height:1.55}
+    details.faq summary::-webkit-details-marker{display:none}
+    details.faq summary::before{content:"Q";margin-right:10px;font:800 16px/1 var(--cond);color:var(--link)}
+    details.faq summary::after{content:"+";position:absolute;right:18px;top:50%;translate:0 -50%;font-size:22px;font-weight:400;color:var(--ink2);transition:rotate .2s ease}
+    details.faq[open] summary::after{rotate:45deg}
+    details.faq p{margin:0;padding:0 18px 16px;font-size:14.5px;line-height:1.8}
+    .g-end{display:flex;justify-content:center;margin-top:20px}
+    .g-end .btn.primary{background:var(--key);border-color:var(--key);color:#fff}
+
+    /* 下部(黒):サイト共通 */
+    .tail{background:var(--bg);color:#f4f4f0;padding-top:28px}
+    .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
+    .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
+
+    @media(max-width:1100px){
+      .split-opt{grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr)}
+      .split-opt>.shot:last-child{grid-column:1/-1;max-width:420px;margin-inline:auto}
+      .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:900px){
+      .g-body{grid-template-columns:minmax(0,1fr);gap:20px;padding:28px 18px 64px}
+      .toc-box{position:static;max-height:none}
+      .toc summary{display:flex;justify-content:space-between;font-size:14px}
+      .toc summary::after{content:"+";font-size:18px;line-height:1}
+      .toc-box[open] summary::after{content:"−"}
+      .toc ol{columns:2;column-gap:10px}
+      .toc li{break-inside:avoid}
+      .split,.split-2,.split-3,.split-opt,.split-narrow{grid-template-columns:minmax(0,1fr)}
+      .split-opt>.shot:last-child{grid-column:auto}
+      .tpl-grid,.modes{grid-template-columns:minmax(0,1fr)}
+      ol.legend{grid-template-columns:minmax(0,1fr)}
+      .g-hero-art{opacity:.22;right:-12vw;width:70vw}
+      .g-sec{margin-bottom:64px}
+    }
+    @media(max-width:650px){
+      .wrap{width:calc(100% - 28px)}
+      .site-footer{flex-direction:column;gap:8px}
+      .g-hero{padding:44px 20px 40px}
+      .g-hero h1{font-size:30px}
+      .quick{grid-template-columns:minmax(0,1fr)}
+      .toc ol{columns:1}
+      .g-main{font-size:15px}
+      .phones .shot{width:calc(50% - 9px)}
+      .ui{white-space:normal}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+
+  </style>
+  <script>document.documentElement.className+=" js"</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="/"><img src="/img/site/logo_icon.png" alt="PANDA KINEMA"></a>
+    <nav class="site-nav" aria-label="サイト"><a href="/#news"><span class="cap">NEWS</span></a><a href="/#board"><span class="cap">BOARD GAME</span></a><a href="/#movie"><span class="cap">MOVIE</span></a><a href="/#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="/#about"><span class="cap">ABOUT</span></a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language" hidden><button type="button" data-l="ja" aria-pressed="true"><span class="cap">JA</span></button><button type="button" data-l="en" aria-pressed="false"><span class="cap">EN</span></button></div>
+  </div>
+</header>
+
+<main class="guide">
+  <section class="g-hero">
+    <div class="g-hero-in">
+      <p class="en" aria-hidden="true">HOW TO USE</p>
+      <h1><span lang="ja">カードモックツクール<br>の使い方</span><span lang="en">How to use<br>Card Mock Maker</span></h1>
+      <p class="lead" lang="ja">カードゲームの試作を、ブラウザだけで作って印刷。</p><p class="lead" lang="en">Build and print card game prototypes, right in your browser.</p>
+      <div class="g-cta"><a class="btn primary" href="../"><span lang="ja">ツールを開く</span><span lang="en">Open the tool</span><span aria-hidden="true"> →</span></a><a class="btn" href="#start"><span lang="ja">はじめに</span><span lang="en">Getting started</span></a></div>
+      <p class="beta" lang="ja">改良テスト版（β）の使い方です。画面や機能は変わることがあります。</p><p class="beta" lang="en">This guide is for the test build (β). Screens and features may change.</p>
+    </div>
+    <div class="g-hero-art" aria-hidden="true"><i></i><i></i><i></i></div>
+  </section>
+
+  <div class="g-body">
+    <nav class="toc" aria-label="目次 / Contents">
+      <details class="toc-box" open>
+        <summary><span lang="ja">目次</span><span lang="en">Contents</span></summary>
+        <ol><li><a href="#start"><span lang="ja">はじめに</span><span lang="en">Getting started</span></a></li><li><a href="#screen"><span lang="ja">画面の見かた</span><span lang="en">The screen</span></a></li><li><a href="#card"><span lang="ja">カードを作る</span><span lang="en">Making a card</span></a></li><li><a href="#template"><span lang="ja">テンプレート</span><span lang="en">Templates</span></a></li><li><a href="#options"><span lang="ja">オプション</span><span lang="en">Options</span></a></li><li><a href="#copies"><span lang="ja">枚数</span><span lang="en">Copies</span></a></li><li><a href="#pages"><span lang="ja">ページ</span><span lang="en">Pages</span></a></li><li><a href="#layout"><span lang="ja">面付け（並べ方）と両面印刷</span><span lang="en">Layout and duplex printing</span></a></li><li><a href="#bulk"><span lang="ja">表から一括作成</span><span lang="en">Create from a table</span></a></li><li><a href="#mytpl"><span lang="ja">マイテンプレート</span><span lang="en">My templates</span></a></li><li><a href="#print"><span lang="ja">印刷</span><span lang="en">Printing</span></a></li><li><a href="#save"><span lang="ja">保存と読み込み</span><span lang="en">Saving and opening</span></a></li><li><a href="#export"><span lang="ja">画像で書き出す</span><span lang="en">Exporting images</span></a></li><li><a href="#phone"><span lang="ja">スマホで使う</span><span lang="en">On a phone</span></a></li><li><a href="#settings"><span lang="ja">単位・フォント・言語</span><span lang="en">Units, fonts and language</span></a></li><li><a href="#faq"><span lang="ja">よくある質問</span><span lang="en">FAQ</span></a></li></ol>
+      </details>
+    </nav>
+    <div class="g-main">
+      
+<section class="g-sec" id="start" aria-labelledby="start-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">GETTING STARTED</p><div class="sec-row"><h2 class="pill" id="start-h"><span lang="ja">はじめに</span><span lang="en">Getting started</span></h2></div></header>
+  
+<p lang="ja">カードゲームの試作（モック）を、ブラウザだけで作って印刷できるツールです。インストールや登録はいりません。作ったカードや画像はブラウザの中だけで扱われ、サーバーには送られません。</p><p lang="en">Card Mock Maker lets you build and print prototype (mock-up) cards for card games right in your browser. There’s nothing to install and no sign-up. Your cards and images stay in your browser and are never sent to a server.</p>
+<h3><span lang="ja">4ステップで印刷まで</span><span lang="en">From start to print in 4 steps</span></h3>
+<ol class="quick">
+  <li><b><span lang="ja">用紙とカードを選ぶ</span><span lang="en">Choose paper and cards</span></b><p lang="ja">画面の上で<b class="ui">用紙サイズ</b>・<b class="ui">向き</b>・<b class="ui">カードサイズ</b>・<b class="ui">面付け</b>を選びます。</p><p lang="en">At the top, choose the paper size, orientation, <b class="ui">Card size</b> and <b class="ui">Layout</b>.</p></li>
+  <li><b><span lang="ja">カードを作る</span><span lang="en">Make the cards</span></b><p lang="ja">用紙の上のカードをクリックして、右のパネルで中身を作ります。</p><p lang="en">Click a card on the sheet and build it in the panel on the right.</p></li>
+  <li><b><span lang="ja">印刷する</span><span lang="en">Print</span></b><p lang="ja"><b class="ui">印刷</b>を押して、倍率を「実際のサイズ（100%）」にして印刷します。</p><p lang="en">Press <b class="ui">Print</b> and print at “Actual size (100%)”.</p></li>
+  <li><b><span lang="ja">保存する</span><span lang="en">Save</span></b><p lang="ja"><b class="ui">PDF保存</b>しておくと、あとで<b class="ui">PDF読み込み</b>から続きを編集できます。</p><p lang="en">Use <b class="ui">Save PDF</b>; later you can carry on editing with <b class="ui">Open PDF</b>.</p></li>
+</ol>
+<div class="split">
+  <div>
+    <p lang="ja">はじめて開くと、用紙は白紙です。まずは<b class="ui">見本を開く</b>で見本のカードを触ってみるのがおすすめです。表計算ソフトにカードのリストがあるなら、<b class="ui">表から一括作成</b>でまとめて作れます。</p><p lang="en">The first time you open it, the sheet is blank. Try <b class="ui">Open sample</b> to play with some example cards first. If your card list is in a spreadsheet, <b class="ui">Create from a table</b> makes them all at once.</p>
+    <p lang="ja">ツールの右上の<b class="ui">•••</b>（スマホは<b class="ui">メニュー</b>）からも、見本・一括作成・この使い方を開けます。</p><p lang="en">The <b class="ui">•••</b> menu at the top right (<b class="ui">Menu</b> on a phone) also has the sample, table import and this guide.</p>
+  </div>
+  <figure class="shot "><img lang="ja" src="img/start-ja.webp?v=20261026" width="1600" height="538" alt="最初の画面。案内から見本や一括作成を開けます" loading="lazy" decoding="async"><img lang="en" src="img/start-en.webp?v=20261026" width="1600" height="538" alt="The first screen. Open the sample or table import from the hint." loading="lazy" decoding="async"><figcaption><span lang="ja">最初の画面。案内から見本や一括作成を開けます</span><span lang="en">The first screen. Open the sample or table import from the hint.</span></figcaption></figure>
+</div>
+
+</section>
+<section class="g-sec" id="screen" aria-labelledby="screen-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">THE SCREEN</p><div class="sec-row"><h2 class="pill" id="screen-h"><span lang="ja">画面の見かた</span><span lang="en">The screen</span></h2></div></header>
+  
+<figure class="shot wide"><img lang="ja" src="img/overview-ja.webp?v=20261026" width="1800" height="1125" alt="パソコンの画面（見本を開いたところ）" loading="lazy" decoding="async"><img lang="en" src="img/overview-en.webp?v=20261026" width="1800" height="1125" alt="The desktop screen with the sample open" loading="lazy" decoding="async"><figcaption><span lang="ja">パソコンの画面（見本を開いたところ）</span><span lang="en">The desktop screen with the sample open</span></figcaption></figure>
+<ol class="legend" lang="ja">
+  <li><b>用紙・カード・面付け・タイトル</b>用紙サイズ（A4・A3）、向き（横・縦）、カードサイズ、面付け（→<a href="#layout">面付け</a>）を選びます。タイトルは用紙の左上に小さく印刷されます。左の ← → は「取り消し」「やり直し」です。</li>
+  <li><b>ページ</b>ページの一覧です（→<a href="#pages">ページ</a>）。</li>
+  <li><b>用紙</b>印刷される用紙そのままのプレビューです。カードをクリックすると水色の枠で選ばれ、右のパネルで編集できます。用紙の下には、1枚に何枚入るかと余白が出ます。</li>
+  <li><b>面</b>選んでいる面（オモテ・ウラ）の枚数、種類、背景、コピーなど（→<a href="#card">カードを作る</a>）。</li>
+  <li><b>テンプレート・オプション</b>テンプレートの中身と、テキストボックスなどの追加パーツ（→<a href="#template">テンプレート</a>・<a href="#options">オプション</a>）。</li>
+  <li><b>PDF保存・印刷・メニュー（•••）</b>メニューには「新規」「PDF読み込み」「見本を開く」「表から一括作成」「画像で書き出す」「マイテンプレート」「使い方を見る」と、設定（単位・フォント・言語）があります。</li>
+</ol>
+<ol class="legend" lang="en">
+  <li><b>Paper, cards, layout, title</b> Choose the paper size (A4/A3), orientation, card size and layout (see <a href="#layout">Layout</a>). The title is printed small at the top left of the sheet. The ← → buttons are Undo and Redo.</li>
+  <li><b>Pages</b> The list of pages (see <a href="#pages">Pages</a>).</li>
+  <li><b>Sheet</b> A preview of exactly what gets printed. Click a card to select it (cyan outline) and edit it in the right panel. Below the sheet you can see how many cards fit and the margins.</li>
+  <li><b>Face</b> Copies, face type, background and copy tools for the selected face (front or back) (see <a href="#card">Making a card</a>).</li>
+  <li><b>Template &amp; Options</b> The template’s contents and extra parts such as text boxes (see <a href="#template">Templates</a> and <a href="#options">Options</a>).</li>
+  <li><b>Save PDF, Print, Menu (•••)</b> The menu has New, Open PDF, Open sample, Create from a table, Export images, My templates, How to use, and settings (units, font, language).</li>
+</ol>
+<h3><span lang="ja">カードサイズ</span><span lang="en">Card sizes</span></h3>
+<div class="table-wrap"><table class="sizes">
+  <thead><tr><th><span lang="ja">名前</span><span lang="en">Name</span></th><th><span lang="ja">大きさ</span><span lang="en">Size</span></th></tr></thead>
+  <tbody>
+    <tr><td><span lang="ja">ポーカー</span><span lang="en">Poker</span></td><td>63 × 88 mm</td></tr>
+    <tr><td><span lang="ja">ブリッジ</span><span lang="en">Bridge</span></td><td>58 × 89 mm</td></tr>
+    <tr><td><span lang="ja">名刺</span><span lang="en">Business card</span></td><td>55 × 91 mm</td></tr>
+    <tr><td><span lang="ja">遊戯王サイズ</span><span lang="en">Japanese size</span></td><td>59 × 86 mm</td></tr>
+    <tr><td><span lang="ja">クレジット</span><span lang="en">Credit card</span></td><td>54 × 86 mm</td></tr>
+    <tr><td><span lang="ja">ハーフ</span><span lang="en">Mini</span></td><td>44 × 63 mm</td></tr>
+  </tbody>
+</table></div>
+<p lang="ja">用紙の向きを変えると、カードの向き（縦長・横長）も切り替わります。</p><p lang="en">Changing the paper orientation also switches the cards between portrait and landscape.</p>
+
+</section>
+<section class="g-sec" id="card" aria-labelledby="card-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">MAKING A CARD</p><div class="sec-row"><h2 class="pill" id="card-h"><span lang="ja">カードを作る</span><span lang="en">Making a card</span></h2></div></header>
+  
+<div class="split">
+  <div>
+    <p lang="ja">用紙の上のカードをクリックすると、その面が選ばれます。パネルの上に「カード3（ページ内3）・オモテ」のように、どのカードのどの面かが出ます。中身は<b class="ui">面の種類</b>で決めます。</p><p lang="en">Click a card on the sheet to select that face. The top of the panel shows which card and side it is, e.g. “Card 3 (#3 on page) · Front”. What goes on the face depends on the <b class="ui">Face type</b>.</p>
+    <dl class="defs" lang="ja">
+      <dt>無地</dt><dd>白紙の面です。背景の色や画像を決めて、<a href="#options">オプション</a>で文字や図形を自由に置きます。</dd>
+      <dt>テンプレート</dt><dd>トランプ・トレカ・ワードゲームの型です。文字を入れるだけでカードらしくなります（→<a href="#template">テンプレート</a>）。</dd>
+      <dt>画像</dt><dd>1枚の画像をカード全体に使います。イラストを全面に入れたいときに。</dd>
+      <dt>マイテンプレート</dt><dd>自分で保存した見た目を使います（→<a href="#mytpl">マイテンプレート</a>）。</dd>
+    </dl>
+    <dl class="defs" lang="en">
+      <dt>Blank</dt><dd>An empty face. Set a background colour or image and place text and shapes freely with <a href="#options">Options</a>.</dd>
+      <dt>Template</dt><dd>Ready-made playing card, trading card and word game layouts. Just type the text (see <a href="#template">Templates</a>).</dd>
+      <dt>Image</dt><dd>One image fills the whole card. Handy for full-bleed artwork.</dd>
+      <dt>My templates</dt><dd>A look you saved yourself (see <a href="#mytpl">My templates</a>).</dd>
+    </dl>
+  </div>
+  <figure class="shot "><img style="max-width:360px" lang="ja" src="img/face-panel-ja.webp?v=20261026" width="666" height="872" alt="面のパネル" loading="lazy" decoding="async"><img style="max-width:360px" lang="en" src="img/face-panel-en.webp?v=20261026" width="666" height="846" alt="The Face panel" loading="lazy" decoding="async"><figcaption><span lang="ja">面のパネル</span><span lang="en">The Face panel</span></figcaption></figure>
+</div>
+<h3><span lang="ja">背景と枠線</span><span lang="en">Background and border</span></h3>
+<ul lang="ja"><li>面色（塗り）と線色（枠線）は、色の四角を押して選びます。</li><li>線の太さは 0.5〜3 mm。線の位置は「内側」「中央」「外側」から選べます。「内側」ならカードの中に収まります。</li><li><b class="ui">背景画像</b>の<b class="ui">画像を選ぶ</b>で、カード全体の背景に画像を敷けます。<b class="ui">削除</b>で外します。</li></ul><ul lang="en"><li>Pick the fill and the border (stroke) colour with the colour squares.</li><li>Border width is 0.5–3 mm. Its position can be Inside, Center or Outside; Inside keeps it within the card.</li><li><b class="ui">Background image</b> → <b class="ui">Choose image</b> puts an image behind the whole card; <b class="ui">Delete</b> removes it.</li></ul>
+<div class="split">
+  <div>
+    <h3><span lang="ja">色の選び方</span><span lang="en">Choosing colours</span></h3>
+    <ul lang="ja"><li>色の四角を押すと「カラー」の画面が開きます。四角の中と虹色のバーで色を選びます。</li><li>CMYK・RGB の数値や、カラーコード（例：#D94A4A）でも指定できます。</li><li>「なし」で色を消せます（透明・線なし）。</li><li>「基本の色」と、いまの作品で「使われている色」から選ぶこともできます。</li></ul><ul lang="en"><li>Press a colour square to open the Color panel. Pick the colour in the square and on the rainbow bar.</li><li>You can also type CMYK or RGB values, or a colour code such as #D94A4A.</li><li>“None” removes the colour (transparent / no line).</li><li>Or choose from Basic colors and the Colors in use in this project.</li></ul>
+    <h3><span lang="ja">同じ面をほかのカードにも</span><span lang="en">Reusing a face</span></h3>
+    <ul lang="ja"><li><b class="ui">面をコピー</b> → 別の面を選んで <b class="ui">面をペースト</b>。</li><li><b class="ui">この面をこのページの同じ面にコピー</b>・<b class="ui">この面をすべてのページの同じ面にコピー</b>は、ウラ面を全部同じにしたいときに便利です（片面のときは「すべての面にコピー」）。</li><li>読み込んだ画像は、自動で長辺2400pxまで小さくして保存します（ポーカーサイズの全面でも十分な細かさです）。</li></ul><ul lang="en"><li><b class="ui">Copy face</b>, select another face, then <b class="ui">Paste face</b>.</li><li><b class="ui">Copy to the same side on this page</b> / <b class="ui">…on all pages</b> are handy for giving every card the same back (on single-sided sheets they copy to every card).</li><li>Images are automatically reduced to 2400 px on the long side, which is still plenty for a full poker-size card.</li></ul>
+  </div>
+  <figure class="shot "><img style="max-width:320px" lang="ja" src="img/color-ja.webp?v=20261026" width="640" height="800" alt="色を選ぶ画面" loading="lazy" decoding="async"><img style="max-width:320px" lang="en" src="img/color-en.webp?v=20261026" width="640" height="792" alt="The colour panel" loading="lazy" decoding="async"><figcaption><span lang="ja">色を選ぶ画面</span><span lang="en">The colour panel</span></figcaption></figure>
+</div>
+
+</section>
+<section class="g-sec" id="template" aria-labelledby="template-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">TEMPLATES</p><div class="sec-row"><h2 class="pill" id="template-h"><span lang="ja">テンプレート</span><span lang="en">Templates</span></h2></div></header>
+  
+<p lang="ja"><b class="ui">面の種類</b>を<b class="ui">テンプレート</b>にすると、<b class="ui">種類</b>から3つの型を選べます。見本の左から、トランプ・トレカ・ワードゲームです。</p><p lang="en">Set the <b class="ui">Face type</b> to <b class="ui">Template</b> and choose one of three layouts under <b class="ui">Type</b>. In the sample, from the left: Playing card, Trading card and Word game.</p>
+<figure class="shot wide-md"><img lang="ja" src="img/sheet-ja.webp?v=20261026" width="1200" height="848" alt="見本のカード（両面（折り））" loading="lazy" decoding="async"><img lang="en" src="img/sheet-en.webp?v=20261026" width="1200" height="848" alt="The sample cards (Front &amp; back (fold))" loading="lazy" decoding="async"><figcaption><span lang="ja">見本のカード（両面（折り））</span><span lang="en">The sample cards (Front & back (fold))</span></figcaption></figure>
+<div class="tpl-grid">
+  <div class="tpl-card">
+    <h3><span lang="ja">トランプ</span><span lang="en">Playing card</span></h3>
+    <figure class="shot "><img style="max-width:330px" lang="ja" src="img/playing-panel-ja.webp?v=20261026" width="666" height="696" alt="トランプのパネル" loading="lazy" decoding="async"><img style="max-width:330px" lang="en" src="img/playing-panel-en.webp?v=20261026" width="666" height="688" alt="Playing card panel" loading="lazy" decoding="async"><figcaption><span lang="ja">トランプのパネル</span><span lang="en">Playing card panel</span></figcaption></figure>
+    <ul lang="ja"><li>数字は自由に入力（A・10・K など）。大きさ・太字・斜体・下線・色・フォントも変えられます。</li><li>スートは ●▲■★♥♠♦♣、大きさは 小・中・大、個数は ×1〜×5。</li><li>スートの種類を「画像」にすると、自分の画像をスートにできます。</li><li>配置：四つ角・上段のみ・右対角線・左対角線。</li></ul><ul lang="en"><li>Type any number or letter (A, 10, K…). Change its size, bold, italic, underline, colour and font.</li><li>Suits: ●▲■★♥♠♦♣; size S/M/L; count ×1–×5.</li><li>Set the suit style to Image to use your own picture as the suit.</li><li>Placement: Four corners, Top only, Diagonal (right) or Diagonal (left).</li></ul>
+  </div>
+  <div class="tpl-card">
+    <h3><span lang="ja">トレカ</span><span lang="en">Trading card</span></h3>
+    <figure class="shot "><img style="max-width:330px" lang="ja" src="img/tcg-panel-ja.webp?v=20261026" width="666" height="784" alt="トレカのパネル" loading="lazy" decoding="async"><img style="max-width:330px" lang="en" src="img/tcg-panel-en.webp?v=20261026" width="666" height="810" alt="Trading card panel" loading="lazy" decoding="async"><figcaption><span lang="ja">トレカのパネル</span><span lang="en">Trading card panel</span></figcaption></figure>
+    <ul lang="ja"><li>上から、カード名・中段の画像・テキスト（効果など）の3段です。</li><li>文字の大きさ・太字・色・フォント、レイアウト（上下3段／上段＋左右分割）を選べます。</li><li>スライダーで上段・中段・下段の高さを、四角でフレームの面色・線色・太さを変えます。</li></ul><ul lang="en"><li>Three rows: card name, middle image and text (effects etc.).</li><li>Set text size, bold, colour and font, and the layout (Three rows / Top + left/right).</li><li>Sliders change the heights of the rows; the squares change the frame fill, stroke and width.</li></ul>
+  </div>
+  <div class="tpl-card">
+    <h3><span lang="ja">ワードゲーム</span><span lang="en">Word game</span></h3>
+    <figure class="shot "><img style="max-width:330px" lang="ja" src="img/word-panel-ja.webp?v=20261026" width="666" height="486" alt="ワードゲームのパネル" loading="lazy" decoding="async"><img style="max-width:330px" lang="en" src="img/word-panel-en.webp?v=20261026" width="666" height="480" alt="Word game panel" loading="lazy" decoding="async"><figcaption><span lang="ja">ワードゲームのパネル</span><span lang="en">Word game panel</span></figcaption></figure>
+    <ul lang="ja"><li>大きなことばを1つ置くカードです。お題カードなどに。</li><li>縦長のカードでは縦書き、横長のカードでは横書きになります。</li><li>大きさ・太字・色・フォントを変えられます。</li></ul><ul lang="en"><li>One big word in the middle, e.g. for prompt cards.</li><li>Portrait cards write it vertically; landscape cards horizontally.</li><li>Change the size, bold, colour and font.</li></ul>
+  </div>
+</div>
+<div class="note tip"><b class="note-l"><span lang="ja">ヒント</span><span lang="en">Tip</span></b><p lang="ja">テンプレートの上にも、オプション（テキストボックス・画像・図形など）を重ねられます。</p><p lang="en">You can add Options (text boxes, images, shapes…) on top of any template.</p></div>
+
+</section>
+<section class="g-sec" id="options" aria-labelledby="options-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">OPTIONS</p><div class="sec-row"><h2 class="pill" id="options-h"><span lang="ja">オプション</span><span lang="en">Options</span></h2></div></header>
+  
+<p lang="ja"><b class="ui">オプション</b>では、どの面にも自由にパーツを足せます。<b class="ui">＋</b>で追加し、カードの上で動かします。</p><p lang="en"><b class="ui">Options</b> lets you add extra parts to any face. Press <b class="ui">+</b> to add one, then arrange it on the card.</p>
+<div class="split split-opt">
+  <figure class="shot "><img style="max-width:320px" lang="ja" src="img/options-card-ja.webp?v=20261026" width="436" height="588" alt="カードの上で、ドラッグで移動・右下の青い点で大きさを変える" loading="lazy" decoding="async"><img style="max-width:320px" lang="en" src="img/options-card-en.webp?v=20261026" width="436" height="588" alt="Drag to move; drag the blue dot at the bottom right to resize" loading="lazy" decoding="async"><figcaption><span lang="ja">カードの上で、ドラッグで移動・右下の青い点で大きさを変える</span><span lang="en">Drag to move; drag the blue dot at the bottom right to resize</span></figcaption></figure>
+  <div>
+    <dl class="defs" lang="ja">
+      <dt>テキストボックス</dt><dd>好きな位置に文字を置きます（1つの面に5つまで）。大きさ・太字・斜体・下線・色・フォント。</dd>
+      <dt>フレームテキスト</dt><dd>枠のついた文字です（5つまで）。文字の色に加えて、枠の面色・線色・太さ・位置も選べます。</dd>
+      <dt>画像</dt><dd>ロゴやアイコンなどの画像を置きます（5つまで）。回転もできます。</dd>
+      <dt>図形</dt><dd>○ △ □ ⬡ ★ を置きます（10個まで）。多角形と星は頂点の数、面色・線色・太さを変えられます。</dd>
+    </dl>
+    <dl class="defs" lang="en">
+      <dt>Text box</dt><dd>Text anywhere on the card (up to 5 per face). Size, bold, italic, underline, colour, font.</dd>
+      <dt>Framed text</dt><dd>Text in a box (up to 5). Besides the text colour you can set the box fill, stroke, width and position.</dd>
+      <dt>Image</dt><dd>Place a logo, icon or other picture (up to 5). It can be rotated.</dd>
+      <dt>Shapes</dt><dd>○ △ □ ⬡ ★ (up to 10). Set the number of points for polygons and stars, plus fill, stroke and width.</dd>
+    </dl>
+    <ul lang="ja"><li>カードの上でドラッグすると動き、右下の青い点をドラッグすると大きさが変わります。</li><li>「中央にスナップ」にチェックすると、カードの真ん中に吸いつきます。</li><li>いらなくなったら、パネルの各パーツの「削除」で消します。</li></ul><ul lang="en"><li>Drag a part on the card to move it; drag the blue dot at its bottom right to resize it.</li><li>Tick “Snap to center” to make it stick to the middle of the card.</li><li>Remove a part with its “Delete” button in the panel.</li></ul>
+  </div>
+  <figure class="shot "><img style="max-width:300px" lang="ja" src="img/options-panel-ja.webp?v=20261026" width="666" height="1706" alt="オプションのパネル" loading="lazy" decoding="async"><img style="max-width:300px" lang="en" src="img/options-panel-en.webp?v=20261026" width="666" height="1698" alt="The Options panel" loading="lazy" decoding="async"><figcaption><span lang="ja">オプションのパネル</span><span lang="en">The Options panel</span></figcaption></figure>
+</div>
+
+</section>
+<section class="g-sec" id="copies" aria-labelledby="copies-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">COPIES</p><div class="sec-row"><h2 class="pill" id="copies-h"><span lang="ja">枚数</span><span lang="en">Copies</span></h2></div></header>
+  
+<div class="split">
+  <div>
+    <p lang="ja">同じカードを何枚も入れたいときは、パネルの<b class="ui">枚数</b>の ＋ を押します。増やしたカードはすぐ後ろに並び、用紙の上では「×3」のように印がつきます（印は印刷されません）。</p><p lang="en">To include several of the same card, press + next to <b class="ui">Copies</b>. The copies are placed right after it and marked like “×3” on the sheet (the mark isn’t printed).</p>
+    <ul lang="ja"><li>同じカードは、どれか1枚を直すと全部に反映されます。</li><li>1枚だけ違うものにしたいときは<b class="ui">このカードだけ別にする</b>を押します。</li><li>ページは足りなくなると自動で増えます（25ページまで）。</li></ul><ul lang="en"><li>Edit any one of the copies and they all change.</li><li>To make one of them different, press <b class="ui">Make this one separate</b>.</li><li>Pages are added automatically as needed (up to 25).</li></ul>
+    <figure class="shot "><img style="max-width:340px" lang="ja" src="img/qty-panel-ja.webp?v=20261026" width="666" height="298" alt="枚数の操作" loading="lazy" decoding="async"><img style="max-width:340px" lang="en" src="img/qty-panel-en.webp?v=20261026" width="666" height="288" alt="The Copies control" loading="lazy" decoding="async"><figcaption><span lang="ja">枚数の操作</span><span lang="en">The Copies control</span></figcaption></figure>
+  </div>
+  <figure class="shot "><img lang="ja" src="img/qty-sheet-ja.webp?v=20261026" width="1200" height="848" alt="「A」を3枚にしたところ" loading="lazy" decoding="async"><img lang="en" src="img/qty-sheet-en.webp?v=20261026" width="1200" height="848" alt="The “A” card set to 3 copies" loading="lazy" decoding="async"><figcaption><span lang="ja">「A」を3枚にしたところ</span><span lang="en">The “A” card set to 3 copies</span></figcaption></figure>
+</div>
+
+</section>
+<section class="g-sec" id="pages" aria-labelledby="pages-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">PAGES</p><div class="sec-row"><h2 class="pill" id="pages-h"><span lang="ja">ページ</span><span lang="en">Pages</span></h2></div></header>
+  
+<div class="split split-narrow">
+  <figure class="shot "><img style="max-width:150px" lang="ja" src="img/pages-ja.webp?v=20261026" width="286" height="732" alt="ページの一覧と「…」のメニュー" loading="lazy" decoding="async"><img style="max-width:150px" lang="en" src="img/pages-en.webp?v=20261026" width="286" height="726" alt="The page list and its “…” menu" loading="lazy" decoding="async"><figcaption><span lang="ja">ページの一覧と「…」のメニュー</span><span lang="en">The page list and its “…” menu</span></figcaption></figure>
+  <div>
+    <ul lang="ja"><li><b class="ui">＋ ページ</b>で、空のページを足します（25ページまで）。</li><li>ページの「…」から、複製・削除ができます。</li><li>ページの絵をドラッグすると、順番を入れ替えられます。</li><li>ページの絵を押すと、そのページを編集します。</li><li>スマホでは<b class="ui">メニュー</b>の「ページを追加」「ページを複製」「ページを削除」を使います。</li></ul><ul lang="en"><li><b class="ui">+ Page</b> adds an empty page (up to 25).</li><li>Use a page’s “…” button to duplicate or delete it.</li><li>Drag a page thumbnail to change the order.</li><li>Click a thumbnail to edit that page.</li><li>On a phone, use Add page / Duplicate page / Delete page in the <b class="ui">Menu</b>.</li></ul>
+  </div>
+</div>
+
+</section>
+<section class="g-sec" id="layout" aria-labelledby="layout-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">LAYOUT</p><div class="sec-row"><h2 class="pill" id="layout-h"><span lang="ja">面付け（並べ方）と両面印刷</span><span lang="en">Layout and duplex printing</span></h2></div></header>
+  
+<p lang="ja"><b class="ui">面付け</b>で、用紙へのカードの並べ方を3つから選びます。</p><p lang="en"><b class="ui">Layout</b> sets how cards are arranged on the paper. There are three options.</p>
+<div class="modes">
+  <div class="mode">
+    <h3><span lang="ja">両面（折り）</span><span lang="en">Front &amp; back (fold)</span></h3>
+    <p lang="ja">オモテとウラを隣どうしに並べて印刷します。切り取ったあと、真ん中で折って貼り合わせます。両面印刷できないプリンタでも作れます。画面の点線は折る位置の目安で、印刷されません。</p><p lang="en">Prints each card’s front and back side by side. Cut them out, fold in the middle and glue. Works with any printer. The dotted line on screen marks the fold and isn’t printed.</p>
+  </div>
+  <div class="mode">
+    <h3><span lang="ja">両面印刷</span><span lang="en">Duplex printing</span></h3>
+    <p lang="ja">1枚目にオモテ、2枚目にウラを並べ、プリンタの両面印刷で紙の表と裏に刷ります。折らずに済むので、きれいに仕上がります。</p><p lang="en">Fronts go on the first page and backs on the second, and your printer prints them on both sides of the paper. No folding, so the result is neater.</p>
+  </div>
+  <div class="mode">
+    <h3><span lang="ja">片面</span><span lang="en">Single-sided</span></h3>
+    <p lang="ja">オモテだけを並べます。ウラがいらないカードやタイル、シールなどに。</p><p lang="en">Only the fronts are printed. For cards without backs, tiles, stickers and so on.</p>
+  </div>
+</div>
+<div class="note tip"><b class="note-l"><span lang="ja">ヒント</span><span lang="en">Tip</span></b><p lang="ja">面付けを変えると、用紙の向きもそのやり方に合う向きに切り替わります。カードの中身はそのままです。</p><p lang="en">Changing the layout also switches the paper to the orientation that suits it. Your cards stay as they are.</p></div>
+<h3 id="duplex"><span lang="ja">両面印刷のしかた</span><span lang="en">How to print double-sided</span></h3>
+<div class="split split-2">
+  <figure class="shot "><img lang="ja" src="img/duplex-front-ja.webp?v=20261026" width="1100" height="1480" alt="両面印刷：オモテ面" loading="lazy" decoding="async"><img lang="en" src="img/duplex-front-en.webp?v=20261026" width="1100" height="1479" alt="Duplex printing: fronts" loading="lazy" decoding="async"><figcaption><span lang="ja">両面印刷：オモテ面</span><span lang="en">Duplex printing: fronts</span></figcaption></figure>
+  <figure class="shot "><img lang="ja" src="img/duplex-back-ja.webp?v=20261026" width="1100" height="1480" alt="ウラ面（左右が入れ替わって並ぶ）" loading="lazy" decoding="async"><img lang="en" src="img/duplex-back-en.webp?v=20261026" width="1100" height="1479" alt="Backs (mirrored left to right)" loading="lazy" decoding="async"><figcaption><span lang="ja">ウラ面（左右が入れ替わって並ぶ）</span><span lang="en">Backs (mirrored left to right)</span></figcaption></figure>
+</div>
+<ol class="steps" lang="ja"><li><b class="ui">面付け</b>を<b class="ui">両面印刷</b>にします。用紙の上に<b class="ui">オモテ面</b>・<b class="ui">ウラ面</b>の切り替えが出ます。</li><li><b class="ui">ウラ面</b>を表示すると、印刷されるウラの並びが見えます。紙を裏返したときにオモテと重なるよう、左右（または上下）が入れ替わっています。</li><li><b class="ui">プリンタの両面設定</b>を、プリンタ側の設定と同じ<b class="ui">長辺とじ</b>か<b class="ui">短辺とじ</b>にします。</li><li>まず1ページ分（オモテとウラの2枚）だけ試し刷りして、光にかざしてずれを確かめます。</li><li>ずれていたら<b class="ui">ウラ面のずれ補正</b>に、ずれた長さを入れます。X はプラスで右へ、Y はプラスで下へ、ウラ面の印刷位置を動かします。</li><li>合ったら、全部を印刷します。</li></ol><ol class="steps" lang="en"><li>Set <b class="ui">Layout</b> to <b class="ui">Duplex printing</b>. A <b class="ui">Front</b> / <b class="ui">Back</b> switch appears above the sheet.</li><li>Switch to <b class="ui">Back</b> to see how the backs will print: swapped left-right (or top-bottom) so they line up with the fronts when the sheet is flipped.</li><li>Set <b class="ui">Printer duplex setting</b> to match your printer: <b class="ui">Flip on long edge</b> or <b class="ui">Flip on short edge</b>.</li><li>Print just one sheet (front and back) first, then hold it up to the light to check the alignment.</li><li>If it’s off, enter the amount in <b class="ui">Back offset</b>. Positive X moves the backs right, positive Y moves them down.</li><li>Once it lines up, print everything.</li></ol>
+<div class="note warn"><b class="note-l"><span lang="ja">注意</span><span lang="en">Note</span></b><p lang="ja">ウラが上下さかさまに出るときは、「長辺とじ」と「短辺とじ」を入れ替えてみてください。</p><p lang="en">If the backs come out upside down, swap Long edge and Short edge.</p></div>
+<div class="split split-narrow">
+  <figure class="shot "><img style="max-width:360px" lang="ja" src="img/single-ja.webp?v=20261026" width="900" height="1270" alt="片面：オモテだけが並ぶ" loading="lazy" decoding="async"><img style="max-width:360px" lang="en" src="img/single-en.webp?v=20261026" width="900" height="1270" alt="Single-sided: fronts only" loading="lazy" decoding="async"><figcaption><span lang="ja">片面：オモテだけが並ぶ</span><span lang="en">Single-sided: fronts only</span></figcaption></figure>
+  <div>
+    <h3><span lang="ja">スマホでは</span><span lang="en">On a phone</span></h3>
+    <p lang="ja"><b class="ui">用紙</b>タブの<b class="ui">面付け</b>で選びます。両面印刷の設定も同じ画面に出ます。<b class="ui">ページ全体</b>の表示では、オモテ面とウラ面を切り替えて確かめられます。</p><p lang="en">Choose it under <b class="ui">Layout</b> in the <b class="ui">Paper</b> tab; the duplex settings appear there too. In <b class="ui">Whole page</b> view you can switch between fronts and backs.</p>
+  </div>
+</div>
+
+</section>
+<section class="g-sec" id="bulk" aria-labelledby="bulk-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">CREATE FROM A TABLE</p><div class="sec-row"><h2 class="pill" id="bulk-h"><span lang="ja">表から一括作成</span><span lang="en">Create from a table</span></h2></div></header>
+  
+<p lang="ja">スプレッドシートやExcelにまとめたカードのリストから、カードをまとめて作れます。1行が1枚のカードになります。</p><p lang="en">Turn a card list from a spreadsheet or Excel into cards in one go. Each row becomes one card.</p>
+<div class="split">
+  <div>
+    <ol class="steps" lang="ja"><li><b class="ui">•••</b>（スマホは<b class="ui">メニュー</b>）の<b class="ui">表から一括作成</b>を開きます。</li><li>テンプレートを選びます：トランプ・トレカ・ワードゲーム・★マイテンプレート・選んでいるカード。表を貼り付けると、見出しから合いそうなものが自動で選ばれます。</li><li>表の範囲をコピーして貼り付けます。<b class="ui">CSVファイルを読み込む</b>でも入れられます。書き方がわからないときは<b class="ui">例を入れる</b>。</li><li><b class="ui">どの列をどこに入れるか</b>を確かめます。見出しの名前で自動で決まり、変えることもできます。「テンプレートのまま」にした場所は、テンプレートの文字が残ります。</li><li><b class="ui">確認</b>で最初の数枚を見て、<b class="ui">作る</b>を押します。</li></ol><ol class="steps" lang="en"><li>Open <b class="ui">Create from a table</b> from <b class="ui">•••</b> (<b class="ui">Menu</b> on a phone).</li><li>Choose a template: Playing card, Trading card, Word game, ★ one of your templates, or the Selected card. When you paste a table, a matching one is picked from the headings automatically.</li><li>Copy the range and paste it, or use <b class="ui">Load a CSV file</b>. Not sure of the format? Try <b class="ui">Fill in an example</b>.</li><li>Check <b class="ui">Which column goes where</b>. It’s set from the headings and you can change it. Anything left as “Keep the template’s text” keeps the template’s text.</li><li>Look over the first few cards under <b class="ui">Check</b>, then press <b class="ui">Create</b>.</li></ol>
+  </div>
+  <figure class="shot "><img lang="ja" src="img/bulk-ja.webp?v=20261026" width="1100" height="1149" alt="表から一括作成" loading="lazy" decoding="async"><img lang="en" src="img/bulk-en.webp?v=20261026" width="1100" height="1146" alt="Create from a table" loading="lazy" decoding="async"><figcaption><span lang="ja">表から一括作成</span><span lang="en">Create from a table</span></figcaption></figure>
+</div>
+<h3><span lang="ja">表の書き方</span><span lang="en">Writing the table</span></h3>
+<div class="table-wrap"><table class="heads">
+  <thead><tr><th><span lang="ja">テンプレート</span><span lang="en">Template</span></th><th><span lang="ja">見出しの例</span><span lang="en">Example headings</span></th></tr></thead>
+  <tbody>
+    <tr><td><span lang="ja">トレカ</span><span lang="en">Trading card</span></td><td><span lang="ja">カード名 ／ テキスト ／ 枚数</span><span lang="en">Name / Text / Copies</span></td></tr>
+    <tr><td><span lang="ja">トランプ</span><span lang="en">Playing card</span></td><td><span lang="ja">数字 ／ スート ／ 枚数</span><span lang="en">Number / Suit / Copies</span></td></tr>
+    <tr><td><span lang="ja">ワードゲーム</span><span lang="en">Word game</span></td><td><span lang="ja">ことば ／ 枚数</span><span lang="en">Word / Copies</span></td></tr>
+    <tr><td><span lang="ja">テキストボックスのあるカード</span><span lang="en">Cards with text boxes</span></td><td><span lang="ja">テキストボックス 1 ／ テキストボックス 2 …</span><span lang="en">Text box 1 / Text box 2 …</span></td></tr>
+  </tbody>
+</table></div>
+<ul lang="ja"><li>1行目は見出しにします（見出しがない表は「1行目は見出し」のチェックを外します）。</li><li>「枚数」の列があると、その数だけ同じカードを作ります。0の行は作りません。</li><li>ウラ面に入れたい列は「ウラ：フレームテキスト 1」のように見出しの頭に「ウラ」をつけます。</li><li>Excelで保存した日本語のCSV（Shift_JIS）も読み込めます。セルの中の改行もそのまま入ります。</li><li>文字だけを入れられます。画像は表からは入れられません。</li></ul><ul lang="en"><li>Use the first row for headings (untick “First row is headers” if your table has none).</li><li>A Copies column makes that many of each card. Rows with 0 are skipped.</li><li>For columns that go on the back, start the heading with “Back”, e.g. “Back: Framed text 1”.</li><li>CSV files saved by Excel (including Japanese Shift_JIS) work, and line breaks inside cells are kept.</li><li>Only text can come from the table, not images.</li></ul>
+<p lang="ja">作ったカードは1つのテンプレートでつながります。あとからどれか1枚の色や配置を変えると、全部に反映されます（→<a href="#mytpl">マイテンプレート</a>）。</p><p lang="en">The new cards are linked by one template, so changing the colours or layout of any one of them later changes them all (see <a href="#mytpl">My templates</a>).</p>
+<h3><span lang="ja">試せるサンプル</span><span lang="en">Sample files to try</span></h3>
+<ul class="dl" lang="ja">
+  <li><a href="samples/tcg_monsters_ja.csv" download>トレカ用（7種類・11枚）</a></li>
+  <li><a href="samples/playing_hearts_ja.csv" download>トランプ用（ハート13枚）</a></li>
+  <li><a href="samples/word_topics_ja.csv" download>ワードゲーム用（お題10個）</a></li>
+</ul>
+<ul class="dl" lang="en">
+  <li><a href="samples/tcg_monsters_en.csv" download>Trading cards (7 designs, 11 cards)</a></li>
+  <li><a href="samples/playing_hearts_en.csv" download>Playing cards (13 hearts)</a></li>
+  <li><a href="samples/word_topics_en.csv" download>Word game (10 prompts)</a></li>
+</ul>
+
+</section>
+<section class="g-sec" id="mytpl" aria-labelledby="mytpl-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">MY TEMPLATES</p><div class="sec-row"><h2 class="pill" id="mytpl-h"><span lang="ja">マイテンプレート</span><span lang="en">My templates</span></h2></div></header>
+  
+<p lang="ja">カードの見た目（色・枠・配置・パーツなど）を名前をつけて保存し、ほかのカードやほかの作品で使えます。</p><p lang="en">Save the look of a card (colours, frames, layout, parts…) under a name and reuse it on other cards and in other projects.</p>
+<div class="split split-3">
+  <div>
+    <h3><span lang="ja">保存する</span><span lang="en">Save</span></h3>
+    <figure class="shot "><img style="max-width:360px" lang="ja" src="img/mytpl-save-ja.webp?v=20261026" width="1000" height="642" alt="テンプレートとして保存" loading="lazy" decoding="async"><img style="max-width:360px" lang="en" src="img/mytpl-save-en.webp?v=20261026" width="1000" height="638" alt="Save as template" loading="lazy" decoding="async"><figcaption><span lang="ja">テンプレートとして保存</span><span lang="en">Save as template</span></figcaption></figure>
+    <p lang="ja">カードを整えたら、面のパネルの<b class="ui">テンプレートとして保存</b>を押し、名前をつけて<b class="ui">保存</b>します。オモテとウラの両方が保存されます。</p><p lang="en">When a card looks right, press <b class="ui">Save as template</b> in the Face panel, give it a name and press <b class="ui">Save</b>. Both front and back are saved.</p>
+  </div>
+  <div>
+    <h3><span lang="ja">使う</span><span lang="en">Use</span></h3>
+    <figure class="shot "><img style="max-width:330px" lang="ja" src="img/mytpl-pick-ja.webp?v=20261026" width="666" height="568" alt="面の種類「マイテンプレート」" loading="lazy" decoding="async"><img style="max-width:330px" lang="en" src="img/mytpl-pick-en.webp?v=20261026" width="666" height="562" alt="Face type “My templates”" loading="lazy" decoding="async"><figcaption><span lang="ja">面の種類「マイテンプレート」</span><span lang="en">Face type “My templates”</span></figcaption></figure>
+    <p lang="ja">別のカードを選び、<b class="ui">面の種類</b>を<b class="ui">マイテンプレート</b>にして、出てきた一覧から選びます。表から一括作成でも「★」の付いた名前で選べます。</p><p lang="en">Select another card, set <b class="ui">Face type</b> to <b class="ui">My templates</b> and pick one from the list. They also appear with a ★ in Create from a table.</p>
+  </div>
+  <div>
+    <h3><span lang="ja">まとめて直す</span><span lang="en">Change them all</span></h3>
+    <figure class="shot "><img style="max-width:330px" lang="ja" src="img/mytpl-linked-ja.webp?v=20261026" width="666" height="740" alt="テンプレートでつながったカード" loading="lazy" decoding="async"><img style="max-width:330px" lang="en" src="img/mytpl-linked-en.webp?v=20261026" width="666" height="734" alt="A card linked to a template" loading="lazy" decoding="async"><figcaption><span lang="ja">テンプレートでつながったカード</span><span lang="en">A card linked to a template</span></figcaption></figure>
+    <p lang="ja">同じテンプレートを使っているカードは、どれか1枚で見た目を変えると全部に反映されます。カード名や説明などの文字と、トレカの中段の画像はカードごとのままです。</p><p lang="en">Cards using the same template are linked: change the look on any one of them and they all change. The text (names, descriptions…) and the trading card’s middle image stay per card.</p>
+  </div>
+</div>
+<ul lang="ja"><li>1枚だけ特別にしたいときは<b class="ui">テンプレートから外す</b>を押します。面の種類を変えたカードも、自動で外れます。</li><li><b class="ui">•••</b>の<b class="ui">マイテンプレート</b>で一覧を開き、名前の変更・<b class="ui">選んでいるカードに使う</b>・<b class="ui">ブラウザにも保存</b>・<b class="ui">削除</b>ができます。</li><li>テンプレートは作品と一緒に保存されます（PDF保存にも入ります）。このブラウザにも保存され、ほかの作品でも使えます。</li><li>別のパソコンやスマホでも、そのPDFを読み込むと、テンプレートがそのブラウザにも追加されます。</li></ul><ul lang="en"><li>To make one card special, press <b class="ui">Unlink from template</b>. Changing a card’s face type unlinks it too.</li><li><b class="ui">My templates</b> in the <b class="ui">•••</b> menu lists them all: rename, <b class="ui">Use on selected card</b>, <b class="ui">Save to browser</b> or <b class="ui">Delete</b>.</li><li>Templates are saved with the project (and inside saved PDFs), and also in this browser so your other projects can use them.</li><li>Open that PDF on another computer or phone and its templates are added to that browser as well.</li></ul>
+<figure class="shot "><img style="max-width:520px" lang="ja" src="img/mytpl-manager-ja.webp?v=20261026" width="1000" height="435" alt="メニューの「マイテンプレート」" loading="lazy" decoding="async"><img style="max-width:520px" lang="en" src="img/mytpl-manager-en.webp?v=20261026" width="1000" height="429" alt="My templates in the menu" loading="lazy" decoding="async"><figcaption><span lang="ja">メニューの「マイテンプレート」</span><span lang="en">My templates in the menu</span></figcaption></figure>
+
+</section>
+<section class="g-sec" id="print" aria-labelledby="print-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">PRINTING</p><div class="sec-row"><h2 class="pill" id="print-h"><span lang="ja">印刷</span><span lang="en">Printing</span></h2></div></header>
+  
+<ol class="steps" lang="ja"><li><b class="ui">印刷</b>を押します（スマホは<b class="ui">メニュー</b>の<b class="ui">印刷</b>）。ブラウザの印刷画面が開きます。</li><li>用紙サイズを、ツールで選んだもの（A4・A3）に合わせます。</li><li>倍率は「実際のサイズ」「100%」にします。「用紙に合わせる」だと、カードが小さく印刷されます。</li><li>両面印刷のときは、プリンタの両面印刷をオンにして、とじ方をツールの設定と同じにします。</li></ol><ol class="steps" lang="en"><li>Press <b class="ui">Print</b> (<b class="ui">Print</b> in the <b class="ui">Menu</b> on a phone). Your browser’s print dialog opens.</li><li>Set the paper size to the one you chose in the tool (A4 or A3).</li><li>Set the scale to “Actual size” / 100%. “Fit to page” prints the cards smaller.</li><li>For duplex printing, turn on two-sided printing and use the same flip edge as in the tool.</li></ol>
+<ul lang="ja"><li>カードのまわりには、切り取り用の細い線が印刷されます。</li><li>用紙の下に「A4横に63×88 mmのカードが4枚（余白 …）」のように、入る枚数と余白が出ます。</li><li>タイトルは用紙の左上に小さく印刷されます（両面印刷のウラには入りません）。</li></ul><ul lang="en"><li>A thin cutting line is printed around each card.</li><li>Below the sheet you’ll see how many cards fit and the margins.</li><li>The title is printed small at the top left (not on the back pages in duplex printing).</li></ul>
+<div class="note warn"><b class="note-l"><span lang="ja">注意</span><span lang="en">Note</span></b><p lang="ja">このツールは試作（モック）用です。印刷所に入稿するための塗り足しなどの設定はありません。</p><p lang="en">This tool is for prototypes. It has no bleed or other settings for sending files to a print shop.</p></div>
+
+</section>
+<section class="g-sec" id="save" aria-labelledby="save-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">SAVING</p><div class="sec-row"><h2 class="pill" id="save-h"><span lang="ja">保存と読み込み</span><span lang="en">Saving and opening</span></h2></div></header>
+  
+<dl class="defs" lang="ja">
+  <dt>自動保存</dt><dd>編集した内容は、このブラウザに自動で保存されます。次に開くと「前回の続きを開きました」と出て、続きから始まります。白紙から始めたいときは「新規」。</dd>
+  <dt>PDF保存</dt><dd>印刷できるPDFに、編集データを入れて保存します。「PDF読み込み」で開けば、いつでも続きを編集できます。別のパソコンやスマホへの持ち運び、バックアップにも使えます。</dd>
+  <dt>取り消し・やり直し</dt><dd>上の ← → ボタン、またはキーボードの ⌘Z / Ctrl+Z（取り消し）、⇧⌘Z / Ctrl+Y（やり直し）。</dd>
+</dl>
+<dl class="defs" lang="en">
+  <dt>Autosave</dt><dd>Your work is saved in this browser automatically. Next time, it says it reopened where you left off. Use “New” to start from a blank sheet.</dd>
+  <dt>Save PDF</dt><dd>Saves a printable PDF with your editing data inside. Open it with “Open PDF” to keep editing at any time. Also good for moving to another computer or phone, and for backups.</dd>
+  <dt>Undo / Redo</dt><dd>The ← → buttons at the top, or ⌘Z / Ctrl+Z (undo) and ⇧⌘Z / Ctrl+Y (redo).</dd>
+</dl>
+<div class="note warn"><b class="note-l"><span lang="ja">注意</span><span lang="en">Note</span></b><p lang="ja">ブラウザの履歴やデータを消すと、自動保存も消えます。大事な作品は「PDF保存」しておいてください。</p><p lang="en">Clearing your browser data also clears the autosave. Keep important work as a PDF with “Save PDF”.</p></div>
+
+</section>
+<section class="g-sec" id="export" aria-labelledby="export-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">EXPORT IMAGES</p><div class="sec-row"><h2 class="pill" id="export-h"><span lang="ja">画像で書き出す</span><span lang="en">Exporting images</span></h2></div></header>
+  
+<div class="split">
+  <div>
+    <p lang="ja"><b class="ui">•••</b>の<b class="ui">画像で書き出す</b>で、カードを画像にしてZIPファイルで保存します。</p><p lang="en"><b class="ui">Export images</b> in the <b class="ui">•••</b> menu saves your cards as images in a ZIP file.</p>
+    <dl class="defs" lang="ja">
+      <dt>カード1枚ずつの画像</dt><dd>1枚ずつのPNG画像です。書き出す面（オモテ面・ウラ面・オモテ面とウラ面）と解像度（150・300 dpi）を選べます。同じカードは1つにまとめ、ファイル名に「_x3」のように枚数が入ります。</dd>
+      <dt>Tabletop Simulator用</dt><dd>Tabletop Simulator（TTS）は、Steamで売られているパソコン用のソフトで、ボードゲームをネット越しに遊べます。10×7に並べたシート画像（deck_1.png）と、ウラ面の画像（back.png）、取り込み方を書いたREADME.txtを書き出します。カードは枚数ぶん並び、69枚ごとにシートが分かれます。</dd>
+    </dl>
+    <dl class="defs" lang="en">
+      <dt>One image per card</dt><dd>A PNG for each card. Choose the sides (front, back or both) and the resolution (150 or 300 dpi). Copies are exported once, with the count in the file name, like “_x3”.</dd>
+      <dt>For Tabletop Simulator</dt><dd>Tabletop Simulator (TTS) is a PC game on Steam for playing board games online. You get 10×7 sheet images (deck_1.png), a back image (back.png) and a README.txt explaining how to import them. Each card appears as many times as its copies, with a new sheet every 69 cards.</dd>
+    </dl>
+  </div>
+  <figure class="shot "><img style="max-width:420px" lang="ja" src="img/export-ja.webp?v=20261026" width="1000" height="631" alt="画像で書き出す" loading="lazy" decoding="async"><img style="max-width:420px" lang="en" src="img/export-en.webp?v=20261026" width="1000" height="654" alt="Export images" loading="lazy" decoding="async"><figcaption><span lang="ja">画像で書き出す</span><span lang="en">Export images</span></figcaption></figure>
+</div>
+<h3><span lang="ja">TTSへの取り込み方</span><span lang="en">Importing into TTS</span></h3>
+<ol class="steps" lang="ja"><li>TTSで Objects → Components → Cards → Custom Deck を置きます。</li><li>Face に deck_1.png、Back に back.png を選びます。ウラ面がカードごとに違うときは、Back に back_1.png を選び「Unique backs」にチェックを入れます。</li><li>Width 10・Height 7・Number（カードの枚数）を入れて Import します。数字はREADME.txtに書いてあります。</li><li>ほかの人と遊ぶときは、画像をSteamクラウドなどにアップロードします（TTSの画像を選ぶ画面からできます）。</li></ol><ol class="steps" lang="en"><li>In TTS, place Objects → Components → Cards → Custom Deck.</li><li>Choose deck_1.png for Face and back.png for Back. If the backs differ per card, choose back_1.png and tick “Unique backs”.</li><li>Enter Width 10, Height 7 and Number (the card count), then Import. The numbers are in README.txt.</li><li>To play with others, upload the images to the Steam Cloud or similar (you can do this from TTS’s image picker).</li></ol>
+
+</section>
+<section class="g-sec" id="phone" aria-labelledby="phone-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">ON A PHONE</p><div class="sec-row"><h2 class="pill" id="phone-h"><span lang="ja">スマホで使う</span><span lang="en">On a phone</span></h2></div></header>
+  
+<div class="phones">
+  <figure class="shot "><img style="max-width:240px" lang="ja" src="img/phone-home-ja.webp?v=20261026" width="520" height="1125" alt="カードを1枚ずつ表示" loading="lazy" decoding="async"><img style="max-width:240px" lang="en" src="img/phone-home-en.webp?v=20261026" width="520" height="1125" alt="One card at a time" loading="lazy" decoding="async"><figcaption><span lang="ja">カードを1枚ずつ表示</span><span lang="en">One card at a time</span></figcaption></figure>
+  <figure class="shot "><img style="max-width:240px" lang="ja" src="img/phone-face-ja.webp?v=20261026" width="520" height="1125" alt="「面」のパネル" loading="lazy" decoding="async"><img style="max-width:240px" lang="en" src="img/phone-face-en.webp?v=20261026" width="520" height="1125" alt="The Face panel" loading="lazy" decoding="async"><figcaption><span lang="ja">「面」のパネル</span><span lang="en">The Face panel</span></figcaption></figure>
+  <figure class="shot "><img style="max-width:240px" lang="ja" src="img/phone-sheet-ja.webp?v=20261026" width="520" height="1125" alt="「ページ全体」の表示" loading="lazy" decoding="async"><img style="max-width:240px" lang="en" src="img/phone-sheet-en.webp?v=20261026" width="520" height="1125" alt="Whole page view" loading="lazy" decoding="async"><figcaption><span lang="ja">「ページ全体」の表示</span><span lang="en">Whole page view</span></figcaption></figure>
+</div>
+<ul lang="ja"><li>下のバーに<b class="ui">面</b>・<b class="ui">テンプレ</b>・<b class="ui">オプション</b>・<b class="ui">用紙</b>・<b class="ui">メニュー</b>が並びます。パソコンの右のパネルと同じことができます。</li><li>カードはオモテとウラを並べて1枚ずつ表示します。← → か、左右にスワイプして次のカードへ。最後のカードで → を押すと、ページが増えます。</li><li><b class="ui">ページ全体</b>で用紙全体を見られます。カードを押すと、そのカードの編集に戻ります。</li><li><b class="ui">用紙</b>では、用紙・カード・面付け・タイトル・フォント・単位を変えます。</li><li>PDF保存・印刷・画像の書き出し・見本・表から一括作成・マイテンプレート・ページの操作・言語は<b class="ui">メニュー</b>にあります。</li></ul><ul lang="en"><li>The bar at the bottom has <b class="ui">Face</b>, <b class="ui">Template</b>, <b class="ui">Options</b>, <b class="ui">Paper</b> and <b class="ui">Menu</b>: the same as the panel on the right on a computer.</li><li>Cards are shown one at a time, front and back side by side. Use ← → or swipe left and right. Pressing → on the last card adds a page.</li><li><b class="ui">Whole page</b> shows the whole sheet. Tap a card to go back to editing it.</li><li><b class="ui">Paper</b> has the paper, card size, layout, title, font and units.</li><li>Save PDF, Print, Export images, the sample, Create from a table, My templates, page tools and language are in the <b class="ui">Menu</b>.</li></ul>
+
+</section>
+<section class="g-sec" id="settings" aria-labelledby="settings-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">SETTINGS</p><div class="sec-row"><h2 class="pill" id="settings-h"><span lang="ja">単位・フォント・言語</span><span lang="en">Units, fonts and language</span></h2></div></header>
+  
+<div class="split">
+  <div>
+    <dl class="defs" lang="ja">
+      <dt>長さの単位</dt><dd>mm（標準）・cm・inch・pt・px。カードサイズや線の太さ、ずれ補正の表示に使います。</dd>
+      <dt>文字の単位</dt><dd>pt（標準）・級（Q）・px。印刷物でよく使う級（1級＝0.25 mm）も選べます。</dd>
+      <dt>基本のフォント</dt><dd>ゴシック・明朝・丸ゴシック・極太・端末の標準。作品全体の文字に使われます。それぞれの文字の「フォント」で個別に変えることもできます（「基本」のままなら、この設定に従います）。</dd>
+      <dt>言語</dt><dd>JA（日本語）・EN（英語）。パンダキネマのサイトと同じ設定です。</dd>
+    </dl>
+    <dl class="defs" lang="en">
+      <dt>Length unit</dt><dd>mm (default), cm, inch, pt or px. Used for card sizes, line widths and the back offset.</dd>
+      <dt>Text unit</dt><dd>pt (default), Q (1 Q = 0.25 mm, common in Japanese print) or px.</dd>
+      <dt>Default font</dt><dd>Sans-serif, Serif, Rounded, Heavy or System font, used for all text in the project. Each text item also has its own Font setting (“Default” follows this one).</dd>
+      <dt>Language</dt><dd>JA (Japanese) or EN (English). Shared with the Panda Kinema site.</dd>
+    </dl>
+    <p lang="ja">単位はこのブラウザに、基本のフォントは作品に保存されます。</p><p lang="en">Units are remembered by this browser; the default font is saved with the project.</p>
+  </div>
+  <figure class="shot "><img style="max-width:300px" lang="ja" src="img/menu-ja.webp?v=20261026" width="560" height="872" alt="メニュー（•••）" loading="lazy" decoding="async"><img style="max-width:300px" lang="en" src="img/menu-en.webp?v=20261026" width="560" height="878" alt="The menu (•••)" loading="lazy" decoding="async"><figcaption><span lang="ja">メニュー（•••）</span><span lang="en">The menu (•••)</span></figcaption></figure>
+</div>
+<div class="note tip"><b class="note-l"><span lang="ja">ヒント</span><span lang="en">Tip</span></b><p lang="ja">フォントはインターネットから読み込みます。オフラインのときは、端末にある文字に置き換わることがあります。</p><p lang="en">Fonts load from the internet. When offline, your device’s own fonts may be used instead.</p></div>
+
+</section>
+<section class="g-sec" id="faq" aria-labelledby="faq-h">
+  <header class="sec-head"><p class="en" aria-hidden="true">FAQ</p><div class="sec-row"><h2 class="pill" id="faq-h"><span lang="ja">よくある質問</span><span lang="en">FAQ</span></h2></div></header>
+  <details class="faq" lang="ja"><summary>印刷すると、カードの大きさが合いません。</summary><p>印刷画面の倍率を「実際のサイズ」「100%」にしてください。「用紙に合わせる」になっていると縮んで印刷されます。用紙サイズがツールと同じかも確かめてください。</p></details><details class="faq" lang="en"><summary>The printed cards are the wrong size.</summary><p>Set the scale in the print dialog to “Actual size” / 100%. “Fit to page” shrinks the cards. Also check that the paper size matches the tool.</p></details><details class="faq" lang="ja"><summary>両面印刷で、オモテとウラがずれます。</summary><p>「プリンタの両面設定」がプリンタと同じか確かめてから、1枚だけ試し刷りして「ウラ面のずれ補正」で合わせます（→<a href="#duplex">両面印刷のしかた</a>）。プリンタによって数ミリずれるのはよくあることです。</p></details><details class="faq" lang="en"><summary>In duplex printing, the fronts and backs don’t line up.</summary><p>Make sure “Printer duplex setting” matches your printer, then print one test sheet and adjust “Back offset” (see <a href="#duplex">How to print double-sided</a>). A few millimetres of drift is normal for many printers.</p></details><details class="faq" lang="ja"><summary>作ったデータはどこに保存されますか？</summary><p>このブラウザの中だけです。サーバーには送られません。別のパソコンやスマホで続きを作るときは「PDF保存」したPDFを「PDF読み込み」で開きます。</p></details><details class="faq" lang="en"><summary>Where is my data stored?</summary><p>Only in this browser; nothing is sent to a server. To continue on another computer or phone, save a PDF with “Save PDF” and open it there with “Open PDF”.</p></details><details class="faq" lang="ja"><summary>「自動保存できませんでした」と出ました。</summary><p>ブラウザの保存できる量がいっぱいの可能性があります。こまめに「PDF保存」してください。大きな画像をたくさん使っているときに起きやすくなります。</p></details><details class="faq" lang="en"><summary>It says autosave failed.</summary><p>The browser’s storage may be full. Save a PDF often. It’s more likely when you use many large images.</p></details><details class="faq" lang="ja"><summary>何枚まで作れますか？</summary><p>25ページまでです。ポーカーサイズの片面なら、A4縦1ページに9枚、25ページで225枚です。</p></details><details class="faq" lang="en"><summary>How many cards can I make?</summary><p>Up to 25 pages. For single-sided poker cards that’s 9 per A4 portrait page, or 225 cards.</p></details><details class="faq" lang="ja"><summary>スマホでも印刷できますか？</summary><p>メニューの「印刷」から、スマホの印刷機能で印刷できます。うまくいかないときは「PDF保存」して、PDFを印刷してください。</p></details><details class="faq" lang="en"><summary>Can I print from a phone?</summary><p>Yes, “Print” in the Menu uses your phone’s printing. If it doesn’t work well, save a PDF and print that.</p></details><details class="faq" lang="ja"><summary>トランプやトレカ以外の形のカードは作れますか？</summary><p>面の種類を「無地」にして、背景・テキストボックス・画像・図形を組み合わせれば、自由なデザインにできます。気に入った形は「テンプレートとして保存」しておくと、ほかのカードにも使えます。</p></details><details class="faq" lang="en"><summary>Can I make cards other than these templates?</summary><p>Yes. Use a Blank face and combine the background, text boxes, images and shapes. Save a design you like with “Save as template” to reuse it.</p></details>
+</section>
+      <div class="g-end"><a class="btn primary" href="../"><span lang="ja">ツールを開く</span><span lang="en">Open the tool</span><span aria-hidden="true"> →</span></a></div>
+    </div>
+  </div>
+</main>
+
+<section class="tail">
+  <div class="wrap">
+    <footer class="site-footer"><span>©2015-2026 Panda Kinema</span><a href="#"><span class="cap">BACK TO TOP ↑</span></a></footer>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.documentElement, shd=document.querySelector(".site-header");
+  function shs(){ shd.classList.toggle("scrolled",scrollY>4) } addEventListener("scroll",shs,{passive:true}); shs();
+  /* 言語切替(JA/EN)。選んだ言語はこの端末に覚えておく(サイト・ツールと共通)。?lang=en でも開ける */
+  var TITLE={ja:document.title,en:"How to use Card Mock Maker | PANDA KINEMA"};
+  var langBox=document.querySelector(".lang");
+  langBox.hidden=false;
+  function setLang(l){ root.classList.toggle("lang-en",l==="en"); root.lang=l; document.title=TITLE[l];
+    [].forEach.call(langBox.querySelectorAll("button"),function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-l")===l?"true":"false") });
+    try{ localStorage.setItem("pk-lang",l) }catch(e){} }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem("pk-lang") }catch(e){}
+  setLang(q||saved||"ja");
+  langBox.addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) setLang(b.getAttribute("data-l")) });
+  /* 目次:いま読んでいる見出しに印。スマホは閉じておく */
+  var box=document.querySelector(".toc-box"), mq=matchMedia("(max-width:900px)");
+  function tocMode(){ if(mq.matches) box.removeAttribute("open"); else box.setAttribute("open","") } tocMode(); mq.addEventListener("change",tocMode);
+  var links={}; [].forEach.call(document.querySelectorAll(".toc a"),function(a){ links[a.getAttribute("href").slice(1)]=a });
+  if("IntersectionObserver" in window){
+    var cur=null, io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ if(cur) cur.classList.remove("on"); cur=links[e.target.id]; if(cur) cur.classList.add("on") } }) },{rootMargin:"-30% 0px -60% 0px"});
+    [].forEach.call(document.querySelectorAll(".g-sec"),function(s){ io.observe(s) });
+  }
+  [].forEach.call(document.querySelectorAll(".toc a"),function(a){ a.addEventListener("click",function(){ if(mq.matches) box.removeAttribute("open") }) });
+})();
+</script>
+</body>
+</html>

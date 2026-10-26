@@ -56,6 +56,7 @@
     <button type="button" class="open-export">画像で書き出す</button>
     <button type="button" class="open-tpl">マイテンプレート</button>
   </div>
+  <a class="settings-help" href="guide/" target="_blank" rel="noopener">使い方を見る</a>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
   <div class="settings-row" data-mslot="units"><label for="unitText">文字の単位</label><select id="unitText"><option value="pt">pt</option><option value="Q">級（Q）</option><option value="px">px</option></select></div>
@@ -153,6 +154,7 @@
         <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
         <button type="button" class="open-sample">見本を開く</button>
         <button type="button" class="open-bulk">表から一括作成</button>
+        <a class="empty-help" href="guide/" target="_blank" rel="noopener">使い方</a>
       </div>
       <div id="duplexBar" class="duplex-bar" hidden>
         <div class="seg" role="group" aria-label="表示する面"><button type="button" data-view-side="front" aria-pressed="true">オモテ面</button><button type="button" data-view-side="back" aria-pressed="false">ウラ面</button></div>
@@ -238,6 +240,7 @@
           </div>
           <div class="m-group-title">言語 / Language</div>
           <div class="lang-switch m-lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
+          <a class="m-help-link" href="guide/" target="_blank" rel="noopener">使い方を見る</a>
           <div class="app-copyright">©2026 Panda Kinema</div>
         </div>
       </div>
@@ -316,8 +319,8 @@
     </div>
     <div class="copy-tools face-copy-tools">
       <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
-      <button id="copyToPageSide" class="mini copy-wide">このページの同じ面にコピー</button>
-      <button id="copyToAllPagesSide" class="mini copy-wide">すべてのページの同じ面にコピー</button>
+      <button id="copyToPageSide" class="mini copy-wide">この面をこのページの同じ面にコピー</button>
+      <button id="copyToAllPagesSide" class="mini copy-wide">この面をすべてのページの同じ面にコピー</button>
       <button id="tplSaveQuick" type="button" class="mini copy-wide">テンプレートとして保存</button>
     </div>
   </div>

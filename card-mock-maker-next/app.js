@@ -652,7 +652,9 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
 
   if(d.template==="word"){
     const wrap=document.createElement("div");wrap.className="word-card";
-    const main=document.createElement("div");main.className="word-main"+(!isLandscapeCard()?" vertical":"");
+    // 縦長のカードは縦書き。ただし日本語を含まない言葉(英単語など)は1文字ずつ縦に並ぶと読みにくいので横書き
+    const jp=/[\u3000-\u30ff\u3400-\u9fff\uf900-\ufaff\uff01-\uff9f]/.test(String(d.main??""));
+    const main=document.createElement("div");main.className="word-main"+(!isLandscapeCard()&&jp?" vertical":"");
     const ms=d.mainStyle||{size:SIZE.word,bold:true,italic:false};main.style.fontSize=(ms.size||SIZE.word)+"pt";if(ms.font)main.style.fontFamily=fontCss(ms.font);main.style.fontWeight=ms.bold?800:400;main.style.fontStyle=ms.italic?"italic":"normal";main.style.textDecoration=ms.underline?"underline":"none";main.style.color=d.mainColorNone?"transparent":(d.mainColor||d.color||"#222222");if(d.main)main.textContent=d.main;else main.innerHTML='<span class="ph">ことば</span>';
     wrap.appendChild(main);faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
