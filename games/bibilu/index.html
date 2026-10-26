@@ -501,6 +501,8 @@
     .bg-new{height:24px;padding:0 10px;font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:.08em}
     .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:56px;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle,rgba(205,210,212,.7) 1.6px,transparent 2px) 0 0/16px 4px repeat-x;font-size:12px;color:#cdd2d4}
     .site-footer a{font-family:var(--cond);font-size:14px;letter-spacing:.08em}
+    .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+    .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
 
     /* ===== 追従するBOOTHボタン(メインビジュアルと購入欄が見えていない間だけ) ===== */
     .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;
@@ -677,7 +679,7 @@
       .bg-card{height:180px}
       .rel-row .bg-card{height:200px}
       .rel-row .bg-link{width:min(260px,72vw)}
-      .site-footer{flex-direction:column;gap:8px}
+      .site-footer{flex-direction:column;gap:8px;text-align:center}
     }
   </style>
   <script>document.documentElement.className+=" js"</script>
@@ -859,7 +861,7 @@
   </div>
 </section>
 
-<div class="wrap"><footer class="site-footer"><span>©2015-2026 Panda Kinema</span><a href="#"><span class="cap">BACK TO TOP ↑</span></a></footer></div>
+<div class="wrap"><footer class="site-footer"><span>©2015-2026 Panda Kinema<small class="ga-note"><span lang="ja">このサイトはアクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleアナリティクス</a>を使用しています</span><span lang="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#"><span class="cap">BACK TO TOP ↑</span></a></footer></div>
 
 <script>
 (function(){
