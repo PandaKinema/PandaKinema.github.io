@@ -72,6 +72,7 @@ content:
       - { name: key, label: key(英小文字), type: string, required: true, description: "バナーの順番で使う名前。あとから変えない" }
       - { name: name, label: 作品名, type: string, required: true }
       - { name: series, label: シリーズ名, type: string, description: "例:MINI THEATER SERIES 01。バナーのロゴの上に出ます。空でOK" }
+      - { name: hashtag, label: Xのハッシュタグ, type: string, description: "作品ページの「Xでシェア」に付くタグ(#なし、複数はカンマ区切り)。#パンダキネマ は自動で付きます。空なら作品名から" }
       - { name: new, label: 新作マークを付ける, type: boolean, description: "オンにすると、カードの上の中央とバナーに「新作」が出ます" }
       - { name: front, label: 閉じたカードの画像, type: image, options: { path: img/card }, description: "縦長 840×1185(比率 約1:1.41)で作った画像をそのまま使います" }
       - { name: pkg, label: パッケージ, type: image, options: { path: img/package }, description: "開いたカードとバナーに出ます。背景が透明なPNG/WebP。横長の画像は横長の置き方になります" }

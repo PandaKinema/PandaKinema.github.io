@@ -335,6 +335,12 @@ def apply(key):
     if t:
         g['spec'] = [(L('人数', 'Players'), L('%s人' % t['players'], str(t['players']).replace('〜', '–'))), (L('時間', 'Time'), L('%s分' % t['time'], '%s min' % str(t['time']).replace('〜', '–'))), (L('年齢', 'Age'), L('%s歳から' % t['age'], '%s+' % t['age']))]
     g['booth'] = d.get('booth') or (t or {}).get('booth') or site.get('booth') or BOOTH
+    # Xでシェア:『作品名』+キャッチ+ページのURL+ハッシュタグ(#パンダキネマ と作品名。カードの「ハッシュタグ」で変えられる)
+    import urllib.parse as _up
+    _nm = str((t or {}).get('name') or d.get('title') or key)
+    _tags = [x for x in re.split(r'[\s,、#]+', str((t or {}).get('hashtag') or '')) if x] or [re.sub(r'[^\w]', '', _nm)]
+    _text = '『%s』%s' % (_nm, str(d.get('catch_ja') or '').strip())
+    g['share_url'] = 'https://x.com/intent/post?' + _up.urlencode({'text': _text, 'url': 'https://pandakinema.com/games/%s/' % key, 'hashtags': ','.join(['パンダキネマ'] + _tags)})
     g['manual_ja'] = d.get('manual_ja') or '#'
     g['manual_en'] = d.get('manual_en') or g['manual_ja']
     g['site'] = site
@@ -1821,6 +1827,8 @@ TEMPLATE = r'''<!doctype html>
     .sr-pts li b{align-self:stretch;font-size:18px;font-weight:900;padding-bottom:10px;border-bottom:1.5px solid rgba(243,242,238,.5)}
     .sr-pts .sr-pt{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
     .sr-row .sr-here{cursor:default}
+    .btn.xshare{background:#000;color:#fff;gap:.5em}   /* Xでシェア:Xの黒 */
+    .btn.xshare img{width:14px;height:14px}
     .sr-row .sr-here small{color:#e8343d;font-weight:800}
     @media (max-width:650px){ .sr-sec{padding:56px 0 60px} .sr-pts{margin:26px auto 32px} }
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
@@ -2171,6 +2179,7 @@ TEMPLATE = r'''<!doctype html>
         <p class="contents">{{contents}}</p>
         {{price_html}}
         <a class="btn buy" href="{{booth}}" target="_blank" rel="noopener">{{L:BOOTHで購入|Buy on BOOTH}} <span aria-hidden="true">↗</span></a>
+        <a class="btn xshare" href="{{share_url}}" target="_blank" rel="noopener"><img src="../../img/site/icon_x_mark.svg" alt="" width="14" height="14">{{L:Xでシェア|Share on X}}</a>
       </div>
     </div>
     </div>
@@ -2545,7 +2554,7 @@ def render(key):
     credits = '\n'.join('    <div style="--i:%d"><dt>%s</dt><dd>%s</dd></div>' % (i, e(a), e(b)) for i, (a, b) in enumerate(g['credits']))
     v = dict(
         header_logo=imgname(g['site'].get('header_logo') or 'brand.png'),
-        title=e(g['title']), description=e(g['description']), theme=g['theme'], booth=e(g['booth']), seats=SEATS,
+        title=e(g['title']), description=e(g['description']), theme=g['theme'], booth=e(g['booth']), share_url=e(g.get('share_url') or ''), seats=SEATS,
         hero_cls=g['hero_cls'], hero_art=g['hero_art'], hero_visual=g['hero_visual'], hero_css=g['hero_css'], hero_style=g['hero_style'], h1_cls=g['h1_cls'],
         logo=g['logo'], logo_w=g['logo_size'][0], logo_h=g['logo_size'][1], logo_alt=e(g['logo_alt']),
         logo_buy=g['logo_buy'], logo_credits=g['logo_credits'], poster=g['poster'],
