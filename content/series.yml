@@ -1,0 +1,17 @@
+- key: mini_theatre
+  name: MINI THEATRE SERIES
+  match: MINI THEAT
+  logo: img/site/mini_theatre_logo.png
+  title_ja: ミニシアターシリーズとは?
+  title_en: What is the Mini Theatre Series?
+  lead_ja: ミニシアターシリーズは、『TRICO!』『モコチャカ』などの通常ラインとは異なり、シンプルなルールとコンパクトな構成で、手に取りやすさを重視したシリーズです。
+  lead_en: Unlike our main line such as “TRICO!” and “Mokochaka,” the Mini Theatre Series focuses on simple rules and compact components, so anyone can pick it up easily.
+  points:
+    - title_ja: すぐ遊べるシンプル設計
+      title_en: Simple, ready to play
+      text_ja: ルールを最小限に絞り、すぐに遊べることを目指しています。
+      text_en: The rules are kept to a minimum so you can start playing right away.
+    - title_ja: コンパクトで手に取りやすい
+      title_en: Compact and easy to pick up
+      text_ja: 小さな構成で、気軽に試せるシリーズです。
+      text_en: Small components make it easy to give it a try.

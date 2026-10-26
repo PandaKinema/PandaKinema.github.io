@@ -340,6 +340,7 @@ def apply(key):
     g['site'] = site
     g['games'] = games
     g['tools'] = load('content/tools.yml') or []
+    g['series'] = load('content/series.yml') or []
     # 背景2色(色か画像)と帯・見出しの飾り:編集画面の値を CSS の変数で上書き
     def tile(v):   # 2倍の大きさで作った画像を半分の大きさで敷き詰める
         f = imgname(v)
@@ -1807,6 +1808,21 @@ TEMPLATE = r'''<!doctype html>
 
     /* 関連コンテンツ */
     .rel-row{justify-content:safe center;gap:18px}
+
+    /* シリーズの共通欄(ミニシアターなど):どの作品でも同じ見た目(パンダキネマの黒) */
+    .sr-sec{position:relative;z-index:2;padding:72px 0 80px;background:#1b2228;color:#f3f2ee;text-align:center}
+    .sr-head{display:flex;flex-direction:column;align-items:center;gap:14px}
+    .sr-logo{width:min(440px,78vw);height:auto}
+    .sr-head h2{margin:6px 0 0;font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em}
+    .sr-lead{margin:0;max-width:38em;font-size:14.5px;line-height:1.95;font-weight:500;word-break:auto-phrase}
+    .sr-pts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:18px;max-width:760px;margin:32px auto 40px;padding:0;list-style:none}
+    .sr-pts li{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 10px 10px;border:14px solid transparent;border-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42'%3E%3Cpath d='M11 1.5H31A9.5 9.5 0 0 0 40.5 11V31A9.5 9.5 0 0 0 31 40.5H11A9.5 9.5 0 0 0 1.5 31V11A9.5 9.5 0 0 0 11 1.5Z' fill='none' stroke='%23f3f2ee' stroke-width='2'/%3E%3C/svg%3E") 14 stretch}   /* 四隅が内側に欠けた、劇場のチケット風の枠 */
+    .sr-pn{margin:0;font-family:var(--cond);font-size:17px;font-weight:700;letter-spacing:.08em;opacity:.8}
+    .sr-pts li b{align-self:stretch;font-size:18px;font-weight:900;padding-bottom:10px;border-bottom:1.5px solid rgba(243,242,238,.5)}
+    .sr-pts .sr-pt{font-size:13.5px;line-height:1.8;font-weight:500;word-break:auto-phrase}
+    .sr-row .sr-here{cursor:default}
+    .sr-row .sr-here small{color:#e8343d;font-weight:800}
+    @media (max-width:650px){ .sr-sec{padding:56px 0 60px} .sr-pts{margin:26px auto 32px} }
     .rel-row .bg-card{height:260px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45)}
     /* リンクのカード(OGPの画像+タイトル+サイト名) */
     .bg-link{display:flex;flex-direction:column;aspect-ratio:auto;width:300px;background:#fff;color:#1b2228;text-align:left}
@@ -2477,6 +2493,40 @@ def related_html(g, key):   # 関連コンテンツ:選んだ作品・ツール�
     </div>
   </section>''' % '\n'.join(cards)
 
+def series_html(g, key):   # シリーズの共通欄(ミニシアターなど):作品の「シリーズ名」に match の文字が入っていれば、関連コンテンツの位置に出す
+    e = H.escape
+    me = g['games'].get(key) or {}
+    nm = str(me.get('series') or '').upper()
+    for sr in g.get('series') or []:
+        m = str(sr.get('match') or sr.get('name') or '').strip().upper()
+        if not m or m not in nm:
+            continue
+        logo = ''
+        if sr.get('logo'):
+            f = imgname(sr['logo'])
+            from PIL import Image
+            with Image.open(os.path.join(WEB, f)) as im:
+                lw, lh = im.size
+            logo = '<img class="sr-logo" src="../../img/%s" alt="%s" width="%d" height="%d">' % (f, e(str(sr.get('name') or '')), lw, lh)
+        pts = ''.join('<li><p class="sr-pn">POINT%d</p><b>%s</b><span class="sr-pt">%s</span></li>' % (i + 1, LL(p, 'title'), LL(p, 'text')) for i, p in enumerate(sr.get('points') or []))
+        mates = [k for k, x in g['games'].items() if m in str(x.get('series') or '').upper()]
+        cards = []
+        for k in mates:
+            c = open_card(g['games'][k])
+            if k == key:   # このページの作品:リンクにせず「上映中」
+                c = c.replace('<a class="bg-card bg-link rel-open" href=', '<a class="bg-card bg-link rel-open sr-here" aria-current="page" data-href=', 1).replace('<small>BOARD GAME</small>', '<small>NOW SHOWING</small>', 1)
+            cards.append(c)
+        return '''  <section class="sr-sec" id="series" aria-labelledby="series-title">
+    <div class="wrap">
+      <header class="sr-head reveal">%s<h2 id="series-title">%s</h2><p class="sr-lead">%s</p></header>
+      <ul class="sr-pts reveal">%s</ul>
+      <ul class="bg-row rel-row sr-row reveal">
+%s
+      </ul>
+    </div>
+  </section>''' % (logo, LL(sr, 'title'), LL(sr, 'lead'), pts, '\n'.join(cards))
+    return ''
+
 def render(key):
     g = apply(key); e = H.escape
     br = lambda t: t.replace('\n', '<br>')
@@ -2517,7 +2567,7 @@ def render(key):
             e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']), LL(v, 'kind'), '' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>') for v in g['videos']),
         vdots_html=''.join('<button type="button"%s>%s</button>' % (' aria-current="true"' if i == 0 else '', LL(v, 'kind')) for i, v in enumerate(g['videos'])),
         lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),
-        related_html=related_html(g, key),
+        related_html=series_html(g, key) + related_html(g, key),
         video_hidden='' if g['videos'] else ' hidden',
         video_tex=' tex' if g.get('video_tex') else '',
         ogp_meta=('  <meta property="og:url" content="https://pandakinema.com/games/%s/">\n  <meta property="og:image" content="https://pandakinema.com/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',

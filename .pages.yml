@@ -967,6 +967,31 @@ content:
       - { name: video, label: バナーの動画, type: file, options: { path: img/video }, description: "mp4・音なし。10MB以下くらいに" }
       - { name: youtube, label: YouTube(動画), type: string, description: "YouTubeのURLかID。音なしでくり返し流れます。mp4 の動画があればそちらが優先" }
 
+  - name: series
+    label: シリーズ(ミニシアターなど)
+    type: file
+    path: content/series.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: key, label: key(英小文字), type: string, required: true }
+      - { name: name, label: シリーズ名, type: string, required: true }
+      - { name: match, label: 対象の作品, type: string, required: true, description: "「ボードゲーム(カード)」のシリーズ名にこの文字が入っている作品のページに、この欄が出ます(例:MINI THEAT)" }
+      - { name: logo, label: シリーズのロゴ, type: image, options: { path: img/site }, description: "白・背景透明" }
+      - { name: title_ja, label: 見出し, type: string }
+      - { name: title_en, label: 見出し(英語), type: string, hidden: true }
+      - { name: lead_ja, label: 説明文, type: text }
+      - { name: lead_en, label: 説明文(英語), type: text, hidden: true }
+      - name: points
+        label: ポイント
+        type: object
+        list: true
+        fields:
+          - { name: title_ja, label: 見出し, type: string }
+          - { name: title_en, label: 見出し(英語), type: string, hidden: true }
+          - { name: text_ja, label: 文, type: text }
+          - { name: text_en, label: 文(英語), type: text, hidden: true }
+
   - name: categories
     label: ニュースのカテゴリ
     type: file
