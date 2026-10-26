@@ -2136,3 +2136,12 @@ header .app-brand{align-items:center}
   .export-opts .ds-item{display:grid;gap:4px}
   .export-opts select{height:40px!important;font-size:16px!important;width:100%!important}
 }
+
+/* ---- 一括作成:ひな形の選択 ---- */
+.bulk-tpl{display:flex;flex-wrap:wrap;gap:6px}
+.bulk-tpl button{min-height:30px;padding:3px 14px;border:1px solid var(--ui-border-strong);border-radius:15px;background:var(--ui-control);color:var(--ink);font-size:12px}
+.bulk-tpl button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ui-panel)}
+.bulk-tpl button:disabled{opacity:.4;cursor:not-allowed}
+.bulk-tpl+.bulk-lead{margin-top:8px}
+#bulkKeepRow[hidden]{display:none!important}
+@media(max-width:720px){.bulk-tpl button{min-height:38px;padding:4px 14px;font-size:14px}}

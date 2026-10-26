@@ -66,6 +66,10 @@ const makePlaying=()=>({type:"template",template:"playing",number:"7",suit:"●"
   numberColor:"#d94a4a",text:"",textColor:"#222222",bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
   numberStyle:{size:SIZE.number,bold:true,italic:false}});
 const makeImageFace=()=>({type:"image",src:null,bgColor:"#ffffff",bgImage:null});
+const makeTcg=()=>({type:"template",template:"tcg",name:T("カード名"),desc:T("テキスト"),image:null,bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
+  textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,
+  nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false}});
+const makeWord=()=>({type:"template",template:"word",main:T("ことば"),mainColor:"#222222",mainStyle:{size:SIZE.word,bold:true,italic:false},bgColor:"#ffffff",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside"});
 /* ---- デッキ:カードの一覧(deck.cards)と、印刷する並び(deck.order) ----
    deck.cards[id]={front,back}。deck.order=[id,...] で、同じidが並べば同じカードを複数枚刷る。
    pages は表示用に deck から作り直す配列(中身は各カードの面そのものを指すので、面の中身を直せばカードに反映される)。 */
@@ -1371,12 +1375,10 @@ el("templateType").addEventListener("change",e=>{
   const keepTextBoxes=deep(ensureTextBoxes(currentFaces()[selected]));
   const keepFrameTexts=deep(ensureFrameTexts(currentFaces()[selected]));
   const keepOptionImages=deep(ensureOptionImages(currentFaces()[selected]));
-  if(t==="playing")nextFace={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};
-  if(t==="tcg")nextFace={type:"template",template:"tcg",name:T("カード名"),desc:T("テキスト"),image:null,bgColor:keepBg,bgImage:keepBgImage,
-    bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,
-    textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
-    nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false}};
-  if(t==="word")nextFace={type:"template",template:"word",main:T("ことば"),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:SIZE.word,bold:true,italic:false}};
+  const common={bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};
+  if(t==="playing")nextFace={...makePlaying(),...common};
+  if(t==="tcg")nextFace={...makeTcg(),...common};
+  if(t==="word")nextFace={...makeWord(),...common};
   if(nextFace)setFaceAt(currentPage,selected,Object.assign(nextFace,keep));   // 図形・背景の「なし」も含めて引き継ぐ
   renderSheet();syncControls();
 });
@@ -1506,7 +1508,7 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
-/* ---- 表から一括作成:選んでいるカードをひな形に、表の1行を1枚のカードにする ---- */
+/* ---- 表から一括作成:ひな形(トランプ・トレカ・ワードゲーム、または選んでいるカード)に、表の1行を1枚のカードとして当てはめる ---- */
 const BULK_ALIASES={
   number:["数字","数","ランク","number","num","rank"],
   suit:["スート","マーク","suit","mark"],
@@ -1514,32 +1516,41 @@ const BULK_ALIASES={
   desc:["テキスト","説明","説明文","効果","本文","text","desc","description","effect","rules"],
   main:["ことば","言葉","お題","ワード","word","main"],
   textbox:["テキストボックス","テキスト","textbox","text"],
-  frame:["フレームテキスト","フレーム","frametext","frame"],
+  frame:["フレームテキスト","フレーム","frametext","framedtext","frame"],
   qty:["枚数","数量","copies","count","qty","quantity"]
+};
+const BULK_KINDS={playing:{name:"トランプ",make:makePlaying,keys:["number","suit"]},tcg:{name:"トレカ",make:makeTcg,keys:["name","desc"]},word:{name:"ワードゲーム",make:makeWord,keys:["main"]}};
+const BULK_EXAMPLES={
+  playing:{ja:[["A","♠"],["2","♠"],["3","♠"]],en:[["A","♠"],["2","♠"],["3","♠"]]},
+  tcg:{ja:[["ゴブリン","相手の手札を1枚見る。","3"],["スライム","攻撃されたら2枚に分かれる。","2"],["ドラゴン","山札から1枚引く。","1"]],
+       en:[["Goblin","Look at one card in an opponent's hand.","3"],["Slime","When attacked, split into two cards.","2"],["Dragon","Draw a card.","1"]]},
+  word:{ja:[["りんご"],["自転車"],["図書館"]],en:[["Apple"],["Bicycle"],["Library"]]}
 };
 /* ひな形のカードで、文字を入れられる場所の一覧 */
 function bulkFields(card){
   const out=[];
   ["front","back"].forEach(side=>{
     const f=card&&card[side];if(!f)return;
-    const add=(kind,name,n,set)=>out.push({side,kind,name,n,set});
+    const add=(kind,name,n,set,get)=>out.push({side,kind,name,n,set,get});
     if(f.type==="template"){
-      if(f.template==="playing"){add("number","数字",0,(d,v)=>{d.number=v});add("suit","スート",0,(d,v)=>{d.suit=v})}
-      else if(f.template==="tcg"){add("name","カード名",0,(d,v)=>{d.name=v});add("desc","テキスト",0,(d,v)=>{d.desc=v})}
-      else if(f.template==="word")add("main","ことば",0,(d,v)=>{d.main=v});
+      if(f.template==="playing"){add("number","数字",0,(d,v)=>{d.number=v},d=>d.number);add("suit","スート",0,(d,v)=>{d.suit=v},d=>d.suit)}
+      else if(f.template==="tcg"){add("name","カード名",0,(d,v)=>{d.name=v},d=>d.name);add("desc","テキスト",0,(d,v)=>{d.desc=v},d=>d.desc)}
+      else if(f.template==="word")add("main","ことば",0,(d,v)=>{d.main=v},d=>d.main);
     }
-    (f.textBoxes||[]).forEach((_,i)=>add("textbox","テキストボックス",i+1,(d,v)=>{d.textBoxes[i].text=v}));
-    (f.frameTexts||[]).forEach((_,i)=>add("frame","フレームテキスト",i+1,(d,v)=>{d.frameTexts[i].text=v}));
+    (f.textBoxes||[]).forEach((_,i)=>add("textbox","テキストボックス",i+1,(d,v)=>{d.textBoxes[i].text=v},d=>d.textBoxes[i].text));
+    (f.frameTexts||[]).forEach((_,i)=>add("frame","フレームテキスト",i+1,(d,v)=>{d.frameTexts[i].text=v},d=>d.frameTexts[i].text));
   });
   return out;
 }
 function bulkFieldLabel(x){return T("{side}：{name}",{side:T(x.side==="front"?"オモテ":"ウラ"),name:T(x.name)+(x.n?" "+x.n:"")})}
+/* 例の見出し:オモテはそのままの名前、ウラは「ウラ：」をつける(どちらも自動の割り当てで読める) */
+function bulkHeadName(x){return x.side==="back"?bulkFieldLabel(x):T(x.name)+(x.n?" "+x.n:"")}
 /* 表の読み取り:スプレッドシートから貼り付けた表(タブ区切り)とCSV。"…" で囲んだセルの改行・区切り文字もそのまま */
 function parseTable(text,csv){
-  text=String(text||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n");   // 改行はLFにそろえる(セルの中の改行も)
+  text=String(text||"").replace(/^﻿/,"").replace(/\r\n?/g,"\n");   // 改行はLFにそろえる(セルの中の改行も)
   let delim="\t";
   if(!text.includes("\t")){
-    const lines=text.split(/\r?\n/).filter(l=>l.trim()),cnt=l=>(l.match(/,/g)||[]).length;
+    const lines=text.split("\n").filter(l=>l.trim()),cnt=l=>(l.match(/,/g)||[]).length;
     if(csv||(lines.length>1&&cnt(lines[0])>0&&lines.every(l=>cnt(l)===cnt(lines[0]))))delim=",";
   }
   const rows=[];let row=[],cell="",q=false;
@@ -1548,7 +1559,6 @@ function parseTable(text,csv){
     if(q){if(ch==='"'){if(text[i+1]==='"'){cell+='"';i++}else q=false}else cell+=ch;continue}
     if(ch==='"'&&cell===""){q=true;continue}
     if(ch===delim){row.push(cell);cell="";continue}
-    if(ch==="\r")continue;
     if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";continue}
     cell+=ch;
   }
@@ -1556,14 +1566,18 @@ function parseTable(text,csv){
   return rows.filter(r=>r.some(c=>c.trim()!==""));
 }
 function normHead(v){return String(v||"").normalize("NFKC").toLowerCase().replace(/[\s_\-・:：()（）「」\[\]]/g,"")}
+function splitHead(h){
+  let v=normHead(h),side=null;
+  const m=v.match(/^(オモテ|おもて|表|front|ウラ|うら|裏|back)/);
+  if(m){side=/^(ウラ|うら|裏|back)/.test(m[1])?"back":"front";v=v.slice(m[1].length)}
+  const num=(v.match(/(\d+)$/)||[])[1];
+  return {side,num,base:num?v.slice(0,-num.length):v};
+}
 /* 見出しの名前から、どの列をどこに入れるかを決める。見出しが合わなければ左の列から順に */
 function bulkAutoMap(fields,headers,useNames){
   const map=fields.map(()=>-1),used=new Set();let qty=-1;
   if(useNames)headers.forEach((h,ci)=>{
-    let v=normHead(h),side=null;
-    const m=v.match(/^(オモテ|おもて|表|front|ウラ|うら|裏|back)/);
-    if(m){side=/^(ウラ|うら|裏|back)/.test(m[1])?"back":"front";v=v.slice(m[1].length)}
-    const num=(v.match(/(\d+)$/)||[])[1],base=num?v.slice(0,-num.length):v;
+    const {side,num,base}=splitHead(h);
     if(!num&&qty<0&&BULK_ALIASES.qty.includes(base)){qty=ci;used.add(ci);return}
     const fi=fields.findIndex((f,k)=>map[k]<0&&(!side||f.side===side)&&BULK_ALIASES[f.kind].includes(base)&&(!num||f.n===+num));
     if(fi>=0){map[fi]=ci;used.add(ci)}
@@ -1571,7 +1585,19 @@ function bulkAutoMap(fields,headers,useNames){
   if(map.every(v=>v<0)){let ci=0;fields.forEach((f,fi)=>{while(used.has(ci))ci++;if(ci<headers.length){map[fi]=ci;ci++}})}
   return {map,qty};
 }
+/* 見出しからひな形を当てる(カード名・テキスト→トレカ、数字・スート→トランプ、ことば→ワードゲーム) */
+function bulkGuessKind(headers){
+  let best=null,score=0;
+  Object.entries(BULK_KINDS).forEach(([k,v])=>{const n=headers.filter(h=>{const {side,base}=splitHead(h);return side!=="back"&&v.keys.some(x=>BULK_ALIASES[x].includes(base))}).length;if(n>score){best=k;score=n}});
+  return best;
+}
 let bulk=null;
+function bulkTemplateCard(){
+  if(bulk.kind==="selected")return deck.cards[bulk.tpl];
+  if(!bulk.builtin||bulk.builtin.kind!==bulk.kind)bulk.builtin={kind:bulk.kind,card:{front:BULK_KINDS[bulk.kind].make(),back:makePlain()}};
+  return bulk.builtin.card;
+}
+function setBulkKind(kind){if(bulk.kind===kind)return;bulk.kind=kind;bulk.builtin=null;bulk.fields=bulkFields(bulkTemplateCard());bulk.sig=null}
 function bulkTable(){
   const rows=parseTable(el("bulkText").value,bulk.csv),head=el("bulkHeader").checked;
   const width=rows.reduce((a,r)=>Math.max(a,r.length),0);
@@ -1579,7 +1605,7 @@ function bulkTable(){
   return {headers,data:head?rows.slice(1):rows,head};
 }
 function bulkCards(table){
-  const tpl=deck.cards[bulk.tpl],out=[];
+  const tpl=bulkTemplateCard(),out=[];
   table.data.forEach(r=>{
     let n=1;
     if(bulk.qty>=0){const v=String(r[bulk.qty]??"").normalize("NFKC").trim();if(v!==""){n=parseInt(v,10);if(!Number.isFinite(n))n=1}}
@@ -1590,29 +1616,46 @@ function bulkCards(table){
   });
   return out;
 }
+/* 作ったカードを入れる場所:選んでいるカードがひな形ならその場所、そうでなければ今あるカードのあと */
 function bulkRoom(){
-  const keep=el("bulkKeep").checked;let order=deck.order.slice();
-  const pos=keep?order.lastIndexOf(bulk.tpl)+1:order.indexOf(bulk.tpl);
-  if(!keep)order=order.filter(x=>x!==bulk.tpl);
+  let order=deck.order.slice(),pos=0;
+  if(bulk.kind==="selected"){
+    const keep=el("bulkKeep").checked;pos=keep?order.lastIndexOf(bulk.tpl)+1:order.indexOf(bulk.tpl);
+    if(!keep)order=order.filter(x=>x!==bulk.tpl);
+  }else order.forEach((id,i)=>{if(!isBlankCard(id))pos=i+1});
   let tail=order.length;while(tail>pos&&isBlankCard(order[tail-1]))tail--;   // 後ろの空のカードは詰める
   order=order.slice(0,tail);
   return {order,pos,room:Math.max(0,MAX_PAGES*cardsPerPage()-order.length)};
 }
+function bulkExample(){
+  const lang=window.CMMI18N&&CMMI18N.lang==="en"?"en":"ja",heads=bulk.fields.map(bulkHeadName);let rows;
+  if(bulk.kind==="selected"){const c=bulkTemplateCard();rows=[bulk.fields.map(f=>String(f.get(c[f.side])??"")).concat("1")];heads.push(T("枚数"))}
+  else{rows=BULK_EXAMPLES[bulk.kind][lang];if(rows[0].length>heads.length)heads.push(T("枚数"))}
+  const cell=v=>/[\t\n"]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
+  return [heads,...rows].map(r=>r.map(cell).join("\t")).join("\n");
+}
 function openBulk(){
-  const id=cardIdAt(currentPage,selected);
-  bulk={tpl:id,fields:bulkFields(deck.cards[id]),csv:false,sig:null,map:[],qty:-1};
+  const id=cardIdAt(currentPage,selected),own=bulkFields(deck.cards[id]).length>0;
+  bulk={tpl:id,own,kind:null,auto:!own,csv:false,sig:null,map:[],qty:-1,fields:[]};
+  setBulkKind(own?"selected":"playing");
   el("bulkText").value="";el("bulkKeep").checked=false;el("bulkHeader").checked=true;
   toggleSettings(false);closeMobilePanel();
   el("bulkModal").hidden=false;renderBulk();
-  if(bulk.fields.length&&!mobileUIActive())el("bulkText").focus();
+  if(!mobileUIActive())el("bulkText").focus();
 }
 function closeBulk(){el("bulkModal").hidden=true;bulk=null}
 function renderBulk(){
   if(!bulk)return;
+  const table=bulkTable();
+  if(bulk.auto&&table.head&&table.data.length){const g=bulkGuessKind(table.headers);if(g)setBulkKind(g)}
+  document.querySelectorAll("#bulkTpl [data-tpl]").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.tpl===bulk.kind));if(b.dataset.tpl==="selected"){b.disabled=!bulk.own;b.title=bulk.own?"":T("選んでいるカードには文字を入れる場所がありません")}});
   const tplNo=deck.order.indexOf(bulk.tpl)+1;
-  el("bulkLead").textContent=T("「カード{n}」をひな形にして、表の1行を1枚のカードにします。文字を入れる場所に、表の列を当てはめます。",{n:tplNo});
-  el("bulkText").placeholder=T("スプレッドシートやExcelで範囲をコピーして、ここに貼り付けます。\n例）\nカード名\tテキスト\t枚数\nドラゴン\t山札から1枚引く。\t2");
-  const table=bulkTable(),sig=table.headers.join("\u0001")+"|"+table.head;
+  el("bulkLead").textContent=bulk.kind==="selected"
+    ?T("「カード{n}」の見た目のまま、表の1行を1枚のカードにします。作ったカードは「カード{n}」の場所に並びます。",{n:tplNo})
+    :T("{name}の基本の見た目で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並びます。色などをそろえたいときは、1枚を整えてから「選んでいるカード」をひな形にすると全部に反映できます。",{name:T(BULK_KINDS[bulk.kind].name)});
+  el("bulkKeepRow").hidden=bulk.kind!=="selected";
+  el("bulkText").placeholder=T("スプレッドシートやExcelで範囲をコピーして、ここに貼り付けます。1行目は見出し（カード名・テキスト・枚数 など）にします。");
+  const sig=bulk.kind+"|"+table.headers.join("\u0001")+"|"+table.head;
   if(sig!==bulk.sig){const a=bulkAutoMap(bulk.fields,table.headers,table.head);bulk.map=a.map;bulk.qty=a.qty;bulk.sig=sig}
   const map=el("bulkMap");map.innerHTML="";
   if(!bulk.fields.length){
@@ -1659,6 +1702,7 @@ function applyBulk(){
 }
 document.querySelectorAll(".open-bulk").forEach(b=>b.addEventListener("click",openBulk));
 document.querySelectorAll("[data-bulk-close]").forEach(b=>b.addEventListener("click",closeBulk));
+document.querySelectorAll("#bulkTpl [data-tpl]").forEach(b=>b.addEventListener("click",()=>{if(!bulk||b.disabled)return;bulk.auto=false;setBulkKind(b.dataset.tpl);renderBulk()}));
 el("bulkModal").addEventListener("click",e=>{if(e.target===el("bulkModal"))closeBulk()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&bulk)closeBulk()});
 el("bulkText").addEventListener("paste",()=>{if(bulk)bulk.csv=false});
@@ -1666,6 +1710,11 @@ el("bulkText").addEventListener("input",()=>renderBulk());
 el("bulkHeader").addEventListener("change",()=>renderBulk());
 el("bulkKeep").addEventListener("change",()=>renderBulk());
 el("bulkApply").addEventListener("click",applyBulk);
+el("bulkExample").addEventListener("click",()=>{
+  if(!bulk)return;
+  if(el("bulkText").value.trim()&&!confirm(T("貼り付けた内容を例に置き換えますか？")))return;
+  bulk.auto=false;el("bulkText").value=bulkExample();el("bulkHeader").checked=true;bulk.csv=false;renderBulk();
+});
 el("bulkFileBtn").addEventListener("click",()=>el("bulkFile").click());
 el("bulkFile").addEventListener("change",async e=>{
   const file=e.target.files[0];e.target.value="";if(!file||!bulk)return;
@@ -1675,7 +1724,7 @@ el("bulkFile").addEventListener("change",async e=>{
     el("bulkText").value=text;bulk.csv=!/\.tsv$/i.test(file.name);renderBulk();
   }catch(err){alert(T("CSVファイルを読み込めませんでした。"))}
 });
-document.addEventListener("cmm-langchange",()=>{if(bulk)renderBulk()});
+document.addEventListener("cmm-langchange",()=>{if(bulk){bulk.builtin=null;if(bulk.kind!=="selected")bulk.fields=bulkFields(bulkTemplateCard());renderBulk()}});
 /* ---- 両面印刷:表示する面・プリンタの両面設定・ウラ面のずれ補正 ---- */
 const OFFSET_STEP={mm:.1,cm:.01,inch:.01,pt:.5,px:1};
 function syncDuplexUI(){

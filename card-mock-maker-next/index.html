@@ -67,19 +67,24 @@
   <div class="modal-box">
     <div class="modal-head"><strong id="bulkTitle">表から一括作成</strong><button type="button" class="modal-close" data-bulk-close aria-label="閉じる">×</button></div>
     <div class="modal-body">
+      <div class="bulk-step"><span class="bulk-num">1</span>ひな形を選ぶ</div>
+      <div id="bulkTpl" class="bulk-tpl" role="group" aria-label="ひな形">
+        <button type="button" data-tpl="playing">トランプ</button><button type="button" data-tpl="tcg">トレカ</button><button type="button" data-tpl="word">ワードゲーム</button><button type="button" data-tpl="selected">選んでいるカード</button>
+      </div>
       <p id="bulkLead" class="bulk-lead no-i18n"></p>
-      <div class="bulk-step"><span class="bulk-num">1</span>表を貼り付ける</div>
+      <div class="bulk-step"><span class="bulk-num">2</span>表を貼り付ける</div>
       <textarea id="bulkText" rows="6" spellcheck="false"></textarea>
       <div class="bulk-row">
         <label><input type="checkbox" id="bulkHeader" checked> 1行目は見出し</label>
         <button type="button" id="bulkFileBtn" class="mini">CSVファイルを読み込む</button>
+        <button type="button" id="bulkExample" class="mini">例を入れる</button>
         <input type="file" id="bulkFile" accept=".csv,.tsv,.txt,text/csv,text/plain" class="hidden">
       </div>
-      <div class="bulk-step"><span class="bulk-num">2</span>どの列をどこに入れるか</div>
+      <div class="bulk-step"><span class="bulk-num">3</span>どの列をどこに入れるか</div>
       <div id="bulkMap" class="bulk-map no-i18n"></div>
-      <div class="bulk-step"><span class="bulk-num">3</span>確認</div>
+      <div class="bulk-step"><span class="bulk-num">4</span>確認</div>
       <div id="bulkPreview" class="bulk-preview no-i18n"></div>
-      <label class="bulk-keep"><input type="checkbox" id="bulkKeep"> ひな形のカードも残す</label>
+      <label id="bulkKeepRow" class="bulk-keep"><input type="checkbox" id="bulkKeep"> ひな形のカードも残す</label>
     </div>
     <div class="modal-foot"><span id="bulkSummary" class="bulk-summary no-i18n"></span><button type="button" data-bulk-close>やめる</button><button type="button" id="bulkApply" class="primary">作る</button></div>
   </div>
@@ -122,6 +127,7 @@
       <div id="emptyHint" class="empty-hint" hidden>
         <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
         <button type="button" class="open-sample">見本を開く</button>
+        <button type="button" class="open-bulk">表から一括作成</button>
       </div>
       <div id="duplexBar" class="duplex-bar" hidden>
         <div class="seg" role="group" aria-label="表示する面"><button type="button" data-view-side="front" aria-pressed="true">オモテ面</button><button type="button" data-view-side="back" aria-pressed="false">ウラ面</button></div>
@@ -214,6 +220,7 @@
         <div id="mobileEmptyHint" class="empty-hint m-empty-hint" hidden>
           <span>下の「面」「テンプレ」から作りはじめます。</span>
           <button type="button" class="open-sample">見本を開く</button>
+          <button type="button" class="open-bulk">表から一括作成</button>
         </div>
         <div class="mobile-card-nav">
           <button id="mobilePrevCard" type="button" aria-label="前のカード">←</button>
