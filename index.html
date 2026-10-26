@@ -3,6 +3,9 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <!-- Googleアナリティクス(アクセス解析) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#1b2228">
@@ -587,7 +590,8 @@
   /* MOVIE:サムネを押すと再生。シャッフルでランダムに */
   var vids=$$(".vid"), last=-1;
   function play(v){ var yt=(v.getAttribute("data-yt")||"").trim(); if(!yt){ v.classList.remove("shake"); void v.offsetWidth; v.classList.add("shake"); return }
-    if($("iframe",v)) return; var f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+yt+"?autoplay=1&rel=0"; f.allow="autoplay; encrypted-media; picture-in-picture"; f.allowFullscreen=true; v.appendChild(f) }
+    if($("iframe",v)) return; var f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+yt+"?autoplay=1&rel=0"; f.allow="autoplay; encrypted-media; picture-in-picture"; f.allowFullscreen=true; v.appendChild(f);
+    /* アクセス解析:動画の再生を記録 */ if(window.gtag) gtag("event","video_start",{video_title:v.getAttribute("aria-label")||"",video_url:"https://www.youtube.com/watch?v="+yt,video_provider:"youtube",video_place:"top"}) }
   vids.forEach(function(v){ v.addEventListener("click",function(){ play(v) }) });
   /* シャッフル再生:オンで並びをランダムにして先頭から再生、オフで元の並びへ */
   var vrow=$("#vrow"), order=$$("li",vrow);
