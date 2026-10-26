@@ -455,8 +455,9 @@ aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);display:
 }
 .tcg-image{
   position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);
-  top:50%;transform:translateY(-50%);
+  /* 中央寄せは transform を使わずに計算する(PDF書き出しで位置がずれる・横向きレイアウトで名前欄に重なるのを防ぐ) */
   height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-mid-p, .50));
+  top:calc(50% - (100% - (2 * var(--tcg-pad))) * var(--tcg-mid-p, .50) / 2);
   border:var(--tcg-border-width,.45mm) solid var(--tcg-border,#222);border-radius:1.3mm;overflow:hidden;background:var(--tcg-panel,#fff);
   display:flex;align-items:center;justify-content:center;color:#999;font-size:3.4mm;
 }
@@ -2000,3 +2001,30 @@ header .app-brand{align-items:center}
 .font-row-label{font-size:11px;color:var(--ui-muted);white-space:nowrap}
 .font-row .font-select{flex:1 1 auto;min-width:0;max-width:200px;width:auto!important;height:30px!important;min-height:30px;padding:2px 26px 2px 8px!important;font-size:12px!important;line-height:1.3!important}
 @media(max-width:720px){.font-row .font-select{height:40px!important;max-width:none;font-size:16px!important}}
+
+/* ---- 最初の画面の案内 ---- */
+.empty-hint{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 auto 12px;padding:8px 12px;max-width:760px;border:1px dashed var(--ui-border-strong);border-radius:8px;font-size:12px;color:var(--ui-muted);background:var(--ui-panel)}
+.empty-hint[hidden]{display:none!important}
+.empty-hint button{min-height:30px;padding:3px 12px;font-size:12px}
+.m-empty-hint{margin:0 0 8px;font-size:12px}
+@media(max-width:720px){#emptyHint{display:none!important}}
+@media print{.empty-hint{display:none!important}}
+
+/* ---- 言語の切り替え(サイトと同じ見た目) ---- */
+.lang-switch{display:inline-flex;flex:none;border:1.5px solid var(--ink);border-radius:3px;overflow:hidden}
+.lang-switch button{min-width:0!important;height:28px!important;padding:0 8px!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--ui-muted)!important;font-size:12px!important;font-weight:700;letter-spacing:.04em}
+.lang-switch button[aria-pressed="true"]{background:var(--ink)!important;color:var(--ui-panel)!important}
+@media(max-width:720px){header .lang-switch{display:none!important}.m-lang-switch{display:inline-flex!important}.m-lang-switch button{height:36px!important;padding:0 16px!important;font-size:14px!important}}
+@media print{.lang-switch{display:none!important}}
+
+/* 文字サイズ欄:小数(10.5など)が切れない幅 */
+.tool-number-wrap .tool-number{width:50px!important;min-width:50px}
+
+/* ---- PCのメニュー(新規・PDF読み込み・見本・設定・言語) ---- */
+.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--ui-border)}
+.settings-actions button{min-height:32px;font-size:12px}
+.settings-actions button:last-child:nth-child(odd){grid-column:1/-1}
+.settings-label{font-size:12px;color:var(--ui-muted)}
+.settings-pop .lang-switch{justify-self:start}
+.settings-btn{font-size:13px!important;letter-spacing:.05em}
+@media(max-width:1180px) and (min-width:721px){header .app-brand strong{display:none!important}}

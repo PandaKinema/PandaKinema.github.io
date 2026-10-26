@@ -1,5 +1,7 @@
 (() => {
 const MM_TO_PX=3.7795275591;
+/* 画面の文字は i18n.js が英語に置き換える。alert・confirm・初期値の文字だけはここで訳す */
+const T=(s,v)=>window.CMMI18N?CMMI18N.T(s,v):s;
 
 /* 画像(data URL)は1枚で数MBになる。取り消し履歴や複製のたびに丸ごとコピーするとメモリがふくらむので、
    同じ画像は1つの文字列を共有し、履歴と自動保存では短いIDに置き換えて持つ。 */
@@ -74,7 +76,7 @@ let viewSide="front";                 // 両面印刷モードのPC表示:オモ
 let printSettings={backFlip:"horizontal",backOffsetX:0,backOffsetY:0};
 let lastArrangement=null,lastN=null;
 function newCardId(){return "c"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function newCardFaces(){return {front:makePlaying(),back:makePlain()}}
+function newCardFaces(){return {front:makePlain(),back:makePlain()}}
 function addCard(front,back){const id=newCardId(),d=newCardFaces();deck.cards[id]={front:front||d.front,back:back||d.back};return id}
 
 const el=id=>document.getElementById(id);
@@ -174,9 +176,9 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&l
 
 
 function ensureTextBoxes(d){ if(!Array.isArray(d.textBoxes)) d.textBoxes=[]; return d.textBoxes; }
-function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"テキスト",style:{size:SIZE.text,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
+function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:T("テキスト"),style:{size:SIZE.text,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
 function ensureFrameTexts(d){if(!Array.isArray(d.frameTexts))d.frameTexts=[];return d.frameTexts}
-function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:"フレームテキスト",style:{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
+function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:T("フレームテキスト"),style:{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
 function ensureOptionImages(d){if(!Array.isArray(d.optionImages))d.optionImages=[];if(!Array.isArray(d.shapes))d.shapes=[];return d.optionImages}
 function ensureShapes(d){if(!Array.isArray(d.shapes))d.shapes=[];return d.shapes}
 function makeShape(type,i=0){return {id:"sh_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),type,points:(type==="star"?5:6),fillColor:"#ffffff",fillNone:false,borderColor:"#222222",borderNone:false,borderWidth:1,borderAlign:"inside",box:{x:30,y:30+i*4,w:38,h:38},centerSnap:false}}
@@ -287,7 +289,7 @@ function onImagePicked(input,apply){
   input.addEventListener("change",async e=>{
     const file=e.target.files[0];if(!file)return;
     try{apply(await readImageFile(file))}
-    catch(err){console.error(err);alert("画像を読み込めませんでした。")}
+    catch(err){console.error(err);alert(T("画像を読み込めませんでした。"))}
     finally{e.target.value=""}
   });
 }
@@ -748,7 +750,7 @@ function buildSheet(container,faces,selectable=true,a=arrangement()){
     for(let side=0;side<sides;side++){
       const idx=paired?c*2+side:c,f=document.createElement("div");
       f.className="face"+(selectable&&idx===selected?" selected":"");
-      if(selectable&&paired&&idx===selected)f.dataset.sideLabel=side===0?"オモテ面":"ウラ面";
+      if(selectable&&paired&&idx===selected)f.dataset.sideLabel=T(side===0?"オモテ面":"ウラ面");
       renderFace(f,faces[idx],selectable&&idx===selected,idx);
       if(selectable) f.addEventListener("click",()=>{selected=idx;renderSheet();syncControls()});
       pair.appendChild(f);
@@ -761,6 +763,8 @@ function buildSheet(container,faces,selectable=true,a=arrangement()){
 function renderSheet(){
   syncPages();
   recordHistory();
+  const blank=deck.order.every(isBlankCard);
+  ["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});
   el("sheetTitle").textContent=sheetTitle;
   buildSheet(grid,currentFaces(),true);
   el("pageCount").textContent=`${currentPage+1} / ${pages.length}`;
@@ -1080,7 +1084,7 @@ function renderTextBoxEditors(d){
       </div>
       <input class="tb-text" type="text" value="${esc(item.text||"")}" placeholder="テキスト${index+1}">
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ（px）">
+        <div class="tool-number-wrap" title="文字サイズ">
           <span class="size-icon">A</span>
           <input class="tb-size tool-number" type="number"><span class="unit-suffix"></span>
         </div>
@@ -1153,7 +1157,7 @@ function renderFrameTextEditors(d){
     wrap.innerHTML=`<div class="frame-editor-head"><strong>フレームテキスト${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
       <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
       <div class="tool-strip tool-strip-secondary">
-        <div class="tool-number-wrap" title="文字サイズ（px）"><span class="size-icon">A</span><input class="ft-size tool-number" type="number"><span class="unit-suffix"></span></div>
+        <div class="tool-number-wrap" title="文字サイズ"><span class="size-icon">A</span><input class="ft-size tool-number" type="number"><span class="unit-suffix"></span></div>
         <label class="style-toggle"><input class="ft-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
         <label class="style-toggle"><input class="ft-italic" type="checkbox" ${st.italic?"checked":""}><span class="italic-mark">I</span></label>
         <label class="style-toggle"><input class="ft-underline" type="checkbox" ${st.underline?"checked":""}><span class="underline-mark">U</span></label>
@@ -1200,7 +1204,6 @@ function syncControls(){
   el("imageControls").classList.toggle("hidden",d.type!=="image");
   el("mobileTemplateHint")?.classList.toggle("hidden",templ);
   el("mobileTemplateBar")?.classList.toggle("hidden",!templ);
-  if(el("mobileFaceTypeName"))el("mobileFaceTypeName").textContent=d.type==="image"?"画像":"無地";
 
 
   el("suitImageControls").classList.add("hidden");
@@ -1332,11 +1335,11 @@ el("templateType").addEventListener("change",e=>{
   const keepFrameTexts=deep(ensureFrameTexts(currentFaces()[selected]));
   const keepOptionImages=deep(ensureOptionImages(currentFaces()[selected]));
   if(t==="playing")nextFace={...makePlaying(),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages};
-  if(t==="tcg")nextFace={type:"template",template:"tcg",name:"カード名",desc:"テキスト",image:null,bgColor:keepBg,bgImage:keepBgImage,
+  if(t==="tcg")nextFace={type:"template",template:"tcg",name:T("カード名"),desc:T("テキスト"),image:null,bgColor:keepBg,bgImage:keepBgImage,
     bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,
     textColor:"#222222",borderColor:"#222222",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,
     nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false}};
-  if(t==="word")nextFace={type:"template",template:"word",main:"ことば",bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:SIZE.word,bold:true,italic:false}};
+  if(t==="word")nextFace={type:"template",template:"word",main:T("ことば"),bgColor:keepBg,bgImage:keepBgImage,bgBorderColor:keepBgBorderColor,bgBorderWidth:keepBgBorderWidth,bgBorderNone:keepBgBorderNone,bgBorderAlign:keepBgBorderAlign,mainColor:"#222222",textBoxes:keepTextBoxes,frameTexts:keepFrameTexts,optionImages:keepOptionImages,mainStyle:{size:SIZE.word,bold:true,italic:false}};
   if(nextFace)setFaceAt(currentPage,selected,Object.assign(nextFace,keep));   // 図形・背景の「なし」も含めて引き継ぐ
   renderSheet();syncControls();
 });
@@ -1466,6 +1469,27 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
+/* ---- 見本:テンプレートとオプションの使い方がわかる4枚 ---- */
+function sampleDeck(){
+  const back=()=>({...makePlain(),bgColor:"#22384f",bgBorderNone:true,
+    frameTexts:[{...makeFrameText(0),text:"SAMPLE",style:{size:16,bold:true,italic:false,underline:false,color:"#22384f",colorNone:false},fillColor:"#f4efe2",borderColor:"#f4efe2",box:{x:15,y:41,w:70,h:18}}],
+    shapes:[{...makeShape("star",0),fillColor:"#e4c62a",borderNone:true,box:{x:38,y:12,w:24,h:24*88/63}}]});
+  const playing=(num,suit,color)=>({...makePlaying(),number:num,suit,numberColor:color});
+  const tcg={type:"template",template:"tcg",name:T("ドラゴン"),desc:T("このカードを出したとき、山札からカードを1枚引く。"),image:null,bgColor:"#3a8dde",bgImage:null,bgBorderColor:"#222222",bgBorderWidth:1,bgBorderNone:true,bgBorderAlign:"inside",
+    textColor:"#222222",borderColor:"#22384f",borderNone:false,panelColor:"#ffffff",horizontalLayout:1,tcgTopHeight:16,tcgMiddleHeight:50,tcgBottomHeight:28,
+    nameStyle:{size:SIZE.tcgName,bold:true,italic:false},descStyle:{size:SIZE.tcgDesc,bold:false,italic:false},textBoxes:[],frameTexts:[],optionImages:[],shapes:[]};
+  const word={type:"template",template:"word",main:T("ことば"),mainColor:"#22384f",mainStyle:{size:SIZE.word,bold:true,italic:false},bgColor:"#f4efe2",bgImage:null,bgBorderColor:"#22384f",bgBorderWidth:2,bgBorderNone:false,bgBorderAlign:"inside",textBoxes:[],frameTexts:[],optionImages:[],shapes:[]};
+  const d={cards:{},order:[],fmt:2,font:"gothic"};
+  [playing("A","♠","#111111"),playing("7","♥","#d94a4a"),tcg,word].forEach(front=>{const id=newCardId();d.cards[id]={front:deep(front),back:back()};d.order.push(id)});
+  return d;
+}
+function openSample(){
+  if(!deck.order.every(isBlankCard)&&!confirm(T("いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)")))return;
+  el("paperSize").value="a4";el("paperOrientation").value="landscape";el("cardSize").value="poker";el("impositionMode").value="duplex";cardOrientation="portrait";
+  deck=sampleDeck();currentPage=0;selected=0;lastArrangement=null;sheetTitle=T("見本");el("sheetTitleInput").value=sheetTitle;
+  closeMobilePanel();setPaper();renderSheet();syncControls();
+}
+document.querySelectorAll(".open-sample").forEach(b=>b.addEventListener("click",openSample));
 /* ---- フォントの選択 ---- */
 document.querySelectorAll("select.font-select[id]").forEach(x=>x.innerHTML=fontOptions(true));
 if(el("deckFont")){el("deckFont").innerHTML=fontOptions(false);el("deckFont").addEventListener("change",e=>{deck.font=e.target.value;renderSheet();syncControls()})}
@@ -1620,8 +1644,82 @@ function showPdfReeditTip(){
   requestAnimationFrame(()=>t.classList.add("show"));
   showPdfReeditTip.timer=setTimeout(()=>t.classList.remove("show"),3200);
 }
+/* PDFに描く前に、写真を枠の形に切り抜いた画像へ置き換える
+   (html2canvas は object-fit に対応しておらず、写真が引き伸ばされてしまうため) */
+async function flattenImagesForRaster(root,scale){
+  for(const img of [...root.querySelectorAll("img")]){
+    try{
+      if(!img.complete)await img.decode().catch(()=>{});
+      const fit=getComputedStyle(img).objectFit,w=img.offsetWidth,h=img.offsetHeight;
+      if(!w||!h||!img.naturalWidth)continue;
+      const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w*scale));c.height=Math.max(1,Math.round(h*scale));
+      const ctx=c.getContext("2d");ctx.imageSmoothingQuality="high";
+      const iw=img.naturalWidth,ih=img.naturalHeight,bw=c.width,bh=c.height;
+      if(fit==="cover"){const k=Math.max(bw/iw,bh/ih),sw=bw/k,sh=bh/k;ctx.drawImage(img,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,bw,bh)}
+      else if(fit==="contain"||fit==="scale-down"){const k=Math.min(bw/iw,bh/ih,fit==="scale-down"?scale:Infinity),dw=iw*k,dh=ih*k;ctx.drawImage(img,(bw-dw)/2,(bh-dh)/2,dw,dh)}
+      else ctx.drawImage(img,0,0,bw,bh);
+      // 「.xxx img{…}」のようにタグ名で当たっている配置を引き継ぐため、計算済みの値を写す
+      const cs=getComputedStyle(img);c.className=img.className;
+      ["position","top","right","bottom","left","margin","display","transform","transformOrigin","borderRadius","zIndex","opacity","verticalAlign","boxSizing"].forEach(k=>{c.style[k]=cs[k]});
+      if(c.style.display==="inline")c.style.display="block";
+      c.style.width=w+"px";c.style.height=h+"px";
+      img.replaceWith(c);
+    }catch(err){console.warn(err)}
+  }
+}
+/* html2canvas が描けない指定を、描ける形に置き換える(PDF書き出し用のコピーにだけ行う)
+   - 内側の線(inset の box-shadow)→ 枠線を持つ重ね板(そのままだと黒く塗りつぶされる)
+   - 縦書き(writing-mode)→ 1文字ずつ縦に並べて描いた画像 */
+function fixShadowsForRaster(root){
+  root.querySelectorAll("*").forEach(n=>{
+    const bs=n.style&&n.style.boxShadow;if(!bs||!/inset/.test(bs))return;
+    const parts=bs.split(/,(?![^(]*\))/),keep=[];
+    parts.forEach(part=>{
+      if(!/inset/.test(part)){keep.push(part);return}
+      const cm=part.match(/rgba?\([^)]*\)|#[0-9a-f]{3,8}\b|transparent/i),color=cm?cm[0]:"#222";
+      const lens=part.replace(cm?cm[0]:"","").replace("inset","").trim().split(/\s+/).filter(Boolean),spread=lens[3]||"0";
+      const o=document.createElement("div");
+      o.style.cssText=`position:absolute;inset:0;border:${spread} solid ${color};box-sizing:border-box;pointer-events:none;z-index:60;border-radius:inherit`;
+      n.appendChild(o);
+    });
+    n.style.boxShadow=keep.join(",")||"none";
+    if(getComputedStyle(n).position==="static")n.style.position="relative";
+  });
+}
+const V_ROTATE=new Set([..."ー―‐〜～…‥（）「」『』【】〈〉《》［］｛｝()[]{}<>-=~_"]),V_SHIFT=new Set([..."、。，．"]);
+function drawVerticalText(el,scale){
+  const cs=getComputedStyle(el),w=el.clientWidth,h=el.clientHeight;if(!w||!h)return;
+  const size=parseFloat(cs.fontSize)||16,font=`${cs.fontStyle} ${cs.fontWeight} ${size}px ${cs.fontFamily}`,box=el.getBoundingClientRect();
+  // ブラウザが縦書きで並べた1文字ずつの位置を測り、その場所に描く(折り返しや中央寄せをそのまま再現)
+  const glyphs=[],walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let node;
+  while((node=walker.nextNode())){
+    const text=node.nodeValue;
+    for(let k=0;k<text.length;){
+      const cp=text.codePointAt(k),len=cp>0xffff?2:1,ch=text.slice(k,k+len);
+      if(ch.trim()){const r=document.createRange();r.setStart(node,k);r.setEnd(node,k+len);const b=r.getBoundingClientRect();if(b.width||b.height)glyphs.push({ch,x:b.left-box.left+b.width/2,y:b.top-box.top+b.height/2})}
+      k+=len;
+    }
+  }
+  const c=document.createElement("canvas");c.width=Math.round(w*scale);c.height=Math.round(h*scale);
+  const ctx=c.getContext("2d");ctx.scale(scale,scale);ctx.font=font;ctx.fillStyle=cs.color;ctx.textAlign="center";ctx.textBaseline="middle";
+  glyphs.forEach(g=>{
+    ctx.save();ctx.translate(g.x,g.y);
+    if(V_ROTATE.has(g.ch))ctx.rotate(Math.PI/2);
+    if(V_SHIFT.has(g.ch))ctx.translate(size*.55,-size*.55);
+    ctx.fillText(g.ch,0,0);ctx.restore();
+  });
+  c.style.cssText="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none";
+  el.style.writingMode="horizontal-tb";el.textContent="";el.appendChild(c);
+}
+async function prepareForRaster(root,scale){
+  await flattenImagesForRaster(root,scale);
+  fixShadowsForRaster(root);
+  root.querySelectorAll(".word-main.vertical").forEach(e=>{if(getComputedStyle(e).writingMode.startsWith("vertical"))drawVerticalText(e,scale)});
+}
+/* 約300dpi。ただし端末が扱える大きさ(約1600万画素)を超えないように */
+function rasterScale(sheet){const w=sheet.offsetWidth||1,h=sheet.offsetHeight||1;return Math.min(300/96,Math.sqrt(16e6/(w*h)))}
 async function buildEditablePdf(){
-  if(!window.html2canvas || !window.PDFLib) throw new Error("PDFライブラリを読み込めませんでした。インターネット接続を確認してください。");
+  if(!window.html2canvas || !window.PDFLib) throw new Error(T("PDFライブラリを読み込めませんでした。インターネット接続を確認してください。"));
   const {PDFDocument}=PDFLib;
   await fontsReady();
   const p=paperMM();
@@ -1641,9 +1739,12 @@ async function buildEditablePdf(){
       sheet.querySelectorAll(".fold,.screen-guide").forEach(node=>node.remove());
       staging.appendChild(sheet);
 
-      const canvas=await html2canvas(sheet,{backgroundColor:"#ffffff",scale:2,useCORS:true,logging:false});
-      const png=canvas.toDataURL("image/png");
-      const img=await pdf.embedPng(png);
+      const scale=rasterScale(sheet),hasPhoto=!!sheet.querySelector("img");
+      await prepareForRaster(sheet,scale);
+      const canvas=await html2canvas(sheet,{backgroundColor:"#ffffff",scale,useCORS:true,logging:false});
+      // 写真があるページはJPEG(軽い)、文字と図形だけならPNG(にじまない)
+      const img=hasPhoto?await pdf.embedJpg(canvas.toDataURL("image/jpeg",.92)):await pdf.embedPng(canvas.toDataURL("image/png"));
+      canvas.width=canvas.height=0;
       const page=pdf.addPage([p.w*ptPerMm,p.h*ptPerMm]);
       page.drawImage(img,{x:0,y:0,width:p.w*ptPerMm,height:p.h*ptPerMm});
       staging.removeChild(sheet);
@@ -1705,7 +1806,7 @@ el("editablePdfBtn").addEventListener("click",async()=>{
     await buildEditablePdf();
     showPdfReeditTip();
   }catch(e){
-    console.error(e);alert(e.message||"PDFの保存に失敗しました。");
+    console.error(e);alert(e.message||T("PDFの保存に失敗しました。"));
   }finally{btn.disabled=false;btn.textContent=old}
 });
 
@@ -1713,17 +1814,17 @@ el("loadPdfBtn").addEventListener("click",()=>el("loadPdf").click());
 el("loadPdf").addEventListener("change",async e=>{
   const file=e.target.files[0];if(!file)return;
   try{
-    if(!window.PDFLib)throw new Error("PDFライブラリを読み込めませんでした。");
+    if(!window.PDFLib)throw new Error(T("PDFライブラリを読み込めませんでした。"));
     const bytes=await file.arrayBuffer();
     const pdf=await PDFLib.PDFDocument.load(bytes);
     const atts=extractPdfAttachments(pdf);
     const project=atts.find(x=>x.name==="card-mock-project.json");
-    if(!project)throw new Error("このPDFにはCard Mock Makerの編集データがありません。");
+    if(!project)throw new Error(T("このPDFにはCard Mock Makerの編集データがありません。"));
     const text=new TextDecoder().decode(project.data);
     const parsed=JSON.parse(text);
     restoreProject(hydrateProjectImages(parsed,atts));
   }catch(err){
-    console.error(err);alert(err.message||"PDFを読み込めませんでした。");
+    console.error(err);alert(err.message||T("PDFを読み込めませんでした。"));
   }finally{e.target.value=""}
 });
 
@@ -1776,7 +1877,7 @@ function showAppToast(message,{action=null,duration=8000}={}){
   if(duration)showAppToast.timer=setTimeout(()=>t.classList.remove("show"),duration);
 }
 async function startNewProject(){
-  if(!confirm("いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)"))return;
+  if(!confirm(T("いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)")))return;
   autosaveStopped=true;clearTimeout(autosaveTimer);
   try{
     if(autosaveBusy)await autosaveBusy.catch(()=>{});
@@ -1852,6 +1953,12 @@ startDeck();
 setPaper();renderSheet();syncControls();
 initHistory();renderSwatches();
 initAutosave();
+/* ---- 言語 ---- */
+if(window.CMMI18N){
+  CMMI18N.init();
+  document.querySelectorAll("[data-lang-btn]").forEach(b=>b.addEventListener("click",()=>CMMI18N.setLang(b.dataset.langBtn)));
+  document.addEventListener("cmm-langchange",()=>{relabelLengths();updateFit();renderSheet();syncControls();fitPaper()});
+}
 
 
 })();

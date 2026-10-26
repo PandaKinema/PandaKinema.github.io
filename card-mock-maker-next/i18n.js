@@ -1,0 +1,162 @@
+/* カードモックツクール:日本語/英語の切り替え
+   画面の日本語をキーにして英語に置き換える。言語はパンダキネマのサイトと同じ「pk-lang」に保存する。
+   カードの中身(利用者が入力した文字)は訳さない。未入力の仮表示(.ph)だけは訳す。 */
+(function(){
+const EN={
+  // ---- アプリ全体
+  "カードモックツクール":"Card Mock Maker","β":"β","β版":"Beta",
+  "パンダキネマのサイトへ":"Go to the Panda Kinema site",
+  "履歴":"History","取り消し":"Undo","やり直し":"Redo","取り消し（⌘Z / Ctrl+Z）":"Undo (⌘Z / Ctrl+Z)","やり直し（⇧⌘Z / Ctrl+Y）":"Redo (⇧⌘Z / Ctrl+Y)",
+  "用紙サイズ":"Paper size","用紙方向":"Paper orientation","横":"Landscape","縦":"Portrait","カードサイズ":"Card size",
+  "面付けモード":"Layout","面付け":"Layout","両面":"Front & back","片面":"Single-sided","両面（折り）":"Front & back (fold)","両面印刷":"Duplex printing",
+  "タイトル":"Title","いまの作業を消して新しく始める":"Clear the current work and start over","新規":"New",
+  "PDF保存":"Save PDF","PDF読み込み":"Open PDF","印刷":"Print","設定":"Settings","準備中…":"Preparing…","PDF作成中…":"Creating PDF…",
+  "長さの単位":"Length unit","文字の単位":"Text unit","級（Q）":"Q (0.25 mm)","基本のフォント":"Default font",
+  "単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。":"Units are saved in this browser. The default font belongs to the current deck.",
+  "言語":"Language","言語 / Language":"Language",
+  // ---- ページ
+  "ページ":"Pages","ページ追加":"Add page","＋ ページ":"+ Page","ページ複製":"Duplicate page","複製":"Duplicate","ページ削除":"Delete page","削除":"Delete",
+  "ページメニュー":"Page menu","ページを追加":"Add page","ページを複製":"Duplicate page","ページを削除":"Delete page",
+  "カードをクリックして、右のパネルの「面の種類」から作りはじめます。":"Click a card, then choose a face type in the right panel to start.",
+  "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
+  "見本を開く":"Open sample","見本":"Sample",
+  // ---- スマホ
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","用紙":"Paper","メニュー":"Menu",
+  "テンプレート":"Template","この面はテンプレートを使っています":"This face uses a template","無地に戻す":"Back to blank",
+  "この面はテンプレートを使っていません。テンプレートを使うときは、面の種類を「テンプレート」にします。":"This face doesn't use a template. To use one, set the face type to “Template”.",
+  "この面をテンプレートにする":"Use a template on this face","カード":"Card","ファイル":"File",
+  "スマホ用カードプレビュー":"Card preview","前のカード":"Previous card","次のカード":"Next card","前のページ":"Previous page","次のページ":"Next page",
+  "ページ全体":"Whole page","1枚ずつ":"One by one","オモテ":"Front","ウラ":"Back","オモテ面":"Front","ウラ面":"Back",
+  // ---- 面
+  "面の種類":"Face type","無地":"Blank","画像":"Image","面色":"Fill","背景の面色":"Background fill","線色":"Stroke","背景の線色":"Background stroke",
+  "線の太さ":"Stroke width","背景の線の太さ":"Background stroke width","線幅":"Stroke width","背景の線の位置":"Background stroke position","線の位置":"Stroke position",
+  "内側":"Inside","中央":"Center","外側":"Outside","背景画像":"Background image","背景画像を削除":"Remove background image","画像を選ぶ":"Choose image",
+  "面をコピー":"Copy face","面をペースト":"Paste face","このページの同じ面にコピー":"Copy to the same side on this page","すべてのページの同じ面にコピー":"Copy to the same side on all pages",
+  "この面をこのページの同じ面にコピー":"Copy to the same side on this page","この面をすべてのページの同じ面にコピー":"Copy to the same side on all pages",
+  "このページのすべての面にコピー":"Copy to every card on this page","すべてのページのすべての面にコピー":"Copy to every card on all pages",
+  "画像を読み込む":"Load image","画像未設定":"No image","画像を読み込めませんでした。":"Couldn't load the image.",
+  // ---- テンプレート
+  "種類":"Type","トランプ":"Playing card","トレカ":"Trading card","ワードゲーム":"Word game",
+  "数字":"Number","数字の大きさ":"Number size","太字":"Bold","斜体":"Italic","下線":"Underline","数字の色":"Number color","フォント":"Font","基本":"Default",
+  "スート":"Suit","スートサイズ":"Suit size","小":"S","中":"M","大":"L","スート個数":"Suit count","スートの種類":"Suit style","記号":"Symbol","スートの画像":"Suit image",
+  "配置":"Placement","数字とスートの配置":"Number & suit placement","四つ角":"Four corners","上段のみ":"Top only","右対角線":"Diagonal (right)","左対角線":"Diagonal (left)",
+  "カード名":"Card name","文字サイズ":"Text size","中段の画像":"Middle image","テキスト":"Text","文字色":"Text color",
+  "上下3段":"Three rows","上段＋左右分割":"Top + left/right","上段の高さ":"Top height","上段":"Top","中段の高さ":"Middle height","中段":"Middle","下段の高さ":"Bottom height","下段":"Bottom",
+  "フレームの面色":"Frame fill","フレームの線色":"Frame stroke","フレームの線の太さ":"Frame stroke width","フレームの線の位置":"Frame stroke position",
+  "ことば":"Word","メイン文字":"Main text",
+  // ---- オプション
+  "テキストボックス":"Text box","追加":"Add","フレームテキスト":"Framed text","図形":"Shapes","中央にスナップ":"Snap to center","回転":"Rotate","頂点":"Points",
+  "円":"Circle","三角形":"Triangle","四角形":"Rectangle","多角形":"Polygon","星":"Star",
+  "画像や編集データはブラウザ内で処理され、サーバーへ送信されません。":"Images and your data are processed in your browser and never sent to a server.",
+  // ---- 色
+  "カラー":"Color","なし":"None","カラーコード":"Color code","基本の色":"Basic colors","使われている色":"Colors in use","まだありません":"None yet",
+  // ---- フォント
+  "ゴシック":"Sans-serif","明朝":"Serif","丸ゴシック":"Rounded","極太":"Heavy","端末の標準":"System font",
+  // ---- カードサイズ名
+  "ポーカー":"Poker","ブリッジ":"Bridge","名刺":"Business card","遊戯王サイズ":"Japanese size","クレジット":"Credit card","ハーフ":"Mini",
+  // ---- 保存・読み込み・通知
+  "保存したPDFは「PDF読み込み」で再編集できます":"You can edit a saved PDF again with “Open PDF”.",
+  "PDFライブラリを読み込めませんでした。インターネット接続を確認してください。":"Couldn't load the PDF library. Please check your internet connection.",
+  "PDFライブラリを読み込めませんでした。":"Couldn't load the PDF library.",
+  "PDFの保存に失敗しました。":"Couldn't save the PDF.","PDFを読み込めませんでした。":"Couldn't open the PDF.",
+  "このPDFにはCard Mock Makerの編集データがありません。":"This PDF doesn't contain Card Mock Maker data.",
+  "自動保存できませんでした(ブラウザの保存容量が足りない可能性があります)。こまめに「PDF保存」してください。":"Autosave failed (the browser may be out of storage). Please use “Save PDF” often.",
+  "閉じる":"Close",
+  "いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)":"Clear the current work and start over?\n(Anything not saved as a PDF can't be restored.)",
+  "いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)":"Replace the current work with the sample?\n(Use “Undo” to go back.)",
+  // ---- 見本・初期値の文字
+  "ドラゴン":"Dragon","このカードを出したとき、山札からカードを1枚引く。":"When you play this card, draw a card.",
+  // ---- メタ
+  "カードモックツクール β（改良テスト版） | Card Mock Maker":"Card Mock Maker β (test build)",
+};
+const PATTERNS=[
+  [/^カード(\d+)（ページ内(\d+)）・(オモテ|ウラ)$/,(m)=>`Card ${m[1]} (#${m[2]} on page) · ${m[3]==="オモテ"?"Front":"Back"}`],
+  [/^カード(\d+)（ページ内(\d+)）$/,(m)=>`Card ${m[1]} (#${m[2]} on page)`],
+  [/^カード (\d+) \/ (\d+)$/,(m)=>`Card ${m[1]} / ${m[2]}`],
+  [/^ページ (\d+) \/ (\d+)$/,(m)=>`Page ${m[1]} / ${m[2]}`],
+  [/^カード (\d+)〜(\d+)$/,(m)=>`Cards ${m[1]}–${m[2]}`],
+  [/^テキストボックス(\d+)$/,(m)=>`Text box ${m[1]}`],[/^フレームテキスト(\d+)$/,(m)=>`Framed text ${m[1]}`],[/^画像(\d+)$/,(m)=>`Image ${m[1]}`],
+  [/^テキスト(\d+)$/,(m)=>`Text ${m[1]}`],
+  [/^(円|三角形|四角形|多角形|星|図形)(\d+)$/,(m)=>`${({円:"Circle",三角形:"Triangle",四角形:"Rectangle",多角形:"Polygon",星:"Star",図形:"Shape"})[m[1]]} ${m[2]}`],
+  [/^(ポーカー|ブリッジ|名刺|遊戯王サイズ|クレジット|ハーフ) \((.+)\)$/,(m)=>`${EN[m[1]]} (${m[2]})`],
+  [/^(A[34])(横|縦)に(.+?)×(.+?) (\S+)のカードが(\d+)枚（余白 左右(.+?)・上下(.+?)）。印刷は「実際のサイズ（100%）」で。$/,
+    (m)=>`${m[1]} ${m[2]==="横"?"landscape":"portrait"}: ${m[6]} cards of ${m[3]}×${m[4]} ${m[5]} (margins ${m[7]} left/right, ${m[8]} top/bottom). Print at “Actual size (100%)”.`],
+  [/^前回の続きを開きました\((.+)保存\)$/,(m)=>`Restored your last session (saved ${m[1]})`],
+  [/^×(\d+)$/,(m)=>`×${m[1]}`],
+];
+const JP=/[぀-ヿ一-鿿！-～]/;
+let lang="ja";
+function T(s,vars){
+  let out=s;
+  if(lang==="en"){
+    if(Object.prototype.hasOwnProperty.call(EN,s))out=EN[s];
+    else for(const [re,fn] of PATTERNS){const m=String(s).match(re);if(m){out=fn(m);break}}
+  }
+  if(vars)out=out.replace(/\{(\w+)\}/g,(_,k)=>vars[k]??"");
+  return out;
+}
+/* 訳さない場所:カードの中身・印刷用・入力欄 */
+const SKIP=".face,.m-face-inner,.thumb-paper,.print-sheet,#printPages,.m-sheet,#sheetTitle,script,style,textarea";
+const originals=new WeakMap();
+function translateText(node){
+  const v=node.nodeValue;if(!v||!JP.test(v))return;
+  const p=node.parentElement;if(!p)return;
+  if(p.closest(SKIP)&&!p.closest(".ph"))return;
+  const key=v.trim(),t=T(key);if(t===key)return;
+  if(!originals.has(node))originals.set(node,v);
+  node.nodeValue=v.replace(key,t);
+}
+const ATTRS=["title","aria-label","placeholder"];
+function translateAttrs(elm){
+  if(elm.closest&&elm.closest(SKIP)&&!elm.closest(".ph"))return;
+  for(const a of ATTRS){
+    const v=elm.getAttribute&&elm.getAttribute(a);if(!v||!JP.test(v))continue;
+    const t=T(v);if(t===v)continue;
+    if(!elm.hasAttribute("data-ja-"+a))elm.setAttribute("data-ja-"+a,v);
+    elm.setAttribute(a,t);
+  }
+}
+function applyTo(root){
+  if(lang!=="en"||!root)return;
+  if(root.nodeType===3){translateText(root);return}
+  if(root.nodeType!==1)return;
+  translateAttrs(root);
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);
+  let n;while((n=w.nextNode())){if(n.nodeType===3)translateText(n);else translateAttrs(n)}
+}
+function restoreAll(){
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);let n;
+  while((n=w.nextNode())){
+    if(n.nodeType===3){if(originals.has(n)){n.nodeValue=originals.get(n);originals.delete(n)}}
+    else for(const a of ATTRS){const k="data-ja-"+a;if(n.hasAttribute(k)){n.setAttribute(a,n.getAttribute(k));n.removeAttribute(k)}}
+  }
+}
+let observer=null,busy=false;
+function observe(){
+  if(observer)return;
+  observer=new MutationObserver(list=>{
+    if(lang!=="en"||busy)return;busy=true;
+    try{for(const m of list){
+      if(m.type==="childList")m.addedNodes.forEach(applyTo);
+      else if(m.type==="characterData")translateText(m.target);
+      else if(m.type==="attributes")translateAttrs(m.target);
+    }}finally{busy=false}
+  });
+  observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:ATTRS});
+}
+function setLang(l,{save=true}={}){
+  lang=l==="en"?"en":"ja";
+  document.documentElement.lang=lang;
+  if(save){try{localStorage.setItem("pk-lang",lang)}catch(e){}}
+  if(lang==="en"){applyTo(document.body);document.title=T("カードモックツクール β（改良テスト版） | Card Mock Maker")}
+  else{restoreAll();document.title=document.documentElement.dataset.jaTitle||document.title}
+  document.querySelectorAll("[data-lang-btn]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.langBtn===lang)));
+  document.dispatchEvent(new CustomEvent("cmm-langchange",{detail:{lang}}));
+}
+function initial(){
+  const q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1];let saved=null;
+  try{saved=localStorage.getItem("pk-lang")}catch(e){}
+  return q||saved||"ja";
+}
+window.CMMI18N={T,setLang,applyTo,get lang(){return lang},init(){document.documentElement.dataset.jaTitle=document.title;observe();setLang(initial(),{save:false})}};
+})();

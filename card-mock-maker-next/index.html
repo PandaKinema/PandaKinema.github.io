@@ -40,21 +40,25 @@
   <select id="impositionMode" title="面付けモード"><option value="duplex">両面</option><option value="single">片面</option></select>
   <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
   <span class="toolbar-spacer header-action-gap"></span>
-  <button id="newProjectBtn" title="いまの作業を消して新しく始める">新規</button>
   <button id="editablePdfBtn">PDF保存</button>
-  <button id="loadPdfBtn">PDF読み込み</button>
   <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
   <button id="printBtn" class="primary">印刷</button>
-  <button id="settingsBtn" class="icon-btn settings-btn" type="button" title="設定" aria-label="設定" aria-expanded="false" aria-controls="settingsPop">⚙</button>
+  <button id="settingsBtn" class="icon-btn settings-btn" type="button" title="メニュー" aria-label="メニュー" aria-expanded="false" aria-controls="settingsPop">•••</button>
   <span id="fitStatus" class="size-note hidden"></span>
 </header>
 
 <div id="settingsPop" class="settings-pop" hidden>
+  <div class="settings-actions">
+    <button id="newProjectBtn" type="button" title="いまの作業を消して新しく始める">新規</button>
+    <button id="loadPdfBtn" type="button">PDF読み込み</button>
+    <button type="button" class="open-sample">見本を開く</button>
+  </div>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
   <div class="settings-row" data-mslot="units"><label for="unitText">文字の単位</label><select id="unitText"><option value="pt">pt</option><option value="Q">級（Q）</option><option value="px">px</option></select></div>
   <div class="settings-row"><label for="deckFont">基本のフォント</label><select id="deckFont"></select></div>
   <p class="settings-note">単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。</p>
+  <div class="settings-row"><span class="settings-label">言語 / Language</span><div class="lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div></div>
 </div>
 
 <div class="layout">
@@ -74,6 +78,10 @@
     </nav>
 
     <div class="canvas-area">
+      <div id="emptyHint" class="empty-hint" hidden>
+        <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
+        <button type="button" class="open-sample">見本を開く</button>
+      </div>
       <div class="paper-wrap screen-paper">
         <div id="paper" class="paper landscape-paper">
           <div id="sheetTitle" class="sheet-title"></div>
@@ -102,7 +110,7 @@
             <button id="mobileMakePlain" type="button">無地に戻す</button>
           </div>
           <div id="mobileTemplateHint" class="m-hint hidden">
-            <p>この面は「<span id="mobileFaceTypeName">無地</span>」です。テンプレートを使うときは、面の種類を「テンプレート」にします。</p>
+            <p>この面はテンプレートを使っていません。テンプレートを使うときは、面の種類を「テンプレート」にします。</p>
             <button id="mobileMakeTemplate" type="button">この面をテンプレートにする</button>
           </div>
         </div>
@@ -133,6 +141,7 @@
             <button id="mobilePdfLoad" type="button">PDF読み込み</button>
             <button id="mobilePrint" type="button">印刷</button>
             <button id="mobileNewProject" type="button">新規</button>
+            <button id="mobileOpenSample" type="button" class="open-sample">見本を開く</button>
           </div>
           <div class="m-group-title">ページ</div>
           <div class="mobile-more-grid">
@@ -140,11 +149,17 @@
             <button id="mobileDupPage" type="button">ページを複製</button>
             <button id="mobileDeletePage" type="button">ページを削除</button>
           </div>
+          <div class="m-group-title">言語 / Language</div>
+          <div class="lang-switch m-lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
           <div class="app-copyright">©2026 Panda Kinema</div>
         </div>
       </div>
 
       <section id="mobileCardPreview" class="mobile-card-preview" aria-label="スマホ用カードプレビュー">
+        <div id="mobileEmptyHint" class="empty-hint m-empty-hint" hidden>
+          <span>下の「面」「テンプレ」から作りはじめます。</span>
+          <button type="button" class="open-sample">見本を開く</button>
+        </div>
         <div class="mobile-card-nav">
           <button id="mobilePrevCard" type="button" aria-label="前のカード">←</button>
           <div class="m-nav-center">
@@ -393,6 +408,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 
 </body>
