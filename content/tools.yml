@@ -1,7 +1,7 @@
 # PLAY&TOOLS に並ぶツール。main = メインカラー(背景)、accent = アクセントカラー(文字)。key はバナーの順番で使う名前
 - key: moji
   name: ビビル文字ジェネレータ
-  url: https://pandakinema.github.io/bibilu-moji/
+  url: https://pandakinema.com/bibilu-moji/
   title_image: img/logo/moji_title.png
   image: ''
   thumb: ''
@@ -11,7 +11,7 @@
   accent: '#ffffff'
 - key: mockmaker
   name: カードモックツクール β
-  url: https://pandakinema.github.io/card-mock-maker/
+  url: https://pandakinema.com/card-mock-maker/
   title_image: ''
   image: img/tools/tool_cmm_screen.webp
   thumb: img/tools/tool_cmm_thumb.webp

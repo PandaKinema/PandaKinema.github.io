@@ -5,7 +5,7 @@ import hashlib, html as H, json, os, re, urllib.request, urllib.parse
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, 'build', 'ogp_cache.json')
 IMG = os.path.join(ROOT, 'img', 'links')
-UA = 'Mozilla/5.0 (compatible; PandaKinemaBot/1.0; +https://pandakinema.github.io/)'
+UA = 'Mozilla/5.0 (compatible; PandaKinemaBot/1.0; +https://pandakinema.com/)'
 
 def _get(url, limit=3_000_000):
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Language': 'ja,en;q=0.8'})

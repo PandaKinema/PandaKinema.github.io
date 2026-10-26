@@ -2514,7 +2514,7 @@ def render(key):
         related_html=related_html(g, key),
         video_hidden='' if g['videos'] else ' hidden',
         video_tex=' tex' if g.get('video_tex') else '',
-        ogp_meta=('  <meta property="og:url" content="https://pandakinema.github.io/games/%s/">\n  <meta property="og:image" content="https://pandakinema.github.io/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
+        ogp_meta=('  <meta property="og:url" content="https://pandakinema.com/games/%s/">\n  <meta property="og:image" content="https://pandakinema.com/img/%s">' % (key, imgname(g['ogp_image']))) if g.get('ogp_image') else '',
     )
     s = TEMPLATE
     for _ in range(3):

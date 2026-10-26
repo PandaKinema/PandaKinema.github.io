@@ -11,7 +11,7 @@ import media
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = ROOT          # サイトの一番上(2026-10 に new/ から移動)
 IMG_DIR = os.path.join(OUT_DIR, 'img')
-SITE_URL = 'https://pandakinema.github.io/'
+SITE_URL = 'https://pandakinema.com/'
 e = H.escape
 
 def load(name):
