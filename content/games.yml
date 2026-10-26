@@ -16,7 +16,7 @@
   intro_ja: 数字カードを同時に出し、高い塔を建てて得点を競うゲームです。
   intro_en: Reveal number cards at the same time and build tall towers to score points.
   page: games/bibilu/
-  booth: https://pandakinema.booth.pm/
+  booth: https://pandakinema.booth.pm/items/8795134
 - key: trico
   name: TRICO!
   new: false
@@ -39,7 +39,7 @@
     Repeat “Appeals,” where the number of colors in play decides the winner,
     then collect 3 colors and declare “Trico!”
   page: games/trico/
-  booth: https://pandakinema.booth.pm/
+  booth: https://pandakinema.booth.pm/items/7555824
   banner:
     pattern: none
 - key: ikatako
@@ -60,7 +60,7 @@
   intro_ja: イカだ！タコだ！手を挙げろ！
   intro_en: Squid! Octopus! Hands up!
   page: games/ikatako/
-  booth: https://pandakinema.booth.pm/
+  booth: https://pandakinema.booth.pm/items/7555957
 - key: moko
   name: モコチャカ
   new: false
@@ -79,7 +79,7 @@
   intro_ja: ねむりは競争だ。
   intro_en: Sleep is a race.
   page: games/moko/
-  booth: https://pandakinema.booth.pm/
+  booth: https://pandakinema.booth.pm/items/8311555
 - key: koikoi
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES
@@ -99,6 +99,7 @@
   intro_ja: あげろ！こいのぼり！
   intro_en: Raise the carp streamers!
   page: games/koikoi/
+  booth: https://pandakinema.booth.pm/items/8425486
 - key: bash
   name: BASH&SMASH
   series: "MINI THEATER SERIES "
@@ -118,3 +119,4 @@
   intro_ja: 読みきれ、叩き込め！
   intro_en: Read them, then strike!
   page: games/bash/
+  booth: https://pandakinema.booth.pm/items/8425512
