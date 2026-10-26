@@ -65,6 +65,9 @@ const EN={
   "いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)":"Clear the current work and start over?\n(Anything not saved as a PDF can't be restored.)",
   "いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)":"Replace the current work with the sample?\n(Use “Undo” to go back.)",
   // ---- 見本・初期値の文字
+  "枚数":"Copies","1枚減らす":"One fewer","1枚増やす":"One more","このカードだけ別にする":"Make this one separate",
+  "同じカードが{n}枚あります。どれを直しても全部に反映されます。":"There are {n} copies of this card. Editing any of them changes all.",
+  "これ以上カードを増やせません（最大{n}ページ）":"Can't add more cards (up to {n} pages).",
   "ドラゴン":"Dragon","このカードを出したとき、山札からカードを1枚引く。":"When you play this card, draw a card.",
   // ---- メタ
   "カードモックツクール β（改良テスト版） | Card Mock Maker":"Card Mock Maker β (test build)",
@@ -73,6 +76,7 @@ const PATTERNS=[
   [/^カード(\d+)（ページ内(\d+)）・(オモテ|ウラ)$/,(m)=>`Card ${m[1]} (#${m[2]} on page) · ${m[3]==="オモテ"?"Front":"Back"}`],
   [/^カード(\d+)（ページ内(\d+)）$/,(m)=>`Card ${m[1]} (#${m[2]} on page)`],
   [/^カード (\d+) \/ (\d+)$/,(m)=>`Card ${m[1]} / ${m[2]}`],
+  [/^カード (\d+) \/ (\d+) ×(\d+)$/,(m)=>`Card ${m[1]} / ${m[2]} ×${m[3]}`],
   [/^ページ (\d+) \/ (\d+)$/,(m)=>`Page ${m[1]} / ${m[2]}`],
   [/^カード (\d+)〜(\d+)$/,(m)=>`Cards ${m[1]}–${m[2]}`],
   [/^テキストボックス(\d+)$/,(m)=>`Text box ${m[1]}`],[/^フレームテキスト(\d+)$/,(m)=>`Framed text ${m[1]}`],[/^画像(\d+)$/,(m)=>`Image ${m[1]}`],

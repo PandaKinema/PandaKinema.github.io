@@ -2028,3 +2028,20 @@ header .app-brand{align-items:center}
 .settings-pop .lang-switch{justify-self:start}
 .settings-btn{font-size:13px!important;letter-spacing:.05em}
 @media(max-width:1180px) and (min-width:721px){header .app-brand strong{display:none!important}}
+
+/* ---- 枚数 ---- */
+.qty-row{display:flex;align-items:center;gap:8px;margin:8px 0 2px;flex-wrap:wrap}
+.qty-label{font-size:11px;color:var(--ui-muted)}
+.qty-stepper{display:inline-flex;align-items:center;border:1px solid var(--ui-border);border-radius:6px;overflow:hidden;background:var(--ui-control)}
+.qty-stepper button{width:28px!important;min-width:28px!important;height:28px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;font-size:15px!important}
+.qty-stepper button:disabled{opacity:.35}
+.qty-stepper input{width:42px!important;height:28px!important;border:0!important;border-left:1px solid var(--ui-border)!important;border-right:1px solid var(--ui-border)!important;border-radius:0!important;text-align:center;padding:0!important;-moz-appearance:textfield;appearance:textfield;background:transparent!important}
+.qty-stepper input::-webkit-inner-spin-button,.qty-stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.qty-note{margin:4px 0 0;font-size:11px;color:var(--ui-muted)}
+.qty-note[hidden],#unlinkCard[hidden]{display:none!important}
+.qty-badge{position:absolute;right:1.2mm;bottom:1.2mm;z-index:70;padding:.4mm 1.4mm;border-radius:2mm;background:rgba(36,184,242,.92);color:#fff;font:700 2.8mm/1.2 -apple-system,BlinkMacSystemFont,sans-serif;pointer-events:none}
+@media print{.qty-badge{display:none!important}}
+@media(max-width:720px){
+  .qty-stepper button{width:40px!important;min-width:40px!important;height:40px!important;font-size:18px!important}
+  .qty-stepper input{height:40px!important;width:52px!important;font-size:16px!important}
+}

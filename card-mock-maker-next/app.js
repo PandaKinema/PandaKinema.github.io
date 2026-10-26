@@ -156,6 +156,27 @@ function syncPages(){
 }
 function setFaceAt(p,i,face){const {slot,side}=slotAt(p,i);deck.cards[deck.order[slot]][side]=face;syncPages()}
 function cardIdAt(p,i){return deck.order[slotAt(p,i).slot]}
+/* ---- 枚数:同じカード(同じid)を並びに何回入れるか。増やすとすぐ後ろに並び、後ろのカードは詰め直す ---- */
+function setCardCount(id,n){
+  const cur=cardCount(id);n=Math.max(1,Math.round(Number(n)||1));if(n===cur||!deck.cards[id])return false;
+  const first=deck.order.indexOf(id),side=slotAt(currentPage,selected).side;
+  if(n>cur){
+    let add=n-cur,room=MAX_PAGES*cardsPerPage()-deck.order.length;
+    // 最後に残っている空のカードは、増やした分だけ詰めて使う(ページ数がむやみに増えないように)
+    let trim=0;for(let k=deck.order.length-1;k>deck.order.lastIndexOf(id)&&trim<add;k--){const x=deck.order[k];if(isBlankCard(x)&&cardCount(x)===1)trim++;else break}
+    if(add>room+trim){add=room+trim;if(add<=0){alert(T("これ以上カードを増やせません（最大{n}ページ）",{n:MAX_PAGES}));return false}}
+    deck.order.splice(deck.order.length-trim,trim);
+    deck.order.splice(deck.order.lastIndexOf(id)+1,0,...Array(add).fill(id));
+  }else{
+    let rm=cur-n;for(let k=deck.order.length-1;k>first&&rm>0;k--)if(deck.order[k]===id){deck.order.splice(k,1);rm--}
+  }
+  syncPages();selectSlot(first,side);return true;
+}
+/* 枚数が2枚以上のカードのうち、選んでいる1枚だけを別のカードにする */
+function unlinkSelected(){
+  const {slot}=slotAt(currentPage,selected),id=deck.order[slot];if(cardCount(id)<2)return;
+  const c=deck.cards[id];deck.order[slot]=addCard(deep(c.front),deep(c.back));syncPages();
+}
 function startDeck(){deck={cards:{},order:[],fmt:2,font:"gothic"};currentPage=0;selected=0;padOrder();syncPages()}
 function applyCardGeometry(container){
   const f=faceMM(),q=pairMM(),g=gridRC();
@@ -752,6 +773,7 @@ function buildSheet(container,faces,selectable=true,a=arrangement()){
       f.className="face"+(selectable&&idx===selected?" selected":"");
       if(selectable&&paired&&idx===selected)f.dataset.sideLabel=T(side===0?"オモテ面":"ウラ面");
       renderFace(f,faces[idx],selectable&&idx===selected,idx);
+      if(selectable&&(side===0||!paired)){const n=cardCount(cardIdAt(currentPage,idx));if(n>1){const q=document.createElement("span");q.className="qty-badge";q.textContent="×"+n;f.appendChild(q)}}
       if(selectable) f.addEventListener("click",()=>{selected=idx;renderSheet();syncControls()});
       pair.appendChild(f);
     }
@@ -948,7 +970,7 @@ function renderMobileCardPreview(){
     return;
   }
   el("mobilePrevCard").setAttribute("aria-label","前のカード");
-  el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;if(el("mobilePageCount"))el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
+  {const n=cardCount(deck.order[absolute]);el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`+(n>1?` ×${n}`:"");}if(el("mobilePageCount"))el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
   el("mobilePrevCard").disabled=absolute<=0;
   const atEnd=absolute>=total-1,nb=el("mobileNextCard");
   nb.disabled=atEnd&&pages.length>=MAX_PAGES;nb.textContent=atEnd?"＋":"→";nb.setAttribute("aria-label",atEnd?"ページを追加":"次のカード");nb.classList.toggle("is-add",atEnd);
@@ -1196,6 +1218,9 @@ function renderFrameTextEditors(d){
 function syncControls(){
   const d=currentFaces()[selected];
   el("selectedLabel").textContent=faceName(selected);
+  {const id=cardIdAt(currentPage,selected),n=cardCount(id);
+   el("cardQty").value=n;el("qtyMinus").disabled=n<=1;el("unlinkCard").hidden=n<2;
+   const note=el("qtyNote");note.hidden=n<2;if(n>1)note.textContent=T("同じカードが{n}枚あります。どれを直しても全部に反映されます。",{n});}
   refreshCopyButtonLabels();
   el("faceType").value=d.type;
   const templ=d.type==="template";
@@ -1469,6 +1494,12 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
+/* ---- 枚数の操作 ---- */
+function changeQty(n){const id=cardIdAt(currentPage,selected);if(setCardCount(id,n)){renderSheet();syncControls()}else syncControls()}
+el("qtyMinus").addEventListener("click",()=>changeQty(cardCount(cardIdAt(currentPage,selected))-1));
+el("qtyPlus").addEventListener("click",()=>changeQty(cardCount(cardIdAt(currentPage,selected))+1));
+el("cardQty").addEventListener("change",e=>changeQty(e.target.value));
+el("unlinkCard").addEventListener("click",()=>{unlinkSelected();renderSheet();syncControls()});
 /* ---- 見本:テンプレートとオプションの使い方がわかる4枚 ---- */
 function sampleDeck(){
   const back=()=>({...makePlain(),bgColor:"#22384f",bgBorderNone:true,

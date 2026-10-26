@@ -182,6 +182,12 @@
   <div class="group face-section">
     <div class="section-title">面</div>
     <div id="selectedLabel" class="hint selected-face-label">カード1（ページ内1）・オモテ</div>
+    <div class="qty-row">
+      <span class="qty-label">枚数</span>
+      <div class="qty-stepper"><button id="qtyMinus" type="button" aria-label="1枚減らす">−</button><input id="cardQty" type="number" min="1" max="99" value="1" inputmode="numeric" aria-label="枚数"><button id="qtyPlus" type="button" aria-label="1枚増やす">＋</button></div>
+      <button id="unlinkCard" type="button" class="mini" hidden>このカードだけ別にする</button>
+    </div>
+    <p id="qtyNote" class="qty-note" hidden></p>
 
     <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
