@@ -1,7 +1,7 @@
 - key: bibilu
   name: ビビルの塔
   new: true
-  front: img/card/bibilu_bdg.png
+  front: img/card/bibilu_bdg.webp
   pkg: img/package/pkg_bibilu.webp
   logo: img/logo/logo_bibilu.png
   main: "#153e53"
@@ -45,7 +45,7 @@
 - key: ikatako
   name: イカタコ
   new: false
-  front: img/card/ikatako_bdg.png
+  front: img/card/ikatako_bdg.webp
   pkg: img/package/pkg_ikatako.webp
   logo: img/logo/logo_ikatako.png
   main: "#0073bd"
@@ -84,7 +84,7 @@
   name: こいこいのぼり 真打
   series: MINI THEATER SERIES
   new: false
-  front: img/card/koikoi_bdg.png
+  front: img/card/koikoi_bdg.webp
   pkg: img/package/mini_koikoi.webp
   logo: img/logo/koikoilogo.png
   main: "#48b0e5"
@@ -104,7 +104,7 @@
   name: BASH&SMASH
   series: "MINI THEATER SERIES "
   new: false
-  front: img/card/bash_bdg.png
+  front: img/card/bash_bdg.webp
   pkg: img/package/mini_bash.webp
   logo: img/logo/bashlogo_4C.png
   main: "#e60039"
