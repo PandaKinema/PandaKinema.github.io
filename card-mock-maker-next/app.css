@@ -2076,3 +2076,43 @@ header .app-brand{align-items:center}
   .m-view-side button{height:32px!important;padding:0 16px!important;font-size:13px!important}
 }
 @media print{.duplex-bar{display:none!important}}
+
+/* ---- 表から一括作成 ---- */
+.modal{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,24,30,.42)}
+.modal[hidden]{display:none!important}
+.modal-box{display:flex;flex-direction:column;width:min(720px,100%);max-height:calc(100vh - 48px);background:var(--ui-panel);color:var(--ink);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.25);overflow:hidden}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ui-border)}
+.modal-head strong{font-size:15px}
+.modal-close{border:0!important;background:transparent!important;font-size:20px!important;min-width:0!important;min-height:0!important;padding:0 6px!important}
+.modal-body{padding:14px 16px 16px;overflow:auto;font-size:12px}
+.modal-foot{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--ui-border)}
+.modal-foot button{min-height:34px;padding:4px 16px}
+.bulk-summary{flex:1;color:var(--ui-muted);font-size:12px}
+.bulk-lead{margin:0 0 4px;color:var(--ui-muted);line-height:1.6}
+.bulk-step{display:flex;align-items:center;gap:8px;margin:14px 0 6px;font-weight:700;font-size:13px}
+.bulk-num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--ui-panel);font-size:11px}
+#bulkText{display:block;width:100%;min-height:120px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;tab-size:14;white-space:pre;overflow:auto}
+.bulk-row{display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap}
+.bulk-row label,.bulk-keep{display:inline-flex;align-items:center;gap:6px}
+.bulk-map{display:grid;grid-template-columns:max-content minmax(0,260px);gap:6px 12px;align-items:center}
+.bulk-map select{height:30px!important;padding:2px 26px 2px 8px!important;font-size:12px!important;line-height:1.3!important}
+.bulk-map-label{color:var(--ink)}
+.bulk-msg{grid-column:1/-1;margin:0;color:var(--ui-muted)}
+.bulk-preview{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;min-height:24px}
+.bulk-thumb{position:relative;overflow:hidden;border:1px solid var(--ui-border-strong);border-radius:3px;background:#fff;flex:none}
+.bulk-thumb .face{position:absolute!important;left:0;top:0;transform-origin:0 0;border:0!important;cursor:default}
+.bulk-qty{position:absolute;right:3px;bottom:3px;z-index:80;padding:0 4px;border-radius:6px;background:rgba(36,184,242,.92);color:#fff;font-size:10px;font-weight:700}
+.bulk-more{align-self:center;color:var(--ui-muted)}
+.bulk-keep{margin-top:12px}
+@media(max-width:720px){
+  .modal{padding:0;align-items:stretch}
+  .modal-box{max-height:none;height:100%;border-radius:0}
+  .modal-body{font-size:13px}
+  #bulkText{font-size:16px;min-height:140px}
+  .bulk-map{grid-template-columns:minmax(0,1fr);gap:4px}
+  .bulk-map select{height:40px!important;font-size:16px!important;margin-bottom:6px}
+  .modal-foot{flex-wrap:wrap;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+  .modal-foot .bulk-summary{flex-basis:100%}
+  .modal-foot button{flex:1;min-height:44px}
+}
+@media print{.modal{display:none!important}}

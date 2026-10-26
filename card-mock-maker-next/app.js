@@ -1506,6 +1506,176 @@ function movePage(from,insertIndex){
   currentPage=active===from?target:(active>from&&active<=target?active-1:(active<from&&active>=target?active+1:active));
 }
 el("addPage").addEventListener("click",addPage);
+/* ---- 表から一括作成:選んでいるカードをひな形に、表の1行を1枚のカードにする ---- */
+const BULK_ALIASES={
+  number:["数字","数","ランク","number","num","rank"],
+  suit:["スート","マーク","suit","mark"],
+  name:["カード名","名前","名称","タイトル","name","title","cardname"],
+  desc:["テキスト","説明","説明文","効果","本文","text","desc","description","effect","rules"],
+  main:["ことば","言葉","お題","ワード","word","main"],
+  textbox:["テキストボックス","テキスト","textbox","text"],
+  frame:["フレームテキスト","フレーム","frametext","frame"],
+  qty:["枚数","数量","copies","count","qty","quantity"]
+};
+/* ひな形のカードで、文字を入れられる場所の一覧 */
+function bulkFields(card){
+  const out=[];
+  ["front","back"].forEach(side=>{
+    const f=card&&card[side];if(!f)return;
+    const add=(kind,name,n,set)=>out.push({side,kind,name,n,set});
+    if(f.type==="template"){
+      if(f.template==="playing"){add("number","数字",0,(d,v)=>{d.number=v});add("suit","スート",0,(d,v)=>{d.suit=v})}
+      else if(f.template==="tcg"){add("name","カード名",0,(d,v)=>{d.name=v});add("desc","テキスト",0,(d,v)=>{d.desc=v})}
+      else if(f.template==="word")add("main","ことば",0,(d,v)=>{d.main=v});
+    }
+    (f.textBoxes||[]).forEach((_,i)=>add("textbox","テキストボックス",i+1,(d,v)=>{d.textBoxes[i].text=v}));
+    (f.frameTexts||[]).forEach((_,i)=>add("frame","フレームテキスト",i+1,(d,v)=>{d.frameTexts[i].text=v}));
+  });
+  return out;
+}
+function bulkFieldLabel(x){return T("{side}：{name}",{side:T(x.side==="front"?"オモテ":"ウラ"),name:T(x.name)+(x.n?" "+x.n:"")})}
+/* 表の読み取り:スプレッドシートから貼り付けた表(タブ区切り)とCSV。"…" で囲んだセルの改行・区切り文字もそのまま */
+function parseTable(text,csv){
+  text=String(text||"").replace(/^﻿/,"");
+  let delim="\t";
+  if(!text.includes("\t")){
+    const lines=text.split(/\r?\n/).filter(l=>l.trim()),cnt=l=>(l.match(/,/g)||[]).length;
+    if(csv||(lines.length>1&&cnt(lines[0])>0&&lines.every(l=>cnt(l)===cnt(lines[0]))))delim=",";
+  }
+  const rows=[];let row=[],cell="",q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){cell+='"';i++}else q=false}else cell+=ch;continue}
+    if(ch==='"'&&cell===""){q=true;continue}
+    if(ch===delim){row.push(cell);cell="";continue}
+    if(ch==="\r")continue;
+    if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";continue}
+    cell+=ch;
+  }
+  if(cell!==""||row.length){row.push(cell);rows.push(row)}
+  return rows.filter(r=>r.some(c=>c.trim()!==""));
+}
+function normHead(v){return String(v||"").normalize("NFKC").toLowerCase().replace(/[\s_\-・:：()（）「」\[\]]/g,"")}
+/* 見出しの名前から、どの列をどこに入れるかを決める。見出しが合わなければ左の列から順に */
+function bulkAutoMap(fields,headers,useNames){
+  const map=fields.map(()=>-1),used=new Set();let qty=-1;
+  if(useNames)headers.forEach((h,ci)=>{
+    let v=normHead(h),side=null;
+    const m=v.match(/^(オモテ|おもて|表|front|ウラ|うら|裏|back)/);
+    if(m){side=/^(ウラ|うら|裏|back)/.test(m[1])?"back":"front";v=v.slice(m[1].length)}
+    const num=(v.match(/(\d+)$/)||[])[1],base=num?v.slice(0,-num.length):v;
+    if(!num&&qty<0&&BULK_ALIASES.qty.includes(base)){qty=ci;used.add(ci);return}
+    const fi=fields.findIndex((f,k)=>map[k]<0&&(!side||f.side===side)&&BULK_ALIASES[f.kind].includes(base)&&(!num||f.n===+num));
+    if(fi>=0){map[fi]=ci;used.add(ci)}
+  });
+  if(map.every(v=>v<0)){let ci=0;fields.forEach((f,fi)=>{while(used.has(ci))ci++;if(ci<headers.length){map[fi]=ci;ci++}})}
+  return {map,qty};
+}
+let bulk=null;
+function bulkTable(){
+  const rows=parseTable(el("bulkText").value,bulk.csv),head=el("bulkHeader").checked;
+  const width=rows.reduce((a,r)=>Math.max(a,r.length),0);
+  const headers=Array.from({length:width},(_,i)=>head&&rows[0]&&String(rows[0][i]||"").trim()||T("列{n}",{n:i+1}));
+  return {headers,data:head?rows.slice(1):rows,head};
+}
+function bulkCards(table){
+  const tpl=deck.cards[bulk.tpl],out=[];
+  table.data.forEach(r=>{
+    let n=1;
+    if(bulk.qty>=0){const v=String(r[bulk.qty]??"").normalize("NFKC").trim();if(v!==""){n=parseInt(v,10);if(!Number.isFinite(n))n=1}}
+    if(n<=0)return;
+    const c={front:deep(tpl.front),back:deep(tpl.back)};
+    bulk.fields.forEach((f,fi)=>{const ci=bulk.map[fi];if(ci>=0)f.set(c[f.side],String(r[ci]??""))});
+    out.push({card:c,n:Math.min(n,999)});
+  });
+  return out;
+}
+function bulkRoom(){
+  const keep=el("bulkKeep").checked;let order=deck.order.slice();
+  const pos=keep?order.lastIndexOf(bulk.tpl)+1:order.indexOf(bulk.tpl);
+  if(!keep)order=order.filter(x=>x!==bulk.tpl);
+  let tail=order.length;while(tail>pos&&isBlankCard(order[tail-1]))tail--;   // 後ろの空のカードは詰める
+  order=order.slice(0,tail);
+  return {order,pos,room:Math.max(0,MAX_PAGES*cardsPerPage()-order.length)};
+}
+function openBulk(){
+  const id=cardIdAt(currentPage,selected);
+  bulk={tpl:id,fields:bulkFields(deck.cards[id]),csv:false,sig:null,map:[],qty:-1};
+  el("bulkText").value="";el("bulkKeep").checked=false;el("bulkHeader").checked=true;
+  toggleSettings(false);closeMobilePanel();
+  el("bulkModal").hidden=false;renderBulk();
+  if(bulk.fields.length&&!mobileUIActive())el("bulkText").focus();
+}
+function closeBulk(){el("bulkModal").hidden=true;bulk=null}
+function renderBulk(){
+  if(!bulk)return;
+  const tplNo=deck.order.indexOf(bulk.tpl)+1;
+  el("bulkLead").textContent=T("「カード{n}」をひな形にして、表の1行を1枚のカードにします。文字を入れる場所に、表の列を当てはめます。",{n:tplNo});
+  el("bulkText").placeholder=T("スプレッドシートやExcelで範囲をコピーして、ここに貼り付けます。\n例）\nカード名\tテキスト\t枚数\nドラゴン\t山札から1枚引く。\t2");
+  const table=bulkTable(),sig=table.headers.join("\u0001")+"|"+table.head;
+  if(sig!==bulk.sig){const a=bulkAutoMap(bulk.fields,table.headers,table.head);bulk.map=a.map;bulk.qty=a.qty;bulk.sig=sig}
+  const map=el("bulkMap");map.innerHTML="";
+  if(!bulk.fields.length){
+    const m=document.createElement("p");m.className="bulk-msg";m.textContent=T("このカードには文字を入れる場所がありません。テンプレート（トランプ・トレカ・ワードゲーム）かテキストボックスを使ったカードを選んでから開いてください。");map.appendChild(m);
+  }
+  const row=(label,value,none,onChange)=>{
+    const l=document.createElement("label");l.className="bulk-map-label";l.textContent=label;
+    const sel=document.createElement("select");
+    sel.innerHTML=`<option value="-1">${esc(none)}</option>`+table.headers.map((hd,i)=>`<option value="${i}">${esc(hd)}</option>`).join("");
+    sel.value=String(value<table.headers.length?value:-1);sel.addEventListener("change",()=>{onChange(Number(sel.value));renderBulk()});
+    map.append(l,sel);
+  };
+  bulk.fields.forEach((f,fi)=>row(bulkFieldLabel(f),bulk.map[fi],T("ひな形のまま"),v=>{bulk.map[fi]=v}));
+  if(bulk.fields.length)row(T("枚数"),bulk.qty,T("すべて1枚"),v=>{bulk.qty=v});
+  // 確認:最初の数枚
+  const pv=el("bulkPreview");pv.innerHTML="";
+  const cards=bulk.fields.length?bulkCards(table):[];
+  const total=cards.reduce((a,c)=>a+c.n,0),{room}=bulkRoom();
+  if(!cards.length){const m=document.createElement("p");m.className="bulk-msg";m.textContent=T("表を貼り付けると、ここに最初の数枚が表示されます。");pv.appendChild(m)}
+  const side=bulk.fields.some((f,fi)=>f.side==="front"&&bulk.map[fi]>=0)||!bulk.fields.some((f,fi)=>bulk.map[fi]>=0)?"front":"back";
+  const fm=faceMM(),W=mobileUIActive()?72:84,k=W/(fm.w*MM_TO_PX);
+  cards.slice(0,6).forEach(c=>{
+    const box=document.createElement("div");box.className="bulk-thumb "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;box.style.width=W+"px";box.style.height=Math.round(fm.h*MM_TO_PX*k)+"px";
+    const f=document.createElement("div");f.className="face";f.style.width=fm.w*MM_TO_PX+"px";f.style.height=fm.h*MM_TO_PX+"px";f.style.transform=`scale(${k})`;
+    box.appendChild(f);renderFace(f,c.card[side],false,-1);
+    if(c.n>1){const q=document.createElement("span");q.className="bulk-qty";q.textContent="×"+c.n;box.appendChild(q)}
+    pv.appendChild(box);
+  });
+  if(cards.length>6){const m=document.createElement("span");m.className="bulk-more";m.textContent=T("ほか{n}種類",{n:cards.length-6});pv.appendChild(m)}
+  let sum=cards.length?T("{n}種類・合計{m}枚のカードを作ります。",{n:cards.length,m:total}):"";
+  if(total>room)sum+=" "+T("最大{p}ページのため、{k}枚までしか作れません。",{p:MAX_PAGES,k:room});
+  el("bulkSummary").textContent=sum;
+  el("bulkApply").disabled=!cards.length||!room;
+}
+function applyBulk(){
+  if(!bulk)return;
+  const cards=bulkCards(bulkTable());if(!cards.length)return;
+  const {order,pos,room}=bulkRoom(),made=[];
+  for(const c of cards){if(made.length>=room)break;const id=addCard(c.card.front,c.card.back);for(let i=0;i<c.n&&made.length<room;i++)made.push(id)}
+  if(!made.length)return;
+  deck.order=order.slice(0,pos).concat(made,order.slice(pos));
+  closeBulk();syncPages();selectSlot(pos,"front");renderSheet();syncControls();
+  showAppToast(T("{n}枚のカードを作りました",{n:made.length}),{duration:4000});
+}
+document.querySelectorAll(".open-bulk").forEach(b=>b.addEventListener("click",openBulk));
+document.querySelectorAll("[data-bulk-close]").forEach(b=>b.addEventListener("click",closeBulk));
+el("bulkModal").addEventListener("click",e=>{if(e.target===el("bulkModal"))closeBulk()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&bulk)closeBulk()});
+el("bulkText").addEventListener("paste",()=>{if(bulk)bulk.csv=false});
+el("bulkText").addEventListener("input",()=>renderBulk());
+el("bulkHeader").addEventListener("change",()=>renderBulk());
+el("bulkKeep").addEventListener("change",()=>renderBulk());
+el("bulkApply").addEventListener("click",applyBulk);
+el("bulkFileBtn").addEventListener("click",()=>el("bulkFile").click());
+el("bulkFile").addEventListener("change",async e=>{
+  const file=e.target.files[0];e.target.value="";if(!file||!bulk)return;
+  try{
+    const buf=await file.arrayBuffer();let text;
+    try{text=new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(_){text=new TextDecoder("shift_jis").decode(buf)}   // Excelの日本語CSVはShift_JISのことがある
+    el("bulkText").value=text;bulk.csv=!/\.tsv$/i.test(file.name);renderBulk();
+  }catch(err){alert(T("CSVファイルを読み込めませんでした。"))}
+});
+document.addEventListener("cmm-langchange",()=>{if(bulk)renderBulk()});
 /* ---- 両面印刷:表示する面・プリンタの両面設定・ウラ面のずれ補正 ---- */
 const OFFSET_STEP={mm:.1,cm:.01,inch:.01,pt:.5,px:1};
 function syncDuplexUI(){

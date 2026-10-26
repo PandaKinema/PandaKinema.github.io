@@ -72,6 +72,16 @@ const EN={
   "ウラ面は、紙を上下に裏返したとき重なるように、上下を入れ替えて並べています。":"This is how the backs print: swapped top and bottom so they line up when the sheet is flipped top to bottom.",
   "ウラ面は、紙を左右に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped sideways. Do a single test print first.",
   "ウラ面は、紙を上下に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped top to bottom. Do a single test print first.",
+  "表から一括作成":"Create from a table","表を貼り付ける":"Paste a table","1行目は見出し":"First row is headers","CSVファイルを読み込む":"Load a CSV file",
+  "どの列をどこに入れるか":"Which column goes where","確認":"Check","ひな形のカードも残す":"Keep the template card too","やめる":"Cancel","作る":"Create",
+  "列{n}":"Column {n}","ひな形のまま":"Keep the template's text","すべて1枚":"1 copy each",
+  "「カード{n}」をひな形にして、表の1行を1枚のカードにします。文字を入れる場所に、表の列を当てはめます。":"Card {n} is the template: each row of the table becomes one card, with the columns filling in its text.",
+  "スプレッドシートやExcelで範囲をコピーして、ここに貼り付けます。\n例）\nカード名\tテキスト\t枚数\nドラゴン\t山札から1枚引く。\t2":"Copy a range in a spreadsheet or Excel and paste it here.\nExample:\nName\tText\tCopies\nDragon\tDraw a card.\t2",
+  "このカードには文字を入れる場所がありません。テンプレート（トランプ・トレカ・ワードゲーム）かテキストボックスを使ったカードを選んでから開いてください。":"This card has nowhere to put text. Select a card that uses a template (playing card, trading card or word game) or text boxes, then open this again.",
+  "表を貼り付けると、ここに最初の数枚が表示されます。":"Paste a table to preview the first few cards here.",
+  "ほか{n}種類":"+{n} more","{n}種類・合計{m}枚のカードを作ります。":"Cards to create: {m} (designs: {n})","{side}：{name}":"{side}: {name}",
+  "最大{p}ページのため、{k}枚までしか作れません。":"Only {k} will fit (up to {p} pages).","{n}枚のカードを作りました":"Created {n} cards",
+  "CSVファイルを読み込めませんでした。":"Couldn't read the CSV file.",
   "枚数":"Copies","1枚減らす":"One fewer","1枚増やす":"One more","このカードだけ別にする":"Make this one separate",
   "同じカードが{n}枚あります。どれを直しても全部に反映されます。":"There are {n} copies of this card. Editing any of them changes all.",
   "これ以上カードを増やせません（最大{n}ページ）":"Can't add more cards (up to {n} pages).",
@@ -107,7 +117,7 @@ function T(s,vars){
   return out;
 }
 /* 訳さない場所:カードの中身・印刷用・入力欄 */
-const SKIP=".face,.m-face-inner,.thumb-paper,.print-sheet,#printPages,.m-sheet,#sheetTitle,script,style,textarea";
+const SKIP=".no-i18n,.face,.m-face-inner,.thumb-paper,.print-sheet,#printPages,.m-sheet,#sheetTitle,script,style,textarea";
 const originals=new WeakMap();
 function translateText(node){
   const v=node.nodeValue;if(!v||!JP.test(v))return;

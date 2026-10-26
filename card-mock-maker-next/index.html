@@ -52,6 +52,7 @@
     <button id="newProjectBtn" type="button" title="いまの作業を消して新しく始める">新規</button>
     <button id="loadPdfBtn" type="button">PDF読み込み</button>
     <button type="button" class="open-sample">見本を開く</button>
+    <button type="button" class="open-bulk">表から一括作成</button>
   </div>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
@@ -59,6 +60,28 @@
   <div class="settings-row"><label for="deckFont">基本のフォント</label><select id="deckFont"></select></div>
   <p class="settings-note">単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。</p>
   <div class="settings-row"><span class="settings-label">言語 / Language</span><div class="lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div></div>
+</div>
+
+<div id="bulkModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="bulkTitle">
+  <div class="modal-box">
+    <div class="modal-head"><strong id="bulkTitle">表から一括作成</strong><button type="button" class="modal-close" data-bulk-close aria-label="閉じる">×</button></div>
+    <div class="modal-body">
+      <p id="bulkLead" class="bulk-lead no-i18n"></p>
+      <div class="bulk-step"><span class="bulk-num">1</span>表を貼り付ける</div>
+      <textarea id="bulkText" rows="6" spellcheck="false"></textarea>
+      <div class="bulk-row">
+        <label><input type="checkbox" id="bulkHeader" checked> 1行目は見出し</label>
+        <button type="button" id="bulkFileBtn" class="mini">CSVファイルを読み込む</button>
+        <input type="file" id="bulkFile" accept=".csv,.tsv,.txt,text/csv,text/plain" class="hidden">
+      </div>
+      <div class="bulk-step"><span class="bulk-num">2</span>どの列をどこに入れるか</div>
+      <div id="bulkMap" class="bulk-map no-i18n"></div>
+      <div class="bulk-step"><span class="bulk-num">3</span>確認</div>
+      <div id="bulkPreview" class="bulk-preview no-i18n"></div>
+      <label class="bulk-keep"><input type="checkbox" id="bulkKeep"> ひな形のカードも残す</label>
+    </div>
+    <div class="modal-foot"><span id="bulkSummary" class="bulk-summary no-i18n"></span><button type="button" data-bulk-close>やめる</button><button type="button" id="bulkApply" class="primary">作る</button></div>
+  </div>
 </div>
 
 <div class="layout">
@@ -151,6 +174,7 @@
             <button id="mobilePrint" type="button">印刷</button>
             <button id="mobileNewProject" type="button">新規</button>
             <button id="mobileOpenSample" type="button" class="open-sample">見本を開く</button>
+            <button id="mobileBulk" type="button" class="open-bulk">表から一括作成</button>
           </div>
           <div class="m-group-title">ページ</div>
           <div class="mobile-more-grid">
