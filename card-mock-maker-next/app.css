@@ -1,0 +1,1983 @@
+:root{
+  color-scheme:light dark;
+  --bg:#f3f3f3;
+  --ink:#191919;
+  --cyan:#24b8f2;
+  --line:#666;
+  --ui-panel:#ffffff;
+  --ui-panel-soft:#f7f7f7;
+  --ui-panel-hover:#f1f1f1;
+  --ui-border:#d8d8d8;
+  --ui-border-strong:#bdbdbd;
+  --ui-muted:#686868;
+  --ui-control:#ffffff;
+  --ui-control-ink:#222222;
+  --ui-shadow:rgba(0,0,0,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1d1d1d;
+    --ink:#eeeeee;
+    --ui-panel:#262626;
+    --ui-panel-soft:#303030;
+    --ui-panel-hover:#393939;
+    --ui-border:#444444;
+    --ui-border-strong:#5a5a5a;
+    --ui-muted:#aaaaaa;
+    --ui-control:#303030;
+    --ui-control-ink:#f0f0f0;
+    --ui-shadow:rgba(0,0,0,.48);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;
+  color:var(--ink); background:var(--bg);
+}
+header{
+  min-height:58px;background:var(--ui-panel);border-bottom:1px solid var(--ui-border);
+  display:flex;align-items:center;gap:7px;padding:9px 12px;position:sticky;top:0;z-index:20;
+  flex-wrap:nowrap;white-space:nowrap;
+}
+header strong{font-size:15px;margin-right:6px}
+header select{width:auto!important}
+
+button,select,input,textarea{font:inherit}
+button{
+  border:1px solid var(--ui-border-strong);background:var(--ui-control);color:var(--ui-control-ink);border-radius:7px;padding:7px 11px;cursor:pointer;
+}
+button:hover{background:var(--ui-panel-hover)}
+button.primary{background:#111;color:#fff;border-color:#111}
+button:disabled{opacity:.4;cursor:default}
+.toolbar-spacer{flex:1}
+.size-note{font-size:12px;color:#666}
+.warn{color:#b42318;font-weight:600}
+
+.layout{display:grid;grid-template-columns:minmax(700px,1fr) 350px;min-height:calc(100vh - 58px)}
+main{padding:0;overflow:hidden}
+.workspace{display:grid;grid-template-columns:148px minmax(0,1fr);height:calc(100vh - 58px)}
+.page-sidebar{
+  background:var(--ui-panel-soft);border-right:1px solid var(--ui-border);padding:10px 8px;
+  overflow:auto;display:flex;flex-direction:column;gap:8px;
+}
+.page-sidebar-head{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.page-sidebar-head span{font-size:10px;color:#777}
+.page-actions{display:grid;grid-template-columns:34px 1fr 1fr;gap:4px}
+.page-actions button{padding:5px 4px;font-size:10px}
+.page-thumbs{display:flex;flex-direction:column;gap:9px;padding-bottom:14px}
+.page-thumb{
+  position:relative;background:#ddd;border:2px solid transparent;border-radius:5px;
+  padding:5px;cursor:pointer;transition:.12s;
+}
+.page-thumb:hover{background:#d7d7d7}
+.page-thumb.active{border-color:var(--cyan);background:#fff}
+.page-thumb.dragging{opacity:.45}
+.page-drop-zone{height:7px;border-radius:4px;transition:.12s}
+.page-drop-zone.drag-over{height:16px;background:var(--cyan)}
+.page-thumb-num{font-size:10px;color:#555;margin:0 0 4px 2px;padding-right:24px}
+
+.style-toggle{
+  margin:0 0 3px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.style-toggle input{display:none}
+.style-toggle span{
+  width:28px;height:26px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid #ccc;border-radius:5px;background:#fff;
+  font-size:13px;line-height:1;color:#333;
+}
+.style-toggle .bold-mark{font-weight:700}
+.style-toggle .italic-mark{font-style:italic;font-family:Georgia,serif}
+.style-toggle input:checked + span{
+  background:#222;color:#fff;border-color:#222;
+}
+
+.size-icon{
+  position:relative;
+  width:21px;
+  height:26px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding-left:2px;
+  color:var(--ui-muted);
+  font-size:14px;
+  line-height:1;
+}
+.size-icon::before,.size-icon::after{
+  content:"";
+  position:absolute;
+  right:1px;
+  width:0;height:0;
+  border-left:3px solid transparent;
+  border-right:3px solid transparent;
+}
+.size-icon::before{
+  top:5px;
+  border-bottom:4px solid var(--cyan);
+}
+.size-icon::after{
+  bottom:5px;
+  border-top:4px solid var(--cyan);
+}
+.style-toggle .underline-mark{text-decoration:underline;font-family:Arial,sans-serif}
+.color-trigger{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+.color-trigger-icon{display:block;position:relative}
+.color-trigger-text-icon{
+  width:22px;height:23px;
+  font-size:20px;
+  line-height:19px;
+  font-family:Arial,sans-serif;
+  text-align:center;
+  color:var(--ui-control-ink);
+}
+.color-trigger-text-icon::after{
+  content:"";
+  position:absolute;
+  left:1px;right:1px;bottom:0;
+  height:4px;
+  border-radius:1px;
+  background:var(--trigger-color,#222);
+}
+.color-trigger-stroke-icon{
+  width:21px;height:21px;
+  box-sizing:border-box;
+  border:3px solid var(--trigger-color,#222);
+  background:transparent;
+}
+.color-trigger-fill-icon{
+  width:21px;height:21px;
+  box-sizing:border-box;
+  border:1px solid var(--ui-border-strong);
+  background:var(--trigger-color,#fff);
+}
+.color-trigger.is-none::after{
+  content:"";
+  position:absolute;
+  left:4px;right:4px;top:50%;
+  height:2px;
+  background:#e31b23;
+  transform:rotate(-45deg);
+  transform-origin:center;
+  pointer-events:none;
+}
+.color-trigger.is-none .color-trigger-text-icon::after{background:transparent}
+.color-trigger.is-none .color-trigger-stroke-icon{border-color:var(--ui-border-strong)}
+.color-trigger.is-none .color-trigger-fill-icon{background:transparent}
+.color-none-btn{
+  width:100%;
+  margin:0 0 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:7px 8px;
+}
+.none-icon{
+  width:18px;height:18px;border:1px solid var(--ui-border-strong);border-radius:2px;
+  background:linear-gradient(135deg,transparent 43%,#e31b23 44%,#e31b23 56%,transparent 57%);
+}
+.option-subtool{margin-top:10px;padding-top:8px;border-top:1px solid var(--ui-border)}
+.frame-text{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  user-select:none;
+  touch-action:none;
+  z-index:91;
+}
+.frame-text.editable{cursor:move}
+.frame-text .resize-handle{
+  position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;
+  background:var(--cyan);border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize;
+}
+.frame-editor{border:1px solid var(--ui-border);border-radius:7px;padding:7px;margin-bottom:7px;background:var(--ui-panel-soft)}
+.frame-editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.frame-color-row{display:flex;gap:8px;align-items:flex-end;margin-top:5px}
+.frame-color-row .tool-color{margin-right:4px}
+
+.color-trigger{
+  background:var(--ui-control)!important;
+  color:var(--ui-control-ink)!important;
+  border-color:var(--ui-border-strong)!important;
+}
+.color-trigger:hover{
+  background:var(--ui-control-ink)!important;
+  color:var(--ui-control)!important;
+}
+.color-trigger-text-icon{color:currentColor!important}
+.color-trigger-fill-icon{
+  background:var(--trigger-color,#fff)!important;
+  border-color:var(--ui-border-strong)!important;
+}
+.color-trigger-stroke-icon{
+  background:transparent!important;
+  border-color:var(--trigger-color,#222)!important;
+}
+.color-trigger.is-none .color-trigger-fill-icon{background:transparent!important}
+.color-trigger.is-none .color-trigger-stroke-icon{border-color:var(--ui-border-strong)!important}
+.stroke-width-control{width:108px}
+.stroke-width-icon{
+  width:22px;
+  height:28px;
+  display:inline-block;
+  position:relative;
+  background:
+    linear-gradient(currentColor,currentColor) center 7px / 14px 1px no-repeat,
+    linear-gradient(currentColor,currentColor) center 13px / 14px 2px no-repeat,
+    linear-gradient(currentColor,currentColor) center 20px / 14px 3px no-repeat;
+  color:var(--ui-control-ink);
+}
+.face-bg-tool{margin-top:6px}
+.face-bg-tool .tool-file-line{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  margin-top:6px;
+}
+.face-bg-tool .tool-file-line input[type="file"]{flex:1;min-width:0}
+.face-bg-tool .tool-file-line button{flex:0 0 auto}
+
+/* Compact editor-tool grammar */
+.tool-block{
+  border-top:1px solid var(--ui-border);
+  padding:7px 0 6px;
+}
+.tool-block:first-child{border-top:0;padding-top:1px}
+
+.tool-strip{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+.tool-strip-secondary{margin-top:5px;justify-content:flex-start}
+.tool-main-input{
+  min-width:0!important;
+  flex:1 1 auto;
+  height:30px;
+  padding:5px 7px!important;
+}
+.tool-number-wrap{
+  height:30px;
+  display:flex;
+  align-items:center;
+  border:1px solid var(--ui-border-strong);
+  border-radius:5px;
+  background:var(--ui-control);
+  overflow:hidden;
+  flex:0 0 auto;
+}
+
+.tool-number{
+  width:48px!important;
+  height:28px;
+  border:0!important;
+  border-left:1px solid var(--ui-border)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--ui-control-ink);
+  padding:3px 4px!important;
+  text-align:center;
+}
+.tool-symbol-select{width:64px!important;height:30px;padding:4px 6px!important;font-size:16px}
+.tool-small-select{width:52px!important;height:30px;padding:4px 5px!important}
+.tool-mode-select{width:70px!important;height:30px;padding:4px 5px!important}
+.tool-file-line input[type="file"]{font-size:10px;padding:4px 0}
+.tool-textarea{min-height:54px!important;padding:6px 7px!important}
+.tool-color{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.tool-color .color-trigger{
+  width:30px!important;
+  height:30px!important;
+  padding:3px!important;
+  border-radius:5px!important;
+}
+
+.style-toggle{margin:0!important;flex:0 0 auto}
+.style-toggle span{
+  width:30px!important;
+  height:30px!important;
+  border-color:var(--ui-border-strong)!important;
+  background:var(--ui-control)!important;
+  color:var(--ui-control-ink)!important;
+}
+.style-toggle input:checked + span{
+  background:var(--ui-control-ink)!important;
+  color:var(--ui-control)!important;
+  border-color:var(--ui-control-ink)!important;
+}
+
+.compact-layout-choice{
+  grid-template-columns:64px 64px!important;
+  justify-content:start;
+}
+.compact-layout-choice .layout-choice{
+  padding:4px!important;
+  justify-content:center;
+}
+.compact-layout-choice .layout-choice input{display:none}
+.compact-layout-choice .layout-choice:has(input:checked){
+  border-color:var(--cyan)!important;
+  box-shadow:0 0 0 1px var(--cyan) inset;
+}
+
+.compact-template-controls{padding-top:6px;padding-bottom:6px}
+.compact-template-controls > label{margin-top:5px}
+
+#tcgLayoutControls{margin:5px 0}
+#tcgLayoutControls > label{margin-bottom:3px}
+#tcgLayoutControls .status{display:none}
+.page-actions{display:block}
+.page-actions button{width:100%}
+.page-thumb-menu-btn{
+  position:absolute;right:4px;top:2px;z-index:20;
+  width:23px;height:22px;padding:0;border:0;background:transparent;
+  font-size:16px;line-height:1;border-radius:4px;
+}
+.page-thumb-menu-btn:hover{background:rgba(0,0,0,.08)}
+.page-thumb-menu{
+  position:absolute;right:4px;top:25px;z-index:50;
+  min-width:92px;background:#fff;border:1px solid #ccc;border-radius:6px;
+  box-shadow:0 5px 16px rgba(0,0,0,.16);padding:4px;
+}
+.page-thumb-menu button{
+  display:block;width:100%;border:0;background:transparent;text-align:left;
+  padding:6px 7px;font-size:11px;border-radius:4px;
+}
+.page-thumb-menu button:hover{background:#f0f0f0}
+
+.thumb-viewport{position:relative;width:100%;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.thumb-paper{position:absolute;left:0;top:0;transform-origin:top left;background:#fff}
+.canvas-area{overflow:auto;padding:22px}
+.paper-wrap{min-width:max-content}
+
+aside{background:var(--ui-panel);border-left:1px solid var(--ui-border);display:flex;flex-direction:column;padding:12px 14px;overflow:auto}
+.paper-wrap{width:100%;display:flex;justify-content:center;align-items:flex-start}
+.paper{position:relative;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.12);transform-origin:top center}
+.sheet-title{
+  position:absolute;z-index:6;font-size:4mm;font-weight:700;line-height:1.2;color:#333;
+  max-width:80mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.paper.landscape-paper .sheet-title{left:10mm;top:6mm}
+.paper.portrait-paper .sheet-title{left:8mm;top:8mm}
+
+.sheet-grid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;gap:0}
+.sheet-grid.portrait-card{
+  grid-template-columns:var(--pair-w) var(--pair-w);
+  grid-template-rows:var(--pair-h) var(--pair-h);
+  width:var(--grid-w);height:var(--grid-h);
+}
+.sheet-grid.landscape-card{
+  grid-template-columns:var(--pair-w) var(--pair-w);
+  grid-template-rows:var(--pair-h) var(--pair-h);
+  width:var(--grid-w);height:var(--grid-h);
+}
+
+.pair{position:relative;display:flex}
+.portrait-card .pair{width:var(--pair-w);height:var(--pair-h);flex-direction:row}
+.landscape-card .pair{width:var(--pair-w);height:var(--pair-h);flex-direction:column}
+
+.face{position:relative;overflow:hidden;background:#fff;cursor:pointer;border:.22mm solid var(--line);flex:none}
+.face{width:var(--face-w);height:var(--face-h)}
+.portrait-card .face:first-of-type{border-right:0}
+.landscape-card .face:first-of-type{border-bottom:0}
+.face.selected{z-index:4}
+.face.selected::after{
+  content:"";position:absolute;inset:0;border:1.1mm solid var(--cyan);pointer-events:none;z-index:9999;
+}
+.fold{position:absolute;pointer-events:none;z-index:5}
+.portrait-card .fold{left:var(--fold-pos);top:0;bottom:0;width:0;border-left:.35mm dashed #777}
+.landscape-card .fold{left:0;right:0;top:var(--fold-pos);height:0;border-top:.35mm dashed #777}
+
+.empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:4mm}
+
+.face img{display:block}
+.face-content{position:absolute;inset:0;z-index:1}
+
+.card-template{position:absolute;inset:0;background:transparent;color:#111;z-index:1}
+.corner{position:absolute;font-weight:700;font-size:7mm;line-height:1;text-align:center;min-width:10mm}
+.corner small{display:block;margin-top:1mm;line-height:1}
+.corner .suit-text,.corner .suit-img{display:block;margin:0 auto}
+.corner .suit-stack{display:flex;flex-direction:column;align-items:center;gap:.45mm;margin-top:1mm;line-height:1}
+.corner .suit-text.small{font-size:2.8mm}
+.corner .suit-text.medium{font-size:4mm}
+.corner .suit-text.large{font-size:5.2mm}
+.corner .suit-img.small{width:3mm;height:3mm;object-fit:contain}
+.corner .suit-img.medium{width:4.5mm;height:4.5mm;object-fit:contain}
+.corner .suit-img.large{width:6mm;height:6mm;object-fit:contain}
+.tl{left:4mm;top:4mm}.tr{right:4mm;top:4mm}
+.bl{left:4mm;bottom:4mm;transform:rotate(180deg)}.br{right:4mm;bottom:4mm;transform:rotate(180deg)}
+.center-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:31mm;line-height:1}
+
+.landscape-card .card-template .corner{font-size:6mm;min-width:9mm}
+.landscape-card .card-template .corner small{font-size:3.6mm}
+.landscape-card .corner .suit-text.small{font-size:2.5mm}
+.landscape-card .corner .suit-text.medium{font-size:3.5mm}
+.landscape-card .corner .suit-text.large{font-size:4.6mm}
+.landscape-card .corner .suit-img.small{width:2.8mm;height:2.8mm}
+.landscape-card .corner .suit-img.medium{width:4mm;height:4mm}
+.landscape-card .corner .suit-img.large{width:5.5mm;height:5.5mm}
+.landscape-card .card-template .center-num{font-size:25mm}
+
+/* TCG: three anchored frames. Sizes are percentages of the usable card height. */
+.tcg-card{
+  position:absolute;inset:0;padding:4mm;z-index:1;
+  color:var(--tcg-text,#222);background:transparent;
+  --tcg-pad:4mm;--tcg-gap:2.2%;--tcg-top:16%;--tcg-mid:50%;--tcg-bottom:28%;
+}
+.tcg-name,.tcg-image,.tcg-desc{box-sizing:border-box}
+.tcg-name{
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);top:var(--tcg-pad);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-top-p, .16));
+  border:var(--tcg-border-width,.4mm) solid var(--tcg-border,#222);border-radius:1.2mm;
+  background:var(--tcg-panel,#fff);display:flex;align-items:center;padding:0 3mm;font-size:4mm;font-weight:700;overflow:hidden;
+}
+.tcg-image{
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);
+  top:50%;transform:translateY(-50%);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-mid-p, .50));
+  border:var(--tcg-border-width,.45mm) solid var(--tcg-border,#222);border-radius:1.3mm;overflow:hidden;background:var(--tcg-panel,#fff);
+  display:flex;align-items:center;justify-content:center;color:#999;font-size:3.4mm;
+}
+.tcg-image img{width:100%;height:100%;object-fit:cover}
+.tcg-desc{
+  position:absolute;left:var(--tcg-pad);right:var(--tcg-pad);bottom:var(--tcg-pad);
+  height:calc((100% - (2 * var(--tcg-pad))) * var(--tcg-bottom-p, .28));
+  border:var(--tcg-border-width,.45mm) solid var(--tcg-border,#222);border-radius:1.3mm;padding:2.5mm;background:var(--tcg-panel,#fff);
+  font-size:3.1mm;line-height:1.4;white-space:pre-wrap;overflow:hidden;
+}
+.card-size-half.portrait-card .tcg-card{--tcg-pad:2.7mm}
+.card-size-half.portrait-card .tcg-name{padding:0 2mm;font-size:3.2mm;border-radius:.8mm}
+.card-size-half.portrait-card .tcg-image{border-radius:.9mm;font-size:2.7mm}
+.card-size-half.portrait-card .tcg-desc{padding:1.6mm;border-radius:.9mm;font-size:2.6mm;line-height:1.3}
+.tcg-size-strip{display:grid!important;grid-template-columns:1fr;gap:6px!important}
+.tcg-size-control{display:grid!important;grid-template-columns:34px 1fr;align-items:center;gap:8px;margin:0!important;font-size:11px;color:#666}
+.tcg-size-control input[type="range"]{width:100%;min-width:0}
+
+.landscape-card .tcg-card.layout1{padding:4mm}
+.landscape-card .tcg-card.layout1 .tcg-name{
+  height:8mm;font-size:3.7mm;
+}
+.landscape-card .tcg-card.layout1 .tcg-image{
+  left:4mm;right:4mm;top:15mm;height:25mm;bottom:auto;width:auto;
+}
+.landscape-card .tcg-card.layout1 .tcg-desc{
+  left:4mm;right:4mm;top:43mm;bottom:4mm;height:auto;
+}
+
+/* Horizontal card layout 2: image left / text right */
+.landscape-card .tcg-card.layout2{padding:4mm}
+.landscape-card .tcg-card.layout2 .tcg-name{height:8mm;font-size:3.7mm}
+.landscape-card .tcg-card.layout2 .tcg-image{
+  left:4mm;top:15mm;width:42mm;height:auto;bottom:4mm;right:auto;
+}
+.landscape-card .tcg-card.layout2 .tcg-desc{
+  left:50mm;right:4mm;top:15mm;bottom:4mm;height:auto;
+}
+
+/* Generic text boxes */
+.generic-textbox{position:absolute;border:.45mm dashed #777;padding:1.2mm;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(255,255,255,.22);user-select:none;touch-action:none;overflow:hidden;z-index:30}
+.generic-textbox.editable{cursor:move}
+.generic-textbox .resize-handle{position:absolute;width:3mm;height:3mm;right:-1.5mm;bottom:-1.5mm;background:var(--cyan);border:.3mm solid #fff;border-radius:.5mm;cursor:nwse-resize}
+.textbox-editor{border:1px solid #e2e2e2;border-radius:7px;padding:7px;margin-bottom:7px;background:#fafafa}
+.textbox-editor-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}.textbox-editor-head strong{font-size:11px}.textbox-delete{padding:3px 7px;font-size:10px}
+.snap-guide-x,.snap-guide-y{position:absolute;pointer-events:none;z-index:29;display:none;background:rgba(36,184,242,.65)}
+.snap-guide-x{left:50%;top:0;width:.3mm;height:100%}.snap-guide-y{left:0;top:50%;width:100%;height:.3mm}
+.face.show-snap-x .snap-guide-x,.face.show-snap-y .snap-guide-y{display:block}
+
+/* Color popup */
+input[type="color"].color-source{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
+.color-trigger{width:34px;height:26px;border:1px solid #cfcfcf;border-radius:6px;background:#fff;padding:3px;cursor:pointer;vertical-align:middle}
+
+.color-popup{position:fixed;z-index:10000;width:320px;padding:10px;background:var(--ui-panel);color:var(--ink);border:1px solid var(--ui-border-strong);border-radius:10px;box-shadow:0 12px 32px var(--ui-shadow);font-size:11px}
+.color-popup-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.color-popup-head strong{font-size:13px}.color-popup-close{border:0;background:transparent;font-size:18px;cursor:pointer;padding:0 3px}
+.color-field{position:relative;height:130px;border-radius:6px;background:#f00;overflow:hidden;cursor:crosshair}.color-field:before{content:"";position:absolute;inset:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}.color-field:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,#000,rgba(0,0,0,0))}
+.color-field-marker{position:absolute;width:10px;height:10px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
+.color-hue{width:100%;margin:8px 0}
+.color-popup-row{display:flex;align-items:flex-start;gap:7px}.color-preview{width:28px;height:28px;border:1px solid #ccc;border-radius:50%;flex:0 0 auto}.color-mode{width:66px!important;flex:0 0 auto}.color-values{display:flex;gap:4px;flex:1}.color-value{flex:1;text-align:center}.color-value input{width:100%!important;padding:4px!important;text-align:center}.color-value label{font-size:9px;color:#666}
+.color-popup-section{font-size:10px;color:#666;margin:8px 0 4px}.color-popup .swatches{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.color-popup .swatch{min-height:22px;border-radius:5px;border:1px solid #ccc}.color-used-empty{font-size:10px;color:#999;grid-column:1/-1}
+
+/* Custom */
+.custom-card{position:absolute;inset:0;background:transparent;z-index:1}
+
+/* Word */
+.word-card{position:absolute;inset:0;background:transparent;color:#111;z-index:1}
+.word-main{
+  position:absolute;inset:8mm;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14mm;line-height:1.15;text-align:center;white-space:pre-wrap;
+}
+.portrait-card .word-main.vertical{writing-mode:vertical-rl;text-orientation:upright}
+
+.history-controls{
+  display:flex;
+  gap:3px;
+  margin-left:2px;
+}
+.icon-btn{
+  width:32px;
+  height:30px;
+  padding:0!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+}
+.icon-btn:disabled{
+  opacity:.35;
+  cursor:default;
+}
+.public-beta-note{
+  margin-top:auto;
+  padding:10px 12px 12px;
+  border-top:1px solid var(--ui-border);
+  font-size:9.5px;
+  line-height:1.45;
+  color:var(--ui-muted);
+}
+.public-beta-note strong{
+  display:inline-block;
+  margin-right:5px;
+  color:var(--ink);
+}
+
+.app-brand{
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  margin-right:4px;
+  white-space:nowrap;
+}
+.app-brand strong{
+  font-size:15px;
+  margin:0;
+  letter-spacing:.01em;
+}
+.app-brand > span{
+  font-size:10px;
+  color:#888;
+}
+
+#fitStatus{display:none!important}
+.selected-face-label{
+  margin:-1px 0 8px;
+  font-size:10px;
+  color:#777;
+}
+.option-tool-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:4px;
+}
+.option-tool-head strong{font-size:11px}
+
+.face-section .section-title,
+.template-section .section-title,
+.option-section .section-title{
+  font-size:13px;
+  letter-spacing:.02em;
+  margin-bottom:7px;
+}
+
+.section-title{font-weight:700;font-size:13px;margin-bottom:6px}
+.group{border-top:1px solid var(--ui-border);padding-top:9px;margin-top:9px}
+.group:first-of-type{border-top:0;padding-top:0}
+label{display:block;font-size:11px;margin:6px 0 3px;color:var(--ui-muted)}
+select,input[type="text"],textarea{
+  width:100%;border:1px solid var(--ui-border-strong);border-radius:7px;padding:8px 9px;background:var(--ui-control);color:var(--ui-control-ink)
+}
+textarea{min-height:76px;resize:vertical}
+input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;border-radius:7px;background:#fff}
+
+  .checkline{display:flex;align-items:center;gap:4px;border:1px solid #ddd;border-radius:6px;padding:4px 5px;background:#fafafa;font-size:10px}
+  .layout-choice-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px}
+  .layout-choice{
+    display:flex;align-items:flex-start;gap:6px;border:1px solid #d5d5d5;border-radius:7px;
+    padding:6px;background:#fff;cursor:pointer;font-size:11px;color:#333;
+  }
+  .layout-choice b{display:block;margin-bottom:5px}
+  .layout-choice input{margin-top:2px}
+  .layout-diagram{
+    width:46px;height:32px;border:1px solid #777;border-radius:3px;background:#fff;
+    display:flex;flex:none;padding:3px;gap:3px;
+  }
+  .layout-diagram.stack{flex-direction:column}
+  .layout-diagram.stack span{display:block;border:1px solid #aaa;flex:1}
+  .layout-diagram.side{flex-direction:column}
+  .layout-diagram.side .top{height:7px;border:1px solid #aaa}
+  .layout-diagram.side .bottom{display:grid;grid-template-columns:1.15fr 1fr;gap:3px;flex:1}
+  .layout-diagram.side .bottom span{border:1px solid #aaa}
+.hidden{display:none!important}
+.mini{padding:6px 9px;font-size:12px}
+.hint{background:#f7f7f7;border:1px solid #e5e5e5;border-radius:8px;padding:10px;font-size:12px;line-height:1.55;color:#555}
+.status{font-size:12px;color:#777;line-height:1.5;margin-top:8px}
+
+.swatches{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+.swatch{
+  aspect-ratio:1/1;border-radius:4px;border:1px solid rgba(0,0,0,.18);cursor:pointer;position:relative;min-width:0;padding:0
+}
+.swatch:hover::after{content:"";position:absolute;inset:-2px;border:2px solid #111;border-radius:6px}
+.swatch.empty{background:repeating-linear-gradient(45deg,#eee,#eee 5px,#fff 5px,#fff 10px)}
+
+.print-pages{display:none}
+
+@media (prefers-color-scheme:dark){
+  header,aside{background:var(--ui-panel);border-color:var(--ui-border)}
+  .page-sidebar{background:#222;border-color:var(--ui-border)}
+  .page-thumb{background:#303030}
+  .page-thumb:hover{background:#373737}
+  .page-thumb.active{background:#2b2b2b}
+  button,select,input[type="text"],input[type="number"],textarea{
+    background:var(--ui-control);
+    color:var(--ui-control-ink);
+    border-color:var(--ui-border-strong);
+  }
+  button:hover{background:var(--ui-panel-hover)}
+  button.primary{background:#f0f0f0;color:#111;border-color:#f0f0f0}
+  label,.hint,.status,.page-thumb-num,.page-sidebar-head span{color:var(--ui-muted)}
+  .group,.tool-block{border-color:var(--ui-border)}
+  .layout-choice{background:var(--ui-control);color:var(--ui-control-ink);border-color:var(--ui-border-strong)}
+  .layout-diagram{background:#f7f7f7}
+  .page-thumb-menu,.color-popup,.textbox-editor{
+    background:var(--ui-panel);
+    color:var(--ink);
+    border-color:var(--ui-border-strong);
+    box-shadow:0 8px 26px var(--ui-shadow);
+  }
+  .page-thumb-menu button{color:var(--ink)}
+  .page-thumb-menu button:hover{background:var(--ui-panel-hover)}
+  .color-popup-section,.color-value label{color:var(--ui-muted)}
+  .color-value input,.color-mode{
+    background:var(--ui-control)!important;
+    color:var(--ui-control-ink)!important;
+    border-color:var(--ui-border-strong)!important;
+  }
+  .color-popup-close{color:var(--ink)}
+  .swatch{border-color:var(--ui-border-strong)!important}
+  .option-tool-head strong,.section-title{color:var(--ink)}
+}
+/* Physical paper/card preview must not inherit dark UI colors. */
+.paper,.thumb-paper,.face{color:#191919}
+
+/* Compact desktop widths: keep toolbar on one line instead of wrapping. */
+@media (max-width:1250px) and (min-width:721px){
+  .app-brand > span{display:none}
+  
+  #sheetTitleInput{width:140px!important}
+}
+
+/* Smartphone layout */
+@media (max-width:720px){
+  html,body{min-width:0;overflow-x:hidden}
+  body{background:var(--bg)}
+
+  header{
+    position:relative;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:7px;
+    padding:10px;
+    min-height:0;
+    white-space:normal;
+  }
+  .app-brand{
+    grid-column:1 / -1;
+    margin:0 0 2px;
+  }
+  .app-brand strong{font-size:15px}
+  .app-brand > span{display:none}
+
+  header select{
+    width:100%!important;
+    min-width:0!important;
+    height:36px;
+  }
+  #sheetTitleInput{
+    grid-column:1 / -1;
+    width:100%!important;
+    height:38px;
+  }
+  .history-controls{
+    grid-column:1 / 2;
+    align-self:center;
+  }
+  .history-controls .icon-btn{
+    width:38px;
+    height:36px;
+  }
+  #editablePdfBtn,#loadPdfBtn{
+    width:100%;
+    min-height:36px;
+  }
+  #editablePdfBtn{grid-column:1 / 2}
+  #loadPdfBtn{grid-column:2 / 3}
+  
+  .toolbar-spacer{display:none}
+  #printBtn{
+    grid-column:2 / 3;
+    grid-row:4;
+    width:100%;
+    min-height:36px;
+  }
+
+  .layout{
+    display:block;
+    min-height:0;
+  }
+  main{
+    overflow:visible;
+  }
+  .workspace{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    min-height:0;
+  }
+
+  /* Pages become a horizontal filmstrip. */
+  .page-sidebar{
+    order:0;
+    width:100%;
+    border-right:0;
+    border-bottom:1px solid var(--ui-border);
+    padding:8px 10px;
+    overflow:hidden;
+    gap:6px;
+  }
+  .page-sidebar-head{
+    min-height:26px;
+  }
+  .page-actions{
+    display:block;
+  }
+  .page-actions #addPage{
+    width:auto;
+    min-height:30px;
+  }
+  .page-thumbs{
+    flex-direction:row;
+    align-items:stretch;
+    gap:5px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 0 8px;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+  }
+  .page-thumb{
+    flex:0 0 126px;
+    scroll-snap-align:start;
+  }
+  .page-drop-zone{
+    flex:0 0 7px;
+    width:7px;
+    height:auto;
+    min-height:100px;
+  }
+  .page-drop-zone.drag-over{
+    flex-basis:16px;
+    width:16px;
+    height:auto;
+  }
+
+  /* A4 preview scales to phone width. */
+  .canvas-area{
+    order:1;
+    width:100%;
+    overflow:hidden;
+    padding:12px 10px 14px;
+  }
+  .paper-wrap{
+    min-width:0!important;
+    width:100%;
+    display:block;
+    overflow:visible;
+  }
+  .paper{
+    transform-origin:top center;
+  }
+
+  /* Settings move below preview. */
+  aside{
+    width:100%;
+    border-left:0;
+    border-top:1px solid var(--ui-border);
+    padding:10px 12px 14px;
+    overflow:visible;
+    max-height:none;
+  }
+  aside .group{
+    max-width:none;
+  }
+
+  /* Tool rows stay usable on narrow screens. */
+  .tool-strip,.frame-color-row{
+    flex-wrap:wrap;
+  }
+  .tool-main-input{
+    flex:1 1 100%!important;
+  }
+  .tool-textarea{
+    width:100%;
+  }
+  .tool-number-wrap{
+    flex:0 0 auto;
+  }
+  .option-tool-head{
+    min-height:34px;
+  }
+
+  /* Prevent iOS from zooming the page when editing fields. */
+  header input,header select,
+  aside input[type="text"],aside input[type="number"],aside textarea,aside select{
+    font-size:16px;
+  }
+  aside .tool-number,
+  aside .stroke-width-select{
+    font-size:13px;
+  }
+
+  .public-beta-note{
+    margin-top:12px;
+  }
+
+  /* Popup always fits inside a phone viewport. */
+  .color-popup{
+    max-width:calc(100vw - 16px);
+    max-height:calc(100dvh - 16px);
+    overflow:auto;
+  }
+}
+
+@media (max-width:390px){
+  header{grid-template-columns:1fr 1fr}
+  
+  .page-thumb{flex-basis:118px}
+}
+
+@media(max-width:1050px){
+  .layout{grid-template-columns:1fr}
+  aside{border-left:0;border-top:1px solid var(--ui-border)}
+}
+@page{margin:0}
+@media print{
+  header,aside,.page-sidebar,.screen-paper{display:none!important}
+  html,body,main,.layout,.workspace,.canvas-area{margin:0!important;padding:0!important;background:#fff!important;display:block!important;height:auto!important;overflow:visible!important}
+  .print-pages{display:block!important;margin:0!important;padding:0!important}
+  .print-sheet{
+    position:relative!important;
+    display:block!important;
+    background:#fff!important;
+    box-shadow:none!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+    break-inside:avoid-page!important;
+    page-break-inside:avoid!important;
+    break-after:page!important;
+    page-break-after:always!important;
+  }
+  .print-sheet + .print-sheet{
+    break-before:page!important;
+    page-break-before:always!important;
+  }
+  .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+  .face.selected::after{display:none!important}
+  .generic-textbox{border-color:transparent!important;background:transparent!important}
+  .generic-textbox .resize-handle,.frame-text .resize-handle,.snap-guide-x,.snap-guide-y{display:none!important}
+
+}
+
+/* v72 layout / imposition */
+@media (min-width:721px){html,body{height:100%;overflow:hidden}.layout{height:calc(100vh - 58px);min-height:0;overflow:hidden}main,.workspace,.canvas-area,aside{min-height:0}.canvas-area{overflow:auto}aside{height:100%;overflow-y:auto;overflow-x:hidden}}
+.face{border-color:#111;border-width:.28mm}
+.fold.screen-guide{border-color:#55bde9!important;border-style:dashed!important;border-width:.28mm!important;opacity:.95}
+.face.selected[data-side-label]::before{content:attr(data-side-label);position:absolute;z-index:50;left:2mm;top:2mm;padding:1mm 1.6mm;border-radius:2mm;background:rgba(22,140,255,.88);color:#fff;font-size:2.6mm;font-weight:700;line-height:1;pointer-events:none}
+.single-mode .pair{width:var(--pair-w);height:var(--pair-h);display:block}
+.single-mode .face{width:var(--face-w);height:var(--face-h)}
+.copy-face-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}.copy-face-row button,.copy-wide{width:100%}.copy-wide+.copy-wide{margin-top:6px}
+@media print{.fold,.screen-guide,.face.selected[data-side-label]::before{display:none!important}.face{border-color:#111!important}}
+
+@page{size:297mm 210mm;margin:0}
+/* v49: option images */
+.option-image{position:absolute;z-index:32;touch-action:none;user-select:none;transform-origin:center center}
+.option-image img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.option-image.editable{outline:1px dashed rgba(0,180,210,.75);cursor:move}
+.option-image .resize-handle{position:absolute;right:-5px;bottom:-5px;width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid #fff;cursor:nwse-resize}
+.option-image .rotate-handle{position:absolute;left:50%;top:-22px;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--cyan);border:2px solid #fff;cursor:grab}
+.option-image .rotate-handle:after{content:"";position:absolute;left:50%;top:10px;width:1px;height:10px;background:var(--cyan)}
+.option-image-editor{margin-top:7px;padding:8px;border:1px solid var(--ui-line);border-radius:7px;background:var(--ui-panel-2)}
+.option-image-editor-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.option-image-editor img{width:42px;height:42px;object-fit:contain;border:1px solid var(--ui-line);border-radius:5px;background:#fff}
+.option-image-row{display:flex;align-items:center;gap:8px}
+.option-image-angle{width:72px}
+
+/* v50: phone editing shows one card pair instead of shrinking the whole A4 sheet. */
+.mobile-card-preview{display:none}
+@media(max-width:720px){
+  .page-sidebar{display:none!important}
+  .canvas-area{
+    padding:10px 10px 14px;
+    overflow:visible;
+  }
+  .screen-paper{display:none!important}
+  .mobile-card-preview{
+    display:block;
+    width:100%;
+    max-width:560px;
+    margin:0 auto;
+  }
+  .mobile-card-nav{
+    display:grid;
+    grid-template-columns:42px 1fr 42px;
+    align-items:center;
+    gap:8px;
+    margin:0 0 10px;
+  }
+  .mobile-card-nav strong{
+    text-align:center;
+    font-size:12px;
+  }
+  .mobile-card-nav button{
+    min-width:42px;
+    height:34px;
+    padding:0;
+  }
+  .mobile-card-pair{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+  }
+  .mobile-card-pair .face{
+    box-sizing:border-box;
+    width:auto!important;
+    height:auto!important;
+    cursor:pointer;
+    flex:0 1 auto;
+    aspect-ratio:var(--mobile-card-ratio);
+    box-shadow:0 4px 16px rgba(0,0,0,.12);
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:calc((100vw - 36px)/2)!important;
+    max-width:245px;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    flex-direction:column;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 20px),520px)!important;
+  }
+  .mobile-face-labels{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:6px;
+    color:var(--ui-muted);
+    font-size:10px;
+    text-align:center;
+  }
+  .mobile-face-labels.stacked{
+    display:none;
+  }
+  .mobile-card-pair .face.selected::after{
+    border-width:3px;
+  }
+}
+
+/* v51 smartphone workspace.
+   Everything here is scoped to <=720px so the desktop A4 editor remains unchanged. */
+@media(max-width:720px){
+  html,body{
+    height:100%;
+    overflow:hidden!important;
+  }
+  body{
+    min-height:100dvh;
+  }
+
+  /* Keep the application header compact and fixed in the phone viewport. */
+  header{
+    position:relative;
+    z-index:40;
+    max-height:112px;
+    overflow:auto;
+  }
+
+  .workspace{
+    height:calc(100dvh - 112px);
+    min-height:0;
+    overflow:hidden;
+    display:block!important;
+  }
+  .center{
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    display:flex!important;
+    flex-direction:column;
+  }
+  .canvas-area{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden!important;
+    padding:8px 10px 68px!important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+
+  /* Phone toolbar stays reachable without page scrolling. */
+  .mobile-quick-bar{
+    order:2;
+    position:fixed;
+    z-index:65;
+    left:0;
+    right:0;
+    bottom:0;
+    height:58px;
+    padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+    background:var(--ui-panel);
+    border-top:1px solid var(--ui-border);
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:7px;
+  }
+  .mobile-quick-bar button{
+    min-width:0;
+    height:42px;
+    padding:0 8px;
+    font-size:12px;
+  }
+
+  .mobile-card-preview{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex!important;
+    flex-direction:column;
+    justify-content:flex-start;
+    overflow:hidden;
+  }
+  .mobile-card-nav{
+    flex:0 0 auto;
+    margin-bottom:6px!important;
+  }
+  .mobile-card-pair{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  /* Fit both faces into the available viewport instead of making the page scroll. */
+  .mobile-card-pair.mobile-portrait-card{
+    align-items:flex-start;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 36px)/2), calc((100dvh - 245px) * .50))!important;
+    max-width:245px;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    justify-content:flex-start;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 20px), calc((100dvh - 260px) * 1.05))!important;
+    max-height:calc((100dvh - 260px)/2);
+  }
+  .mobile-face-labels{
+    flex:0 0 auto;
+  }
+
+  /* Existing right controls become an app-like bottom sheet.
+     Only the sheet scrolls; the card preview stays visible behind it. */
+  aside{
+    display:block!important;
+    position:fixed!important;
+    z-index:60;
+    left:0;
+    right:0;
+    bottom:58px;
+    top:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    height:min(58dvh,520px);
+    max-height:calc(100dvh - 150px);
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:12px 12px 22px!important;
+    background:var(--ui-panel);
+    border:1px solid var(--ui-border);
+    border-left:0;
+    border-right:0;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -10px 28px rgba(0,0,0,.18);
+    transform:translateY(calc(100% + 70px));
+    transition:transform .2s ease;
+    visibility:hidden;
+  }
+  body.mobile-editor-open aside{
+    transform:translateY(0);
+    visibility:visible;
+  }
+
+  /* Keep legacy page/sidebar and A4 preview out of the phone workspace. */
+  .page-sidebar,.screen-paper{
+    display:none!important;
+  }
+}
+@media(min-width:721px){
+  .mobile-quick-bar{display:none!important}
+}
+
+/* v52: repair smartphone bottom sheet target and simplify viewport sizing. */
+@media(max-width:720px){
+  .layout,main,.workspace,.center,.canvas-area{
+    min-width:0!important;
+  }
+  main{
+    height:calc(100dvh - 112px)!important;
+    overflow:hidden!important;
+  }
+  .workspace{
+    height:100%!important;
+  }
+  .canvas-area{
+    height:100%!important;
+    box-sizing:border-box;
+    touch-action:manipulation;
+  }
+  .mobile-card-preview{
+    width:100%;
+    height:100%;
+    box-sizing:border-box;
+    padding-bottom:2px;
+    pointer-events:auto;
+  }
+  .mobile-card-pair{
+    pointer-events:auto;
+  }
+  .mobile-card-pair .face{
+    pointer-events:auto;
+    touch-action:none;
+  }
+  aside{
+    box-sizing:border-box;
+  }
+  body.mobile-editor-open aside{
+    pointer-events:auto;
+  }
+}
+
+/* v53 — compact phone workspace. Desktop remains governed by the original styles. */
+@media(max-width:720px){
+  :root{--mobile-dock-h:62px}
+
+  html,body{height:100%;overflow:hidden!important}
+  body{min-height:100dvh;background:var(--ui-bg)}
+
+  /* Phone header: preserve identity, remove desktop clutter from the working viewport. */
+  header{
+    height:52px!important;
+    min-height:52px!important;
+    max-height:52px!important;
+    padding:7px 10px!important;
+    overflow:hidden!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    flex-wrap:nowrap!important;
+  }
+  header .app-brand{flex:1 1 auto;min-width:0;white-space:nowrap}
+  header .app-brand .brand-en{display:none!important}
+  
+  header .app-brand .beta-badge{transform:scale(.86)}
+  header > *:not(.app-brand){display:none!important}
+
+  main,.workspace{
+    height:calc(100dvh - 52px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .center{height:100%!important;min-height:0!important;overflow:hidden!important}
+  .canvas-area{
+    height:100%!important;
+    min-height:0!important;
+    padding:8px 10px calc(var(--mobile-dock-h) + 8px)!important;
+    overflow:hidden!important;
+  }
+
+  /* Card navigation is always visible and compact. */
+  .mobile-card-preview{height:100%!important;min-height:0!important}
+  .mobile-card-nav{
+    height:38px!important;
+    min-height:38px!important;
+    margin:0 0 8px!important;
+    grid-template-columns:38px 1fr 38px!important;
+  }
+  .mobile-card-nav button{height:36px!important;min-width:36px!important;border-radius:9px!important}
+  .mobile-card-nav strong{font-size:12px!important}
+
+  .mobile-card-pair{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    gap:8px!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 34px)/2), 245px)!important;
+    max-height:calc(100dvh - 180px)!important;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    flex-direction:column!important;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 22px),500px)!important;
+    max-height:calc((100dvh - 190px)/2)!important;
+  }
+
+  /* Five-tool dock: app-like and thumb reachable. */
+  .mobile-quick-bar{
+    position:fixed!important;
+    z-index:80!important;
+    left:0!important;right:0!important;bottom:0!important;
+    height:var(--mobile-dock-h)!important;
+    box-sizing:content-box!important;
+    padding:5px 6px env(safe-area-inset-bottom)!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,1fr)!important;
+    gap:2px!important;
+    background:color-mix(in srgb,var(--ui-panel) 96%,transparent)!important;
+    border-top:1px solid var(--ui-border)!important;
+    box-shadow:0 -5px 18px rgba(0,0,0,.10)!important;
+  }
+  .mobile-quick-bar button{
+    height:52px!important;
+    min-width:0!important;
+    padding:4px 2px!important;
+    border:0!important;
+    background:transparent!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:2px!important;
+    font-size:10px!important;
+    border-radius:9px!important;
+  }
+  .mobile-quick-bar button:active{background:var(--ui-panel-2)!important}
+  .mq-icon{font-size:18px;line-height:19px;font-weight:700}
+
+  /* Settings become a half-height tray. Preview remains visible above it. */
+  aside{
+    display:block!important;
+    position:fixed!important;
+    z-index:75!important;
+    left:0!important;right:0!important;
+    bottom:calc(var(--mobile-dock-h) + env(safe-area-inset-bottom))!important;
+    top:auto!important;
+    width:100%!important;
+    height:44dvh!important;
+    max-height:390px!important;
+    min-height:220px!important;
+    box-sizing:border-box!important;
+    padding:30px 12px 18px!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    border-radius:16px 16px 0 0!important;
+    border:1px solid var(--ui-border)!important;
+    border-bottom:0!important;
+    background:var(--ui-panel)!important;
+    box-shadow:0 -8px 28px rgba(0,0,0,.20)!important;
+    transform:translateY(calc(100% + var(--mobile-dock-h) + 30px))!important;
+    visibility:hidden!important;
+    transition:transform .18s ease,visibility 0s linear .18s!important;
+  }
+  body.mobile-editor-open aside{
+    transform:translateY(0)!important;
+    visibility:visible!important;
+    transition:transform .18s ease!important;
+  }
+  .mobile-tray-close{
+    display:block!important;
+    position:sticky!important;
+    z-index:5!important;
+    top:-25px!important;
+    margin:-25px 0 4px auto!important;
+    width:32px!important;height:32px!important;
+    padding:0!important;
+    border-radius:50%!important;
+    font-size:22px!important;
+    line-height:28px!important;
+    background:var(--ui-panel-2)!important;
+  }
+  .mobile-section-hit{scroll-margin-top:34px}
+
+  .page-sidebar,.screen-paper{display:none!important}
+}
+@media(min-width:721px){
+  .mobile-tray-close{display:none!important}
+}
+
+/* v54 — deterministic mobile controls. Desktop remains untouched. */
+@media(max-width:720px){
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+    font-weight:700!important;
+  }
+
+  /* The settings tray is a viewport, not a scrollable sheet.
+     Buttons jump directly to a category; tapping the active category closes it. */
+  aside{
+    height:36dvh!important;
+    min-height:190px!important;
+    max-height:310px!important;
+    overflow:hidden!important;
+    overscroll-behavior:none!important;
+    touch-action:manipulation!important;
+    padding-top:32px!important;
+  }
+  aside > *{
+    scroll-margin-top:32px;
+  }
+  body.mobile-editor-open .mobile-card-preview{
+    padding-bottom:min(36dvh,310px);
+    box-sizing:border-box;
+  }
+
+  /* Make the dock the only mobile navigation target; no accidental page scroll. */
+  .mobile-quick-bar{
+    touch-action:manipulation!important;
+  }
+  .mobile-quick-bar button{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation!important;
+  }
+}
+
+/* v55 — independent phone tool windows; the preview never reflows when a panel opens. */
+@media(max-width:720px){
+  /* Retire the reused desktop aside completely on phone. */
+  aside{display:none!important}
+
+  /* Card preview keeps exactly the same geometry whether a tool window is open or closed. */
+  body.mobile-editor-open .mobile-card-preview,
+  .mobile-card-preview{padding-bottom:0!important}
+
+  .mobile-tool-panel{
+    display:none;
+    position:fixed;
+    z-index:76;
+    left:8px;
+    right:8px;
+    bottom:calc(68px + env(safe-area-inset-bottom));
+    height:250px;
+    max-height:38dvh;
+    box-sizing:border-box;
+    background:var(--ui-panel);
+    border:1px solid var(--ui-border);
+    border-radius:14px;
+    box-shadow:0 10px 32px rgba(0,0,0,.28);
+    overflow:hidden;
+  }
+  .mobile-tool-panel.open{display:flex;flex-direction:column}
+  .mobile-panel-head{
+    height:42px;
+    flex:0 0 42px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 8px 0 14px;
+    border-bottom:1px solid var(--ui-border);
+  }
+  .mobile-panel-close{
+    width:32px;height:32px;padding:0!important;
+    border:0!important;background:transparent!important;
+    font-size:22px!important;
+  }
+  .mobile-panel-body{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:10px 12px 14px;
+  }
+  .mobile-more-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    align-content:start;
+  }
+  .mobile-more-grid button{
+    min-height:70px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+  }
+  .mobile-more-grid small{font-size:10px;opacity:.7}
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+    font-weight:700!important;
+  }
+}
+@media(min-width:721px){
+  .mobile-tool-panel{display:none!important}
+}
+
+/* v56 — phone UX polish + repaired actions. Desktop styles are untouched. */
+@media(max-width:720px){
+  .mobile-card-nav{
+    position:relative;
+    z-index:2;
+    margin-bottom:10px!important;
+  }
+  .mobile-count-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1px;
+    line-height:1.15;
+  }
+  .mobile-count-wrap strong{font-size:12px!important}
+  .mobile-count-wrap span{font-size:9px;color:var(--ui-muted)}
+
+  /* Keep the card pair directly under navigation. No large dead area. */
+  .mobile-card-pair{
+    flex:0 0 auto!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    margin-top:0!important;
+  }
+  .mobile-card-pair.mobile-portrait-card .face{
+    width:min(calc((100vw - 34px)/2),210px)!important;
+    max-height:none!important;
+  }
+  .mobile-card-pair.mobile-landscape-card{
+    align-items:center!important;
+    justify-content:flex-start!important;
+  }
+  .mobile-card-pair.mobile-landscape-card .face{
+    width:min(calc(100vw - 28px),430px)!important;
+    max-height:none!important;
+  }
+  .mobile-face-labels{
+    margin-top:5px!important;
+  }
+
+  /* Tool windows are compact overlays. Opening them never resizes or moves the cards. */
+  .mobile-tool-panel{
+    height:228px!important;
+    max-height:34dvh!important;
+    left:10px!important;
+    right:10px!important;
+    bottom:calc(68px + env(safe-area-inset-bottom))!important;
+    border-radius:16px!important;
+  }
+  .mobile-panel-head{
+    height:40px!important;
+    flex-basis:40px!important;
+  }
+  .mobile-panel-body{
+    padding:9px 12px 12px!important;
+  }
+
+  .mobile-more-grid{
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:6px!important;
+  }
+  .mobile-more-grid button{
+    min-height:66px!important;
+    padding:6px 2px!important;
+  }
+
+  /* Make the bottom dock read as navigation rather than five ordinary buttons. */
+  .mobile-quick-bar{
+    height:58px!important;
+    padding-top:3px!important;
+  }
+  .mobile-quick-bar button{
+    height:50px!important;
+    border-radius:10px!important;
+  }
+  .mobile-quick-bar button.active{
+    background:var(--ui-panel-2)!important;
+  }
+}
+
+.stroke-width-control{max-width:100%;overflow:visible}.stroke-width-select{width:76px!important}.stroke-align-select{width:78px;height:28px;border:0;border-left:1px solid var(--ui-border);border-radius:0;background:transparent;color:var(--ui-control-ink);padding:3px 22px 3px 8px;font-size:11px;flex:0 0 78px}
+.color-hue{-webkit-appearance:none;appearance:none;height:14px;border-radius:7px;border:1px solid var(--ui-border);background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);padding:0}.color-hue::-webkit-slider-runnable-track{height:12px;background:transparent}.color-hue::-moz-range-track{height:12px;background:transparent}.color-hue::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-2px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #555;background:transparent}.color-hue::-moz-range-thumb{width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #555;background:transparent}
+.color-value input{appearance:textfield;-moz-appearance:textfield;box-shadow:none!important;background:var(--ui-control)!important;border:1px solid var(--ui-border)!important;border-radius:4px!important}.color-value input::-webkit-inner-spin-button,.color-value input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.color-bottom-row{display:flex;gap:7px;align-items:center;margin-top:8px}.color-bottom-row .color-none-btn{width:46%;margin:0!important;min-height:30px}.hex-wrap{width:54%;display:flex;align-items:center;gap:5px}.hex-wrap input{width:100%!important;height:30px;box-shadow:none!important;border:1px solid var(--ui-border)!important;border-radius:5px!important;background:var(--ui-control)!important;padding:4px 7px!important;text-transform:uppercase}
+.shape-add-row{display:flex;gap:4px}.shape-add-row .mini{min-width:31px;font-size:16px}.option-shape{position:absolute;z-index:31;touch-action:none;user-select:none}.option-shape svg{width:100%;height:100%;overflow:visible;pointer-events:none}.option-shape.editable{outline:1px dashed rgba(0,180,210,.75);cursor:move}.option-shape .resize-handle{position:absolute;right:-5px;bottom:-5px;width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid #fff}.shape-editor{margin-top:7px;padding:8px;border:1px solid var(--ui-line);border-radius:7px;background:var(--ui-panel-2)}.shape-editor-head,.shape-editor-row{display:flex;align-items:center;gap:6px}.shape-editor-head{justify-content:space-between;margin-bottom:6px}.shape-editor-row{flex-wrap:wrap}.shape-editor .stroke-align-select{border:1px solid var(--ui-border);border-radius:5px}
+
+/* v69: controls in the same row share a common height and never clip their labels. */
+.tool-strip,.frame-color-row,.shape-editor-row,.color-bottom-row{align-items:center}
+.stroke-width-select,.stroke-align-select{box-sizing:border-box!important;height:34px!important;min-height:34px!important;line-height:1.2!important;font-size:11px!important;white-space:nowrap!important}
+.stroke-width-select{width:84px!important;min-width:84px!important;flex:0 0 84px!important;padding:5px 24px 5px 9px!important}
+.stroke-align-select{width:88px!important;min-width:88px!important;flex:0 0 88px!important;padding:5px 25px 5px 10px!important}
+.tool-color,.tool-color input,.shape-add-row .mini{box-sizing:border-box}
+.shape-add-row{align-items:center;flex-wrap:wrap}
+.shape-add-row .mini{width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;padding:0!important;display:inline-flex;align-items:center;justify-content:center;line-height:1!important}
+.color-popup-row{align-items:center!important}
+.color-preview,.color-mode,.color-values input{box-sizing:border-box;min-height:34px!important;height:34px!important}
+.color-bottom-row{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:7px!important}
+.color-bottom-row .color-none-btn,.hex-wrap,.hex-wrap input{box-sizing:border-box;width:100%!important;height:34px!important;min-height:34px!important;margin:0!important}
+.hex-wrap{display:block!important}.hex-wrap input{padding:5px 9px!important;font-size:11px!important}
+.shape-editor-row>label{min-height:34px;display:inline-flex;align-items:center;gap:5px}
+.shape-editor-row .shape-points{box-sizing:border-box;height:34px!important;min-height:34px!important}
+.option-shape{aspect-ratio:1 / 1}
+.option-shape svg{display:block;width:100%;height:100%;aspect-ratio:1 / 1}
+@media(max-width:720px){.stroke-width-select,.stroke-align-select{font-size:13px!important}.stroke-align-select{width:96px!important;min-width:96px!important;flex-basis:96px!important}}
+
+/* v70 UI grammar: same function = same appearance. */
+/* Stroke width + alignment are two equal-height controls; never clip or overflow. */
+.stroke-width-control{
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  height:34px!important;display:inline-flex!important;align-items:stretch!important;
+  overflow:visible!important;border:0!important;background:transparent!important;
+  border-radius:0!important;box-shadow:none!important;gap:6px!important;
+}
+.stroke-width-control .stroke-width-icon{display:none!important}
+.stroke-width-select,.stroke-align-select{
+  box-sizing:border-box!important;height:34px!important;min-height:34px!important;
+  border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;color:var(--ui-control-ink)!important;
+  box-shadow:none!important;line-height:1.2!important;white-space:nowrap!important;
+  flex:0 0 auto!important;
+}
+.stroke-width-select{width:88px!important;min-width:88px!important;padding:5px 25px 5px 10px!important}
+.stroke-align-select{width:96px!important;min-width:96px!important;padding:5px 28px 5px 11px!important}
+/* Fill/stroke color controls always use the same square-chip grammar. */
+.tool-color{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important}
+.tool-color .color-trigger{
+  box-sizing:border-box!important;width:34px!important;height:34px!important;min-width:34px!important;
+  padding:4px!important;border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;box-shadow:none!important;
+}
+.tool-color .color-trigger-fill-icon,.tool-color .color-trigger-stroke-icon{box-sizing:border-box!important;width:24px!important;height:24px!important}
+/* Editor inputs are flat: no inset/embossed treatment. */
+.shape-editor input[type="text"],.shape-editor input[type="number"],.shape-editor select,
+.frame-editor input[type="text"],.frame-editor input[type="number"]{
+  box-shadow:none!important;text-shadow:none!important;
+}
+.shape-editor .shape-points{
+  appearance:textfield!important;-moz-appearance:textfield!important;
+  border:1px solid var(--ui-border-strong)!important;border-radius:6px!important;
+  background:var(--ui-control)!important;color:var(--ui-control-ink)!important;
+  padding:5px 8px!important;box-shadow:none!important;
+}
+.shape-editor .shape-points::-webkit-inner-spin-button,.shape-editor .shape-points::-webkit-outer-spin-button{
+  -webkit-appearance:none!important;margin:0!important;
+}
+/* Rows may wrap instead of crushing controls. */
+.tool-strip,.frame-color-row,.shape-editor-row{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important}
+.shape-editor-row>*{flex-shrink:0!important}
+/* Shape add buttons and shape canvas are square. */
+.shape-add-row .mini{box-sizing:border-box!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;aspect-ratio:1/1!important;box-shadow:none!important}
+.option-shape{aspect-ratio:1/1!important}
+.option-shape svg{width:100%!important;height:100%!important;aspect-ratio:1/1!important}
+@media(max-width:720px){
+  .stroke-width-select{width:92px!important;min-width:92px!important}
+  .stroke-align-select{width:102px!important;min-width:102px!important}
+}
+
+/* v76: printing always uses the prepared imposition sheets, never the editor/mobile UI. */
+@media print{
+  html,body{margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important;background:#fff!important}
+  body>header{display:none!important}
+  .layout{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  .layout>aside{display:none!important}
+  main{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  main>.workspace{display:none!important}
+  #printPages.print-pages{display:block!important;margin:0!important;padding:0!important;width:auto!important;height:auto!important;overflow:visible!important}
+  #printPages .print-sheet{display:block!important;margin:0!important;padding:0!important;box-shadow:none!important;overflow:hidden!important;break-after:page!important;page-break-after:always!important}
+  #printPages .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+  #printPages .fold,#printPages .screen-guide,#printPages [data-side-label]::before{display:none!important}
+  #printPages .mobile-quick-bar,#printPages .mobile-card-nav,#printPages .mobile-face-labels,#printPages .mobile-tool-panel{display:none!important}
+}
+
+/* v77 UI/UX normalization: same concepts, same visual grammar. */
+.face-copy-tools{margin-top:12px;padding-top:10px;border-top:1px solid var(--ui-border)}
+
+.option-tool-head{min-height:34px;align-items:center}
+.option-add-button{width:34px!important;min-width:34px!important;height:34px!important;padding:0!important;font-size:17px!important;line-height:1!important}
+.option-section .option-subtool{margin-top:12px}
+/* Phone keeps one physical card in focus, but uses the same cut/fold grammar as desktop. */
+@media(max-width:720px){
+  header #paperSize{display:block!important;grid-column:2/3;grid-row:2;width:100%!important}
+  header .history-controls{grid-column:1/2;grid-row:2}
+  header #paperOrientation{grid-column:3/4;grid-row:2}
+  header #cardSize{grid-column:1/3;grid-row:3}
+  header #impositionMode{display:block!important;grid-column:3/4;grid-row:3;width:100%!important}
+  header #sheetTitleInput{grid-column:1/-1;grid-row:4;width:100%!important}
+  header #editablePdfBtn{grid-row:5}
+  header #loadPdfBtn{grid-row:5}
+  header #printBtn{grid-row:5}
+  .mobile-card-pair{position:relative;gap:0!important;padding:0!important;background:#fff;box-sizing:border-box;border:.28mm solid #111;overflow:visible}
+  .mobile-card-pair .face{box-shadow:none!important;border:0!important}
+  .mobile-card-pair:not(.single-mode)::after{content:"";position:absolute;z-index:46;pointer-events:none}
+  .mobile-card-pair.mobile-portrait-card:not(.single-mode)::after{left:50%;top:0;bottom:0;border-left:.28mm dashed #62c9f2;transform:translateX(-.14mm)}
+  .mobile-card-pair.mobile-landscape-card:not(.single-mode)::after{left:0;right:0;top:50%;border-top:.28mm dashed #62c9f2;transform:translateY(-.14mm)}
+  .mobile-card-pair.mobile-portrait-card{width:fit-content!important;max-width:100%;margin:0 auto}
+  .mobile-card-pair.mobile-landscape-card{width:fit-content!important;max-width:100%;margin:0 auto}
+  .mobile-face-labels{margin-top:7px}
+}
+@media print{.mobile-card-pair::after{display:none!important}}
+
+.generic-textbox.editable,.frame-text.editable{outline:0}
+.generic-textbox.editable{border-color:#5b5b5b}
+.frame-text.editable .resize-handle,.generic-textbox.editable .resize-handle{z-index:5}
+
+.tool-block .stroke-color + .fill-color{margin-left:4px}
+.frame-color-row .stroke-color,.frame-color-row .fill-color{margin-right:2px}
+
+.stroke-width-select{
+  width:82px;
+  height:28px;
+  border:0;
+  border-left:1px solid var(--ui-border);
+  border-radius:0;
+  background:transparent;
+  color:var(--ui-control-ink);
+  padding:3px 18px 3px 5px;
+  font-size:10px;
+}
+
+header .history-controls{margin-right:5px}
+header #sheetTitleInput{margin-right:12px}
+.pdf-reedit-toast{
+ position:fixed;right:16px;top:70px;z-index:10050;max-width:310px;
+ padding:9px 12px;border:1px solid var(--ui-border);border-radius:8px;
+ background:var(--ui-panel);color:var(--ink);box-shadow:0 7px 24px rgba(0,0,0,.16);
+ font-size:11px;line-height:1.45;opacity:0;transform:translateY(-5px);
+ pointer-events:none;transition:opacity .18s,transform .18s
+}
+.pdf-reedit-toast.show{opacity:1;transform:none}
+@media(max-width:720px){
+ header{grid-template-columns:auto minmax(0,1fr) minmax(0,1fr)}
+ header .history-controls{grid-column:1/2;grid-row:1;margin:0}
+ header #paperOrientation{grid-column:2/3;grid-row:1}
+ header #cardSize{grid-column:3/4;grid-row:1}
+ header #sheetTitleInput{grid-column:1/-1;grid-row:2;margin:0}
+ header .toolbar-spacer{display:none}
+ header #editablePdfBtn{grid-column:1/2;grid-row:3}
+ header #loadPdfBtn{grid-column:2/3;grid-row:3}
+ header #printBtn{grid-column:3/4;grid-row:3}
+ .pdf-reedit-toast{left:10px;right:10px;top:10px;max-width:none}
+}
+
+header .app-brand{
+  flex:0 0 auto;
+  margin-right:4px;
+}
+header .app-brand strong{
+  font-size:15px;
+  white-space:nowrap;
+}
+header #sheetTitleInput{
+  width:clamp(170px,18vw,240px)!important;
+  margin-right:0;
+}
+header .header-action-gap{
+  flex:1 1 28px;
+  min-width:28px;
+}
+@media(max-width:1250px) and (min-width:721px){
+  header .app-brand{display:flex}
+  header .app-brand strong{font-size:13px}
+  header #sheetTitleInput{width:clamp(140px,15vw,190px)!important}
+  header .header-action-gap{min-width:14px}
+}
+@media(max-width:720px){
+  header .app-brand{
+    display:flex;
+    grid-column:1/-1;
+    grid-row:1;
+    margin:0 0 2px;
+  }
+  header .app-brand strong{font-size:15px}
+  header .history-controls{grid-row:2}
+  header #paperOrientation{grid-row:2}
+  header #cardSize{grid-row:2}
+  header #sheetTitleInput{
+    grid-column:1/-1;
+    grid-row:3;
+    width:100%!important;
+  }
+  header .header-action-gap{display:none}
+  header #editablePdfBtn{grid-row:4}
+  header #loadPdfBtn{grid-row:4}
+  header #printBtn{grid-row:4}
+}
+
+header .app-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-right:5px;
+}
+header .app-brand strong{
+  font-size:15px;
+  font-weight:700;
+  white-space:nowrap;
+}
+header .beta-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:21px;
+  height:21px;
+  border:1px solid var(--ui-border-strong);
+  border-radius:5px;
+  font-size:12px;
+  font-weight:700;
+  line-height:1;
+  color:var(--ui-muted);
+}
+header .brand-en{
+  font-size:11px;
+  color:var(--ui-muted);
+  white-space:nowrap;
+}
+header #sheetTitleInput{
+  width:clamp(250px,27vw,360px)!important;
+}
+@media(max-width:1250px) and (min-width:721px){
+  header .app-brand strong{font-size:13px}
+  header .brand-en{display:none}
+  header #sheetTitleInput{width:clamp(200px,22vw,285px)!important}
+}
+@media(max-width:720px){
+  header .app-brand{
+    display:flex;
+    grid-column:1/-1;
+    gap:7px;
+  }
+  header .app-brand strong{font-size:15px}
+  header .brand-en{display:inline}
+  header #sheetTitleInput{width:100%!important}
+}
+
+.page-thumb-menu-btn{
+  top:1px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+.page-thumb-menu-btn{padding-bottom:4px}
+
+header .app-brand > .beta-badge{display:inline-flex}
+@media(max-width:1250px){
+  header .app-brand > .beta-badge{display:inline-flex}
+}
+
+/* Thumbnail menu: optically align with the page number. */
+.page-thumb-menu-btn{
+  transform:translateY(-5px);
+}
+
+.textbox-editor,.frame-editor{
+  margin-top:7px;
+  padding:8px;
+  border:1px solid var(--ui-border);
+  border-radius:7px;
+  background:var(--ui-panel-2);
+}
+.textbox-editor-head,.frame-editor-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:25px;
+  margin-bottom:6px;
+}
+.textbox-editor-head strong,.frame-editor-head strong{
+  font-size:10px;
+  font-weight:700;
+}
+.textbox-editor .checkline,.frame-editor .checkline{
+  font-size:10px;
+}
+
+/* v74: cut lines are drawn inside each physical piece so sheet-edge lines never clip. */
+.face{border:0!important}
+.pair::after{content:"";position:absolute;inset:0;box-sizing:border-box;border:.28mm solid #111;pointer-events:none;z-index:45}
+/* Duplex: the centre is a fold guide only, never a cut line. */
+.duplex-mode .fold.screen-guide{border-color:#62c9f2!important;border-style:dashed!important;border-width:.28mm!important;opacity:1;z-index:46}
+@media print{
+  .pair::after{border-color:#111!important}
+  .duplex-mode .fold,.duplex-mode .screen-guide{display:none!important}
+}
+
+/* 改良テスト版:ヘッダーが狭い画面幅ではみ出さないよう、タイトル欄を縮められるように */
+@media(min-width:721px){
+  header #sheetTitleInput{flex:0 1 auto;min-width:90px}
+  header .header-action-gap{min-width:10px}
+  /* 用紙は縮めず、縮小表示(transform)だけで画面に合わせる */
+  .paper-wrap > .paper{flex:none}
+}
+@media(max-width:1250px) and (min-width:721px){
+  header #cardSize{max-width:150px}
+}
+@media(max-width:1100px) and (min-width:721px){
+  header{gap:5px;overflow-x:auto;scrollbar-width:none}
+  header::-webkit-scrollbar{display:none}
+  header #cardSize{max-width:118px}
+  header #sheetTitleInput{min-width:56px}
+  header .app-brand strong{font-size:12px!important}
+  header button{padding-left:8px!important;padding-right:8px!important}
+}
+@media(max-width:1440px) and (min-width:721px){
+  header .brand-en{display:none}
+}
+/* 通知(自動保存の復元など) */
+.app-toast{
+  position:fixed;left:12px;right:12px;bottom:22px;margin:0 auto;width:max-content;z-index:10060;display:flex;align-items:center;gap:10px;
+  max-width:min(560px,calc(100vw - 24px));box-sizing:border-box;padding:10px 10px 10px 14px;border-radius:10px;
+  background:#1f1f1f;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:13px;line-height:1.45;
+  opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s,transform .18s
+}
+.app-toast.show{opacity:1;transform:none;pointer-events:auto}
+.app-toast span{min-width:0}
+.app-toast span{flex:1 1 auto}
+.app-toast button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;min-height:0}
+.app-toast .app-toast-close{border:0;padding:2px 6px;font-size:16px;opacity:.7}
+@media(max-width:720px){.app-toast{bottom:calc(84px + env(safe-area-inset-bottom))}}
+@media print{.app-toast{display:none!important}}
+/* 印刷:シートの中央寄せをflexで行う(transformで中央寄せすると、Chromeで2ページ以上の印刷が崩れる) */
+@media print{
+  #printPages .print-sheet{display:flex!important;align-items:center!important;justify-content:center!important}
+  #printPages .print-sheet>.sheet-grid{position:relative!important;left:auto!important;top:auto!important;transform:none!important;flex:none!important}
+  #printPages .print-sheet>.sheet-title{position:absolute!important}
+  #printPages .print-sheet.landscape-paper>.sheet-title{left:10mm;top:6mm}
+  #printPages .print-sheet.portrait-paper>.sheet-title{left:8mm;top:8mm}
+}
+
+/* ---- 改良テスト版:プレースホルダー(未入力の仮表示)は印刷・PDFに出さない ---- */
+.print-sheet .ph{visibility:hidden!important}
+.ph{color:#b5b5b5}
+/* 面付けの情報 */
+.fit-note{margin:10px auto 0;font-size:11px;line-height:1.5;color:var(--ui-muted);text-align:center}
+.file-line-label{font-size:11px;color:var(--ui-muted);white-space:nowrap}
+@media print{.fit-note{display:none!important}}
+@media(max-width:720px){.screen-fit-note{display:none}}
+
+/* ---- 改良テスト版:スマホ ---- */
+@media(max-width:720px){
+  /* ヘッダー:ロゴと取り消し/やり直しだけ(用紙の設定は「用紙」パネルへ) */
+  header{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+  header .history-controls{display:flex!important;gap:6px;margin:0!important}
+  header .history-controls .icon-btn{width:40px!important;height:36px!important;min-width:40px!important;font-size:18px!important}
+  /* パネルはカードのすぐ下から使う */
+  .mobile-tool-panel{top:var(--m-panel-top,auto)!important;bottom:var(--m-panel-bottom,calc(68px + env(safe-area-inset-bottom)))!important;height:auto!important;max-height:none!important}
+  /* パネルの見出しと中の見出しの重複をなくす */
+  .mobile-panel-body .section-title{display:none!important}
+  /* iPhoneで入力時に画面が拡大されないよう16px以上に */
+  .mobile-panel-body input:not([type=checkbox]):not([type=radio]):not([type=range]),.mobile-panel-body select,.mobile-panel-body textarea{font-size:16px!important}
+  .mobile-panel-body .stroke-width-select{width:96px!important;flex:0 0 96px!important}
+  .mobile-panel-body .stroke-align-select{width:88px!important;flex:0 0 88px!important}
+  .mobile-panel-body .stroke-width-control{flex-wrap:nowrap}
+  /* オモテ/ウラのラベルを読みやすく */
+  .mobile-face-labels{font-size:12px!important;color:var(--ui-muted)}
+  .mobile-card-pair{touch-action:pan-y}
+  .mobile-card-nav button.is-add{font-size:22px!important;font-weight:700}
+  /* 用紙パネル */
+  .m-form{display:flex;flex-direction:column;gap:10px}
+  .m-field{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:8px}
+  .m-label{font-size:12px;font-weight:700;color:var(--ui-muted)}
+  .m-slot{display:flex;gap:6px;min-width:0}
+  .m-slot > *{flex:1 1 auto;min-width:0;width:100%!important;max-width:none!important;margin:0!important;display:block!important;height:40px}
+  .m-slot-pair > *{flex:1 1 0}
+  .m-form .fit-note{margin:2px 0 0;text-align:left}
+  /* メニュー */
+  .m-group-title{font-size:11px;font-weight:700;color:var(--ui-muted);margin:2px 2px 6px}
+  .m-group-title:not(:first-child){margin-top:14px}
+  .mobile-more-panel .mobile-more-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+  .mobile-more-panel .mobile-more-grid button{min-height:46px!important;padding:6px 8px!important;font-size:14px!important;display:flex;align-items:center;justify-content:center}
+  /* テンプレート以外の面のときの案内 */
+  .m-hint{padding:4px 2px 10px;font-size:13px;line-height:1.6}
+  .m-hint p{margin:0 0 10px}
+  .m-hint button{width:100%;min-height:44px;font-size:14px}
+}
+
+/* ファイル選択ボタン */
+.file-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;pointer-events:none}
+.file-btn{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:3px 12px;border:1px solid var(--ui-border);border-radius:6px;background:var(--ui-control);color:var(--ui-control-ink);font-size:12px;cursor:pointer;white-space:nowrap;margin:0!important}
+.file-btn:hover{background:var(--ui-panel-hover)}
+.file-native:focus-visible + .file-btn{outline:2px solid var(--cyan);outline-offset:1px}
+@media(max-width:720px){
+  .file-btn{min-height:40px;font-size:14px;padding:6px 14px}
+}
+/* 背の低いスマホでは、パネルを開いている間だけカードを小さくする */
+@media(max-width:720px) and (max-height:760px){
+  body.m-panel-open .mobile-card-pair.mobile-portrait-card .face{width:min(calc((100vw - 34px)/2.8),130px)!important}
+  body.m-panel-open .mobile-card-pair.mobile-landscape-card .face{width:min(calc(100vw - 150px),260px)!important}
+  body.m-panel-open .mobile-card-pair{justify-content:center!important}
+}
+
+/* スマホのプレビュー:実寸で描いて縮小 */
+.m-face-inner{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:#fff;color:#191919}
+.m-face-inner .resize-handle{width:22px!important;height:22px!important;right:-9px!important;bottom:-9px!important}
+.m-face-inner .rotate-handle{transform:translateX(-50%) scale(1.6)}
+
+/* パンダキネマのアイコン(サイトのトップへ) */
+.pk-home{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-right:-2px;flex:none;border-radius:6px;color:var(--ink)}
+.pk-home i{display:block;width:26px;height:26px;background:currentColor;-webkit-mask:url("data:image/png;base64,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") center/contain no-repeat;mask:url("data:image/png;base64,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") center/contain no-repeat}
+.pk-home:hover{background:var(--ui-panel-hover)}
+.pk-home:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+header .app-brand{align-items:center}
+/* コピーライト */
+.app-copyright{margin:14px 0 2px;font-size:10px;letter-spacing:.03em;color:var(--ui-muted);text-align:right}
+@media print{.app-copyright,.pk-home{display:none!important}}
+/* 面の種類のラベル */
+.face-type-label{display:block;margin:8px 0 3px;font-size:11px;color:var(--ui-muted)}
+@media(max-width:720px){
+  .mobile-more-panel .app-copyright{margin-top:18px;text-align:center}
+  /* テンプレートを使っている面:無地に戻す */
+  .m-template-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:var(--ui-panel-soft);font-size:12px;color:var(--ui-muted)}
+  .m-template-bar.hidden{display:none!important}
+  .m-template-bar button{flex:none;min-height:36px;padding:4px 12px;font-size:13px}
+  /* ページ全体の表示 */
+  .m-nav-center{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0}
+  .mobile-card-nav .m-view-toggle{height:30px!important;min-width:0!important;padding:0 12px!important;border-radius:15px!important;font-size:12px!important;white-space:nowrap;border:1px solid var(--ui-border);background:var(--ui-control)}
+  .mobile-card-nav .m-view-toggle[aria-pressed="true"]{background:var(--ink);color:var(--ui-panel);border-color:var(--ink)}
+  body.m-sheet-mode .mobile-card-pair,body.m-sheet-mode .mobile-face-labels{display:none!important}
+  .m-sheet-view{display:flex;justify-content:center;touch-action:pan-y}
+  .m-sheet-view[hidden]{display:none!important}
+  .m-sheet-frame{position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.14);background:#fff}
+  .m-sheet{position:absolute;left:0;top:0;transform-origin:0 0;background:#fff;color:#191919}
+  .m-sheet .sheet-title{position:absolute}
+  .m-sheet.landscape-paper .sheet-title{left:10mm;top:6mm}
+  .m-sheet.portrait-paper .sheet-title{left:8mm;top:8mm}
+  .m-sheet .ph{visibility:hidden}
+  .m-sheet .pair{cursor:pointer}
+  .m-sheet .pair.m-current{outline:2.2mm solid var(--cyan);outline-offset:-1.1mm;z-index:5}
+}
