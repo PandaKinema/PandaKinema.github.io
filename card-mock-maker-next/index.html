@@ -1690,6 +1690,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
 <body>
 <header>
   <div class="app-brand">
+    <a class="pk-home" href="/" title="パンダキネマのサイトへ" aria-label="パンダキネマのサイトへ"><i aria-hidden="true"></i></a>
     <strong>カードモックツクール</strong>
     <span class="beta-badge">β</span>
     <span class="brand-en">Card Mock Maker</span>
@@ -1756,6 +1757,10 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
       <div id="mobileTemplatePanel" class="mobile-tool-panel" aria-hidden="true">
         <div class="mobile-panel-head"><strong>テンプレート</strong><button type="button" class="mobile-panel-close">×</button></div>
         <div id="mobileTemplatePanelBody" class="mobile-panel-body">
+          <div id="mobileTemplateBar" class="m-template-bar hidden">
+            <span>この面はテンプレートを使っています</span>
+            <button id="mobileMakePlain" type="button">無地に戻す</button>
+          </div>
           <div id="mobileTemplateHint" class="m-hint hidden">
             <p>この面は「<span id="mobileFaceTypeName">無地</span>」です。テンプレートを使うときは、面の種類を「テンプレート」にします。</p>
             <button id="mobileMakeTemplate" type="button">この面をテンプレートにする</button>
@@ -1792,16 +1797,21 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
             <button id="mobileDupPage" type="button">ページを複製</button>
             <button id="mobileDeletePage" type="button">ページを削除</button>
           </div>
+          <div class="app-copyright">©2026 Panda Kinema</div>
         </div>
       </div>
 
       <section id="mobileCardPreview" class="mobile-card-preview" aria-label="スマホ用カードプレビュー">
         <div class="mobile-card-nav">
           <button id="mobilePrevCard" type="button" aria-label="前のカード">←</button>
-          <div class="mobile-count-wrap"><strong id="mobileCardCount">カード 1 / 4</strong><span id="mobilePageCount">ページ 1 / 1</span></div>
+          <div class="m-nav-center">
+            <div class="mobile-count-wrap"><strong id="mobileCardCount">カード 1 / 4</strong><span id="mobilePageCount">ページ 1 / 1</span></div>
+            <button id="mobileViewToggle" class="m-view-toggle" type="button" aria-pressed="false">ページ全体</button>
+          </div>
           <button id="mobileNextCard" type="button" aria-label="次のカード">→</button>
         </div>
         <div id="mobileCardPair" class="mobile-card-pair"></div>
+        <div id="mobileSheetView" class="m-sheet-view" hidden></div>
         <div class="mobile-face-labels"><span>オモテ</span><span>ウラ</span></div>
       </section>
     </div>
@@ -1815,6 +1825,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <div class="section-title">面</div>
     <div id="selectedLabel" class="hint selected-face-label">カード1（ページ内1）・オモテ</div>
 
+    <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
       <option value="plain">無地</option>
       <option value="template">テンプレート</option>
@@ -2035,6 +2046,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #c8c8c8;
     <strong>β版</strong>
     <span>画像や編集データはブラウザ内で処理され、サーバーへ送信されません。</span>
   </div>
+  <div class="app-copyright">©2026 Panda Kinema</div>
 
 </aside>
 </div>
@@ -2727,6 +2739,7 @@ function closeMobilePanel(){
   mobilePanelOpen="";
   document.body.classList.remove("m-panel-open");
   rescaleMobileFaces();
+  if(mobileSheetMode)renderMobileSheet();
   document.querySelectorAll(".mobile-tool-panel").forEach(p=>{
     p.classList.remove("open");
     p.setAttribute("aria-hidden","true");
@@ -2736,6 +2749,7 @@ function closeMobilePanel(){
 
 function openMobilePanel(name,buttonId){
   if(!mobileUIActive())return;
+  if(mobileSheetMode&&["Face","Template","Options"].includes(name))setMobileSheetMode(false);
   if(mobilePanelOpen===name){ closeMobilePanel(); return; }
   closeMobilePanel();
   const p=el("mobile"+name+"Panel");
@@ -2743,6 +2757,7 @@ function openMobilePanel(name,buttonId){
   mobilePanelOpen=name;
   document.body.classList.add("m-panel-open");
   rescaleMobileFaces();
+  if(mobileSheetMode)renderMobileSheet();
   placeMobilePanel();
   p.classList.add("open");
   p.setAttribute("aria-hidden","false");
@@ -2780,7 +2795,8 @@ window.matchMedia("(max-width:720px)").addEventListener("change",()=>{cloneContr
 function placeMobilePanel(){
   if(!mobileUIActive())return;
   const labels=document.querySelector(".mobile-face-labels"),pair=el("mobileCardPair"),bar=el("mobileQuickBar");
-  const ref=(labels&&labels.offsetParent)?labels:pair;if(!ref||!bar)return;
+  const sheetFrame=mobileSheetMode?document.querySelector("#mobileSheetView .m-sheet-frame"):null;
+  const ref=sheetFrame||((labels&&labels.offsetParent)?labels:pair);if(!ref||!bar)return;
   const barTop=bar.getBoundingClientRect().top;
   const top=Math.max(56,Math.min(ref.getBoundingClientRect().bottom+8,barTop-8-220));
   document.documentElement.style.setProperty("--m-panel-top",Math.round(top)+"px");
@@ -2812,6 +2828,42 @@ function goToMobileCard(delta){
   renderSheet();
   syncControls();
 }
+/* ---- スマホ:ページ全体の表示(1枚ずつの表示と切り替え) ---- */
+let mobileSheetMode=false;
+function setMobileSheetMode(on){
+  mobileSheetMode=!!on;
+  document.body.classList.toggle("m-sheet-mode",mobileSheetMode);
+  const t=el("mobileViewToggle");if(t){t.textContent=mobileSheetMode?"1枚ずつ":"ページ全体";t.setAttribute("aria-pressed",String(mobileSheetMode))}
+  el("mobileSheetView").hidden=!mobileSheetMode;
+  renderMobileCardPreview();
+  if(mobilePanelOpen)placeMobilePanel();
+}
+function renderMobileSheet(){
+  const host=el("mobileSheetView");if(!host||!mobileSheetMode)return;
+  host.innerHTML="";
+  const p=paperMM(),W=p.w*MM_TO_PX,H=p.h*MM_TO_PX;
+  const frame=document.createElement("div");frame.className="m-sheet-frame";
+  const sheet=document.createElement("div");sheet.className="m-sheet "+(el("paperOrientation").value==="landscape"?"landscape-paper":"portrait-paper");
+  sheet.style.width=W+"px";sheet.style.height=H+"px";
+  const title=document.createElement("div");title.className="sheet-title";title.textContent=sheetTitle;sheet.appendChild(title);
+  const sg=document.createElement("div");buildSheet(sg,currentFaces(),false);sheet.appendChild(sg);
+  frame.appendChild(sheet);host.appendChild(frame);
+  const cur=isSingleMode()?selected:Math.floor(selected/2);
+  sg.querySelectorAll(".pair").forEach((pair,i)=>{
+    if(i===cur)pair.classList.add("m-current");
+    pair.addEventListener("click",()=>{selected=isSingleMode()?i:i*2+(selected%2);setMobileSheetMode(false);syncControls()});
+  });
+  // 幅いっぱい、ただし下のバー(パネルを開いていればパネル)にかからない大きさに
+  const bar=el("mobileQuickBar"),top=host.getBoundingClientRect().top;
+  const limit=(bar?bar.getBoundingClientRect().top:innerHeight)-(mobilePanelOpen?228:12);
+  const k=Math.max(.1,Math.min(host.clientWidth/W,(limit-top)/H));
+  sheet.style.transform=`scale(${k})`;frame.style.width=W*k+"px";frame.style.height=H*k+"px";
+}
+function goToMobilePage(delta){
+  if(delta>0&&currentPage>=pages.length-1){if(pages.length<25){const keep=selected;el("addPage").click();selected=keep;renderSheet();syncControls()}return}
+  currentPage=clamp(currentPage+delta,0,pages.length-1);renderSheet();syncControls();
+}
+
 function rescaleMobileFaces(){
   document.querySelectorAll("#mobileCardPair .m-face-inner").forEach(n=>{const w=n.parentElement.clientWidth;if(w)n.style.transform=`scale(${w/parseFloat(n.style.width)})`});
 }
@@ -2825,6 +2877,19 @@ function renderMobileCardPreview(){
   rescaleMobileFaces();
   const absolute=isSingleMode()?currentPage*cardsPerPage()+selected:mobileCardIndex();
   const total=pages.length*cardsPerPage();
+  if(mobileSheetMode){
+    renderMobileSheet();
+    const n=cardsPerPage(),first=currentPage*n+1;
+    el("mobileCardCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
+    if(el("mobilePageCount"))el("mobilePageCount").textContent=`カード ${first}〜${first+n-1}`;
+    el("mobilePrevCard").disabled=currentPage<=0;
+    const atEnd=currentPage>=pages.length-1,nb=el("mobileNextCard");
+    nb.disabled=atEnd&&pages.length>=25;nb.textContent=atEnd?"＋":"→";nb.setAttribute("aria-label",atEnd?"ページを追加":"次のページ");nb.classList.toggle("is-add",atEnd);
+    el("mobilePrevCard").setAttribute("aria-label","前のページ");
+    if(mobilePanelOpen)requestAnimationFrame(placeMobilePanel);
+    return;
+  }
+  el("mobilePrevCard").setAttribute("aria-label","前のカード");
   el("mobileCardCount").textContent=`カード ${absolute+1} / ${total}`;if(el("mobilePageCount"))el("mobilePageCount").textContent=`ページ ${currentPage+1} / ${pages.length}`;
   el("mobilePrevCard").disabled=absolute<=0;
   const atEnd=absolute>=total-1,nb=el("mobileNextCard");
@@ -3096,6 +3161,7 @@ function syncControls(){
   el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
   el("imageControls").classList.toggle("hidden",d.type!=="image");
   el("mobileTemplateHint")?.classList.toggle("hidden",templ);
+  el("mobileTemplateBar")?.classList.toggle("hidden",!templ);
   if(el("mobileFaceTypeName"))el("mobileFaceTypeName").textContent=d.type==="image"?"画像":"無地";
 
 
@@ -3181,6 +3247,7 @@ el("mobileOptionsJump")?.addEventListener("click",()=>{cloneControlsForMobile();
 el("mobileMore")?.addEventListener("click",()=>openMobilePanel("More","mobileMore"));
 el("mobilePaperTab")?.addEventListener("click",()=>{cloneControlsForMobile();updateFit();openMobilePanel("Paper","mobilePaperTab")});
 el("mobileMakeTemplate")?.addEventListener("click",()=>{const f=el("faceType");f.value="template";f.dispatchEvent(new Event("change",{bubbles:true}))});
+el("mobileMakePlain")?.addEventListener("click",()=>{const f=el("faceType");f.value="plain";f.dispatchEvent(new Event("change",{bubbles:true}))});
 ["mobilePdfSave","mobilePdfLoad","mobilePrint","mobileDupPage","mobileDeletePage"].forEach(id=>el(id)?.addEventListener("click",closeMobilePanel));
 el("mobileUndo")?.addEventListener("click",()=>el("undoBtn")?.click());
 el("mobileRedo")?.addEventListener("click",()=>el("redoBtn")?.click());
@@ -3189,14 +3256,17 @@ el("mobilePdfLoad")?.addEventListener("click",()=>el("loadPdfBtn")?.click());
 el("mobilePrint")?.addEventListener("click",()=>el("printBtn")?.click());
 el("mobileDupPage")?.addEventListener("click",()=>el("dupPage")?.click());
 el("mobileDeletePage")?.addEventListener("click",()=>el("deletePage")?.click());
-el("mobilePrevCard")?.addEventListener("click",()=>goToMobileCard(-1));
-(()=>{const pair=el("mobileCardPair");if(!pair)return;let sx=null,sy=0;
-  pair.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"||e.target.closest(".editable"))return;sx=e.clientX;sy=e.clientY});
-  pair.addEventListener("pointerup",e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;
-    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0&&mobileCardIndex()>=pages.length*cardsPerPage()-1)return;goToMobileCard(dx<0?1:-1)}});
-  pair.addEventListener("pointercancel",()=>{sx=null});
-})();
-el("mobileNextCard")?.addEventListener("click",()=>goToMobileCard(1));
+el("mobilePrevCard")?.addEventListener("click",()=>mobileSheetMode?goToMobilePage(-1):goToMobileCard(-1));
+el("mobileViewToggle")?.addEventListener("click",()=>{if(!mobileSheetMode&&["Face","Template","Options"].includes(mobilePanelOpen))closeMobilePanel();setMobileSheetMode(!mobileSheetMode)});
+[el("mobileCardPair"),el("mobileSheetView")].forEach(area=>{if(!area)return;let sx=null,sy=0;
+  area.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"||e.target.closest(".editable"))return;sx=e.clientX;sy=e.clientY});
+  area.addEventListener("pointerup",e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;
+    if(!(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5))return;
+    if(mobileSheetMode){if(dx<0&&currentPage>=pages.length-1)return;goToMobilePage(dx<0?1:-1)}
+    else{if(dx<0&&mobileCardIndex()>=pages.length*cardsPerPage()-1)return;goToMobileCard(dx<0?1:-1)}});
+  area.addEventListener("pointercancel",()=>{sx=null});
+});
+el("mobileNextCard")?.addEventListener("click",()=>mobileSheetMode?goToMobilePage(1):goToMobileCard(1));
 el("paperSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
 el("paperOrientation").addEventListener("change",()=>{cardOrientation=(el("paperOrientation").value==="landscape")?(isSingleMode()?"landscape":"portrait"):(isSingleMode()?"portrait":"landscape");resizePagesForLayout();setPaper();syncControls()});
 el("cardSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
@@ -4030,7 +4100,9 @@ header .app-brand > .beta-badge{display:inline-flex}
   header{gap:5px;overflow-x:auto;scrollbar-width:none}
   header::-webkit-scrollbar{display:none}
   header #cardSize{max-width:118px}
-  header #sheetTitleInput{min-width:70px}
+  header #sheetTitleInput{min-width:56px}
+  header .pk-home{margin-right:4px}
+  header .app-brand strong{font-size:12px!important}
   header button{padding-left:8px!important;padding-right:8px!important}
 }
 @media(max-width:1440px) and (min-width:721px){
@@ -4125,4 +4197,38 @@ header .app-brand > .beta-badge{display:inline-flex}
 .m-face-inner{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:#fff;color:#191919}
 .m-face-inner .resize-handle{width:22px!important;height:22px!important;right:-9px!important;bottom:-9px!important}
 .m-face-inner .rotate-handle{transform:translateX(-50%) scale(1.6)}
+
+/* パンダキネマのアイコン(サイトのトップへ) */
+.pk-home{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-right:8px;flex:none;border-radius:6px;color:var(--ink)}
+.pk-home i{display:block;width:24px;height:24px;background:currentColor;-webkit-mask:url("data:image/png;base64,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") center/contain no-repeat;mask:url("data:image/png;base64,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") center/contain no-repeat}
+.pk-home:hover{background:var(--ui-panel-hover)}
+.pk-home:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+header .app-brand{align-items:center}
+/* コピーライト */
+.app-copyright{margin:14px 0 2px;font-size:10px;letter-spacing:.03em;color:var(--ui-muted);text-align:right}
+@media print{.app-copyright,.pk-home{display:none!important}}
+/* 面の種類のラベル */
+.face-type-label{display:block;margin:8px 0 3px;font-size:11px;color:var(--ui-muted)}
+@media(max-width:720px){
+  .mobile-more-panel .app-copyright{margin-top:18px;text-align:center}
+  /* テンプレートを使っている面:無地に戻す */
+  .m-template-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:var(--ui-panel-soft);font-size:12px;color:var(--ui-muted)}
+  .m-template-bar.hidden{display:none!important}
+  .m-template-bar button{flex:none;min-height:36px;padding:4px 12px;font-size:13px}
+  /* ページ全体の表示 */
+  .m-nav-center{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0}
+  .mobile-card-nav .m-view-toggle{height:30px!important;min-width:0!important;padding:0 12px!important;border-radius:15px!important;font-size:12px!important;white-space:nowrap;border:1px solid var(--ui-border);background:var(--ui-control)}
+  .mobile-card-nav .m-view-toggle[aria-pressed="true"]{background:var(--ink);color:var(--ui-panel);border-color:var(--ink)}
+  body.m-sheet-mode .mobile-card-pair,body.m-sheet-mode .mobile-face-labels{display:none!important}
+  .m-sheet-view{display:flex;justify-content:center;touch-action:pan-y}
+  .m-sheet-view[hidden]{display:none!important}
+  .m-sheet-frame{position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.14);background:#fff}
+  .m-sheet{position:absolute;left:0;top:0;transform-origin:0 0;background:#fff;color:#191919}
+  .m-sheet .sheet-title{position:absolute}
+  .m-sheet.landscape-paper .sheet-title{left:10mm;top:6mm}
+  .m-sheet.portrait-paper .sheet-title{left:8mm;top:8mm}
+  .m-sheet .ph{visibility:hidden}
+  .m-sheet .pair{cursor:pointer}
+  .m-sheet .pair.m-current{outline:2.2mm solid var(--cyan);outline-offset:-1.1mm;z-index:5}
+}
 </style>
