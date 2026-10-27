@@ -1,0 +1,88 @@
+  /* モコチャカだけで使う見た目
+     説明書と同じく、番号のある章(1〜6)はそれぞれ白い座布団に。見出しの左にモコの形の番号 */
+  .chap-head{display:flex;align-items:center;gap:10px}
+  .chap-head h2{align-self:center}
+  .snum{width:48px;height:45px}
+  .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  /* 目次:長い章名(5.トークン獲得によるボーナス)は2行になってもきれいに */
+  .toc a{border-radius:16px}
+
+  /* 準備の(1)〜(5) */
+  ol.paren{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:p}
+  ol.paren>li{counter-increment:p;position:relative;padding-left:2.2em;line-height:1.85}
+  ol.paren>li::before{content:"(" counter(p) ")";position:absolute;left:0;top:0;font-weight:800}
+  ol.paren .sub{display:block}
+  /* 箇条書き(説明書の「・」) */
+  ul.dot{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+  ul.dot>li{position:relative;padding-left:1.1em;line-height:1.85}
+  ul.dot>li::before{content:"・";position:absolute;left:0}
+
+  /* 説明書のピンクの囲み(ルール):左に動物のアイコン */
+  .crule{display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:12px;background:color-mix(in srgb,var(--accent) 38%,#fff)}
+  .crule .ic{display:flex;flex:none;gap:2px}
+  .crule .ic img{width:40px}
+  @media (max-width:560px){ .crule{flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px} .crule .ic img{width:32px} }
+  .crule ul{flex:1;min-width:0;font-weight:700}
+  /* 例:左にカード3枚、右に説明 */
+  .ex{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 18px;padding-left:4px}
+  .ex .row{gap:6px}
+  .ex .card{--cw:56px}
+  .ex .card img{border-radius:5px}
+  .ex p{font-size:15px;line-height:1.75}
+  .ex p b{color:var(--hl);font-weight:800}
+  .ex .note{display:block;margin-top:4px;font-size:13px;line-height:1.6}
+  @media (max-width:560px){ .ex{grid-template-columns:minmax(0,1fr);justify-items:center;padding-left:0} .ex p{justify-self:stretch} }
+  .notes{display:flex;flex-direction:column;gap:2px;font-size:13.5px;font-weight:700;line-height:1.7}
+  .notes em{font-weight:800}
+
+  /* 場の図:トークンを中心に3つの山(大きさは em でまとめて変える) */
+  .fwrap{--fs:11px;font-size:var(--fs);line-height:1.3}
+  @media (max-width:560px){ .fwrap{--fs:8.4px} }
+  .fwrap.sm{--fs:8.6px}
+  @media (max-width:560px){ .fwrap.sm{--fs:8.4px} }
+  .fld{position:relative;flex:none;width:calc(21 * var(--fs));height:calc(19.5 * var(--fs))}
+  .fld .pc{position:absolute;left:calc((var(--x) - 2) * var(--fs));top:calc((var(--y) - 2.8) * var(--fs));width:calc(4 * var(--fs));rotate:var(--r,0deg);z-index:var(--z,1)}
+  .fld .pc img{width:100%;border-radius:.35em;box-shadow:0 .15em .45em rgba(0,0,0,.28)}
+  .fld .pc.sel img{outline:.3em solid var(--hl);outline-offset:.15em}
+  .fld .pc.slot{height:5.6em;border:.2em dashed var(--ink-soft);border-radius:.4em;background:var(--paper)}
+  .fld .tok{position:absolute;left:calc((var(--x) - 2.4) * var(--fs));top:calc((var(--y) - 2.3) * var(--fs));width:calc(4.8 * var(--fs));z-index:3;filter:drop-shadow(0 .2em .3em rgba(0,0,0,.25))}
+  .fld .t{position:absolute;left:calc(var(--x) * var(--fs));top:calc(var(--y) * var(--fs));translate:-50% -50%;font-size:1.35em;font-weight:900;white-space:nowrap;z-index:5}
+  .fld .t.hl{color:var(--hl);font-size:1.25em;line-height:1.35;text-align:center}
+  .fhand{display:flex;flex-direction:column;align-items:center;gap:.5em}
+  .fhand .dk{position:relative;width:4.6em;height:6.2em}
+  .fhand .dk img{position:absolute;width:4em;border-radius:.35em;box-shadow:0 .15em .4em rgba(0,0,0,.25)}
+  .fhand .dk img:nth-child(1){left:0;top:0}
+  .fhand .dk img:nth-child(2){left:.3em;top:.3em}
+  .fhand .dk img:nth-child(3){left:.6em;top:.6em}
+  .fhand b{font-size:1.35em;font-weight:900}
+  .farrow{flex:none;width:0;height:0;border-left:1.4em solid var(--hl);border-block:1em solid transparent}
+  /* 準備の例(4人):四隅に手札、真ん中に場 */
+  .setup4{display:grid;grid-template-columns:auto auto auto;grid-template-rows:auto auto;align-items:center;justify-items:center;gap:1em 1.2em}
+  .setup4 .fld{grid-column:2;grid-row:1 / span 2}
+  .frow{display:flex;align-items:center;justify-content:center;gap:1em}
+  /* 図1・図2 */
+  .figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .figs .fig .viz{min-height:100%;align-items:center}
+  .fig2{position:relative;width:12em;height:12em}
+  .fig2 .dk{position:absolute;left:1.5em;top:4.2em;width:6em;height:7.4em}
+  .fig2 .dk img{position:absolute;width:5.4em;border-radius:.4em;box-shadow:0 .15em .4em rgba(0,0,0,.25)}
+  .fig2 .dk img:nth-child(1){left:.6em;top:.6em}
+  .fig2 .dk img:nth-child(2){left:.3em;top:.3em}
+  .fig2 .dk .lift{left:0;top:0;transform-origin:50% 0;transform:perspective(30em) rotateX(55deg) translateY(-1.4em)}
+  .fig2 svg{position:absolute;left:5.4em;top:.6em;width:6.4em;height:6em;color:var(--hl)}
+  @media (max-width:620px){ .figs{grid-template-columns:minmax(0,1fr)} }
+  /* ボーナスの図 */
+  .bonus .pick{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 14px;border:2.5px dashed var(--hl);border-radius:14px}
+  .bonus .tokhand{display:flex;align-items:center;gap:8px}
+  .bonus .tokhand img.tk{width:46px}
+  .bonus .fhand{font-size:10px}
+  .bonus .arrow.l{transform:rotate(180deg);border-left-color:var(--hl);opacity:1}
+  @media (max-width:560px){ .bonus{flex-direction:column-reverse;align-items:center} .bonus .arrow.l{transform:rotate(90deg)} }
+
+  .cnote{font-size:13px;line-height:1.6}
+  .manual-thumb img{width:150px;border-radius:4px;box-shadow:0 1px 5px rgba(0,0,0,.25)}
+  .things{--tw:76px}
+  .warn{--warn-bg:color-mix(in srgb,var(--accent) 38%,#fff)}
+  .namecards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:440px;margin-inline:auto}
+  .namecards .grp b{font-size:18px;font-weight:900}
+  .namecards .card{--cw:100%;width:100%;max-width:90px}

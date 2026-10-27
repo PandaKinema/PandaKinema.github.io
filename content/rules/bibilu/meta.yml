@@ -1,0 +1,45 @@
+# ビビルの塔 遊び方説明書(WEB版)
+key: bibilu
+title_ja: ビビルの塔
+title_en: The Tower of BIBILU
+logo: logo/b_logo_navy.png
+logo_alt: ビビルの塔 THE TOWER OF BIBILU
+players_ja: 2〜4人
+players_en: 2–4
+time_ja: 10〜15分
+time_en: 10–15 min
+age_ja: 6歳から
+age_en: 6+
+printed_ja: 2026年10月発行の説明書に対応
+printed_en: Matches the printed rulebook (October 2026)
+booth: https://pandakinema.booth.pm/items/8795134
+catch_ja: ビビっている場合じゃない
+catch_en: This Is No Time to BIBILU!
+story_ja: 遠い未来、どこかの惑星に、トゥーパという生命体がいました。彼らにとって、塔を建てることは何よりも大事です。高い塔ほど立派ですが、高くしすぎると神の天罰がくだり、たちまち崩れてしまいます。あなたもトゥーパとなり、ときには慎重に、ときには思いきって、誰よりも立派な塔を完成させましょう!
+story_en: "In the distant future, creatures called the Túpa lived on a faraway planet. Nothing matters more to them than building towers: the taller, the better—but build too high, and divine punishment will bring it crashing down. Play as a Túpa, balancing caution and courage to build the finest tower of all!"
+youtube: ""
+fonts: [Abril+Fatface]
+theme:
+  main: "#153e53"
+  accent: "#fff5d7"
+  ink: "#153e53"          # 白い座布団の上の文字
+  hl: "#d4242b"           # 強調(説明書の赤字)
+  head: "#153e53"         # 見出し・番号・図の枠
+  on-head: "#fff5d7"
+  cover: "#fff5d7"        # 表紙の地
+  on-cover: "#153e53"
+  body: "#153e53"         # 本文の地
+  on-body: "#fff5d7"
+  tex: "url({{img:page/b_tex_c.png}})"
+  tex-size: 525px 175px
+  band: "url({{img:page/b_band.png}})"
+  band-h: 24px
+  step-icon: "url({{img:page/b_tupa.png}})"
+  num: '"Abril Fatface","Didot","Bodoni 72",Georgia,serif'   # カードの数字と同じアールデコ調
+  num-y: 54%
+  logo-w: 400px
+  gold: "#f2d756"
+  sky: "#2b9fd9"
+  soft: "#dce2e5"
+nobreak: []
+# 更新履歴は content/pages/bibilu.yml の rules_history(編集画面「作品ページ」)

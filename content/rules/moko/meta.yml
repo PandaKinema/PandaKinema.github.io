@@ -1,0 +1,43 @@
+# モコチャカ 遊び方説明書(WEB版)
+key: moko
+title_ja: モコチャカ
+title_en: Mokochaka
+logo: logo/m_logo_navy.png
+logo_alt: モコチャカ MOKOCHAKA
+players_ja: 2〜4人
+players_en: 2–4
+time_ja: 10〜15分
+time_en: 10–15 min
+age_ja: 6歳から
+age_en: 6+
+printed_ja: 2026年5月発行の説明書に対応
+printed_en: Matches the printed rulebook (May 2026)
+booth: https://pandakinema.booth.pm/items/8311555
+catch_ja: ねむりは競争だ。
+catch_en: Sleep is a race.
+story_ja: あなたたちは眠りの浅瀬でモコを数えていました。正確に数えるほど、よりよい眠りに近づきます。すると「まぜて!」とパカやポメも現れ、数えるのがだんだんややこしくなっていきます。やがて数が揃うと、不思議なアルファ波「モコチャカ」が生まれ、眠りはより深くなります。しかし、それを阻むのがガブです。ガブの妨害をかいくぐり、最も深い眠りにたどり着くのは誰でしょうか。
+story_en: "You were counting Moko in the shallows of sleep. The more accurately you count, the closer you get to a good sleep. Then Paka and Pome show up saying “Let us join!”, and counting gets trickier and trickier. When the numbers line up, a mysterious alpha wave, “Mokochaka,” is born and your sleep grows deeper. But Gabu stands in the way. Who will slip past Gabu and reach the deepest sleep?"
+youtube: ""
+fonts: [Dela+Gothic+One]
+theme:
+  main: "#39278b"
+  accent: "#f19ebc"
+  ink: "#39278b"          # 白い座布団の上の文字(説明書と同じ紺紫)
+  hl: "#d4242b"           # 強調(赤。説明書はピンク寄りの赤)
+  head: "#39278b"         # 見出し・番号・図の枠
+  on-head: "#ffffff"      # 説明書の見出しと同じ白抜き
+  cover: "#f19ebc"        # 表紙の地(説明書の表紙側のピンク)
+  on-cover: "#39278b"
+  body: "#39278b"         # 本文の地
+  on-body: "#f19ebc"
+  tex: "url({{img:page/m_tex_c.png}})"   # 説明書の方眼
+  tex-size: 36px 36px
+  band: "url({{img:page/saku_loop.png}})"
+  band-h: 24px
+  step-icon: "url({{img:page/m_moko_sil.png}})"
+  num: '"Dela Gothic One","Hiragino Sans",sans-serif'   # 遊び方動画と同じ書体
+  num-y: 47%
+  logo-w: 420px
+  soft: "#e1dfee"
+nobreak: [「モコチャカ」, 「チャカモコ」, 「チャカモコチャカ」, 「パカモコ」, 「ポメパカ」, 「モコモコ」, 「パカ」, 「ガブ」, 「コール」, 「パカパカ」, 「ポメポメ」, 「ガブガブ」, アクリルトークン, スタートプレイヤー, 手番, 特殊コール, モコチャカ, チャカモコ, チャカモコチャカ, パカモコ, ポメパカ, モコモコ, パカパカ, ポメポメ, ガブガブ, 保護フィルム, ペナルティ]
+# 更新履歴は content/pages/moko.yml の rules_history(編集画面「作品ページ」)

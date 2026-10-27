@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b2228">
+<title>TRICO! 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="TRICO!の遊び方説明書(WEB版)。内容物、ゲームの目的、ゲームの準備、アピールの流れ、ニコ!、トリコ!、ラウンド・ゲームの終了、更新履歴。日本語と英語を切り替えられます。">
+<meta property="og:title" content="TRICO! 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="TRICO!の遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="https://pandakinema.com/games/trico/rules/">
+<meta property="og:image" content="https://pandakinema.com/img/share/ogp_trico_ticket.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&amp;display=swap">
+<style>
+  /* ===== パンダキネマ 遊び方説明書(WEB版) 共通 =====
+     作品ごとに変えるのは :root の色・書体・アイコンだけ(build.py が meta.yml から差し込む)。
+     紙の説明書と同じ組み:上は表紙(ロゴと物語)、本文に章ごとの白い座布団。強調は赤。
+     背景・帯は作品ページと同じ:表紙=作品ページのSTORYの欄、本文=「どんなゲーム?」の欄、帯は本文の内側(上下)に */
+  :root{
+    --site:#1b2228;        /* サイトの下地 */
+    --bar:#000000;         /* ヘッダー */
+    --paper:#ffffff;       /* 白い座布団 */
+    --red:#d4242b;         /* 説明書の赤字(強調の基本) */
+    --soft:color-mix(in srgb,var(--ink) 10%,transparent);    /* 図の下地(作品ページの --soft で上書き) */
+    --line:color-mix(in srgb,var(--ink) 20%,transparent);
+    --ink-soft:color-mix(in srgb,var(--ink) 72%,transparent);
+    --on-body-soft:color-mix(in srgb,var(--on-body) 14%,transparent);
+    --on-body-line:color-mix(in srgb,var(--on-body) 38%,transparent);
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+    --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+    --bar-h:56px;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar-h) + 64px + env(safe-area-inset-top,0px))}
+  @media (min-width:900px){ html{scroll-padding-top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px))} }
+  body{margin:0;background:var(--site);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar)}
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+  html:not([data-lang="en"]) .en{display:none!important}
+  html[data-lang="en"] .ja{display:none!important}
+  /* 改行:日本語は文節の切れ目(<wbr>)でだけ折り返す。英語は行末をそろえすぎない */
+  .bx{word-break:keep-all;overflow-wrap:anywhere}
+  p,li,dt,dd,h2,h3,figcaption,.lbl{line-break:strict;text-wrap:pretty}
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* ===== ヘッダー(サイト共通) ===== */
+  .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar)}
+  .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:var(--bar-h)}
+  .brand img{height:30px;width:auto}
+  .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);min-width:0;overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font:700 clamp(14px,1.6vw,19px) var(--cond);text-transform:uppercase}
+  .site-nav::-webkit-scrollbar{display:none}
+  .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;text-decoration:none;opacity:.9}
+  .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+  .lang{display:flex;flex:none;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+  .lang button{height:26px;padding:0 9px;border:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:#f3f2ee;color:#000}
+  /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から(サイトのほかのページと同じ) */
+  .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .menu-btn{display:none}
+  @media (max-width:650px){
+    :root{--bar-h:52px}
+    .site-header .bar{position:relative;gap:10px}
+    .brand img{height:26px}
+    .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+    .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+    .menu-btn i{position:relative}
+    .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+    .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+    .navtg:checked~.menu-btn i{background:transparent}
+    .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+    .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+    .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+    .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+    .navtg:checked~.site-nav.site-nav{display:flex}
+    .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+    .site-nav a:first-child{border-top:0}
+    .lang{order:2}
+    .lang button{height:22px;padding:0 7px;font-size:13px}
+  }
+
+  /* ===== レイヤー(作品ページと同じ最大幅、外は下地) ===== */
+  .sheet{max-width:1100px;margin-inline:auto;background:var(--body)}
+
+  /* ===== 表紙(説明書の1面の上と同じ:左にロゴ、右に物語) ===== */
+  .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
+  .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
+  .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
+  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .h1{margin:0;width:min(var(--logo-w,400px),100%)}
+  .h1 img{margin-inline:auto}
+  .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
+  .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0;font-size:15px;font-weight:800}
+  .spec div{display:flex;align-items:baseline;gap:6px}
+  .spec dt{font-size:11px;opacity:.72}
+  .spec dd{margin:0}
+  .cover-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;margin:0;font-size:12.5px;font-weight:700;opacity:.75}
+  .cover-meta a{text-underline-offset:3px}
+  .story{display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent)}
+  .catch{margin:0;font-size:clamp(24px,3.4vw,32px);font-weight:900;line-height:1.25;text-wrap:balance}
+  .story p{margin:0}
+  .story p:not(.catch){font-size:15px;font-weight:700;line-height:1.85}
+  @media (max-width:760px){
+    .cover .inner{grid-template-columns:minmax(0,1fr);padding-block:36px 32px}
+    .story{align-items:center;padding:22px 0 0;border-left:0;border-top:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent);text-align:center}
+  }
+  /* 表紙と本文の境目(作品ごとの帯。なければまっすぐ) */
+  .edge{display:none}
+
+  /* ===== 本文:メインカラーの地(説明書と同じ模様)、左に目次、右に章ごとの白い座布団 ===== */
+  .body{position:relative;background:var(--body) var(--tex,none) center top/var(--tex-size,auto)}
+  /* 帯:作品ページと同じく、色の境目には置かず本文の内側(上下18px)に */
+  .body::before,.body::after{content:"";position:absolute;left:0;right:0;height:var(--band-h,0px);background:var(--band-c,var(--cover));pointer-events:none;
+    -webkit-mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px);mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px)}
+  .body::before{top:18px}
+  .body::after{bottom:18px}
+  .layout{display:grid;grid-template-columns:190px minmax(0,720px);justify-content:center;gap:44px;padding-block:calc(44px + var(--band-space,0px)) calc(64px + var(--band-space,0px))}
+  .toc{position:sticky;top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px));align-self:start;color:var(--on-body)}
+  .toc p{margin:0 0 10px 12px;font:700 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .toc ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+  .toc a{display:block;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;opacity:.82;transition:background .2s,opacity .2s}
+  .toc a:hover{opacity:1;background:var(--on-body-soft)}
+  .toc a.on{opacity:1;background:var(--on-body);color:var(--body)}
+  .toc .sub{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px 10px}
+  .toc .sub a{display:flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;padding:0;border-radius:50%;border:1.5px solid var(--on-body-line);font:var(--num-weight,400) 14px/1 var(--num);font-variant-numeric:lining-nums tabular-nums}
+
+  @media (max-width:899px){
+    .layout{grid-template-columns:minmax(0,1fr);gap:0;padding-block:var(--band-space,0px) calc(48px + var(--band-space,0px))}
+    /* スマホ:横にスライドする目次。並びは画面の端まで続き、端で切れる(余白の内側では切らない) */
+    .toc{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));
+      z-index:20;top:calc(var(--bar-h) + env(safe-area-inset-top,0px));margin-inline:calc(-1 * var(--gl)) calc(-1 * var(--gr));padding:10px 0;background:var(--body);border-bottom:1px solid var(--on-body-soft)}
+    .toc p,.toc .sub{display:none}
+    .toc ol{flex-direction:row;gap:6px;padding-inline:var(--gl) 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-padding-inline:var(--gl) var(--gr);scrollbar-width:none}
+    .toc ol::after{content:"";flex:none;width:calc(var(--gr) - 6px)}   /* 最後の項目のあとにも同じ余白 */
+    .toc li{flex:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{white-space:nowrap;border:1.5px solid var(--on-body-line);padding:6px 13px;font-size:13px}
+    .toc a.on{border-color:var(--on-body)}
+    .content{padding-top:24px}
+  }
+
+  /* ===== 章=白い座布団。見出しはサイト共通の角丸(左の目次と同じ形)。作品が変わっても色だけ差し替え ===== */
+  .content{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .panel{display:flex;flex-direction:column;gap:18px;min-width:0;padding:26px 28px 28px;border-radius:18px;background:var(--paper)}
+  @media (max-width:560px){ .panel{padding:20px 18px 22px;border-radius:14px} }
+  h2{align-self:flex-start;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--head);color:var(--on-head);font-size:clamp(17px,2.2vw,19px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+  /* 章の中の小見出し(説明書の「ニコ忘れ」「特殊カードの時」など) */
+  h4{margin:4px 0 0;font-size:16.5px;font-weight:900;line-height:1.4}
+  h4::before{content:"";display:inline-block;width:6px;height:1em;margin-right:8px;border-radius:2px;background:var(--head);vertical-align:-.12em}
+  .content p{margin:0}
+  /* 行間:本文 1.85/図の中の短い文 1.6 */
+  .prose p,.step>p,.prose li,.step li{line-height:1.85}
+  .prose{display:flex;flex-direction:column;gap:12px}
+  .prose ul,.prose ol,.step ul,.step ol{display:flex;flex-direction:column;gap:4px;margin:0;padding-left:1.4em}
+  em{font-style:normal;font-weight:800;color:var(--hl)}
+
+  /* 動画の枠(長尺の遊び方動画が入る場所) */
+  .screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:8px;background:#000;color:#f3f2ee;overflow:hidden}
+  .screen .soon{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .screen .play{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid rgba(243,242,238,.45)}
+  .screen .play::before{content:"";margin-left:5px;border-left:17px solid rgba(243,242,238,.45);border-block:11px solid transparent}
+  .screen .soon b{font:700 18px/1 var(--cond);letter-spacing:.18em}
+  .screen .soon span{font-size:13px;opacity:.7}
+  .note{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+
+  /* 内容物:ラベル(・○○:○枚)と並べた実物 */
+  .crow{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .crow.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cbox{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .clbl{display:flex;flex-wrap:wrap;font-size:15px;font-weight:800;line-height:1.5}   /* 「・」だけが1行目に残らないように */
+  .clbl::before{content:"・";flex:none}
+  .clbl>span{flex:1 1 0;min-width:0}
+  .clbl small{flex:0 0 100%;margin-top:2px;padding-left:1em;font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .cards{display:grid;grid-template-columns:repeat(var(--cols,10),minmax(0,1fr));gap:6px}
+  .cards img{width:100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .things{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+  .things img{width:var(--tw,46px)}
+  .sheet-icon{display:flex;gap:6px}
+  .sheet-icon span{display:grid;place-items:center;width:40px;height:54px;border-radius:3px;background:var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 14px var(--cond);letter-spacing:.06em}
+  .sheet-icon span:last-child{background:var(--head);color:var(--on-head)}
+  @media (min-width:900px){ .cards{gap:8px} }
+  @media (max-width:560px){ .cards{grid-template-columns:repeat(var(--cols-sm,5),minmax(0,1fr));gap:8px} .crow.two{grid-template-columns:minmax(0,1fr)} }
+
+  /* 人数ごとの表など(説明書の小さな表) */
+  .ptable{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:10px;max-width:calc(var(--cols,2) * 230px);padding:10px;border-radius:14px;background:var(--soft)}
+  .ptable>div{overflow:hidden;border:2px solid var(--head);border-radius:10px;background:var(--paper);text-align:center}
+  .ptable b{display:block;padding:6px;background:var(--head);color:var(--on-head);font-size:15px}
+  .ptable p{padding:10px 8px 12px;font-size:15px;font-weight:800;line-height:1.5}
+  /* 説明書の赤い帯(※注意書き) */
+  .rnote{align-self:flex-start;padding:7px 14px;border-radius:6px;background:var(--hl);color:#fff;font-size:13.5px;font-weight:800;line-height:1.6}
+  .rnote a{text-decoration:none}
+  .rnote a:hover{text-decoration:underline}
+  /* 印刷した説明書の誤りの訂正(その場所に小さく添える。更新履歴には「訂正」の印) */
+  .errata{display:block;margin-top:4px;color:var(--hl);font-size:12px;font-weight:800;line-height:1.5;font-style:normal}
+  /* 枠で囲んだ補足(説明書の「ニコ忘れ」のような囲み) */
+  .box{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px;background:var(--soft)}
+  .box p{line-height:1.8}
+
+  /* ===== ゲームの流れ(1つの座布団の中に手順を並べる) ===== */
+  .flow{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+  .step{display:flex;flex-direction:column;gap:14px;padding-block:24px}
+  .step:first-child{padding-top:4px}
+  .step:last-child{padding-bottom:0}
+  .step + .step{border-top:2px dashed var(--line)}
+  .step-head{display:flex;align-items:center;gap:12px}
+  .snum{position:relative;flex:none;width:44px;height:46px;background:var(--head);-webkit-mask:var(--step-icon) center/contain no-repeat;mask:var(--step-icon) center/contain no-repeat}
+  /* 番号:アイコンの真ん中(作品ごとに --num-y で上下を合わせる) */
+  .snum b{position:absolute;left:0;right:0;top:var(--num-y,50%);translate:0 -50%;color:var(--on-head);font:var(--num-weight,400) 25px/1 var(--num);font-variant-numeric:lining-nums;text-align:center}
+  h3{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+
+  /* ===== 図(説明書の図をカードの画像で組み直したもの) ===== */
+  .viz{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:18px 22px;padding:22px 14px 18px;border-radius:12px;background:var(--soft);overflow-x:auto}
+  .grp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .grp>.lbl,.lbl{font-size:12.5px;font-weight:800;line-height:1.45;text-align:center}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .card{position:relative;display:block;flex:none;width:var(--cw,52px)}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:60px} }
+  .card img{width:100%;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.22)}
+  .card.sel img{outline:3px solid var(--hl);outline-offset:2px}
+  .card.dim img{opacity:.35}
+  .arrow{align-self:center;flex:none;width:0;height:0;border-left:13px solid var(--head);border-block:9px solid transparent;opacity:.85}
+  @media (max-width:560px){ .viz.stack-sm{flex-direction:column;align-items:center} .viz.stack-sm>.arrow{transform:rotate(90deg)} }
+  /* 2つ以上を見くらべる図:点線で区切る */
+  .viz.split{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));align-items:start;gap:0;padding-inline:0}
+  .viz.split>.grp{padding-inline:12px}
+  .viz.split>.grp+.grp{border-left:2px dashed var(--line)}
+  @media (max-width:620px){ .viz.split{grid-template-columns:minmax(0,1fr);gap:18px} .viz.split>.grp+.grp{padding-top:18px;border-left:0;border-top:2px dashed var(--line)} }
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:12px;font-weight:800;white-space:nowrap}
+  .tag.hl{background:var(--hl);color:#fff}
+  .callout{max-width:170px;font-size:12.5px;font-weight:800;line-height:1.6}
+  .callout em{display:block;font-size:15px}
+  .pile{position:relative;width:96px;height:96px}
+  .pile .card{position:absolute;left:24px;top:10px}
+  .deck{position:relative;width:calc(var(--cw,52px) + 12px);height:calc(var(--cw,52px) * 1.4 + 12px)}
+  .deck .card{position:absolute}
+  .deck .card:nth-child(1){left:0;top:0}
+  .deck .card:nth-child(2){left:6px;top:6px}
+  .deck .card:nth-child(3){left:12px;top:12px}
+  .loop{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:13px;font-weight:800}
+  .loop::before{content:"↻";font-size:18px;line-height:1}
+  /* 説明書の図の枠(見出し付き) */
+  .fig{margin:0;overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--paper)}
+  .fig-t{padding:6px 12px;background:var(--head);color:var(--on-head);font-size:13.5px;font-weight:800;text-align:center}
+  .fig .viz{border-radius:0}
+  .fig-txt{max-width:280px;font-size:14px;font-weight:700;line-height:1.6}
+
+  /* よくある質問 */
+  .qa{display:flex;flex-direction:column;gap:14px;margin:0}
+  .qa dt{font-weight:900;line-height:1.6}
+  .qa dd{margin:4px 0 0;padding-left:1.6em;line-height:1.8}
+  .qa dt::before,.qa dd::before{display:inline-block;width:1.6em;margin-left:-1.6em;font-weight:900}
+  .qa dt{padding-left:1.6em}
+  .qa dt::before{content:"Q.";color:var(--hl)}
+  .qa dd::before{content:"A."}
+
+  /* 注意(説明書の注意枠) */
+  .warn{overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--warn-bg,var(--soft))}
+  .warn-t{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 12px;background:var(--head);color:var(--on-head);font-size:16px;font-weight:900}
+  .warn-t svg{flex:none;width:22px;height:20px}
+  .warn ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:14px 18px 16px 34px;font-size:13.5px;font-weight:700;line-height:1.6}
+
+  /* 更新履歴 */
+  .log{display:flex;flex-direction:column;margin:0;padding:0;list-style:none;border-top:1.5px solid var(--line)}
+  .log li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:14px 4px;border-bottom:1.5px solid var(--line);font-size:15px;line-height:1.7}
+  .log time{font:700 18px/1.5 var(--cond);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .log .chg{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:4px;background:var(--hl);color:#fff;font-size:12px;font-weight:800;vertical-align:2px}
+  .legend{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .legend .chg{display:inline-block;padding:0 7px;border-radius:4px;background:var(--hl);color:#fff;font-size:11.5px;font-weight:800}
+
+  /* 作品ページへ */
+  .back{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;padding:13px 26px;border-radius:999px;background:var(--on-body);color:var(--body);font-size:14px;font-weight:800;letter-spacing:.04em;text-decoration:none;transition:translate .15s}
+  .btn:hover{translate:0 -2px}
+  .btn.ghost{background:none;color:var(--on-body);box-shadow:inset 0 0 0 2px var(--on-body)}
+
+  .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));background:var(--bar);color:#9aa3a9;font-size:12px}
+  .site-footer a{color:#f3f2ee;font:700 15px var(--cond);text-decoration:none}
+  .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+  .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media (max-width:650px){ .site-footer{flex-direction:column;gap:8px;text-align:center} }
+
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.toc a{transition:none} }
+
+  /* ===== TRICO! ===== */
+  :root{
+    --main:#664498;
+    --accent:#fdd000;
+    --ink:#664498;
+    --hl:#d4242b;
+    --head:#664498;
+    --on-head:#ffffff;
+    --cover:#fdd000;
+    --on-cover:#664498;
+    --body:#664498;
+    --on-body:#fdd000;
+    --tex:url(../../../img/page/t_tex_c.png?v=38936893);
+    --tex-size:92px 160px;
+    --band:none;
+    --band-h:0px;
+    --step-icon:url(../../../img/page/dia.png?v=c734a84b);
+    --num:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",var(--sans);
+    --num-weight:800;
+    --num-y:42%;
+    --logo-w:360px;
+    --soft:#e8e3f0;
+    --band-space:0px;
+    --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
+  }
+  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、黄色い表紙の三角の帯、ひし形の番号、勝利条件の帯、カードの WIN */
+  b{font-weight:800}
+  .content a b{text-decoration:underline;text-underline-offset:3px}
+
+
+  /* 番号:説明書の宝石(ひし形)。横長なので少し大きめに */
+  .snum{width:52px;height:40px}
+  .snum b{font-size:19px}
+  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く */
+  .tc-head{align-items:flex-start;gap:14px}
+  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;padding-top:7px}
+  .tc-txt p{font-size:15.5px;line-height:1.85}
+  .step{gap:16px}
+
+  /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
+  .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
+  .tc-grid{--cols:6;--cols-sm:6;gap:5px}
+  .tc-items{display:flex;flex-direction:column;gap:14px;padding-top:34px}
+  .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
+  .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
+  .tc-item .clbl{flex:1;min-width:0}
+  .tc-lead{width:70px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-lead.sm{width:58px}
+  .tc-sum{width:52px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-marks{display:flex;gap:4px}
+  .tc-marks img{width:34px}
+  @media (max-width:760px){
+    .tc-contents{grid-template-columns:minmax(0,1fr)}
+    .tc-grid{max-width:340px}
+    .tc-items{padding-top:0}
+    .tc-pic{width:96px}
+    .tc-pic .tc-marks img{width:28px}
+  }
+  @media (max-width:560px){ .tc-head{gap:10px} .snum{width:46px;height:36px} .snum b{font-size:17px} .tc-txt{padding-top:5px} }
+
+  /* アピールの勝利条件:説明書・サマリーと同じ黄色の帯 */
+  .tc-cond{display:flex;flex-direction:column;gap:8px;padding:16px 14px 14px;background:var(--soft)}
+  .tc-row{display:grid;grid-template-columns:7.5em auto 22px minmax(0,1fr);align-items:center;gap:10px;padding:7px 18px;border-radius:999px;background:var(--accent);font-size:14.5px;font-weight:800;line-height:1.4}
+  .tc-row b{font-size:1.15em}
+  html[data-lang="en"] .tc-row{grid-template-columns:12.5em auto 22px minmax(0,1fr)}
+  .chips{display:flex;gap:4px}
+  .chips i{display:block;width:20px;height:27px;border:2px solid var(--main);border-radius:4px;rotate:-8deg}
+  .chips i.p{background:var(--main);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
+  .chips i.y{background:var(--accent);box-shadow:0 0 0 1.5px #fff,0 0 0 3px var(--main)}
+  .chips i.r{background:var(--hl);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
+  .tc-to{width:0;height:0;justify-self:center;border-left:13px solid var(--hl);border-block:9px solid transparent}
+  .tc-r{font-size:15px}
+  .tc-note{padding:2px 6px 0;font-size:13px;line-height:1.6}
+  @media (max-width:560px){
+    .tc-row,html[data-lang="en"] .tc-row{grid-template-columns:auto 1fr;grid-template-areas:"c chips" "r r";gap:6px 10px;padding:10px 16px;border-radius:16px}
+    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end}.tc-to{display:none}.tc-r{grid-area:r}
+    .tc-r::before{content:"→ ";color:var(--hl)}
+  }
+
+  /* 場のカードの WIN(説明書の赤い WIN) */
+  .tc-win-row{padding-top:20px}
+  .tc-win{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;color:var(--hl);font:900 14px/1 var(--cond);letter-spacing:.06em}
+  .fig-txt{text-align:left}
+
+  /* ニコ・トリコのキャラ */
+  .tc-call{gap:6px}
+  .tc-chara{width:84px}
+  .tc-pair{width:min(260px,100%)}
+
+  /* よくある質問:説明書と同じく質問は赤 */
+  .qa dt{color:var(--hl)}
+
+  /* おまけ:えかきうた */
+  .tc-ekaki{width:100%;border-radius:10px;box-shadow:0 0 0 2px var(--soft)}
+  .tc-song{padding-left:1.6em;line-height:1.8}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="../../../" aria-label="PANDA KINEMA トップへ"><img src="../../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="../../../#news">NEWS</a><a href="../../../#board">BOARD GAME</a><a href="../../../#movie">MOVIE</a><a href="../../../#tools">PLAY&amp;TOOLS</a><a href="../../../#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+        <h1 class="h1"><img src="../../../img/logo/trico_logo_purple.png?v=5670a940" alt="TRICO!(トリコ)"></h1>
+        <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja"><span class="bx">人数</span></span><span class="en">Players</span></dt><dd><span class="ja"><span class="bx">2〜3人</span></span><span class="en">2–3</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">10〜15分</span></span><span class="en">10–15 min</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>5年11月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (November 2025)</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja"><span class="bx">あの<wbr>コを<wbr>とりこに<wbr>する<wbr>ために</span></span><span class="en">To Win Her Heart</span></p>
+        <p class="ja"><span class="bx">どこかに<wbr>生息する<wbr>カラフルな<wbr>鳥、<wbr>トリコ。<wbr>3匹の<wbr>オスは、<wbr>美しい<wbr>メス<wbr>「ニコ」の<wbr>ハートを<wbr>射止めようと<wbr>アピールを<wbr>しています。<wbr>ただし、<wbr>それぞれが<wbr>持ち寄る<wbr>宝石の<wbr>色に<wbr>よって<wbr>ニコの<wbr>好みは<wbr>変わります。<wbr>見事ニコに<wbr>3色の<wbr>宝石を<wbr>受け取って<wbr>もらえたら、<wbr>「トリコ!」と<wbr>高らかに<wbr>宣言しましょう!</span></p>
+        <p class="en">Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
+        <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
+        <li><a href="#overview"><span class="ja">ゲームの目的</span><span class="en">Object of the Game</span></a></li>
+        <li><a href="#setup"><span class="ja">ゲームの準備</span><span class="en">Game Setup</span></a></li>
+        <li><a href="#flow"><span class="ja">アピールの流れ</span><span class="en">The Appeal</span></a>
+          <div class="sub" aria-label="手順"><a href="#step1">1</a><a href="#step2">2</a><a href="#step3">3</a><a href="#step4">4</a><a href="#step5">5</a></div></li>
+        <li><a href="#nico"><span class="ja">ニコ!</span><span class="en">Nico!</span></a></li>
+        <li><a href="#trico"><span class="ja">トリコ!</span><span class="en">Trico!</span></a></li>
+        <li><a href="#end"><span class="ja">ラウンド・ゲームの終了</span><span class="en">End of Round &amp; Game</span></a></li>
+        <li><a href="#two"><span class="ja">2人用ルール</span><span class="en">2-Player Rules</span></a>
+          <div class="sub" aria-label="手順"><a href="#two1">1</a><a href="#two2">2</a><a href="#two3">3</a><a href="#two4">4</a></div></li>
+        <li><a href="#qa"><span class="ja">よくある質問</span><span class="en">FAQ</span></a></li>
+        <li><a href="#extra"><span class="ja">おまけ</span><span class="en">Bonus</span></a></li>
+        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
+        <div class="screen">
+          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
+        </div>
+        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
+      </section>
+
+      <!-- 内容物 -->
+      <section class="panel" id="contents" aria-labelledby="h-contents">
+        <h2 id="h-contents"><span class="ja"><span class="bx">内容物</span></span><span class="en">Contents</span></h2>
+        <div class="tc-contents">
+          <div class="crow">
+            <p class="clbl"><span class="ja"><span class="bx">ゲームカード:30枚<wbr>(各色<wbr>10枚)</span></span><span class="en">Game cards: 30 (10 of each color)</span></p>
+            <div class="cards tc-grid" role="img" aria-label="黄・紫・赤の3、6、9、12、15、18、21、24、27、30のカード">
+              <img src="../../../img/parts/tc_c_y3.webp?v=fd9ea070" alt=""><img src="../../../img/parts/tc_c_y6.webp?v=e777b1ce" alt=""><img src="../../../img/parts/tc_c_y9.webp?v=eaa00abe" alt=""><img src="../../../img/parts/tc_c_y12.webp?v=7e705880" alt=""><img src="../../../img/parts/tc_c_y15.webp?v=731fd254" alt=""><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt="">
+              <img src="../../../img/parts/tc_c_y21.webp?v=d321e6df" alt=""><img src="../../../img/parts/tc_c_y24.webp?v=0f396c7b" alt=""><img src="../../../img/parts/tc_c_y27.webp?v=4d688aaf" alt=""><img src="../../../img/parts/tc_c_y30.webp?v=42546b29" alt=""><img src="../../../img/parts/tc_c_p3.webp?v=85308139" alt=""><img src="../../../img/parts/tc_c_p6.webp?v=418bc5c3" alt="">
+              <img src="../../../img/parts/tc_c_p9.webp?v=69feb8c1" alt=""><img src="../../../img/parts/tc_c_p12.webp?v=8a257d60" alt=""><img src="../../../img/parts/tc_c_p15.webp?v=860b34b0" alt=""><img src="../../../img/parts/tc_c_p18.webp?v=9d863611" alt=""><img src="../../../img/parts/tc_c_p21.webp?v=7802e703" alt=""><img src="../../../img/parts/tc_c_p24.webp?v=3b262144" alt="">
+              <img src="../../../img/parts/tc_c_p27.webp?v=2617982b" alt=""><img src="../../../img/parts/tc_c_p30.webp?v=12295aba" alt=""><img src="../../../img/parts/tc_c_r3.webp?v=0076f195" alt=""><img src="../../../img/parts/tc_c_r6.webp?v=b6c54ef4" alt=""><img src="../../../img/parts/tc_c_r9.webp?v=f051e875" alt=""><img src="../../../img/parts/tc_c_r12.webp?v=51ef9f2f" alt="">
+              <img src="../../../img/parts/tc_c_r15.webp?v=888cebc2" alt=""><img src="../../../img/parts/tc_c_r18.webp?v=0827b46c" alt=""><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""><img src="../../../img/parts/tc_c_r24.webp?v=c7af30c4" alt=""><img src="../../../img/parts/tc_c_r27.webp?v=5196dd63" alt=""><img src="../../../img/parts/tc_c_r30.webp?v=0724f65e" alt="">
+            </div>
+          </div>
+          <div class="tc-items">
+            <div class="tc-item"><span class="tc-pic"><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></span><p class="clbl"><span class="ja"><span class="bx">リードプレイヤーマーカー:1枚</span></span><span class="en">Lead player marker: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><img class="tc-sum" src="../../../img/parts/tc_summary_sm.webp?v=f7f9162c" alt=""></span><p class="clbl"><span class="ja"><span class="bx">サマリー:1枚</span></span><span class="en">Summary card: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><img class="tc-man" src="../../../img/parts/tc_manual_sm.webp?v=191b726d" alt=""></span><p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></span><p class="clbl"><span class="ja"><span class="bx">トリコマーカー:3個</span></span><span class="en">Trico markers: 3</span></p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ゲームの目的 -->
+      <section class="panel" id="overview" aria-labelledby="h-overview">
+        <h2 id="h-overview"><span class="ja"><span class="bx">ゲームの<wbr>目的</span></span><span class="en">Object of the Game</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">カードを<wbr>手札から<wbr>出し合い、<wbr>場に<wbr>出た色の<wbr>数で<wbr>勝敗が<wbr>決まる<b><wbr>「アピール」</b>を<wbr>行います。<wbr>勝った<wbr>プレイヤーは<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>獲得します。<wbr>これを<wbr>繰り返し、<wbr>得点カードの<wbr>中に<wbr>3色が<wbr>揃ったら、<b><wbr>「トリコ!」</b>と<wbr>宣言して<wbr>ラウンド勝利と<wbr>なります。<wbr>最初に<wbr>2回ラウンド勝利した<wbr>プレイヤーが<wbr>この<wbr>ゲームの<wbr>勝者です。</span></p>
+          <p class="en">Players play cards from their hands in an <b>“Appeal,”</b> where the number of colors on the table decides the winner. The winner takes any one of the 3 cards on the table. Repeat this, and when your scoring cards include all 3 colors, declare <b>“Trico!”</b> to win the round. The first player to win 2 rounds wins the game.</p>
+        </div>
+      </section>
+
+      <!-- ゲームの準備 -->
+      <section class="panel" id="setup" aria-labelledby="h-setup">
+        <h2 id="h-setup"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2>
+        <div class="prose">
+          <p class="rnote"><a href="#two"><span class="ja"><span class="bx">※こちらは<wbr>3人用の<wbr>ルールです。<wbr>2人で<wbr>遊ぶ際は<wbr>下の<wbr>「2人用ルール」を<wbr>参照してください。</span></span><span class="en">These are the rules for 3 players. For 2 players, see “2-Player Rules” below.</span></a></p>
+          <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>全員に<wbr>配り切ります。<wbr>1人に<wbr>配られる<wbr>手札は<wbr>10枚です。<br><wbr>適当な<wbr>方法で<b><wbr>リードプレイヤー<wbr>(親)</b>を<wbr>決めたら、<wbr>その<wbr>人は<wbr>リードプレイヤーマーカーを<wbr>受け取り、<wbr>手元に<wbr>置いてください。<b><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。</b><wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
+          <p class="en">Shuffle the cards well and deal them all out. Each player gets a hand of 10 cards.<br>Choose a <b>lead player</b> in any way you like. That player takes the lead player marker and places it in front of them. <b>The winner of each round takes a Trico marker.</b> To start, place the markers where everyone can reach them.</p>
+          <div class="viz" role="img" aria-label="3人に手札を10枚ずつ配り、リードプレイヤーはリードプレイヤーマーカーを受け取る。トリコマーカーは全員が手の届く位置に置く">
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><div class="row" style="align-items:center"><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><img class="tc-lead sm" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">トリコマーカー</span></span><span class="en">Trico markers</span></span><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- アピールの流れ -->
+      <section class="panel" id="flow" aria-labelledby="h-flow">
+        <h2 id="h-flow"><span class="ja"><span class="bx">アピールの<wbr>流れ</span></span><span class="en">The Appeal</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">各プレイヤーが<wbr>カードを<wbr>出し、<wbr>場に<wbr>出た<wbr>カードの<wbr>色の<wbr>数で<wbr>勝敗を<wbr>決める<wbr>ことを<em><wbr>「アピール」</em>と<wbr>呼びます。<wbr>アピールは<wbr>誰かが<em><wbr>「トリコ!」</em>を<wbr>宣言するか、<wbr>手札が<wbr>なくなるまで<wbr>繰り返します。<wbr>ここまでの<wbr>一連の<wbr>流れを<em><wbr>「ラウンド」</em>と<wbr>呼びます。</span></p>
+          <p class="en">Each player plays a card, and the number of colors among the cards on the table decides the winner. This is called an <em>“Appeal.”</em> Appeals repeat until someone declares <em>“Trico!”</em> or a hand runs out. This whole sequence is called a <em>“round.”</em></p>
+        </div>
+        <ol class="flow">
+
+          <li class="step" id="step1">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>1</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">リードプレイヤーが<wbr>手札から<wbr>1枚、<wbr>カードを<wbr>表向きに<wbr>公開します。</span></p><p class="en">The lead player plays one card from their hand face up.</p></div></div>
+            <div class="viz" role="img" aria-label="リードプレイヤーが赤の21を表向きに出す">
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step2">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>2</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">他の<wbr>2人の<wbr>プレイヤーは<wbr>手札から<wbr>裏向きで<wbr>1枚カードを<wbr>出し、<wbr>同時に<wbr>表向きに<wbr>公開します。<wbr>この<wbr>時、<wbr>場に<wbr>揃った<wbr>色の<wbr>数で<wbr>勝敗を<wbr>決めます。</span></p><p class="en">The other two players each play one card face down from their hands, then reveal them at the same time. The number of colors now on the table decides the winner.</p></div></div>
+            <div class="viz stack-sm" role="img" aria-label="2人が裏向きで出したカードを同時に公開すると、場は赤の21、紫の30、黄の12になった">
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">裏向きで<wbr>出す</span></span><span class="en">Face down</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同時に<wbr>表向きに<wbr>公開</span></span><span class="en">Reveal together</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step3">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>3</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">勝利条件に<wbr>従い、<wbr>アピールの<wbr>勝者を<wbr>確定します。<br><em><wbr>この<wbr>時、<wbr>勝った<wbr>カードが<wbr>複数あった<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札と<wbr>なります。</em></span></p><p class="en">Determine the winner of the Appeal using the winning conditions.<br><em>If more than one card wins, the Appeal is void and all the cards go to the discard pile.</em></p></div></div>
+            <figure class="fig">
+              <figcaption class="fig-t"><span class="ja"><span class="bx">アピールの<wbr>勝利条件</span></span><span class="en">Winning Conditions for an Appeal</span></figcaption>
+              <div class="tc-cond">
+                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>1色</b></span></span><span class="en"><b>1 color</b> on the table</span></span><span class="chips" aria-label="紫・紫・紫"><i class="p"></i><i class="p"></i><i class="p"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
+                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>2色</b></span></span><span class="en"><b>2 colors</b> on the table</span></span><span class="chips" aria-label="紫・紫・黄"><i class="p"></i><i class="p"></i><i class="y"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><em><span class="ja"><span class="bx">同じ<wbr>色の<wbr>中で<wbr>最も<wbr>小さい<wbr>数</span></span><span class="en">Lowest number of the matching color</span></em></span></div>
+                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>3色</b></span></span><span class="en"><b>3 colors</b> on the table</span></span><span class="chips" aria-label="紫・黄・赤"><i class="p"></i><i class="y"></i><i class="r"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
+                <p class="tc-note"><em><span class="ja"><span class="bx">※<wbr>勝った<wbr>カードが<wbr>複数あった<wbr>場合この<wbr>アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札に<wbr>なる。</span></span><span class="en">If more than one card wins, this Appeal is void and all the cards are discarded.</span></em></p>
+              </div>
+            </figure>
+            <div class="viz" role="img" aria-label="場の色が3色なので、最も大きい紫の30の勝ち">
+              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+            </div>
+            <figure class="fig">
+              <figcaption class="fig-t"><span class="ja"><span class="bx">アピールの<wbr>例</span></span><span class="en">Appeal Examples</span></figcaption>
+              <div class="viz split">
+                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tc_p3.webp?v=761eae70" alt=""></span><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_r27.webp?v=2cf7026f" alt=""></span><span class="arrow" aria-hidden="true"></span><span class="card sel"><img src="../../../img/parts/tc_p3.webp?v=761eae70" alt=""></span></div>
+                  <p class="fig-txt"><span class="ja"><span class="bx">場の<wbr>色が<em><wbr>2色</em>なので<wbr>紫の<wbr>中で<em><wbr>最も<wbr>小さい</em><em><wbr>3の<wbr>勝ち!</em></span></span><span class="en"><em>2 colors</em> on the table, so the <em>lowest</em> purple card, <em>3, wins!</em></span></p></div>
+                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tc_y24.webp?v=e85d8da9" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_r30.webp?v=0724f65e" alt=""></span></div>
+                  <p class="fig-txt"><span class="ja"><span class="bx">場の<wbr>色が<em><wbr>3色</em>だが、<wbr>紫と<wbr>赤が<wbr>30で<em><wbr>同じ<wbr>大きさなので、<wbr>この<wbr>アピールは<wbr>無効。</em></span></span><span class="en"><em>3 colors</em> on the table, but purple and red are both 30. <em>They tie, so this Appeal is void.</em></span></p></div>
+              </div>
+            </figure>
+          </li>
+
+          <li class="step" id="step4">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>4</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">アピールの<wbr>勝者は<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>1枚獲得し、<wbr>手元に<wbr>表向きで<wbr>置きます。<b><wbr>(手札には<wbr>加えません)</b><br>また、<em><wbr>リードプレイヤーが<wbr>アピールに<wbr>勝った<wbr>場合は<wbr>さらに<wbr>もう<wbr>1枚獲得する<wbr>ことができます。</em></span></p><p class="en">The winner of the Appeal takes any one of the 3 cards on the table and places it face up in front of them. <b>(Do not add it to your hand.)</b><br>Also, <em>if the lead player wins the Appeal, they may take one more card.</em></p></div></div>
+            <div class="viz stack-sm" role="img" aria-label="アピールの勝者は場の3枚から好きなカードを1枚獲得し、手元に表向きで置く">
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card sel"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手元に<wbr>表向きで<wbr>置く</span></span><span class="en">Face up in front of you</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step5">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>5</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">場に<wbr>残った<wbr>カードは<wbr>捨て札と<wbr>して<wbr>裏向きで<wbr>重ねて<wbr>おきます。<br><wbr>アピールの<wbr>勝者は<wbr>次の<wbr>リードプレイヤーと<wbr>なり、<wbr>リードプレイヤーマーカーを<wbr>受け取ります。<wbr>(以後<wbr>❶から<wbr>繰り返し)</span></p><p class="en">Stack the cards left on the table face down as the discard pile.<br>The winner of the Appeal becomes the next lead player and takes the lead player marker. (Repeat from ❶.)</p></div></div>
+            <div class="viz" role="img" aria-label="場に残ったカードは捨て札に。アピールの勝者がリードプレイヤーマーカーを受け取り、❶から繰り返す">
+              <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">捨て札</span></span><span class="en">Discard pile</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div></div>
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">アピールの<wbr>勝者</span></span><span class="en">Appeal winner</span></span><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""><span class="lbl"><span class="ja"><span class="bx">リードプレイヤーマーカー</span></span><span class="en">Lead player marker</span></span></div>
+              <div class="grp" style="align-self:center"><span class="loop"><span class="ja"><span class="bx">以後<wbr>❶から<wbr>繰り返し</span></span><span class="en">Repeat from ❶</span></span></div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ニコ! -->
+      <section class="panel" id="nico" aria-labelledby="h-nico">
+        <h2 id="h-nico"><span class="ja"><span class="bx">ニコ!</span></span><span class="en">Nico!</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">獲得した<wbr>カードが<wbr>2色に<wbr>なったら、<em><wbr>「ニコ!」</em>と<wbr>宣言します。</span></p>
+          <p class="en">When the cards you have taken show 2 colors, declare <em>“Nico!”</em></p>
+          <div class="viz" role="img" aria-label="獲得したカードが紫と黄の2色になったら「ニコ!」と宣言する">
+            <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_y6.webp?v=eedbd274" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">2色</span></span><span class="en">2 colors</span></span></div>
+            <span class="arrow" aria-hidden="true"></span>
+            <div class="grp tc-call"><img class="tc-chara" src="../../../img/chara/t_nico.webp?v=c1b4542c" alt=""><span class="tag hl"><span class="ja"><span class="bx">「ニコ!」</span></span><span class="en">“Nico!”</span></span></div>
+          </div>
+          <div class="box">
+            <h4><span class="ja"><span class="bx">ニコ忘れ</span></span><span class="en">Forgetting to Call Nico</span></h4>
+            <p class="ja"><span class="bx">ニコに<wbr>なった<wbr>人は<b><wbr>次の<wbr>アピールで<wbr>カードを<wbr>出すまでに<wbr>宣言しなければいけません。</b><wbr>宣言を<wbr>忘れた<wbr>ことを<wbr>指摘されてしまった<wbr>場合、<em><wbr>ペナルティと<wbr>して<wbr>最後に<wbr>獲得した<wbr>カードを<wbr>1枚捨て札に<wbr>します。</em><br><wbr>その<wbr>時<wbr>他の<wbr>プレイヤーは<b><wbr>捨て札を<wbr>シャッフルし、<wbr>それぞれ<wbr>上から<wbr>1枚を<wbr>手札に<wbr>加えます。</b></span></p>
+            <p class="en">A player who reaches Nico <b>must declare it before playing a card in the next Appeal.</b> If someone points out that they forgot, <em>as a penalty they discard the last card they took.</em><br>The other players then <b>shuffle the discard pile and each add the top card to their hand.</b></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- トリコ! -->
+      <section class="panel" id="trico" aria-labelledby="h-trico">
+        <h2 id="h-trico"><span class="ja"><span class="bx">トリコ!</span></span><span class="en">Trico!</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">獲得した<wbr>カードが<wbr>3色に<wbr>なったら、<em><wbr>「トリコ!」</em>と<wbr>宣言します。<br><wbr>宣言した<wbr>プレイヤーは<wbr>ラウンドの<wbr>勝者と<wbr>なり、<b><wbr>トリコマーカーを<wbr>1つ<wbr>獲得します。</b><br><wbr>また、<em><wbr>トリコに<wbr>なった<wbr>3枚の<wbr>カードが<wbr>いずれも<wbr>同じ<wbr>数字だった<wbr>場合は<wbr>トリコマーカーを<wbr>2つ<wbr>獲得し、<wbr>ゲームの<wbr>勝者と<wbr>なります。</em></span></p>
+          <p class="en">When the cards you have taken show all 3 colors, declare <em>“Trico!”</em><br>The player who declares it wins the round and <b>takes 1 Trico marker.</b><br>Also, <em>if the 3 cards that make your Trico all show the same number, you take 2 Trico markers and win the game.</em></p>
+          <div class="viz split" role="img" aria-label="3色になったら「トリコ!」でトリコマーカーを1つ獲得。3枚がいずれも同じ数字ならトリコマーカーを2つ獲得">
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">「トリコ!」</span></span><span class="en">“Trico!”</span></span><div class="row"><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_y6.webp?v=eedbd274" alt=""></span><span class="card"><img src="../../../img/parts/tc_r15.webp?v=1d279c82" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー1つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">いずれも<wbr>同じ<wbr>数字</span></span><span class="en">All the same number</span></span><div class="row"><span class="card"><img src="../../../img/parts/tc_p12.webp?v=7743f0db" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_r12.webp?v=51ef9f2f" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー2つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
+          </div>
+          <div class="box">
+            <h4><span class="ja"><span class="bx">誰も<wbr>トリコに<wbr>ならなかった<wbr>時</span></span><span class="en">If No One Gets a Trico</span></h4>
+            <p class="ja"><span class="bx">誰も<wbr>トリコを<wbr>宣言せずに<wbr>誰かの<wbr>手札が<wbr>なくなった<wbr>場合、<em><wbr>その<wbr>時<wbr>点の<wbr>リードプレイヤーが<wbr>ラウンドの<wbr>勝者と<wbr>なり、<wbr>トリコマーカーを<wbr>1つ<wbr>獲得します。</em></span></p>
+            <p class="en">If someone’s hand runs out before anyone declares Trico, <em>the current lead player wins the round and takes 1 Trico marker.</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ラウンドの終了・ゲームの終了 -->
+      <section class="panel" id="end" aria-labelledby="h-end" data-toc="ラウンド・ゲームの終了|End of Round &amp; Game">
+        <h2 id="h-end"><span class="ja"><span class="bx">ラウンドの<wbr>終了・ゲームの<wbr>終了</span></span><span class="en">End of the Round and Game</span></h2>
+        <div class="prose">
+          <h3><span class="ja"><span class="bx">ラウンドの<wbr>終了</span></span><span class="en">End of the Round</span></h3>
+          <p class="ja"><span class="bx"><em>誰かが<wbr>トリコマーカーを<wbr>獲得した<wbr>時、<wbr>ラウンドは<wbr>終了します。</em><wbr>ラウンドが<wbr>終了したら<wbr>全ての<wbr>カードを<wbr>回収し、<a href="#setup"><b><wbr>「ゲームの<wbr>準備」</b></a>から<wbr>再度次の<wbr>ラウンドを<wbr>行ってください。<wbr>この<wbr>時、<em><wbr>前の<wbr>ラウンドの<wbr>勝者が<wbr>次の<wbr>ラウンドで<wbr>リードプレイヤーと<wbr>なります。</em></span></p>
+          <p class="en"><em>The round ends when someone takes a Trico marker.</em> Gather all the cards and play the next round, starting again from <a href="#setup"><b>“Game Setup.”</b></a> <em>The winner of the previous round becomes the lead player for the next round.</em></p>
+          <h3><span class="ja"><span class="bx">ゲームの<wbr>終了</span></span><span class="en">End of the Game</span></h3>
+          <p class="ja"><span class="bx">誰かが<wbr>トリコマーカーを<wbr>2つ<wbr>獲得した<wbr>時、<wbr>ゲームは<wbr>終了します。<wbr>ニコの<wbr>ハートを<wbr>射止めたのは<wbr>勝利した<wbr>あなたです!</span></p>
+          <p class="en">The game ends when someone has 2 Trico markers. The one who won Nico’s heart is you, the winner!</p>
+          <div class="viz" role="img" aria-label="トリコマーカーを2つ獲得したらゲームの勝者">
+            <div class="grp"><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span><span class="lbl"><span class="ja"><span class="bx">トリコマーカー2つ</span></span><span class="en">2 Trico markers</span></span></div>
+            <span class="arrow" aria-hidden="true"></span>
+            <img class="tc-pair" src="../../../img/chara/t_pair.webp?v=ba0fb92e" alt="">
+          </div>
+        </div>
+      </section>
+
+      <!-- 2人用ルール -->
+      <section class="panel" id="two" aria-labelledby="h-two">
+        <h2 id="h-two"><span class="ja"><span class="bx">2人用ルール</span></span><span class="en">2-Player Rules</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">トリコを<wbr>2人で<wbr>遊ぶ時は、<wbr>少しだけ<wbr>遊び方が<wbr>変化します。<wbr>残った<wbr>10枚の<wbr>カードを<b><wbr>仮想プレイヤー</b>と<wbr>して<wbr>扱い、<b><wbr>常に<wbr>リードプレイヤーの<wbr>役割を<wbr>務めます。</b><wbr>仮想プレイヤーが<wbr>勝利した<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>捨て札に<wbr>なります。<wbr>2人の<wbr>プレイヤーは<wbr>仮想プレイヤーが<wbr>勝たないように<wbr>しつつ、<wbr>お互いを<wbr>出し抜かなければいけません。</span></p>
+          <p class="en">When playing TRICO with 2 players, the rules change slightly. The 10 leftover cards act as a <b>virtual player</b>, which <b>always takes the role of lead player.</b> If the virtual player wins, the Appeal is void and the cards are discarded. The two players must outwit each other while keeping the virtual player from winning.</p>
+          <h3><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h3>
+          <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>手札を<wbr>10<wbr>枚ずつ<wbr>配ります。<br><wbr>残った<wbr>10枚の<wbr>カードは<wbr>積み重ねて<wbr>山札の<wbr>状態に<wbr>して、<em><wbr>仮想プレイヤー</em>と<wbr>して<wbr>扱います。<br><em><wbr>2人用ルールでは<wbr>リードプレイヤーマーカーは<wbr>使用しません。<wbr>常に<wbr>仮想プレイヤーが<wbr>リードプレイヤーを<wbr>務めます。</em><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。<wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
+          <p class="en">Shuffle the cards well and deal 10 cards to each player.<br>Stack the 10 remaining cards as a deck. This deck is the <em>virtual player</em>.<br><em>The lead player marker is not used in the 2-player rules. The virtual player is always the lead player.</em> The winner of each round takes a Trico marker. To start, place the markers where everyone can reach them.</p>
+          <h3><span class="ja"><span class="bx">アピールの<wbr>流れ</span></span><span class="en">The Appeal</span></h3>
+        </div>
+        <ol class="flow">
+          <li class="step" id="two1">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>1</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">仮想プレイヤーの<wbr>山札の<wbr>上から<wbr>1枚、<wbr>カードを<wbr>表向きに<wbr>公開します。</span></p><p class="en">Reveal the top card of the virtual player’s deck face up.</p></div></div>
+            <div class="viz" role="img" aria-label="仮想プレイヤーの山札の上から1枚、黄の18を表向きに公開する">
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">仮想プレイヤー<wbr>(山札)</span></span><span class="en">Virtual player (deck)</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="card"><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
+            </div>
+          </li>
+          <li class="step" id="two2">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>2</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">他の<wbr>2人の<wbr>プレイヤーは<wbr>手札から<wbr>裏向きで<wbr>1枚カードを<wbr>出し、<wbr>同時に<wbr>表向きに<wbr>公開します。<wbr>この<wbr>時、<wbr>場に<wbr>揃った<wbr>色の<wbr>数で<wbr>勝敗を<wbr>決めます。</span></p><p class="en">The two players each play one card face down from their hands, then reveal them at the same time. The number of colors now on the table decides the winner.</p></div></div>
+            <div class="viz" role="img" aria-label="場は黄の18、27、15で1色なので、最も大きい27の勝ち">
+              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tc_c_y27.webp?v=4d688aaf" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_y15.webp?v=731fd254" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+            </div>
+          </li>
+          <li class="step" id="two3">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>3</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">勝利条件に<wbr>従い、<wbr>アピールの<wbr>勝者を<wbr>確定します。<wbr>アピールの<wbr>勝者は<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>1枚獲得し、<wbr>手元に<wbr>表向きで<wbr>置きます。<b><wbr>(手札には<wbr>加えません)</b><br>また、<em><wbr>仮想プレイヤーが<wbr>勝った<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札と<wbr>なります。</em></span></p><p class="en">Determine the winner of the Appeal using the winning conditions. The winner takes any one of the 3 cards on the table and places it face up in front of them. <b>(Do not add it to your hand.)</b><br>Also, <em>if the virtual player wins, the Appeal is void and all the cards go to the discard pile.</em></p></div></div>
+          </li>
+          <li class="step" id="two4">
+            <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>4</b></span>
+              <div class="tc-txt"><p class="ja"><span class="bx">場に<wbr>残った<wbr>カードは<wbr>捨て札と<wbr>して<wbr>裏向きで<wbr>重ねて<wbr>おきます。<br><b><wbr>以後<wbr>❶から<wbr>繰り返し、<wbr>ラウンド・ゲーム終了までの<wbr>流れは<wbr>3人用ルールと<wbr>同様です。</b></span></p><p class="en">Stack the cards left on the table face down as the discard pile.<br><b>Repeat from ❶. Everything up to the end of the round and the game works the same as in the 3-player rules.</b></p></div></div>
+          </li>
+        </ol>
+        <div class="box">
+          <h4><span class="ja"><span class="bx">2<wbr>人プレイで<wbr>誰も<wbr>トリコに<wbr>ならなかった<wbr>時</span></span><span class="en">If No One Gets a Trico in a 2-Player Game</span></h4>
+          <p class="ja"><span class="bx">2人用ルールで<wbr>誰も<wbr>トリコを<wbr>宣言せずに<wbr>誰かの<wbr>手札が<wbr>なくなった<wbr>場合、<em><wbr>最後に<wbr>カードを<wbr>獲得した<wbr>プレイヤーが<wbr>ラウンドの<wbr>勝者と<wbr>なり、<wbr>トリコマーカーを<wbr>1つ<wbr>獲得します。</em></span></p>
+          <p class="en">In the 2-player rules, if someone’s hand runs out before anyone declares Trico, <em>the player who took a card most recently wins the round and takes 1 Trico marker.</em></p>
+        </div>
+      </section>
+
+      <!-- よくある質問 -->
+      <section class="panel" id="qa" aria-labelledby="h-qa">
+        <h2 id="h-qa"><span class="ja"><span class="bx">よく<wbr>ある<wbr>質問</span></span><span class="en">FAQ</span></h2>
+        <dl class="qa">
+          <div><dt><span class="ja"><span class="bx">カードが<wbr>3の<wbr>倍数なのは<wbr>なぜ?</span></span><span class="en">Why are the cards multiples of 3?</span></dt>
+            <dd><span class="ja"><span class="bx">この<wbr>ゲームは<wbr>トリコロール<wbr>(3色)を<wbr>テーマに<wbr>しています。<wbr>その<wbr>ため3に<wbr>ちなんだ<wbr>数字に<wbr>しました。<wbr>実際の<wbr>数字の<wbr>強さは<wbr>1〜10と<wbr>変わりありません。</span></span><span class="en">This game is themed on the tricolor (three colors), so the numbers are based on 3. In practice, the strengths are the same as 1 to 10.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">全員が<wbr>1回ず<wbr>つ<wbr>ラウンド勝利して<wbr>トリコマーカーが<wbr>なくなってしまった。<wbr>この<wbr>時は<wbr>どうしたら<wbr>いい?</span></span><span class="en">Everyone has won one round, and the Trico markers have run out. What should we do?</span></dt>
+            <dd><span class="ja"><span class="bx">もう<wbr>1ラウンド行い、<wbr>その<wbr>ラウンドの<wbr>勝者が<wbr>ゲームの<wbr>勝者です。</span></span><span class="en">Play one more round. The winner of that round wins the game.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">アピールで<wbr>勝ったのに<wbr>場の<wbr>カードに<wbr>欲しい<wbr>色が<wbr>ありませんでした。<wbr>この<wbr>場合も<wbr>カードを<wbr>獲得しなければいけない?</span></span><span class="en">I won an Appeal, but none of the cards on the table were a color I wanted. Do I still have to take one?</span></dt>
+            <dd><span class="ja"><span class="bx">この<wbr>場合も<wbr>カードを<wbr>獲得してください。<wbr>むしろ<wbr>数字が<wbr>増える<wbr>ことで<wbr>ゾロ目トリコの<wbr>可能性も<wbr>高くなるので、<wbr>デメリットばかりではありません。</span></span><span class="en">Yes, take a card anyway. More numbers also raise your chances of a same-number Trico, so it isn’t all bad.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">「私は<wbr>次赤出します!○○さんは<wbr>どうします?」など<wbr>会話するのは<wbr>アリ?</span></span><span class="en">Can we talk during play, like “I’m playing red next! What about you?”</span></dt>
+            <dd><span class="ja"><span class="bx">アリです!直接的な<wbr>数字を<wbr>言ったりしなければ<wbr>ルール上<wbr>問題は<wbr>ありません。<wbr>むしろ<wbr>これを<wbr>行う<wbr>ことで<wbr>ブラフの<wbr>要素が<wbr>加わり、<wbr>ゲームが<wbr>何倍にも<wbr>面白くなるかもしれません。</span></span><span class="en">Yes! As long as you don’t say exact numbers, it’s within the rules. Talking adds bluffing, which might make the game many times more fun.</span></dd></div>
+        </dl>
+      </section>
+
+      <!-- おまけ -->
+      <section class="panel" id="extra" aria-labelledby="h-extra">
+        <h2 id="h-extra"><span class="ja"><span class="bx">おまけ</span></span><span class="en">Bonus</span></h2>
+        <div class="prose">
+          <h3><span class="ja"><span class="bx">みんなでかこう!TRICO!えかきうた</span></span><span class="en">Let’s All Draw TRICO! — A Drawing Song</span></h3>
+          <img class="tc-ekaki" src="../../../img/unused/t_ekaki.webp?v=12479c3d" alt="①西からのぼったおひさまが ②ずれてはんしゃしているよ ③今日もいい日だにじゅうまる! ④ここはくちばしいっぽんせん ⑤足としっぽをかいたなら ⑥あっという間にトリコだね! キミもかいてみよう!!" width="1286" height="511">
+          <ol class="en tc-song">
+            <li>The sun that rose in the west…</li>
+            <li>…is reflecting a little off to the side.</li>
+            <li>Another good day: a double circle!</li>
+            <li>Here’s the beak, one straight line.</li>
+            <li>Once you draw the feet and tail…</li>
+            <li>…in no time at all, it’s a Trico!</li>
+          </ol>
+          <p class="en"><b>Try drawing one yourself!</b></p>
+        </div>
+      </section>
+
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
+        <ol class="log">
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+        </ol>
+        <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="../"><span class="ja"><span class="bx">TRICO!の<wbr>作品ページへ</span></span><span class="en">Back to TRICO!</span></a>
+        <a class="btn ghost" href="https://pandakinema.booth.pm/items/7555824" target="_blank" rel="noopener"><span class="ja"><span class="bx">BOOTHで<wbr>購入</span></span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="../../../rules/"><span class="ja"><span class="bx">遊び方説明書の<wbr>一覧へ</span></span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja"><span class="bx">この<wbr>サイトは<wbr>アクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener"><wbr>Googleアナリティクス</a>を<wbr>使用しています</span></span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

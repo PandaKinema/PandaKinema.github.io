@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b2228">
+<title>ビビルの塔 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="ビビルの塔の遊び方説明書(WEB版)。内容物、どんなゲーム?、ゲームの準備、ゲームの流れ、2人プレイの遊びかた、注意、更新履歴。日本語と英語を切り替えられます。">
+<meta property="og:title" content="ビビルの塔 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="ビビルの塔の遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="https://pandakinema.com/games/bibilu/rules/">
+<meta property="og:image" content="https://pandakinema.com/img/share/ogp_bibilu_ticket.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&amp;display=swap">
+<style>
+  /* ===== パンダキネマ 遊び方説明書(WEB版) 共通 =====
+     作品ごとに変えるのは :root の色・書体・アイコンだけ(build.py が meta.yml から差し込む)。
+     紙の説明書と同じ組み:上は表紙(ロゴと物語)、本文に章ごとの白い座布団。強調は赤。
+     背景・帯は作品ページと同じ:表紙=作品ページのSTORYの欄、本文=「どんなゲーム?」の欄、帯は本文の内側(上下)に */
+  :root{
+    --site:#1b2228;        /* サイトの下地 */
+    --bar:#000000;         /* ヘッダー */
+    --paper:#ffffff;       /* 白い座布団 */
+    --red:#d4242b;         /* 説明書の赤字(強調の基本) */
+    --soft:color-mix(in srgb,var(--ink) 10%,transparent);    /* 図の下地(作品ページの --soft で上書き) */
+    --line:color-mix(in srgb,var(--ink) 20%,transparent);
+    --ink-soft:color-mix(in srgb,var(--ink) 72%,transparent);
+    --on-body-soft:color-mix(in srgb,var(--on-body) 14%,transparent);
+    --on-body-line:color-mix(in srgb,var(--on-body) 38%,transparent);
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+    --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+    --bar-h:56px;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar-h) + 64px + env(safe-area-inset-top,0px))}
+  @media (min-width:900px){ html{scroll-padding-top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px))} }
+  body{margin:0;background:var(--site);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar)}
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+  html:not([data-lang="en"]) .en{display:none!important}
+  html[data-lang="en"] .ja{display:none!important}
+  /* 改行:日本語は文節の切れ目(<wbr>)でだけ折り返す。英語は行末をそろえすぎない */
+  .bx{word-break:keep-all;overflow-wrap:anywhere}
+  p,li,dt,dd,h2,h3,figcaption,.lbl{line-break:strict;text-wrap:pretty}
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* ===== ヘッダー(サイト共通) ===== */
+  .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar)}
+  .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:var(--bar-h)}
+  .brand img{height:30px;width:auto}
+  .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);min-width:0;overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font:700 clamp(14px,1.6vw,19px) var(--cond);text-transform:uppercase}
+  .site-nav::-webkit-scrollbar{display:none}
+  .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;text-decoration:none;opacity:.9}
+  .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+  .lang{display:flex;flex:none;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+  .lang button{height:26px;padding:0 9px;border:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:#f3f2ee;color:#000}
+  /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から(サイトのほかのページと同じ) */
+  .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .menu-btn{display:none}
+  @media (max-width:650px){
+    :root{--bar-h:52px}
+    .site-header .bar{position:relative;gap:10px}
+    .brand img{height:26px}
+    .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+    .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+    .menu-btn i{position:relative}
+    .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+    .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+    .navtg:checked~.menu-btn i{background:transparent}
+    .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+    .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+    .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+    .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+    .navtg:checked~.site-nav.site-nav{display:flex}
+    .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+    .site-nav a:first-child{border-top:0}
+    .lang{order:2}
+    .lang button{height:22px;padding:0 7px;font-size:13px}
+  }
+
+  /* ===== レイヤー(作品ページと同じ最大幅、外は下地) ===== */
+  .sheet{max-width:1100px;margin-inline:auto;background:var(--body)}
+
+  /* ===== 表紙(説明書の1面の上と同じ:左にロゴ、右に物語) ===== */
+  .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
+  .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
+  .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
+  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .h1{margin:0;width:min(var(--logo-w,400px),100%)}
+  .h1 img{margin-inline:auto}
+  .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
+  .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0;font-size:15px;font-weight:800}
+  .spec div{display:flex;align-items:baseline;gap:6px}
+  .spec dt{font-size:11px;opacity:.72}
+  .spec dd{margin:0}
+  .cover-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;margin:0;font-size:12.5px;font-weight:700;opacity:.75}
+  .cover-meta a{text-underline-offset:3px}
+  .story{display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent)}
+  .catch{margin:0;font-size:clamp(24px,3.4vw,32px);font-weight:900;line-height:1.25;text-wrap:balance}
+  .story p{margin:0}
+  .story p:not(.catch){font-size:15px;font-weight:700;line-height:1.85}
+  @media (max-width:760px){
+    .cover .inner{grid-template-columns:minmax(0,1fr);padding-block:36px 32px}
+    .story{align-items:center;padding:22px 0 0;border-left:0;border-top:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent);text-align:center}
+  }
+  /* 表紙と本文の境目(作品ごとの帯。なければまっすぐ) */
+  .edge{display:none}
+
+  /* ===== 本文:メインカラーの地(説明書と同じ模様)、左に目次、右に章ごとの白い座布団 ===== */
+  .body{position:relative;background:var(--body) var(--tex,none) center top/var(--tex-size,auto)}
+  /* 帯:作品ページと同じく、色の境目には置かず本文の内側(上下18px)に */
+  .body::before,.body::after{content:"";position:absolute;left:0;right:0;height:var(--band-h,0px);background:var(--band-c,var(--cover));pointer-events:none;
+    -webkit-mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px);mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px)}
+  .body::before{top:18px}
+  .body::after{bottom:18px}
+  .layout{display:grid;grid-template-columns:190px minmax(0,720px);justify-content:center;gap:44px;padding-block:calc(44px + var(--band-space,0px)) calc(64px + var(--band-space,0px))}
+  .toc{position:sticky;top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px));align-self:start;color:var(--on-body)}
+  .toc p{margin:0 0 10px 12px;font:700 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .toc ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+  .toc a{display:block;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;opacity:.82;transition:background .2s,opacity .2s}
+  .toc a:hover{opacity:1;background:var(--on-body-soft)}
+  .toc a.on{opacity:1;background:var(--on-body);color:var(--body)}
+  .toc .sub{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px 10px}
+  .toc .sub a{display:flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;padding:0;border-radius:50%;border:1.5px solid var(--on-body-line);font:var(--num-weight,400) 14px/1 var(--num);font-variant-numeric:lining-nums tabular-nums}
+
+  @media (max-width:899px){
+    .layout{grid-template-columns:minmax(0,1fr);gap:0;padding-block:var(--band-space,0px) calc(48px + var(--band-space,0px))}
+    /* スマホ:横にスライドする目次。並びは画面の端まで続き、端で切れる(余白の内側では切らない) */
+    .toc{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));
+      z-index:20;top:calc(var(--bar-h) + env(safe-area-inset-top,0px));margin-inline:calc(-1 * var(--gl)) calc(-1 * var(--gr));padding:10px 0;background:var(--body);border-bottom:1px solid var(--on-body-soft)}
+    .toc p,.toc .sub{display:none}
+    .toc ol{flex-direction:row;gap:6px;padding-inline:var(--gl) 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-padding-inline:var(--gl) var(--gr);scrollbar-width:none}
+    .toc ol::after{content:"";flex:none;width:calc(var(--gr) - 6px)}   /* 最後の項目のあとにも同じ余白 */
+    .toc li{flex:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{white-space:nowrap;border:1.5px solid var(--on-body-line);padding:6px 13px;font-size:13px}
+    .toc a.on{border-color:var(--on-body)}
+    .content{padding-top:24px}
+  }
+
+  /* ===== 章=白い座布団。見出しはサイト共通の角丸(左の目次と同じ形)。作品が変わっても色だけ差し替え ===== */
+  .content{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .panel{display:flex;flex-direction:column;gap:18px;min-width:0;padding:26px 28px 28px;border-radius:18px;background:var(--paper)}
+  @media (max-width:560px){ .panel{padding:20px 18px 22px;border-radius:14px} }
+  h2{align-self:flex-start;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--head);color:var(--on-head);font-size:clamp(17px,2.2vw,19px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+  /* 章の中の小見出し(説明書の「ニコ忘れ」「特殊カードの時」など) */
+  h4{margin:4px 0 0;font-size:16.5px;font-weight:900;line-height:1.4}
+  h4::before{content:"";display:inline-block;width:6px;height:1em;margin-right:8px;border-radius:2px;background:var(--head);vertical-align:-.12em}
+  .content p{margin:0}
+  /* 行間:本文 1.85/図の中の短い文 1.6 */
+  .prose p,.step>p,.prose li,.step li{line-height:1.85}
+  .prose{display:flex;flex-direction:column;gap:12px}
+  .prose ul,.prose ol,.step ul,.step ol{display:flex;flex-direction:column;gap:4px;margin:0;padding-left:1.4em}
+  em{font-style:normal;font-weight:800;color:var(--hl)}
+
+  /* 動画の枠(長尺の遊び方動画が入る場所) */
+  .screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:8px;background:#000;color:#f3f2ee;overflow:hidden}
+  .screen .soon{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .screen .play{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid rgba(243,242,238,.45)}
+  .screen .play::before{content:"";margin-left:5px;border-left:17px solid rgba(243,242,238,.45);border-block:11px solid transparent}
+  .screen .soon b{font:700 18px/1 var(--cond);letter-spacing:.18em}
+  .screen .soon span{font-size:13px;opacity:.7}
+  .note{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+
+  /* 内容物:ラベル(・○○:○枚)と並べた実物 */
+  .crow{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .crow.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cbox{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .clbl{display:flex;flex-wrap:wrap;font-size:15px;font-weight:800;line-height:1.5}   /* 「・」だけが1行目に残らないように */
+  .clbl::before{content:"・";flex:none}
+  .clbl>span{flex:1 1 0;min-width:0}
+  .clbl small{flex:0 0 100%;margin-top:2px;padding-left:1em;font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .cards{display:grid;grid-template-columns:repeat(var(--cols,10),minmax(0,1fr));gap:6px}
+  .cards img{width:100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .things{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+  .things img{width:var(--tw,46px)}
+  .sheet-icon{display:flex;gap:6px}
+  .sheet-icon span{display:grid;place-items:center;width:40px;height:54px;border-radius:3px;background:var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 14px var(--cond);letter-spacing:.06em}
+  .sheet-icon span:last-child{background:var(--head);color:var(--on-head)}
+  @media (min-width:900px){ .cards{gap:8px} }
+  @media (max-width:560px){ .cards{grid-template-columns:repeat(var(--cols-sm,5),minmax(0,1fr));gap:8px} .crow.two{grid-template-columns:minmax(0,1fr)} }
+
+  /* 人数ごとの表など(説明書の小さな表) */
+  .ptable{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:10px;max-width:calc(var(--cols,2) * 230px);padding:10px;border-radius:14px;background:var(--soft)}
+  .ptable>div{overflow:hidden;border:2px solid var(--head);border-radius:10px;background:var(--paper);text-align:center}
+  .ptable b{display:block;padding:6px;background:var(--head);color:var(--on-head);font-size:15px}
+  .ptable p{padding:10px 8px 12px;font-size:15px;font-weight:800;line-height:1.5}
+  /* 説明書の赤い帯(※注意書き) */
+  .rnote{align-self:flex-start;padding:7px 14px;border-radius:6px;background:var(--hl);color:#fff;font-size:13.5px;font-weight:800;line-height:1.6}
+  .rnote a{text-decoration:none}
+  .rnote a:hover{text-decoration:underline}
+  /* 印刷した説明書の誤りの訂正(その場所に小さく添える。更新履歴には「訂正」の印) */
+  .errata{display:block;margin-top:4px;color:var(--hl);font-size:12px;font-weight:800;line-height:1.5;font-style:normal}
+  /* 枠で囲んだ補足(説明書の「ニコ忘れ」のような囲み) */
+  .box{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px;background:var(--soft)}
+  .box p{line-height:1.8}
+
+  /* ===== ゲームの流れ(1つの座布団の中に手順を並べる) ===== */
+  .flow{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+  .step{display:flex;flex-direction:column;gap:14px;padding-block:24px}
+  .step:first-child{padding-top:4px}
+  .step:last-child{padding-bottom:0}
+  .step + .step{border-top:2px dashed var(--line)}
+  .step-head{display:flex;align-items:center;gap:12px}
+  .snum{position:relative;flex:none;width:44px;height:46px;background:var(--head);-webkit-mask:var(--step-icon) center/contain no-repeat;mask:var(--step-icon) center/contain no-repeat}
+  /* 番号:アイコンの真ん中(作品ごとに --num-y で上下を合わせる) */
+  .snum b{position:absolute;left:0;right:0;top:var(--num-y,50%);translate:0 -50%;color:var(--on-head);font:var(--num-weight,400) 25px/1 var(--num);font-variant-numeric:lining-nums;text-align:center}
+  h3{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+
+  /* ===== 図(説明書の図をカードの画像で組み直したもの) ===== */
+  .viz{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:18px 22px;padding:22px 14px 18px;border-radius:12px;background:var(--soft);overflow-x:auto}
+  .grp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .grp>.lbl,.lbl{font-size:12.5px;font-weight:800;line-height:1.45;text-align:center}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .card{position:relative;display:block;flex:none;width:var(--cw,52px)}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:60px} }
+  .card img{width:100%;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.22)}
+  .card.sel img{outline:3px solid var(--hl);outline-offset:2px}
+  .card.dim img{opacity:.35}
+  .arrow{align-self:center;flex:none;width:0;height:0;border-left:13px solid var(--head);border-block:9px solid transparent;opacity:.85}
+  @media (max-width:560px){ .viz.stack-sm{flex-direction:column;align-items:center} .viz.stack-sm>.arrow{transform:rotate(90deg)} }
+  /* 2つ以上を見くらべる図:点線で区切る */
+  .viz.split{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));align-items:start;gap:0;padding-inline:0}
+  .viz.split>.grp{padding-inline:12px}
+  .viz.split>.grp+.grp{border-left:2px dashed var(--line)}
+  @media (max-width:620px){ .viz.split{grid-template-columns:minmax(0,1fr);gap:18px} .viz.split>.grp+.grp{padding-top:18px;border-left:0;border-top:2px dashed var(--line)} }
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:12px;font-weight:800;white-space:nowrap}
+  .tag.hl{background:var(--hl);color:#fff}
+  .callout{max-width:170px;font-size:12.5px;font-weight:800;line-height:1.6}
+  .callout em{display:block;font-size:15px}
+  .pile{position:relative;width:96px;height:96px}
+  .pile .card{position:absolute;left:24px;top:10px}
+  .deck{position:relative;width:calc(var(--cw,52px) + 12px);height:calc(var(--cw,52px) * 1.4 + 12px)}
+  .deck .card{position:absolute}
+  .deck .card:nth-child(1){left:0;top:0}
+  .deck .card:nth-child(2){left:6px;top:6px}
+  .deck .card:nth-child(3){left:12px;top:12px}
+  .loop{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:13px;font-weight:800}
+  .loop::before{content:"↻";font-size:18px;line-height:1}
+  /* 説明書の図の枠(見出し付き) */
+  .fig{margin:0;overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--paper)}
+  .fig-t{padding:6px 12px;background:var(--head);color:var(--on-head);font-size:13.5px;font-weight:800;text-align:center}
+  .fig .viz{border-radius:0}
+  .fig-txt{max-width:280px;font-size:14px;font-weight:700;line-height:1.6}
+
+  /* よくある質問 */
+  .qa{display:flex;flex-direction:column;gap:14px;margin:0}
+  .qa dt{font-weight:900;line-height:1.6}
+  .qa dd{margin:4px 0 0;padding-left:1.6em;line-height:1.8}
+  .qa dt::before,.qa dd::before{display:inline-block;width:1.6em;margin-left:-1.6em;font-weight:900}
+  .qa dt{padding-left:1.6em}
+  .qa dt::before{content:"Q.";color:var(--hl)}
+  .qa dd::before{content:"A."}
+
+  /* 注意(説明書の注意枠) */
+  .warn{overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--warn-bg,var(--soft))}
+  .warn-t{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 12px;background:var(--head);color:var(--on-head);font-size:16px;font-weight:900}
+  .warn-t svg{flex:none;width:22px;height:20px}
+  .warn ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:14px 18px 16px 34px;font-size:13.5px;font-weight:700;line-height:1.6}
+
+  /* 更新履歴 */
+  .log{display:flex;flex-direction:column;margin:0;padding:0;list-style:none;border-top:1.5px solid var(--line)}
+  .log li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:14px 4px;border-bottom:1.5px solid var(--line);font-size:15px;line-height:1.7}
+  .log time{font:700 18px/1.5 var(--cond);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .log .chg{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:4px;background:var(--hl);color:#fff;font-size:12px;font-weight:800;vertical-align:2px}
+  .legend{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .legend .chg{display:inline-block;padding:0 7px;border-radius:4px;background:var(--hl);color:#fff;font-size:11.5px;font-weight:800}
+
+  /* 作品ページへ */
+  .back{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;padding:13px 26px;border-radius:999px;background:var(--on-body);color:var(--body);font-size:14px;font-weight:800;letter-spacing:.04em;text-decoration:none;transition:translate .15s}
+  .btn:hover{translate:0 -2px}
+  .btn.ghost{background:none;color:var(--on-body);box-shadow:inset 0 0 0 2px var(--on-body)}
+
+  .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));background:var(--bar);color:#9aa3a9;font-size:12px}
+  .site-footer a{color:#f3f2ee;font:700 15px var(--cond);text-decoration:none}
+  .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+  .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media (max-width:650px){ .site-footer{flex-direction:column;gap:8px;text-align:center} }
+
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.toc a{transition:none} }
+
+  /* ===== ビビルの塔 ===== */
+  :root{
+    --main:#153e53;
+    --accent:#fff5d7;
+    --ink:#153e53;
+    --hl:#d4242b;
+    --head:#153e53;
+    --on-head:#fff5d7;
+    --cover:#fff5d7;
+    --on-cover:#153e53;
+    --body:#153e53;
+    --on-body:#fff5d7;
+    --tex:url(../../../img/page/b_tex_c.png?v=5818d645);
+    --tex-size:525px 175px;
+    --band:url(../../../img/page/b_band.png?v=2fbc6c74);
+    --band-h:24px;
+    --step-icon:url(../../../img/page/b_tupa.png?v=e687c2a3);
+    --num:"Abril Fatface","Didot","Bodoni 72",Georgia,serif;
+    --num-y:54%;
+    --logo-w:400px;
+    --gold:#f2d756;
+    --sky:#2b9fd9;
+    --soft:#dce2e5;
+    --band-space:60px;
+    --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
+  }
+  /* ビビルの塔だけで使う図:王冠と星(説明シート)、青い欄の塔と目盛り、天罰マーク、得点の式 */
+  .mk-box{display:flex;justify-content:center;height:30px;margin-top:8px}
+  .crown{display:flex;align-items:flex-end;justify-content:center;width:30px;height:24px;padding-bottom:3px;background:var(--gold);color:var(--main);font:900 12px/1 var(--sans);clip-path:polygon(0 100%,0 18%,25% 52%,50% 4%,75% 52%,100% 18%,100% 100%)}
+  .star{width:28px;height:27px;background:var(--gold);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+  .col{display:flex;align-items:flex-end;gap:3px;padding:5px 5px 5px 2px;border-radius:7px;background:var(--sky)}
+  .col.red{background:var(--hl)}
+  .col{--cw:42px;--ch:calc(var(--cw) * 1.4);--st:calc(var(--cw) * .58)}
+  @media (min-width:900px){ .step .col{--cw:50px} .big8{width:90px} }
+  .ruler{position:relative;width:15px;height:calc(var(--ch) + (var(--n) - 1) * var(--st));margin:0;padding:0;list-style:none}
+  .ruler li{position:absolute;left:0;right:0;bottom:calc(var(--i) * var(--st));height:var(--st);display:grid;place-items:center;color:#fff;font:900 12px/1 var(--sans)}
+  .stack{position:relative;width:var(--cw);height:calc(var(--ch) + (var(--n) - 1) * var(--st))}
+  .stack img{position:absolute;left:0;bottom:calc(var(--i) * var(--st));width:var(--cw);border-radius:3px;box-shadow:0 -2px 4px rgba(0,0,0,.28)}
+  .tag.sky{background:var(--sky);color:#fff}
+  .callout.wide{max-width:230px;text-align:center}
+  .big8{position:relative;width:78px}
+  .big8 img{width:100%;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+  .big8 .marks{position:absolute;left:84%;top:13%;width:15%;height:30%;border:2.5px solid var(--hl);border-radius:4px}
+  .big8 .marks-l{position:absolute;left:calc(100% + 4px);top:16%;color:var(--hl);font-size:11.5px;font-weight:900;line-height:1.25;writing-mode:vertical-rl}
+  .formula{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:260px;text-align:center}
+  .formula .eq{color:var(--hl);font-size:22px;font-weight:900;line-height:1.3}
+  .formula .ex{font-size:13.5px;font-weight:700;line-height:1.6;text-align:left}
+  .formula .ex b{display:block}
+  .howto{align-items:center;gap:18px 24px}
+  .howto-pic{display:flex;align-items:flex-end;gap:10px;padding:8px 10px;border-radius:8px;background:var(--sky)}
+  .howto-pic .col{--cw:56px}
+  .col.plain{padding:0;background:none}
+  .col.plain:first-child{flex-direction:column;align-items:center;gap:0}
+  .here{margin-bottom:6px;color:#fff;font-size:13px;font-weight:900;text-align:center}
+  .one{position:relative;width:var(--cw)}
+  .one img{width:100%;border-radius:3px}
+  .one .line{position:absolute;left:-3px;right:-3px;bottom:41.5%;height:3px;background:#fff;box-shadow:0 0 0 1.5px var(--sky)}
+  .howto-txt{max-width:260px;font-size:14.5px;font-weight:700;line-height:1.6}
+  .warn{--warn-bg:var(--accent)}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="../../../" aria-label="PANDA KINEMA トップへ"><img src="../../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="../../../#news">NEWS</a><a href="../../../#board">BOARD GAME</a><a href="../../../#movie">MOVIE</a><a href="../../../#tools">PLAY&amp;TOOLS</a><a href="../../../#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+        <h1 class="h1"><img src="../../../img/logo/b_logo_navy.png?v=70e9a992" alt="ビビルの塔 THE TOWER OF BIBILU"></h1>
+        <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja"><span class="bx">人数</span></span><span class="en">Players</span></dt><dd><span class="ja"><span class="bx">2〜4人</span></span><span class="en">2–4</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">10〜15分</span></span><span class="en">10–15 min</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>6年10月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (October 2026)</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja"><span class="bx">ビビっている<wbr>場合じゃない</span></span><span class="en">This Is No Time to BIBILU!</span></p>
+        <p class="ja"><span class="bx">遠い<wbr>未来、<wbr>どこかの<wbr>惑星に、<wbr>トゥーパと<wbr>いう<wbr>生命体が<wbr>いました。<wbr>彼らに<wbr>とって、<wbr>塔を<wbr>建てる<wbr>ことは<wbr>何よりも<wbr>大事です。<wbr>高い<wbr>塔ほど<wbr>立派ですが、<wbr>高くしすぎると<wbr>神の<wbr>天罰が<wbr>くだり、<wbr>たちまち<wbr>崩れてしまいます。<wbr>あなたも<wbr>トゥーパと<wbr>なり、<wbr>ときには<wbr>慎重に、<wbr>ときには<wbr>思いきって、<wbr>誰よりも<wbr>立派な<wbr>塔を<wbr>完成させましょう!</span></p>
+        <p class="en">In the distant future, creatures called the Túpa lived on a faraway planet. Nothing matters more to them than building towers: the taller, the better—but build too high, and divine punishment will bring it crashing down. Play as a Túpa, balancing caution and courage to build the finest tower of all!</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
+        <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
+        <li><a href="#overview"><span class="ja">どんなゲーム?</span><span class="en">Game Overview</span></a></li>
+        <li><a href="#setup"><span class="ja">ゲームの準備</span><span class="en">Game Setup</span></a></li>
+        <li><a href="#flow"><span class="ja">ゲームの流れ</span><span class="en">How to Play</span></a>
+          <div class="sub" aria-label="手順"><a href="#step1">1</a><a href="#step2">2</a><a href="#step3">3</a><a href="#step4">4</a><a href="#step5">5</a><a href="#step6">6</a></div></li>
+        <li><a href="#two"><span class="ja">2人プレイの遊びかた</span><span class="en">2-Player Rules</span></a></li>
+        <li><a href="#warnings"><span class="ja">注意</span><span class="en">Warnings</span></a></li>
+        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
+        <div class="screen">
+          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
+        </div>
+        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
+      </section>
+
+      <!-- 内容物 -->
+      <section class="panel" id="contents" aria-labelledby="h-contents">
+        <h2 id="h-contents"><span class="ja"><span class="bx">内容物</span></span><span class="en">Contents</span></h2>
+        <div class="crow">
+          <p class="clbl"><span class="ja"><span class="bx">カード:40枚<wbr>(1〜10が<wbr>4セット)</span></span><span class="en">Cards: 40 (four sets of 1–10)</span></p>
+          <div class="cards" role="img" aria-label="1から10までのカード">
+            <img src="../../../img/parts/bc_1.webp?v=eb8ef767" alt=""><img src="../../../img/parts/bc_2.webp?v=0b5747b7" alt=""><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><img src="../../../img/parts/bc_4.webp?v=ef9d05b2" alt=""><img src="../../../img/parts/bc_5.webp?v=b948c317" alt=""><img src="../../../img/parts/bc_6.webp?v=dfb1777c" alt=""><img src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><img src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""><img src="../../../img/parts/bc_9.webp?v=3bfac0fe" alt=""><img src="../../../img/parts/bc_10.webp?v=0edc613f" alt="">
+          </div>
+        </div>
+        <div class="crow two">
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">トゥーパ トークン:5個</span></span><span class="en">Túpa Tokens: 5</span></p>
+            <div class="things" role="img" aria-label="トゥーパ トークン5個"><img src="../../../img/parts/b_token.webp?v=e3853686" alt=""><img src="../../../img/parts/b_token.webp?v=e3853686" alt=""><img src="../../../img/parts/b_token.webp?v=e3853686" alt=""><img src="../../../img/parts/b_token.webp?v=e3853686" alt=""><img src="../../../img/parts/b_token.webp?v=e3853686" alt=""></div>
+          </div>
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">遊び方説明書<wbr>(JA / EN):各1枚</span></span><span class="en">Rulebooks (JA / EN): 1 each</span></p>
+            <div class="sheet-icon" aria-hidden="true"><span>JA</span><span>EN</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- どんなゲーム? -->
+      <section class="panel" id="overview" aria-labelledby="h-overview">
+        <h2 id="h-overview"><span class="ja"><span class="bx">どんな<wbr>ゲーム?</span></span><span class="en">Game Overview</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">『ビビルの<wbr>塔』は、<em><wbr>数字カードを<wbr>同時に<wbr>出し、<wbr>高い<wbr>塔を<wbr>建てて<wbr>得点を<wbr>競う<wbr>ゲームです。</em></span></p>
+          <p class="ja"><span class="bx">出した<em><wbr>数字の<wbr>大きさが<wbr>1位と<wbr>2位</em>の<wbr>プレイヤーは、<wbr>その<wbr>カードを<em><wbr>自分の<wbr>前に<wbr>重ねて<wbr>塔を<wbr>建てます。</em><wbr>同じ<wbr>数字を<wbr>出した<wbr>プレイヤーが<wbr>複数いた<wbr>場合は<em><wbr>バッティング</em>となり、<em><wbr>その<wbr>プレイヤーだけが<wbr>塔を<wbr>建てます。</em><wbr>塔は<wbr>高い<wbr>ほど<wbr>高得点を<wbr>狙えますが、<em><wbr>6枚に<wbr>なると<wbr>天罰に<wbr>よって<wbr>崩れてしまいます。</em></span></p>
+          <p class="ja"><span class="bx">手札が<wbr>なくなったら<wbr>塔の<wbr>得点を<wbr>計算し、<em><wbr>最も<wbr>得点の<wbr>高かった<wbr>プレイヤーが<wbr>ラウンドの<wbr>勝者です。</em><wbr>最初に<em><wbr>2回</em>ラウンド勝利を<wbr>した<wbr>プレイヤーが<wbr>この<wbr>ゲームの<wbr>勝者と<wbr>なります。</span></p>
+          <p class="en">The Tower of BIBILU is <em>a simultaneous card-playing game in which players build tall towers and compete for points.</em></p>
+          <p class="en">Each turn, all players reveal a number card at the same time. The players with the <em>highest and second-highest numbers place their cards in front of themselves to build their towers.</em> If two or more players reveal the same number, they <em>clash</em>, and <em>only those players build their towers.</em> Taller towers can score more points, but <em>a tower collapses under divine punishment as soon as it reaches six cards.</em></p>
+          <p class="en">When all players have used every card in their hands, calculate each tower’s score. <em>The player with the highest score wins the round.</em> The first player to win <em>two rounds</em> wins the game.</p>
+        </div>
+      </section>
+
+      <!-- 準備 -->
+      <section class="panel" id="setup" aria-labelledby="h-setup">
+        <h2 id="h-setup"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">プレイ人数に<wbr>よって<wbr>使う<wbr>カードの<wbr>枚数が<wbr>異なります。<wbr>(下表)カードを<wbr>よく<wbr>混ぜ、<em><wbr>全員に<wbr>10枚ずつ<wbr>配りましょう。</em><wbr>トークンは<wbr>ラウンド勝利マーカーと<wbr>して<wbr>使う<wbr>ため、<wbr>手の<wbr>届く<wbr>場所に<wbr>置いておきましょう。</span></p>
+          <p class="en">The number of cards used depends on the number of players. See the table below. Shuffle the cards well, then <em>deal 10 cards to each player.</em> Keep the tokens within easy reach, as they are used to mark round wins.</p>
+          <div class="ptable">
+            <div><b><span class="ja"><span class="bx">2〜3人</span></span><span class="en">2–3 Players</span></b><p><span class="ja"><span class="bx">1〜10を<em><wbr>3</em>セット<br>全<em>3<wbr>0</em>枚</span></span><span class="en"><em>3 sets</em> of 1–10<br><em>30</em> cards</span></p></div>
+            <div><b><span class="ja"><span class="bx">4人</span></span><span class="en">4 Players</span></b><p><span class="ja"><span class="bx">全ての<wbr>カードを<br><wbr>使用します。</span></span><span class="en">Use all<br>40 cards.</span></p></div>
+          </div>
+          <p class="rnote"><a href="#two"><span class="ja"><span class="bx">※2<wbr>人プレイの<wbr>遊びかたは、<wbr>下の<wbr>「2人プレイの<wbr>遊びかた」を<wbr>参照してください。</span></span><span class="en">For a 2-player game, see “2-Player Rules” below.</span></a></p>
+        </div>
+      </section>
+
+      <!-- ゲームの流れ -->
+      <section class="panel" id="flow" aria-labelledby="h-flow">
+        <h2 id="h-flow"><span class="ja"><span class="bx">ゲームの<wbr>流れ</span></span><span class="en">How to Play</span></h2>
+        <ol class="flow">
+
+          <li class="step" id="step1">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>1</b></span><h3><span class="ja"><span class="bx">手札を<wbr>出す</span></span><span class="en">Play a Card</span></h3></div>
+            <p class="ja"><span class="bx">配られた<wbr>10枚の<wbr>カードは<wbr>自分の<wbr>手札と<wbr>なります。<wbr>各プレイヤーは<wbr>手札から<wbr>任意の<wbr>数字カードを<wbr>1枚選び、<wbr>自分の<wbr>前に<wbr>伏せて<wbr>出します。<em><wbr>全員<wbr>揃ったら、<wbr>同時に<wbr>めくって<wbr>公開します。</em></span></p>
+            <p class="en">The 10 cards dealt to you form your hand. Each player chooses one number card from their hand and places it face down in front of them. <em>Once everyone is ready, reveal all cards at the same time.</em></p>
+            <div class="viz stack-sm" role="img" aria-label="4人が伏せて出したカードを、同時にめくると7・5・3・8だった">
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">伏せて<wbr>出す</span></span><span class="en">Face down</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""></span><span class="card"><img src="../../../img/parts/bc_5.webp?v=b948c317" alt=""></span><span class="card"><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""></span><span class="card"><img src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同時に<wbr>めくる</span></span><span class="en">Reveal together</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step2">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>2</b></span><h3><span class="ja"><span class="bx">数字を<wbr>くらべる</span></span><span class="en">Compare the Numbers</span></h3></div>
+            <p class="ja"><span class="bx">全員が<wbr>出した<wbr>カードの<wbr>数字を<wbr>比較します。<em><wbr>1番目</em>と<em><wbr>2番目</em>に<wbr>数字が<wbr>大きかった<wbr>プレイヤーは、<em><wbr>塔を<wbr>建てることができます。</em><wbr>ただし、<wbr>同じ<wbr>数字を<wbr>出した<wbr>プレイヤーが<wbr>複数いた<wbr>場合は<em><wbr>バッティング</em>となり、<em><wbr>通常の<wbr>順位処理は<wbr>行いません。</em><em><wbr>バッティングした<wbr>プレイヤーのみが<wbr>塔を<wbr>建てます。</em></span></p>
+            <p class="en">Compare the numbers on all revealed cards. The players with the <em>highest and second-highest numbers may build their towers.</em> However, if two or more players reveal the same number, they <em>clash</em>, and <em>normal ranking does not apply. Only the players involved in the clash may build their towers.</em></p>
+            <p class="rnote"><span class="ja"><span class="bx">※バッティングが<wbr>複数起こった<wbr>場合は<wbr>数字の<wbr>大きい方を<wbr>優先します。</span></span><span class="en">If multiple clashes occur, the clash involving the higher number takes priority.</span></p>
+            <div class="viz split" role="img" aria-label="通常の順位処理:8が1位、7が2位。バッティング時の処理:3を出した2人だけが塔を建てる">
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">通常の<wbr>順位処理</span></span><span class="en">Normal Ranking</span></span>
+                <div class="row">
+                  <span class="card sel"><img src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><span class="mk-box"><span class="crown">2</span></span></span>
+                  <span class="card"><img src="../../../img/parts/bc_5.webp?v=b948c317" alt=""><span class="mk-box"></span></span>
+                  <span class="card"><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><span class="mk-box"></span></span>
+                  <span class="card sel"><img src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""><span class="mk-box"><span class="crown">1</span></span></span>
+                </div></div>
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">バッティング時の<wbr>処理</span></span><span class="en">Clash Resolution</span></span>
+                <div class="row">
+                  <span class="card sel"><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><span class="mk-box"><span class="star"></span></span></span>
+                  <span class="card sel"><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><span class="mk-box"><span class="star"></span></span></span>
+                  <span class="card"><img src="../../../img/parts/bc_10.webp?v=0edc613f" alt=""><span class="mk-box"></span></span>
+                  <span class="card"><img src="../../../img/parts/bc_2.webp?v=0b5747b7" alt=""><span class="mk-box"></span></span>
+                </div></div>
+            </div>
+          </li>
+
+          <li class="step" id="step3">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>3</b></span><h3><span class="ja"><span class="bx">塔を<wbr>建てる</span></span><span class="en">Build Your Tower</span></h3></div>
+            <p class="ja"><span class="bx">塔を<wbr>建てる<wbr>プレイヤーは、<wbr>自分が<wbr>出した<wbr>カードを<wbr>獲得して<wbr>手元に<wbr>置きます。<wbr>これを<em><wbr>「塔」</em>と<wbr>呼びます。<wbr>2枚目以降は、<wbr>すでに<wbr>ある<wbr>カードの<wbr>上に<wbr>重ねてください。</span></p>
+            <p class="en">Players who may build take the cards they played and place them in front of themselves. This is called a <em>tower.</em> From the second card onward, place each new card on top of the previous one.</p>
+            <figure class="fig">
+              <figcaption class="fig-t"><span class="ja"><span class="bx">塔の<wbr>建てかた</span></span><span class="en">How to Build a Tower</span></figcaption>
+              <div class="viz howto">
+                <div class="howto-pic" role="img" aria-label="下のカードの、古代文字のある紺色の部分に、次のカードを重ねる">
+                  <div class="col plain"><div class="here"><span class="ja"><span class="bx">この<wbr>へん</span></span><span class="en">Around here</span></div><div class="one"><img src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><span class="line" aria-hidden="true"></span></div></div>
+                  <div class="col plain" style="--n:2"><div class="stack"><img style="--i:0" src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><img style="--i:1" src="../../../img/parts/bc_5.webp?v=b948c317" alt=""></div></div>
+                </div>
+                <p class="howto-txt"><span class="ja"><span class="bx"><em>古代文字の<wbr>ある<wbr>紺色の<wbr>部分</em>を<wbr>重ねるように<wbr>すると<wbr>綺麗な<wbr>塔に<wbr>なります。<wbr>(図参照)</span></span><span class="en"><em>Overlap the navy sections to form a neat tower.</em> See the diagram.</span></p>
+              </div>
+            </figure>
+          </li>
+
+          <li class="step" id="step4">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>4</b></span><h3><span class="ja"><span class="bx">天罰</span></span><span class="en">Divine Punishment</span></h3></div>
+            <p class="ja"><span class="bx">塔を<wbr>重ねられるのは<em><wbr>5枚</em>までです。<em><wbr>塔が<wbr>6枚に<wbr>なると<wbr>天罰が<wbr>発生します。</em><wbr>6枚目に<wbr>獲得した<wbr>カードに<wbr>描かれた<em><wbr>天罰マークの<wbr>数</em>だけ、<wbr>塔の<wbr>下から<wbr>カードを<em><wbr>捨て札</em>にし、<wbr>残った<wbr>塔で<wbr>ゲームを<wbr>続けます。</span></p>
+            <p class="en">A tower can hold up to <em>five cards. When a sixth card is added, divine punishment occurs.</em> Discard cards from the bottom of the tower equal to the <em>number of divine punishment symbols</em> on the sixth card, then continue the game with the remaining tower. The removed cards go to the <em>discard pile.</em></p>
+            <figure class="fig">
+              <figcaption class="fig-t"><span class="ja"><span class="bx">天罰の<wbr>処理</span></span><span class="en">Resolving Divine Punishment</span></figcaption>
+              <div class="viz stack-sm" role="img" aria-label="5枚の塔に6枚目として8を獲得。8の天罰マークは4つなので、下から4枚を捨て札にし、上の2枚が残る">
+                <div class="grp">
+                  <div class="row" style="align-items:flex-end;gap:14px">
+                    <div class="col" style="--n:5"><ol class="ruler"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="stack"><img style="--i:0" src="../../../img/parts/bc_2.webp?v=0b5747b7" alt=""><img style="--i:1" src="../../../img/parts/bc_5.webp?v=b948c317" alt=""><img style="--i:2" src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><img style="--i:3" src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><img style="--i:4" src="../../../img/parts/bc_1.webp?v=eb8ef767" alt=""></div></div>
+                    <div class="grp" style="gap:12px;align-items:flex-start"><div class="big8"><img src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""><span class="marks" aria-hidden="true"></span><span class="marks-l"><span class="ja"><span class="bx">天罰マーク</span></span><span class="en">Symbols</span></span></div>
+                      <p class="callout"><span class="ja"><span class="bx"><em>6枚目に<wbr>8を<wbr>獲得!</em>8の<wbr>天罰マークは<wbr>4つなので…</span></span><span class="en"><em>You add an 8 as the sixth card!</em>It has four punishment symbols, so…</span></p></div>
+                  </div>
+                </div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="grp">
+                  <div class="row" style="align-items:flex-end;gap:12px">
+                    <div class="grp" style="gap:8px"><span class="tag hl"><span class="ja"><span class="bx">捨て札</span></span><span class="en">Discard</span></span><div class="col red" style="--n:4"><ol class="ruler"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li></ol><div class="stack"><img style="--i:0" src="../../../img/parts/bc_2.webp?v=0b5747b7" alt=""><img style="--i:1" src="../../../img/parts/bc_5.webp?v=b948c317" alt=""><img style="--i:2" src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><img style="--i:3" src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""></div></div></div>
+                    <div class="grp" style="gap:8px"><span class="tag sky"><span class="ja"><span class="bx">上の<wbr>2枚は<wbr>残る</span></span><span class="en">The top 2 cards remain</span></span><div class="col" style="--n:2"><ol class="ruler"><li style="--i:0">1</li><li style="--i:1">2</li></ol><div class="stack"><img style="--i:0" src="../../../img/parts/bc_1.webp?v=eb8ef767" alt=""><img style="--i:1" src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""></div></div></div>
+                  </div>
+                  <p class="callout wide"><span class="ja"><span class="bx">6枚目と<wbr>して<wbr>8を<wbr>重ねた<wbr>後に<em><wbr>下から<wbr>4枚捨てる!</em></span></span><span class="en">Add the 8 as the sixth card, <em>then discard the bottom four cards!</em></span></p>
+                </div>
+              </div>
+            </figure>
+          </li>
+
+          <li class="step" id="step5">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>5</b></span><h3><span class="ja"><span class="bx">ターンの<wbr>終了</span></span><span class="en">End of the Turn</span></h3></div>
+            <p class="ja"><span class="bx"><em>塔の<wbr>処理を<wbr>終えるまでを<wbr>1ターン</em>と<wbr>します。<wbr>ターンが<wbr>終わったら、<wbr>塔に<wbr>ならなかった<wbr>カードは<em><wbr>捨て札</em>にし、<wbr>次の<wbr>ターンへ<wbr>進みます。<wbr>全員の<wbr>手札が<wbr>なくなるまで、<wbr>これを<wbr>繰り返します。</span></p>
+            <p class="en"><em>A turn ends once all tower effects have been resolved.</em> At the end of the turn, place all cards that were not added to a tower in the <em>discard pile</em>, then begin the next turn. Repeat until all players have no cards left in their hands.</p>
+            <div class="viz" role="img" aria-label="塔にならなかった5と3は捨て札にして、次のターンへ">
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">塔へ</span></span><span class="en">To towers</span></span><div class="row"><span class="card"><img src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""></span><span class="card"><img src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""></span></div></div>
+              <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">捨て札へ</span></span><span class="en">To the discard pile</span></span><div class="pile" aria-hidden="true"><span class="card" style="rotate:-10deg"><img src="../../../img/parts/bc_5.webp?v=b948c317" alt=""></span><span class="card" style="rotate:7deg;left:30px"><img src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""></span></div></div>
+              <div class="grp" style="align-self:center"><span class="loop"><span class="ja"><span class="bx">手札が<wbr>なくなるまで<wbr>繰り返す</span></span><span class="en">Repeat until hands are empty</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step6">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>6</b></span><h3><span class="ja"><span class="bx">ラウンドの<wbr>終了・ゲームの<wbr>終了</span></span><span class="en">End of the Round and Game</span></h3></div>
+            <p class="ja"><span class="bx">全員の<wbr>手札が<wbr>なくなったら、<wbr>ラウンド終了です。<em><wbr>塔の<wbr>いちばん上の<wbr>数字に<wbr>塔の<wbr>枚数を<wbr>かけた<wbr>数</em>が<em><wbr>得点</em>に<wbr>なります。<em><wbr>最も<wbr>得点の<wbr>高い<wbr>プレイヤーは、<wbr>トークンを<wbr>1個受け取ります。</em><wbr>同点の<wbr>場合は、<wbr>該当する<wbr>プレイヤー全員が<wbr>1個ずつ<wbr>受け取ります。<wbr>その後、<wbr>カードを<wbr>配り直して<wbr>次の<wbr>ラウンドを<wbr>始めます。</span></p>
+            <p class="ja"><span class="bx">ラウンドを<wbr>繰り返し、<em><wbr>最初に<wbr>トークンを<wbr>2個集めた<wbr>プレイヤーが<wbr>ゲームの<wbr>勝者です!</em>同着が<wbr>いた<wbr>場合は<wbr>勝利を<wbr>分かち合いましょう。</span></p>
+            <p class="en">The round ends when all players have no cards left in their hands. Multiply <em>the number on top of your tower by the number of cards in it</em> to calculate your <em>score. The player with the highest score receives one token.</em> If there is a tie, each tied player receives one token. Then, deal the cards again and begin the next round.</p>
+            <p class="en">Continue playing rounds until <em>the first player to collect two tokens wins the game!</em> If multiple players reach two tokens at the same time, they share the victory.</p>
+            <figure class="fig">
+              <figcaption class="fig-t"><span class="ja"><span class="bx">得点計算</span></span><span class="en">Scoring</span></figcaption>
+              <div class="viz stack-sm" role="img" aria-label="いちばん上の数字が8で、塔の枚数が5なら8×5=40点">
+                <div class="col" style="--n:5"><ol class="ruler"><li style="--i:0">1</li><li style="--i:1">2</li><li style="--i:2">3</li><li style="--i:3">4</li><li style="--i:4">5</li></ol><div class="stack"><img style="--i:0" src="../../../img/parts/bc_3.webp?v=cdaa3531" alt=""><img style="--i:1" src="../../../img/parts/bc_5.webp?v=b948c317" alt=""><img style="--i:2" src="../../../img/parts/bc_2.webp?v=0b5747b7" alt=""><img style="--i:3" src="../../../img/parts/bc_7.webp?v=6f4e2c32" alt=""><img style="--i:4" src="../../../img/parts/bc_8.webp?v=f9211e57" alt=""></div></div>
+                <div class="formula">
+                  <p class="eq"><span class="ja"><span class="bx">いちばん上の<wbr>数字<br>×<br>塔の<wbr>枚数</span></span><span class="en">Top number<br>×<br>Number of cards in the tower</span></p>
+                  <p class="ex"><span class="ja"><span class="bx"><b>例)</b>いちばん上の<wbr>数字が<em><wbr>8</em>で、<wbr>塔の<wbr>枚数が<em><wbr>5</em>段なら<em><wbr>8×5=40点</em></span></span><span class="en"><b>Example:</b> If the top number is <em>8</em> and the tower has <em>5 cards</em>, the score is <em>8 × 5 = 40 points.</em></span></p>
+                </div>
+              </div>
+            </figure>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 2人プレイ -->
+      <section class="panel" id="two" aria-labelledby="h-two">
+        <h2 id="h-two"><span class="ja"><span class="bx">2<wbr>人プレイの<wbr>遊びかた</span></span><span class="en">2-Player Rules</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx"><em>2<wbr>人プレイでは、<wbr>1〜10の<wbr>カード3セット<wbr>(30枚)を<wbr>使います。</em><wbr>各プレイヤーに<wbr>10枚ずつ<wbr>配り、<em><wbr>残り<wbr>10枚を<wbr>ダミー山札に<wbr>します。</em></span></p>
+          <p class="ja"><span class="bx">カードを<wbr>公開する<wbr>たびに、<em><wbr>ダミー山札からも<wbr>1枚<wbr>公開し</em>、<wbr>3人戦と<wbr>同じように<wbr>順位と<wbr>バッティングを<wbr>判定します。<em><wbr>ただし、<wbr>ダミープレイヤーは<wbr>塔を<wbr>建てず、<wbr>ラウンドの<wbr>勝者にも<wbr>なりません。</em></span></p>
+          <p class="ja"><span class="bx">他の<wbr>ルールは<wbr>通常ルールと<wbr>同様です。</span></p>
+          <p class="en"><em>For a 2-player game, use three sets of cards numbered 1–10 (30 cards total).</em> Deal 10 cards to each player and <em>place the remaining 10 cards in a dummy deck.</em></p>
+          <p class="en">Each time the players reveal their cards, <em>reveal one card from the dummy deck as well</em>, then determine the ranking and clashes as in a 3-player game. <em>However, the dummy player does not build a tower and cannot win the round.</em></p>
+          <p class="en">All other rules remain the same.</p>
+          <div class="viz" role="img" aria-label="2人に10枚ずつ配り、残り10枚をダミー山札にする">
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="row"><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="row"><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">ダミー山札</span></span><span class="en">Dummy deck</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span><span class="card"><img src="../../../img/parts/bc_ura.webp?v=8d52340d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">残り<wbr>10枚</span></span><span class="en">Remaining 10</span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 注意 -->
+      <section class="panel" id="warnings" aria-labelledby="h-warn" data-toc="注意|Warnings">
+        <div class="warn">
+          <p class="warn-t" id="h-warn" role="heading" aria-level="2"><svg viewBox="0 0 22 20" aria-hidden="true"><path d="M11 1.2 21 18.8H1z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 6.6v6.2" stroke="var(--head)" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="15.6" r="1.4" fill="var(--head)"/></svg><span class="ja"><span class="bx">注意<wbr>(必ず<wbr>お読みください)</span></span><span class="en">WARNINGS</span></p>
+          <ul class="ja">
+            <li><span class="bx">小部品が<wbr>あります。<wbr>誤飲・窒息の<wbr>危険が<wbr>ありますので、<wbr>3才未満の<wbr>お子様には<wbr>絶対に<wbr>与えないでください。</span></li>
+            <li><span class="bx">高温<wbr>多湿の<wbr>場所に<wbr>放置しないでください。<wbr>変質の<wbr>恐れが<wbr>あります。</span></li>
+            <li><span class="bx">火に<wbr>近づけないでください。<wbr>変形・火災の<wbr>原因に<wbr>なります。</span></li>
+            <li><span class="bx">使用後は<wbr>3才未満の<wbr>お子様の<wbr>手の<wbr>届かない<wbr>場所に<wbr>保管してください。</span></li>
+          </ul>
+          <ul class="en">
+            <li><b>WARNING: CHOKING HAZARD — Small parts. Not for children under 3 years.</b></li>
+            <li>Do not store in hot or humid conditions, as this may damage the product.</li>
+            <li>Keep away from fire and heat sources to prevent deformation or fire.</li>
+            <li>After use, store out of reach of children under 3 years.</li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
+        <ol class="log">
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+        </ol>
+        <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="../"><span class="ja"><span class="bx">ビビルの<wbr>塔の<wbr>作品ページへ</span></span><span class="en">Back to The Tower of BIBILU</span></a>
+        <a class="btn ghost" href="https://pandakinema.booth.pm/items/8795134" target="_blank" rel="noopener"><span class="ja"><span class="bx">BOOTHで<wbr>購入</span></span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="../../../rules/"><span class="ja"><span class="bx">遊び方説明書の<wbr>一覧へ</span></span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja"><span class="bx">この<wbr>サイトは<wbr>アクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener"><wbr>Googleアナリティクス</a>を<wbr>使用しています</span></span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

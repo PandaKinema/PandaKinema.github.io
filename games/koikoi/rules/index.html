@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b2228">
+<title>こいこいのぼり 真打 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="こいこいのぼり 真打の遊び方説明書(WEB版)。内容物、どんなゲーム?、ゲームの準備、ゲームの進め方、トークンの移動、局、ゲームの終了、Q&amp;A、更新履歴。日本語と英語を切り替えられます。">
+<meta property="og:title" content="こいこいのぼり 真打 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="こいこいのぼり 真打の遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="https://pandakinema.com/games/koikoi/rules/">
+<meta property="og:image" content="https://pandakinema.com/img/share/ogp_koikoinobori_ticket.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&amp;display=swap">
+<style>
+  /* ===== パンダキネマ 遊び方説明書(WEB版) 共通 =====
+     作品ごとに変えるのは :root の色・書体・アイコンだけ(build.py が meta.yml から差し込む)。
+     紙の説明書と同じ組み:上は表紙(ロゴと物語)、本文に章ごとの白い座布団。強調は赤。
+     背景・帯は作品ページと同じ:表紙=作品ページのSTORYの欄、本文=「どんなゲーム?」の欄、帯は本文の内側(上下)に */
+  :root{
+    --site:#1b2228;        /* サイトの下地 */
+    --bar:#000000;         /* ヘッダー */
+    --paper:#ffffff;       /* 白い座布団 */
+    --red:#d4242b;         /* 説明書の赤字(強調の基本) */
+    --soft:color-mix(in srgb,var(--ink) 10%,transparent);    /* 図の下地(作品ページの --soft で上書き) */
+    --line:color-mix(in srgb,var(--ink) 20%,transparent);
+    --ink-soft:color-mix(in srgb,var(--ink) 72%,transparent);
+    --on-body-soft:color-mix(in srgb,var(--on-body) 14%,transparent);
+    --on-body-line:color-mix(in srgb,var(--on-body) 38%,transparent);
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+    --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+    --bar-h:56px;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar-h) + 64px + env(safe-area-inset-top,0px))}
+  @media (min-width:900px){ html{scroll-padding-top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px))} }
+  body{margin:0;background:var(--site);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar)}
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+  html:not([data-lang="en"]) .en{display:none!important}
+  html[data-lang="en"] .ja{display:none!important}
+  /* 改行:日本語は文節の切れ目(<wbr>)でだけ折り返す。英語は行末をそろえすぎない */
+  .bx{word-break:keep-all;overflow-wrap:anywhere}
+  p,li,dt,dd,h2,h3,figcaption,.lbl{line-break:strict;text-wrap:pretty}
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* ===== ヘッダー(サイト共通) ===== */
+  .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar)}
+  .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:var(--bar-h)}
+  .brand img{height:30px;width:auto}
+  .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);min-width:0;overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font:700 clamp(14px,1.6vw,19px) var(--cond);text-transform:uppercase}
+  .site-nav::-webkit-scrollbar{display:none}
+  .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;text-decoration:none;opacity:.9}
+  .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+  .lang{display:flex;flex:none;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+  .lang button{height:26px;padding:0 9px;border:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:#f3f2ee;color:#000}
+  /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から(サイトのほかのページと同じ) */
+  .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .menu-btn{display:none}
+  @media (max-width:650px){
+    :root{--bar-h:52px}
+    .site-header .bar{position:relative;gap:10px}
+    .brand img{height:26px}
+    .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+    .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+    .menu-btn i{position:relative}
+    .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+    .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+    .navtg:checked~.menu-btn i{background:transparent}
+    .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+    .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+    .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+    .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+    .navtg:checked~.site-nav.site-nav{display:flex}
+    .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+    .site-nav a:first-child{border-top:0}
+    .lang{order:2}
+    .lang button{height:22px;padding:0 7px;font-size:13px}
+  }
+
+  /* ===== レイヤー(作品ページと同じ最大幅、外は下地) ===== */
+  .sheet{max-width:1100px;margin-inline:auto;background:var(--body)}
+
+  /* ===== 表紙(説明書の1面の上と同じ:左にロゴ、右に物語) ===== */
+  .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
+  .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
+  .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
+  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .h1{margin:0;width:min(var(--logo-w,400px),100%)}
+  .h1 img{margin-inline:auto}
+  .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
+  .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0;font-size:15px;font-weight:800}
+  .spec div{display:flex;align-items:baseline;gap:6px}
+  .spec dt{font-size:11px;opacity:.72}
+  .spec dd{margin:0}
+  .cover-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;margin:0;font-size:12.5px;font-weight:700;opacity:.75}
+  .cover-meta a{text-underline-offset:3px}
+  .story{display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent)}
+  .catch{margin:0;font-size:clamp(24px,3.4vw,32px);font-weight:900;line-height:1.25;text-wrap:balance}
+  .story p{margin:0}
+  .story p:not(.catch){font-size:15px;font-weight:700;line-height:1.85}
+  @media (max-width:760px){
+    .cover .inner{grid-template-columns:minmax(0,1fr);padding-block:36px 32px}
+    .story{align-items:center;padding:22px 0 0;border-left:0;border-top:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent);text-align:center}
+  }
+  /* 表紙と本文の境目(作品ごとの帯。なければまっすぐ) */
+  .edge{display:none}
+
+  /* ===== 本文:メインカラーの地(説明書と同じ模様)、左に目次、右に章ごとの白い座布団 ===== */
+  .body{position:relative;background:var(--body) var(--tex,none) center top/var(--tex-size,auto)}
+  /* 帯:作品ページと同じく、色の境目には置かず本文の内側(上下18px)に */
+  .body::before,.body::after{content:"";position:absolute;left:0;right:0;height:var(--band-h,0px);background:var(--band-c,var(--cover));pointer-events:none;
+    -webkit-mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px);mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px)}
+  .body::before{top:18px}
+  .body::after{bottom:18px}
+  .layout{display:grid;grid-template-columns:190px minmax(0,720px);justify-content:center;gap:44px;padding-block:calc(44px + var(--band-space,0px)) calc(64px + var(--band-space,0px))}
+  .toc{position:sticky;top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px));align-self:start;color:var(--on-body)}
+  .toc p{margin:0 0 10px 12px;font:700 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .toc ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+  .toc a{display:block;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;opacity:.82;transition:background .2s,opacity .2s}
+  .toc a:hover{opacity:1;background:var(--on-body-soft)}
+  .toc a.on{opacity:1;background:var(--on-body);color:var(--body)}
+  .toc .sub{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px 10px}
+  .toc .sub a{display:flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;padding:0;border-radius:50%;border:1.5px solid var(--on-body-line);font:var(--num-weight,400) 14px/1 var(--num);font-variant-numeric:lining-nums tabular-nums}
+
+  @media (max-width:899px){
+    .layout{grid-template-columns:minmax(0,1fr);gap:0;padding-block:var(--band-space,0px) calc(48px + var(--band-space,0px))}
+    /* スマホ:横にスライドする目次。並びは画面の端まで続き、端で切れる(余白の内側では切らない) */
+    .toc{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));
+      z-index:20;top:calc(var(--bar-h) + env(safe-area-inset-top,0px));margin-inline:calc(-1 * var(--gl)) calc(-1 * var(--gr));padding:10px 0;background:var(--body);border-bottom:1px solid var(--on-body-soft)}
+    .toc p,.toc .sub{display:none}
+    .toc ol{flex-direction:row;gap:6px;padding-inline:var(--gl) 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-padding-inline:var(--gl) var(--gr);scrollbar-width:none}
+    .toc ol::after{content:"";flex:none;width:calc(var(--gr) - 6px)}   /* 最後の項目のあとにも同じ余白 */
+    .toc li{flex:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{white-space:nowrap;border:1.5px solid var(--on-body-line);padding:6px 13px;font-size:13px}
+    .toc a.on{border-color:var(--on-body)}
+    .content{padding-top:24px}
+  }
+
+  /* ===== 章=白い座布団。見出しはサイト共通の角丸(左の目次と同じ形)。作品が変わっても色だけ差し替え ===== */
+  .content{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .panel{display:flex;flex-direction:column;gap:18px;min-width:0;padding:26px 28px 28px;border-radius:18px;background:var(--paper)}
+  @media (max-width:560px){ .panel{padding:20px 18px 22px;border-radius:14px} }
+  h2{align-self:flex-start;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--head);color:var(--on-head);font-size:clamp(17px,2.2vw,19px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+  /* 章の中の小見出し(説明書の「ニコ忘れ」「特殊カードの時」など) */
+  h4{margin:4px 0 0;font-size:16.5px;font-weight:900;line-height:1.4}
+  h4::before{content:"";display:inline-block;width:6px;height:1em;margin-right:8px;border-radius:2px;background:var(--head);vertical-align:-.12em}
+  .content p{margin:0}
+  /* 行間:本文 1.85/図の中の短い文 1.6 */
+  .prose p,.step>p,.prose li,.step li{line-height:1.85}
+  .prose{display:flex;flex-direction:column;gap:12px}
+  .prose ul,.prose ol,.step ul,.step ol{display:flex;flex-direction:column;gap:4px;margin:0;padding-left:1.4em}
+  em{font-style:normal;font-weight:800;color:var(--hl)}
+
+  /* 動画の枠(長尺の遊び方動画が入る場所) */
+  .screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:8px;background:#000;color:#f3f2ee;overflow:hidden}
+  .screen .soon{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .screen .play{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid rgba(243,242,238,.45)}
+  .screen .play::before{content:"";margin-left:5px;border-left:17px solid rgba(243,242,238,.45);border-block:11px solid transparent}
+  .screen .soon b{font:700 18px/1 var(--cond);letter-spacing:.18em}
+  .screen .soon span{font-size:13px;opacity:.7}
+  .note{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+
+  /* 内容物:ラベル(・○○:○枚)と並べた実物 */
+  .crow{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .crow.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cbox{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .clbl{display:flex;flex-wrap:wrap;font-size:15px;font-weight:800;line-height:1.5}   /* 「・」だけが1行目に残らないように */
+  .clbl::before{content:"・";flex:none}
+  .clbl>span{flex:1 1 0;min-width:0}
+  .clbl small{flex:0 0 100%;margin-top:2px;padding-left:1em;font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .cards{display:grid;grid-template-columns:repeat(var(--cols,10),minmax(0,1fr));gap:6px}
+  .cards img{width:100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .things{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+  .things img{width:var(--tw,46px)}
+  .sheet-icon{display:flex;gap:6px}
+  .sheet-icon span{display:grid;place-items:center;width:40px;height:54px;border-radius:3px;background:var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 14px var(--cond);letter-spacing:.06em}
+  .sheet-icon span:last-child{background:var(--head);color:var(--on-head)}
+  @media (min-width:900px){ .cards{gap:8px} }
+  @media (max-width:560px){ .cards{grid-template-columns:repeat(var(--cols-sm,5),minmax(0,1fr));gap:8px} .crow.two{grid-template-columns:minmax(0,1fr)} }
+
+  /* 人数ごとの表など(説明書の小さな表) */
+  .ptable{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:10px;max-width:calc(var(--cols,2) * 230px);padding:10px;border-radius:14px;background:var(--soft)}
+  .ptable>div{overflow:hidden;border:2px solid var(--head);border-radius:10px;background:var(--paper);text-align:center}
+  .ptable b{display:block;padding:6px;background:var(--head);color:var(--on-head);font-size:15px}
+  .ptable p{padding:10px 8px 12px;font-size:15px;font-weight:800;line-height:1.5}
+  /* 説明書の赤い帯(※注意書き) */
+  .rnote{align-self:flex-start;padding:7px 14px;border-radius:6px;background:var(--hl);color:#fff;font-size:13.5px;font-weight:800;line-height:1.6}
+  .rnote a{text-decoration:none}
+  .rnote a:hover{text-decoration:underline}
+  /* 印刷した説明書の誤りの訂正(その場所に小さく添える。更新履歴には「訂正」の印) */
+  .errata{display:block;margin-top:4px;color:var(--hl);font-size:12px;font-weight:800;line-height:1.5;font-style:normal}
+  /* 枠で囲んだ補足(説明書の「ニコ忘れ」のような囲み) */
+  .box{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px;background:var(--soft)}
+  .box p{line-height:1.8}
+
+  /* ===== ゲームの流れ(1つの座布団の中に手順を並べる) ===== */
+  .flow{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+  .step{display:flex;flex-direction:column;gap:14px;padding-block:24px}
+  .step:first-child{padding-top:4px}
+  .step:last-child{padding-bottom:0}
+  .step + .step{border-top:2px dashed var(--line)}
+  .step-head{display:flex;align-items:center;gap:12px}
+  .snum{position:relative;flex:none;width:44px;height:46px;background:var(--head);-webkit-mask:var(--step-icon) center/contain no-repeat;mask:var(--step-icon) center/contain no-repeat}
+  /* 番号:アイコンの真ん中(作品ごとに --num-y で上下を合わせる) */
+  .snum b{position:absolute;left:0;right:0;top:var(--num-y,50%);translate:0 -50%;color:var(--on-head);font:var(--num-weight,400) 25px/1 var(--num);font-variant-numeric:lining-nums;text-align:center}
+  h3{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+
+  /* ===== 図(説明書の図をカードの画像で組み直したもの) ===== */
+  .viz{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:18px 22px;padding:22px 14px 18px;border-radius:12px;background:var(--soft);overflow-x:auto}
+  .grp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .grp>.lbl,.lbl{font-size:12.5px;font-weight:800;line-height:1.45;text-align:center}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .card{position:relative;display:block;flex:none;width:var(--cw,52px)}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:60px} }
+  .card img{width:100%;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.22)}
+  .card.sel img{outline:3px solid var(--hl);outline-offset:2px}
+  .card.dim img{opacity:.35}
+  .arrow{align-self:center;flex:none;width:0;height:0;border-left:13px solid var(--head);border-block:9px solid transparent;opacity:.85}
+  @media (max-width:560px){ .viz.stack-sm{flex-direction:column;align-items:center} .viz.stack-sm>.arrow{transform:rotate(90deg)} }
+  /* 2つ以上を見くらべる図:点線で区切る */
+  .viz.split{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));align-items:start;gap:0;padding-inline:0}
+  .viz.split>.grp{padding-inline:12px}
+  .viz.split>.grp+.grp{border-left:2px dashed var(--line)}
+  @media (max-width:620px){ .viz.split{grid-template-columns:minmax(0,1fr);gap:18px} .viz.split>.grp+.grp{padding-top:18px;border-left:0;border-top:2px dashed var(--line)} }
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:12px;font-weight:800;white-space:nowrap}
+  .tag.hl{background:var(--hl);color:#fff}
+  .callout{max-width:170px;font-size:12.5px;font-weight:800;line-height:1.6}
+  .callout em{display:block;font-size:15px}
+  .pile{position:relative;width:96px;height:96px}
+  .pile .card{position:absolute;left:24px;top:10px}
+  .deck{position:relative;width:calc(var(--cw,52px) + 12px);height:calc(var(--cw,52px) * 1.4 + 12px)}
+  .deck .card{position:absolute}
+  .deck .card:nth-child(1){left:0;top:0}
+  .deck .card:nth-child(2){left:6px;top:6px}
+  .deck .card:nth-child(3){left:12px;top:12px}
+  .loop{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:13px;font-weight:800}
+  .loop::before{content:"↻";font-size:18px;line-height:1}
+  /* 説明書の図の枠(見出し付き) */
+  .fig{margin:0;overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--paper)}
+  .fig-t{padding:6px 12px;background:var(--head);color:var(--on-head);font-size:13.5px;font-weight:800;text-align:center}
+  .fig .viz{border-radius:0}
+  .fig-txt{max-width:280px;font-size:14px;font-weight:700;line-height:1.6}
+
+  /* よくある質問 */
+  .qa{display:flex;flex-direction:column;gap:14px;margin:0}
+  .qa dt{font-weight:900;line-height:1.6}
+  .qa dd{margin:4px 0 0;padding-left:1.6em;line-height:1.8}
+  .qa dt::before,.qa dd::before{display:inline-block;width:1.6em;margin-left:-1.6em;font-weight:900}
+  .qa dt{padding-left:1.6em}
+  .qa dt::before{content:"Q.";color:var(--hl)}
+  .qa dd::before{content:"A."}
+
+  /* 注意(説明書の注意枠) */
+  .warn{overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--warn-bg,var(--soft))}
+  .warn-t{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 12px;background:var(--head);color:var(--on-head);font-size:16px;font-weight:900}
+  .warn-t svg{flex:none;width:22px;height:20px}
+  .warn ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:14px 18px 16px 34px;font-size:13.5px;font-weight:700;line-height:1.6}
+
+  /* 更新履歴 */
+  .log{display:flex;flex-direction:column;margin:0;padding:0;list-style:none;border-top:1.5px solid var(--line)}
+  .log li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:14px 4px;border-bottom:1.5px solid var(--line);font-size:15px;line-height:1.7}
+  .log time{font:700 18px/1.5 var(--cond);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .log .chg{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:4px;background:var(--hl);color:#fff;font-size:12px;font-weight:800;vertical-align:2px}
+  .legend{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .legend .chg{display:inline-block;padding:0 7px;border-radius:4px;background:var(--hl);color:#fff;font-size:11.5px;font-weight:800}
+
+  /* 作品ページへ */
+  .back{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;padding:13px 26px;border-radius:999px;background:var(--on-body);color:var(--body);font-size:14px;font-weight:800;letter-spacing:.04em;text-decoration:none;transition:translate .15s}
+  .btn:hover{translate:0 -2px}
+  .btn.ghost{background:none;color:var(--on-body);box-shadow:inset 0 0 0 2px var(--on-body)}
+
+  .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));background:var(--bar);color:#9aa3a9;font-size:12px}
+  .site-footer a{color:#f3f2ee;font:700 15px var(--cond);text-decoration:none}
+  .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+  .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media (max-width:650px){ .site-footer{flex-direction:column;gap:8px;text-align:center} }
+
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.toc a{transition:none} }
+
+  /* ===== こいこいのぼり 真打 ===== */
+  :root{
+    --main:#48b0e5;
+    --accent:#ffffff;
+    --ink:#0a0c0c;
+    --hl:#d4242b;
+    --head:#0a0c0c;
+    --on-head:#ffffff;
+    --cover:#48b0e5;
+    --on-cover:#ffffff;
+    --body:#0a0c0c;
+    --on-body:#ffffff;
+    --tex:url(../../../img/page/k_sei_ura.png?v=b05f33d6);
+    --tex-size:122px 122px;
+    --band:url(../../../img/page/mt_sprocket.svg?v=404578e1);
+    --band-h:20px;
+    --step-icon:url(../../../img/page/k_fish.png?v=08973631);
+    --num:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Arial Rounded MT Bold",sans-serif;
+    --num-weight:800;
+    --num-y:50%;
+    --logo-w:340px;
+    --cover-tex:url(../../../img/page/k_sei_top.png?v=e25a8083);
+    --cover-tex-size:122px 122px;
+    --band-c:#4c5155;
+    --soft:#e4f3fb;
+    --band-space:56px;
+    --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
+  }
+  /* こいこいのぼり 真打だけで使う見た目 */
+  /* 番号:おさかなトークンの形(横長)。数字は尾びれを除いた胴の真ん中に */
+  .snum{width:64px;height:38px}
+  .snum b{font-size:21px;translate:var(--num-x,-6px) -50%}
+  .toc .sub a{font-weight:800}
+
+  /* こいのぼりカード(縦長) */
+  .card{--cw:44px}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:46px} }
+  .card img{border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.22)}
+  .card.up{translate:0 -10px}
+  .hand{display:flex}
+  .hand .card+.card{margin-left:calc(var(--cw) * -.52)}
+  .hand .card:nth-child(1){z-index:1}.hand .card:nth-child(2){z-index:2}.hand .card:nth-child(3){z-index:3}.hand .card:nth-child(4){z-index:4}.hand .card:nth-child(5){z-index:5}
+  .hands{gap:14px}
+  .deck{width:calc(var(--cw,44px) + 12px);height:calc(var(--cw,44px) * 1.653 + 12px)}
+  .row{gap:6px}
+  .viz.k{gap:16px 18px;align-items:center}
+  .viz.k .grp>.lbl:last-child{color:var(--ink-soft)}
+
+  /* 内容物 */
+  .kcards{--tw:56px}
+  .skies{--tw:118px;gap:3px}
+  .summ{--tw:190px}
+  .summ img{border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .fish1{--tw:60px}
+  .things img{border-radius:3px}
+
+  /* どんなゲーム?(説明書の表面の2つ) */
+  .genre{margin:-6px 0 0}
+  .quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .qcard{display:flex;flex-direction:column;gap:10px;min-width:0;padding:16px;border-radius:12px;background:var(--soft)}
+  .qcard h3{align-self:flex-start;padding:5px 14px 6px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:15px}
+  .qcard p{font-size:15px;font-weight:800;line-height:1.6}
+  .qcard .viz{padding:14px;background:var(--paper);align-items:center}
+  @media (max-width:620px){ .quick{grid-template-columns:minmax(0,1fr)} }
+
+  /* 準備:説明書の黒い四角の番号 */
+  .olsq{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+  .olsq li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+  .olsq p{line-height:1.85}
+  .sqn{display:inline-grid;place-items:center;width:22px;height:22px;margin-top:.3em;border-radius:3px;background:var(--head);color:var(--on-head);font:var(--num-weight) 14px/1 var(--num)}
+  .lbl .sqn{width:18px;height:18px;margin:0 6px 0 0;font-size:12px;vertical-align:-3px}
+  .viz.setup{gap:20px 26px}
+
+  /* そらカードとおさかなトークン */
+  .sky{position:relative;display:flex;gap:2px;width:var(--sw,236px)}
+  .sky>img{width:calc(50% - 1px);border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  /* トークンは胴(尾びれを除いた部分)の真ん中が --fx に来るように置く */
+  .sky>img.fish{position:absolute;left:var(--fx);top:50%;width:13%;border-radius:0;box-shadow:none;translate:-41% -50%;z-index:2;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.45))}
+  .sky>img.fish.ghost{opacity:.3}
+  .pullar{position:absolute;left:50%;top:50%;width:36%;height:0;translate:-50% -50%;z-index:1}
+  .pullar::before,.pullar::after{content:"";position:absolute;top:-9px;border-block:9px solid transparent}
+  .pullar::before{left:0;border-right:14px solid var(--hl)}
+  .pullar::after{right:0;border-left:14px solid var(--hl)}
+  .movar{position:absolute;left:var(--a);width:calc(var(--b) - var(--a));top:-14px;height:4px;border-radius:2px;background:var(--hl)}
+  .movar::after{content:"";position:absolute;right:-4px;top:-6px;border-block:8px solid transparent;border-left:12px solid var(--hl)}
+  .sides{display:flex;justify-content:space-between;width:var(--sw,236px)}
+  .sides .tag{font-size:11.5px}
+
+  /* 自分の手番にすること */
+  .turn{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px 18px;padding:14px 16px;border-radius:12px;background:var(--soft)}
+  .turn-t{padding:10px 16px;border-radius:10px;background:var(--main);color:#fff;font-size:17px;font-weight:900;line-height:1.35;text-align:center}
+  .turn ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none;font-size:16px;font-weight:800;line-height:1.6}
+  .turn a{text-decoration:none}
+  .turn a:hover{text-decoration:underline;text-underline-offset:3px}
+  @media (max-width:520px){ .turn{grid-template-columns:minmax(0,1fr)} .turn-t{justify-self:start} }
+
+  /* 役の一覧(説明書の赤い枠) */
+  .yaku{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:16px 26px;padding:18px 14px 16px;border-radius:12px;background:var(--hl);color:#fff}
+  .yaku .card{--cw:36px}
+  @media (min-width:900px){ .yaku .card{--cw:40px} }
+  .yaku .row{gap:4px}
+  .yaku .lbl{font-size:14px;font-weight:900}
+  .yaku .nt{flex-basis:100%;font-size:12.5px;font-weight:800;line-height:1.6;text-align:center}
+
+  /* あがり/こいこい */
+  .decl{display:flex;flex-direction:column;gap:6px;margin:0}
+  .decl>div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px}
+  .decl dt{font-weight:900;line-height:1.8}
+  .decl dd{margin:0;line-height:1.8}
+  .decl-n{font-size:14.5px;font-weight:800;text-align:center}
+  @media (max-width:520px){ .decl>div{grid-template-columns:minmax(0,1fr);gap:0} }
+  /* 成功/失敗 */
+  .res2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .res{--c:var(--main);overflow:hidden;border:2.5px solid var(--c);border-radius:10px;background:var(--paper)}
+  .res.ng{--c:var(--hl)}
+  .res b{display:block;padding:5px 12px;background:var(--c);color:#fff;font-size:13.5px;font-weight:900;line-height:1.5}
+  .res p{padding:10px 12px 12px;font-size:15px;font-weight:800;line-height:1.6}
+  @media (max-width:560px){ .res2{grid-template-columns:minmax(0,1fr)} }
+
+  /* トークンの移動 */
+  .tokrow{display:flex;flex-wrap:wrap;align-items:center;gap:16px 22px}
+  .tokrow .viz{flex:1 1 280px}
+  .mtab{display:flex;flex-direction:column;gap:6px;margin:0}
+  .mtab>div{display:grid;grid-template-columns:7.5em 5em;overflow:hidden;border:2px solid var(--head);border-radius:999px;font-size:16px;font-weight:900;line-height:1.3}
+  html[data-lang="en"] .mtab>div{grid-template-columns:7em 6.5em}
+  .mtab dt{padding:6px 12px;background:var(--head);color:var(--on-head);text-align:center}
+  .mtab dd{margin:0;padding:6px 12px;background:var(--paper);text-align:center}
+
+  /* Q&A の例 */
+  .qa-ex{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .qa-ex p{font-size:14.5px;line-height:1.7}
+  .qa-ex .viz{padding-top:28px}
+  .qa>div{display:flex;flex-direction:column}
+
+  .warn{--warn-bg:var(--paper)}
+  .panel>p.ja,.panel>p.en{line-height:1.85}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="../../../" aria-label="PANDA KINEMA トップへ"><img src="../../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="../../../#news">NEWS</a><a href="../../../#board">BOARD GAME</a><a href="../../../#movie">MOVIE</a><a href="../../../#tools">PLAY&amp;TOOLS</a><a href="../../../#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+        <p class="series">MINI THEATRE SERIES 01</p>
+        <h1 class="h1"><img src="../../../img/logo/koikoilogo.png?v=bc68f6cc" alt="こいこいのぼり 真打 KOIKOINOBORI SHINUCHI"></h1>
+        <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja"><span class="bx">人数</span></span><span class="en">Players</span></dt><dd><span class="ja"><span class="bx">2人</span></span><span class="en">2</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">5〜10分</span></span><span class="en">5–10 min</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>6年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja"><span class="bx">あげろ!こいの<wbr>ぼり</span></span><span class="en">Raise the Carp Streamers!</span></p>
+        <p class="ja"><span class="bx">花札の<wbr>『こいこい』を<wbr>もとにした、<wbr>鯉の<wbr>ぼりの<wbr>カードゲーム。<wbr>同じ<wbr>色の<wbr>こいの<wbr>ぼりを<wbr>ペアで<wbr>取って<wbr>役を<wbr>作り、<wbr>こいの<wbr>ぼりを<wbr>高く<wbr>上げましょう。<wbr>勝負を<wbr>決めるか、<wbr>『こいこい』で<wbr>さらに<wbr>点を<wbr>伸ばすか。<wbr>3局を<wbr>終えた<wbr>とき、<wbr>相手より<wbr>高く<wbr>こいの<wbr>ぼりを<wbr>上げていた<wbr>方が<wbr>勝ちです。</span></p>
+        <p class="en">A carp-streamer card game based on the hanafuda game “Koi-Koi.” Take carp streamers of the same color in pairs to make sets, and raise your streamer high. Will you settle the round, or call “Koi-Koi” to push your score even higher? After 3 rounds, whoever has raised their streamer higher than their opponent wins.</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
+        <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
+        <li><a href="#overview"><span class="ja">どんなゲーム?</span><span class="en">Game Overview</span></a></li>
+        <li><a href="#setup"><span class="ja">ゲームの準備</span><span class="en">Game Setup</span></a></li>
+        <li><a href="#flow"><span class="ja">ゲームの進め方</span><span class="en">How to Play</span></a>
+          <div class="sub" aria-label="手順"><a href="#step1">1</a><a href="#step2">2</a><a href="#step3">3</a></div></li>
+        <li><a href="#token"><span class="ja">トークンの移動</span><span class="en">Moving the Token</span></a></li>
+        <li><a href="#end"><span class="ja">局、ゲームの終了</span><span class="en">End of the Round and Game</span></a></li>
+        <li><a href="#qa">Q&amp;A</a></li>
+        <li><a href="#warnings"><span class="ja">注意</span><span class="en">Warnings</span></a></li>
+        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
+        <div class="screen">
+          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
+        </div>
+        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
+      </section>
+
+      <!-- 内容物 -->
+      <section class="panel" id="contents" aria-labelledby="h-contents">
+        <h2 id="h-contents"><span class="ja"><span class="bx">内容物</span></span><span class="en">Contents</span></h2>
+        <div class="crow">
+          <p class="clbl"><span class="ja"><span class="bx">こいのぼりカード:25枚<small><wbr>(各色、<wbr>5が<wbr>1枚、<wbr>3が<wbr>2枚、<wbr>1が<wbr>3枚。<wbr>黒のみ<wbr>5が<wbr>2枚。)</small></span></span><span class="en">Carp Streamer Cards: 25<small>(In each color: one 5, two 3s and three 1s. Black only has two 5s.)</small></span></p>
+          <div class="things kcards" role="img" aria-label="青・緑・赤・黒のこいのぼりカード"><img src="../../../img/parts/kc_b5.webp?v=176f9345" alt=""><img src="../../../img/parts/kc_g5.webp?v=5ba299e7" alt=""><img src="../../../img/parts/kc_r5.webp?v=ea676835" alt=""><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></div>
+        </div>
+        <div class="crow two">
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">そらカード:2枚<small><wbr>(表は<wbr>青空、<wbr>裏は<wbr>夕焼け)</small></span></span><span class="en">Sky Cards: 2<small>(Blue sky on the front, sunset on the back)</small></span></p>
+            <div class="things skies" role="img" aria-label="そらカード2枚"><img src="../../../img/parts/kc_sl.webp?v=c05392f3" alt=""><img src="../../../img/parts/kc_sr.webp?v=7233a647" alt=""></div>
+          </div>
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">サマリー:1枚</span></span><span class="en">Summary Card: 1</span></p>
+            <div class="things summ" role="img" aria-label="サマリー"><img src="../../../img/gallery/kg_summary1.webp?v=3246b670" alt=""></div>
+          </div>
+        </div>
+        <div class="crow two">
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">おさかなトークン:1個</span></span><span class="en">Fish Token: 1</span></p>
+            <div class="things fish1" role="img" aria-label="おさかなトークン"><img src="../../../img/parts/k_fish.webp?v=5c22b4e7" alt=""></div>
+            <p class="note"><span class="ja"><span class="bx">※頒布<wbr>時期に<wbr>よって<wbr>トークンの<wbr>形状が<wbr>多少異なる<wbr>場合が<wbr>あります。<wbr>ご了承ください。</span></span><span class="en">The shape of the token may vary slightly depending on when the game was distributed.</span></p>
+          </div>
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p>
+            <div class="sheet-icon" aria-hidden="true"><span>JA</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- どんなゲーム?(説明書の表面) -->
+      <section class="panel" id="overview" aria-labelledby="h-overview">
+        <h2 id="h-overview"><span class="ja"><span class="bx">どんな<wbr>ゲーム?</span></span><span class="en">Game Overview</span></h2>
+        <p class="genre"><span class="tag"><span class="ja"><span class="bx">花札風セットコレクション</span></span><span class="en">Hanafuda-style set collection</span></span></p>
+        <div class="quick">
+          <div class="qcard">
+            <h3><span class="ja"><span class="bx">1.カードは<wbr>同じ<wbr>色の<wbr>ペアで<wbr>取る!</span></span><span class="en">1. Take cards in pairs of the same color!</span></h3>
+            <p><span class="ja"><span class="bx">場札に<wbr>同じ<wbr>色が<wbr>あれば、<wbr>ペアに<wbr>して<wbr>獲得できる!</span></span><span class="en">If a table card matches your card’s color, take them both as a pair!</span></p>
+            <div class="viz" role="img" aria-label="青の5と、場札の青の1をペアにして獲得"><span class="card"><img src="../../../img/parts/kc_b5.webp?v=176f9345" alt=""></span><span class="arrow" aria-hidden="true"></span><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span></div>
+          </div>
+          <div class="qcard">
+            <h3><span class="ja"><span class="bx">2.<wbr>同じ<wbr>数字を<wbr>揃えると<wbr>役に<wbr>なる!</span></span><span class="en">2. Matching numbers make a set!</span></h3>
+            <p><span class="ja"><span class="bx">同じ<wbr>数字を<wbr>複数枚獲得すると<wbr>役に<wbr>なる!</span></span><span class="en">Collect several cards with the same number to make a set!</span></p>
+            <div class="viz" role="img" aria-label="青・赤・黒の5がそろって役になる"><div class="row"><span class="card"><img src="../../../img/parts/kc_b5.webp?v=176f9345" alt=""></span><span class="card"><img src="../../../img/parts/kc_r5.webp?v=ea676835" alt=""></span><span class="card"><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 準備 -->
+      <section class="panel" id="setup" aria-labelledby="h-setup">
+        <h2 id="h-setup"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2>
+        <ol class="olsq">
+          <li><span class="sqn" aria-hidden="true">1</span><div><p class="ja"><span class="bx">全ての<wbr>こいのぼりカードを<wbr>よく<wbr>混ぜ、<wbr>山札に<wbr>します。</span></p><p class="en">Shuffle all the carp streamer cards well to form the deck.</p></div></li>
+          <li><span class="sqn" aria-hidden="true">2</span><div><p class="ja"><span class="bx">山札から<wbr>5枚カードを<wbr>引き、<wbr>場札と<wbr>して<wbr>並べます。<br><em><wbr>(すべて<wbr>同じ<wbr>色だった<wbr>場合は<wbr>引き直します。)</em></span></p><p class="en">Draw 5 cards from the deck and lay them out as the table cards.<br><em>(If they are all the same color, draw again.)</em></p></div></li>
+          <li><span class="sqn" aria-hidden="true">3</span><div><p class="ja"><span class="bx">そらカードを<wbr>矢車が<wbr>できる<wbr>形で<wbr>配置し、<wbr>真ん中に<wbr>トークンを<wbr>置きます。<wbr>(そらカードの<wbr>裏表は<wbr>お好みで。)</span></p><p class="en">Place the sky cards so that they form a pinwheel, and put the token in the middle. (Use either side of the sky cards, as you like.)</p></div></li>
+          <li><span class="sqn" aria-hidden="true">4</span><div><p class="ja"><span class="bx">各プレイヤーは<wbr>山札から<wbr>手札を<wbr>5枚引き、<wbr>じゃんけんに<wbr>勝った<wbr>方から<wbr>ゲームを<wbr>始めます。<br><em><wbr>(この<wbr>時、<wbr>手札に<wbr>5が<wbr>4枚<wbr>あった<wbr>場合、<wbr>5点を<wbr>獲得して<wbr>即あがりと<wbr>なります。<wbr>超ラッキー!)※こいこいは<wbr>できません。</em></span></p><p class="en">Each player draws 5 cards from the deck as their hand. The winner of rock-paper-scissors goes first.<br><em>(If your hand has four 5s at this point, you score 5 points and win the round on the spot. What luck!) You cannot call Koi-Koi.</em></p></div></li>
+        </ol>
+        <div class="viz setup" role="img" aria-label="1 山札、2 場札5枚、3 そらカードの真ん中にトークン、4 2人に手札5枚ずつ">
+          <div class="grp"><span class="lbl"><span class="sqn">1</span><span class="ja"><span class="bx">山札</span></span><span class="en">Deck</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span></div></div>
+          <div class="grp"><span class="lbl"><span class="sqn">2</span><span class="ja"><span class="bx">場札</span></span><span class="en">Table cards</span></span><div class="row"><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></span><span class="card"><img src="../../../img/parts/kc_g3.webp?v=e1da7497" alt=""></span><span class="card"><img src="../../../img/parts/kc_r1.webp?v=1c0bd412" alt=""></span><span class="card"><img src="../../../img/parts/kc_k3.webp?v=e48aec66" alt=""></span></div></div>
+          <div class="grp"><span class="lbl"><span class="sqn">3</span><span class="ja"><span class="bx">そらカードと<wbr>トークン</span></span><span class="en">Sky cards and token</span></span><div class="sky "><img src="../../../img/parts/kc_sl.webp?v=c05392f3" alt=""><img src="../../../img/parts/kc_sr.webp?v=7233a647" alt=""><img class="fish" src="../../../img/parts/k_fish.webp?v=5c22b4e7" alt="" style="--fx:50%"></div></div>
+          <div class="grp"><span class="lbl"><span class="sqn">4</span><span class="ja"><span class="bx">手札<wbr>(5<wbr>枚ずつ)</span></span><span class="en">Hands (5 cards each)</span></span><div class="row hands"><div class="hand"><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span></div><div class="hand"><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span></div></div></div>
+        </div>
+      </section>
+
+      <!-- ゲームの進め方 -->
+      <section class="panel" id="flow" aria-labelledby="h-flow">
+        <h2 id="h-flow"><span class="ja"><span class="bx">ゲームの<wbr>進め方</span></span><span class="en">How to Play</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">この<wbr>ゲームでは<wbr>以下の<wbr>手順を<wbr>交互に<wbr>行います。<wbr>そして、<wbr>得点が<wbr>確定して<wbr>トークンを<wbr>移動するまでを<wbr>1局とし、<wbr>これを<wbr>3局行います。</span></p>
+          <p class="en">Players take turns doing the steps below. A round lasts until a score is settled and the token is moved, and the game is played over 3 rounds.</p>
+        </div>
+        <div class="turn">
+          <p class="turn-t"><span class="ja"><span class="bx">自分の<wbr>手番に<wbr>する<wbr>こと</span></span><span class="en">On your turn</span></p>
+          <ol>
+            <li><a href="#step1"><span class="ja"><span class="bx">1. 手札から<wbr>場に<wbr>1枚出す</span></span><span class="en">1. Play a card from your hand</span></a></li>
+            <li><a href="#step2"><span class="ja"><span class="bx">2. 山札から<wbr>カードを<wbr>めくる</span></span><span class="en">2. Flip a card from the deck</span></a></li>
+            <li><a href="#step3"><span class="ja"><span class="bx">3. 役の<wbr>確認</span></span><span class="en">3. Check for sets</span></a></li>
+          </ol>
+        </div>
+        <ol class="flow">
+
+          <li class="step" id="step1">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>1</b></span><h3><span class="ja"><span class="bx">手札から<wbr>場に<wbr>1枚出す</span></span><span class="en">Play a Card from Your Hand</span></h3></div>
+            <p class="ja"><span class="bx">①手札から<wbr>1枚選び、<wbr>場に<wbr>出します。<wbr>場に<wbr>同じ<wbr>色が<wbr>あれば、<wbr>ペアで<wbr>獲得します。<br><wbr>(場に<wbr>同じ<wbr>色が<wbr>複数あっても<wbr>ペアに<wbr>できるのは<wbr>1枚です。)<br>②獲得したカードは<wbr>手元に<wbr>表向きで<wbr>置いておきます。<br><em><wbr>※同じ<wbr>色の<wbr>カードが<wbr>場に<wbr>なければ<wbr>そのまま<wbr>場に<wbr>置いておきます。</em></span></p>
+            <p class="en">① Choose 1 card from your hand and play it to the table. If a table card has the same color, take both as a pair.<br>(Even if several table cards share that color, you can pair with only one of them.)<br>② Place the cards you take face up in front of you.<br><em>If no table card has the same color, leave your card on the table.</em></p>
+            <div class="viz stack-sm k" role="img" aria-label="手札から赤の3を出し、場札の赤の1とペアにして獲得する">
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></span><div class="hand"><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_k1.webp?v=b4702d8e" alt=""></span><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_g1.webp?v=7d18401d" alt=""></span><span class="card sel up"><img src="../../../img/parts/kc_r3.webp?v=f96ecfda" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">①1枚<wbr>選んで<wbr>場に<wbr>出す</span></span><span class="en">① Play 1 card</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">場札</span></span><span class="en">Table cards</span></span><div class="row"><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></span><span class="card"><img src="../../../img/parts/kc_g3.webp?v=e1da7497" alt=""></span><span class="card sel"><img src="../../../img/parts/kc_r1.webp?v=1c0bd412" alt=""></span><span class="card"><img src="../../../img/parts/kc_k3.webp?v=e48aec66" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同じ<wbr>色<wbr>(赤)と<wbr>ペア</span></span><span class="en">Pair with the same color (red)</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">獲得したカード</span></span><span class="en">Cards you took</span></span><div class="row"><span class="card"><img src="../../../img/parts/kc_r3.webp?v=f96ecfda" alt=""></span><span class="card"><img src="../../../img/parts/kc_r1.webp?v=1c0bd412" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">②手元に<wbr>表向きで<wbr>置く</span></span><span class="en">② Place face up</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step2">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>2</b></span><h3><span class="ja"><span class="bx">山札から<wbr>カードを<wbr>めくる</span></span><span class="en">Flip a Card from the Deck</span></h3></div>
+            <p class="ja"><span class="bx">①山札を<wbr>上から<wbr>1枚めくります。<wbr>場に<wbr>同じ<wbr>色が<wbr>あれば、<wbr>ペアで<wbr>獲得します。<br><wbr>(場に<wbr>同じ<wbr>色が<wbr>複数あっても<wbr>ペアに<wbr>できるのは<wbr>1枚です。)<br><em>※同じ<wbr>色の<wbr>カードが<wbr>場に<wbr>なければ<wbr>そのまま<wbr>場に<wbr>置いておきます。</em><br><wbr>②獲得したカードは<wbr>手元に<wbr>表向きで<wbr>置いておきます。</span></p>
+            <p class="en">① Flip the top card of the deck. If a table card has the same color, take both as a pair.<br>(Even if several table cards share that color, you can pair with only one of them.)<br><em>If no table card has the same color, leave the flipped card on the table.</em><br>② Place the cards you take face up in front of you.</p>
+            <div class="viz stack-sm k" role="img" aria-label="山札から青の3をめくり、場札の青の1とペアにして獲得する">
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">山札</span></span><span class="en">Deck</span></span><div class="row"><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span><span class="card"><img src="../../../img/parts/kc_ura.webp?v=ded4ca0d" alt=""></span></div><span class="card sel"><img src="../../../img/parts/kc_b3.webp?v=145adfb4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">①<wbr>1枚めくる</span></span><span class="en">① Flip 1 card</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">場札</span></span><span class="en">Table cards</span></span><div class="row"><span class="card sel"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></span><span class="card"><img src="../../../img/parts/kc_g3.webp?v=e1da7497" alt=""></span><span class="card"><img src="../../../img/parts/kc_k3.webp?v=e48aec66" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同じ<wbr>色<wbr>(青)と<wbr>ペア</span></span><span class="en">Pair with the same color (blue)</span></span></div>
+              <span class="arrow" aria-hidden="true"></span>
+              <div class="grp"><span class="lbl"><span class="ja"><span class="bx">獲得したカード</span></span><span class="en">Cards you took</span></span><div class="row"><span class="card"><img src="../../../img/parts/kc_b3.webp?v=145adfb4" alt=""></span><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">②手元に<wbr>表向きで<wbr>置く</span></span><span class="en">② Place face up</span></span></div>
+            </div>
+          </li>
+
+          <li class="step" id="step3">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>3</b></span><h3><span class="ja"><span class="bx">役の<wbr>確認</span></span><span class="en">Check for Sets</span></h3></div>
+            <p class="ja"><span class="bx">獲得したカードに<wbr>同じ<wbr>数字が<wbr>揃ったら<wbr>役が<wbr>成立します。<br><wbr>役が<wbr>成立する<wbr>枚数は<wbr>数字に<wbr>よって<wbr>異なります。</span></p>
+            <p class="en">When the cards you have taken include enough cards with the same number, you make a set.<br>How many cards a set needs depends on the number.</p>
+            <div class="yaku" role="img" aria-label="役:1は5枚で1点、3は4枚で3点、5は色の異なる3枚で5点">
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span><span class="card"><img src="../../../img/parts/kc_g1.webp?v=7d18401d" alt=""></span><span class="card"><img src="../../../img/parts/kc_r1.webp?v=1c0bd412" alt=""></span><span class="card"><img src="../../../img/parts/kc_k1.webp?v=b4702d8e" alt=""></span><span class="card"><img src="../../../img/parts/kc_b1.webp?v=5d6dc5da" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">1:5枚<wbr>(1点)</span></span><span class="en">1: five cards (1 pt)</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/kc_b3.webp?v=145adfb4" alt=""></span><span class="card"><img src="../../../img/parts/kc_k3.webp?v=e48aec66" alt=""></span><span class="card"><img src="../../../img/parts/kc_g3.webp?v=e1da7497" alt=""></span><span class="card"><img src="../../../img/parts/kc_r3.webp?v=f96ecfda" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">3:4枚<wbr>(3点)</span></span><span class="en">3: four cards (3 pts)</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/kc_b5.webp?v=176f9345" alt=""></span><span class="card"><img src="../../../img/parts/kc_r5.webp?v=ea676835" alt=""></span><span class="card"><img src="../../../img/parts/kc_k5.webp?v=da2c0a63" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">5:色の<wbr>異なる<wbr>3枚<wbr>(5点)</span></span><span class="en">5: three cards of different colors (5 pts)</span></span></div>
+              <p class="nt"><span class="ja"><span class="bx">※5以外は<wbr>色の<wbr>数は<wbr>何色でも<wbr>OK<br>※役は<wbr>複数同時に<wbr>成立する<wbr>こともあります。</span></span><span class="en">For numbers other than 5, any mix of colors is OK.<br>You may make more than one set at the same time.</span></p>
+            </div>
+            <p class="ja"><span class="bx">役が<wbr>成立していなかった<wbr>場合は<wbr>相手の<wbr>番に<wbr>移ります。<br><wbr>成立していた<wbr>場合は<wbr>「あがり」か<wbr>「こいこい」を<wbr>宣言します。</span></p>
+            <p class="en">If you have not made a set, it becomes your opponent’s turn.<br>If you have, declare either “Agari” or “Koi-Koi.”</p>
+            <div class="box">
+              <dl class="decl">
+                <div><dt><span class="ja"><span class="bx">あがり:</span></span><span class="en">Agari:</span></dt><dd><span class="ja"><span class="bx">得点を<wbr>確定し、<wbr>トークンの<wbr>移動を<wbr>行い局を<wbr>終了します。</span></span><span class="en">Settle your score, move the token, and end the round.</span></dd></div>
+                <div><dt><span class="ja"><span class="bx">こいこい<wbr>:</span></span><span class="en">Koi-Koi:</span></dt><dd><span class="ja"><span class="bx">局を<wbr>続行します。<wbr>次に<wbr>自分が<wbr>役を<wbr>作れば<wbr>成功、<wbr>相手に<wbr>先に<wbr>作られると<wbr>失敗と<wbr>なり、<wbr>その<wbr>時点で<wbr>局が<wbr>終了します。</span></span><span class="en">Continue the round. If you make your next set first, you succeed; if your opponent makes a set first, you fail. Either way, the round ends at that point.</span></dd></div>
+              </dl>
+              <p class="decl-n"><span class="ja"><span class="bx"><em>(こいこいは<wbr>1局に<wbr>1回しか<wbr>宣言できません。)</em></span></span><span class="en"><em>(You can call Koi-Koi only once per round.)</em></span></p>
+            </div>
+            <div class="res2">
+              <div class="res ok"><b><span class="ja"><span class="bx">成功<wbr>(自分が<wbr>先に<wbr>次の<wbr>役を<wbr>作った)</span></span><span class="en">Success (you made the next set first)</span></b><p><span class="ja"><span class="bx">最初の<wbr>役と<wbr>次の<wbr>役の<wbr>得点の<wbr>合計+2</span></span><span class="en">The total of your first and next sets +2</span></p></div>
+              <div class="res ng"><b><span class="ja"><span class="bx">失敗<wbr>(相手が<wbr>先に<wbr>次の<wbr>役を<wbr>作った)</span></span><span class="en">Failure (your opponent made the next set first)</span></b><p><span class="ja"><span class="bx">最初の<wbr>役と、<wbr>相手が<wbr>作った<wbr>役の<wbr>得点の<wbr>合計を<wbr>相手が<wbr>獲得</span></span><span class="en">Your opponent scores the total of your first set and the set they made</span></p></div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- トークンの移動 -->
+      <section class="panel" id="token" aria-labelledby="h-token">
+        <h2 id="h-token"><span class="ja"><span class="bx">トークンの<wbr>移動</span></span><span class="en">Moving the Token</span></h2>
+        <p class="ja"><span class="bx">局の<wbr>終了時、<wbr>勝者は<wbr>得点に<wbr>応じて<wbr>そらカードの<wbr>中央に<wbr>ある<wbr>トークンを<wbr>自分側に<wbr>引き寄せます。</span></p>
+        <p class="en">At the end of a round, the winner pulls the token in the middle of the sky cards toward their side, according to their score.</p>
+        <div class="tokrow">
+          <dl class="mtab">
+            <div><dt><span class="ja"><span class="bx">1〜4点</span></span><span class="en">1–4 pts</span></dt><dd><span class="ja"><span class="bx">1マス</span></span><span class="en">1 space</span></dd></div>
+            <div><dt><span class="ja"><span class="bx">5〜9点</span></span><span class="en">5–9 pts</span></dt><dd><span class="ja"><span class="bx">3マス</span></span><span class="en">3 spaces</span></dd></div>
+            <div><dt><span class="ja"><span class="bx">10点以上</span></span><span class="en">10+ pts</span></dt><dd><span class="ja"><span class="bx">5マス</span></span><span class="en">5 spaces</span></dd></div>
+          </dl>
+          <div class="viz" role="img" aria-label="そらカードの中央にあるトークンを、勝者が自分側に引き寄せる"><div class="grp"><div class="sky pull"><img src="../../../img/parts/kc_sl.webp?v=c05392f3" alt=""><img src="../../../img/parts/kc_sr.webp?v=7233a647" alt=""><img class="fish" src="../../../img/parts/k_fish.webp?v=5c22b4e7" alt="" style="--fx:50%"><span class="pullar" aria-hidden="true"></span></div><div class="sides"><span class="tag"><span class="ja"><span class="bx">相手側</span></span><span class="en">Opponent’s side</span></span><span class="tag"><span class="ja"><span class="bx">自分側</span></span><span class="en">Your side</span></span></div></div></div>
+        </div>
+        <p class="rnote"><span class="ja"><span class="bx">※動かせる<wbr>マスは<wbr>5が<wbr>最大です。<wbr>5に<wbr>いる<wbr>ときは<wbr>それ以上<wbr>進めません。</span></span><span class="en">The token can move up to space 5. Once it is on 5, it cannot move any further.</span></p>
+      </section>
+
+      <!-- 局、ゲームの終了 -->
+      <section class="panel" id="end" aria-labelledby="h-end">
+        <h2 id="h-end"><span class="ja"><span class="bx">局、<wbr>ゲームの<wbr>終了</span></span><span class="en">End of the Round and Game</span></h2>
+        <p class="ja"><span class="bx">トークンを<wbr>移動したら<wbr>その<wbr>局は<wbr>終了します。<wbr>カードを<wbr>すべて<wbr>回収して<wbr>次の<wbr>局を<wbr>準備し、<em><wbr>トークンが<wbr>自分側に<wbr>ない<wbr>(負けている)プレイヤーから<wbr>開始します。</em><wbr>3局終了時、<wbr>トークンが<wbr>自分側に<wbr>ある<wbr>プレイヤーの<wbr>勝利です。</span></p>
+        <p class="en">Once the token has moved, the round ends. Gather all the cards and set up the next round. <em>The player who does not have the token on their side (the player who is behind) goes first.</em> After 3 rounds, the player with the token on their side wins.</p>
+      </section>
+
+      <!-- Q&A -->
+      <section class="panel" id="qa" aria-labelledby="h-qa">
+        <h2 id="h-qa">Q&amp;A</h2>
+        <dl class="qa">
+          <div><dt><span class="ja"><span class="bx">同じ<wbr>カードを<wbr>複数の<wbr>役に<wbr>使えますか?</span></span><span class="en">Can the same card be used for more than one set?</span></dt><dd><span class="ja"><span class="bx">いいえ、<wbr>カードは<wbr>1つの<wbr>役にのみ<wbr>使用できます。</span></span><span class="en">No. Each card can be used for only one set.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">手札や<wbr>山札が<wbr>なくなった<wbr>場合は<wbr>どうなりますか?</span></span><span class="en">What happens if a hand or the deck runs out?</span></dt><dd><span class="ja"><span class="bx">その<wbr>局を<wbr>終了し、<wbr>得点も<wbr>ないためトークンも<wbr>移動しません。</span></span><span class="en">The round ends. No one scores, so the token does not move.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">トークンは<wbr>どうやって<wbr>動かすの?</span></span><span class="en">How do I move the token?</span></dt><dd><span class="ja"><span class="bx">トークンは<wbr>得点に<wbr>応じて<wbr>動かします。<wbr>相手側に<wbr>ある<wbr>場合は、<wbr>中央を<wbr>通過して<wbr>自分側へ<wbr>移動します。</span></span><span class="en">Move the token according to your score. If it is on your opponent’s side, it passes through the middle and moves onto your side.</span>
+            <div class="qa-ex">
+              <p class="ja"><span class="bx"><em>例:トークンが<wbr>相手側に<wbr>3マスある<wbr>状態で、<wbr>自分が<wbr>10点を<wbr>獲得した<wbr>場合、<wbr>トークンは<wbr>中央を<wbr>通過して<wbr>自分側に<wbr>2マス移動します。<br><wbr>(中央を<wbr>0と<wbr>して<wbr>扱う)</em><small class="errata">※印刷した<wbr>説明書では<wbr>「5点」に<wbr>なっていますが、<wbr>正しくは<wbr>「10点」です<wbr>(10点以上で<wbr>5マス)。</small></span></p>
+              <p class="en"><em>Example: If the token is 3 spaces into your opponent’s side and you score 10 points, it passes through the middle and moves 2 spaces onto your side.<br>(The middle counts as 0.)</em><small class="errata">The printed rulebook says “5 points” here; the correct figure is 10 points (10 or more moves 5 spaces).</small></p>
+              <div class="viz" role="img" aria-label="相手側の3にあるトークンが、中央を通って自分側の2へ移動する"><div class="grp"><div class="sky move"><img src="../../../img/parts/kc_sl.webp?v=c05392f3" alt=""><img src="../../../img/parts/kc_sr.webp?v=7233a647" alt=""><img class="fish ghost" src="../../../img/parts/k_fish.webp?v=5c22b4e7" alt="" style="--fx:23.1%"><img class="fish" src="../../../img/parts/k_fish.webp?v=5c22b4e7" alt="" style="--fx:68.95%"><span class="movar" aria-hidden="true" style="--a:23.1%;--b:68.95%"></span></div><div class="sides"><span class="tag"><span class="ja"><span class="bx">相手側</span></span><span class="en">Opponent’s side</span></span><span class="tag"><span class="ja"><span class="bx">自分側</span></span><span class="en">Your side</span></span></div></div></div>
+            </div></dd></div>
+        </dl>
+      </section>
+
+      <!-- 注意 -->
+      <section class="panel" id="warnings" aria-labelledby="h-warn" data-toc="注意|Warnings">
+        <div class="warn">
+          <p class="warn-t" id="h-warn" role="heading" aria-level="2"><svg viewBox="0 0 22 20" aria-hidden="true"><path d="M11 1.2 21 18.8H1z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 6.6v6.2" stroke="var(--head)" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="15.6" r="1.4" fill="var(--head)"/></svg><span class="ja"><span class="bx">注意<wbr>(必ず<wbr>お読みください)</span></span><span class="en">WARNINGS</span></p>
+          <ul class="ja">
+            <li><span class="bx">小部品が<wbr>あります。<wbr>誤飲・窒息の<wbr>危険が<wbr>ありますので、<wbr>3才未満の<wbr>お子様には<wbr>絶対に<wbr>与えないでください。</span></li>
+          </ul>
+          <ul class="en">
+            <li><b>WARNING: CHOKING HAZARD — Small parts. Not for children under 3 years.</b></li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
+        <ol class="log">
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="chg"><span class="ja"><span class="bx">訂正</span></span><span class="en">Correction</span></span><span class="ja"><span class="bx">説明書の<wbr>誤りを<wbr>訂正しました<wbr>(Q&amp;Aの<wbr>例:<wbr>「5点」ではなく<wbr>「10点」を<wbr>獲得した<wbr>場合)。</span></span><span class="en">Corrected an error in the printed rulebook (Q&amp;A example: scoring 10 points, not 5).</span></span></li>
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+        </ol>
+        <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="../"><span class="ja"><span class="bx">こいこいの<wbr>ぼり 真打の<wbr>作品ページへ</span></span><span class="en">Back to KOIKOINOBORI SHINUCHI</span></a>
+        <a class="btn ghost" href="https://pandakinema.booth.pm/items/8425486" target="_blank" rel="noopener"><span class="ja"><span class="bx">BOOTHで<wbr>購入</span></span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="../../../rules/"><span class="ja"><span class="bx">遊び方説明書の<wbr>一覧へ</span></span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja"><span class="bx">この<wbr>サイトは<wbr>アクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener"><wbr>Googleアナリティクス</a>を<wbr>使用しています</span></span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+  /* こいこいのぼり 真打だけで使う見た目 */
+  /* 番号:おさかなトークンの形(横長)。数字は尾びれを除いた胴の真ん中に */
+  .snum{width:64px;height:38px}
+  .snum b{font-size:21px;translate:var(--num-x,-6px) -50%}
+  .toc .sub a{font-weight:800}
+
+  /* こいのぼりカード(縦長) */
+  .card{--cw:44px}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:46px} }
+  .card img{border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.22)}
+  .card.up{translate:0 -10px}
+  .hand{display:flex}
+  .hand .card+.card{margin-left:calc(var(--cw) * -.52)}
+  .hand .card:nth-child(1){z-index:1}.hand .card:nth-child(2){z-index:2}.hand .card:nth-child(3){z-index:3}.hand .card:nth-child(4){z-index:4}.hand .card:nth-child(5){z-index:5}
+  .hands{gap:14px}
+  .deck{width:calc(var(--cw,44px) + 12px);height:calc(var(--cw,44px) * 1.653 + 12px)}
+  .row{gap:6px}
+  .viz.k{gap:16px 18px;align-items:center}
+  .viz.k .grp>.lbl:last-child{color:var(--ink-soft)}
+
+  /* 内容物 */
+  .kcards{--tw:56px}
+  .skies{--tw:118px;gap:3px}
+  .summ{--tw:190px}
+  .summ img{border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .fish1{--tw:60px}
+  .things img{border-radius:3px}
+
+  /* どんなゲーム?(説明書の表面の2つ) */
+  .genre{margin:-6px 0 0}
+  .quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .qcard{display:flex;flex-direction:column;gap:10px;min-width:0;padding:16px;border-radius:12px;background:var(--soft)}
+  .qcard h3{align-self:flex-start;padding:5px 14px 6px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:15px}
+  .qcard p{font-size:15px;font-weight:800;line-height:1.6}
+  .qcard .viz{padding:14px;background:var(--paper);align-items:center}
+  @media (max-width:620px){ .quick{grid-template-columns:minmax(0,1fr)} }
+
+  /* 準備:説明書の黒い四角の番号 */
+  .olsq{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+  .olsq li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+  .olsq p{line-height:1.85}
+  .sqn{display:inline-grid;place-items:center;width:22px;height:22px;margin-top:.3em;border-radius:3px;background:var(--head);color:var(--on-head);font:var(--num-weight) 14px/1 var(--num)}
+  .lbl .sqn{width:18px;height:18px;margin:0 6px 0 0;font-size:12px;vertical-align:-3px}
+  .viz.setup{gap:20px 26px}
+
+  /* そらカードとおさかなトークン */
+  .sky{position:relative;display:flex;gap:2px;width:var(--sw,236px)}
+  .sky>img{width:calc(50% - 1px);border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  /* トークンは胴(尾びれを除いた部分)の真ん中が --fx に来るように置く */
+  .sky>img.fish{position:absolute;left:var(--fx);top:50%;width:13%;border-radius:0;box-shadow:none;translate:-41% -50%;z-index:2;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.45))}
+  .sky>img.fish.ghost{opacity:.3}
+  .pullar{position:absolute;left:50%;top:50%;width:36%;height:0;translate:-50% -50%;z-index:1}
+  .pullar::before,.pullar::after{content:"";position:absolute;top:-9px;border-block:9px solid transparent}
+  .pullar::before{left:0;border-right:14px solid var(--hl)}
+  .pullar::after{right:0;border-left:14px solid var(--hl)}
+  .movar{position:absolute;left:var(--a);width:calc(var(--b) - var(--a));top:-14px;height:4px;border-radius:2px;background:var(--hl)}
+  .movar::after{content:"";position:absolute;right:-4px;top:-6px;border-block:8px solid transparent;border-left:12px solid var(--hl)}
+  .sides{display:flex;justify-content:space-between;width:var(--sw,236px)}
+  .sides .tag{font-size:11.5px}
+
+  /* 自分の手番にすること */
+  .turn{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px 18px;padding:14px 16px;border-radius:12px;background:var(--soft)}
+  .turn-t{padding:10px 16px;border-radius:10px;background:var(--main);color:#fff;font-size:17px;font-weight:900;line-height:1.35;text-align:center}
+  .turn ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none;font-size:16px;font-weight:800;line-height:1.6}
+  .turn a{text-decoration:none}
+  .turn a:hover{text-decoration:underline;text-underline-offset:3px}
+  @media (max-width:520px){ .turn{grid-template-columns:minmax(0,1fr)} .turn-t{justify-self:start} }
+
+  /* 役の一覧(説明書の赤い枠) */
+  .yaku{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:16px 26px;padding:18px 14px 16px;border-radius:12px;background:var(--hl);color:#fff}
+  .yaku .card{--cw:36px}
+  @media (min-width:900px){ .yaku .card{--cw:40px} }
+  .yaku .row{gap:4px}
+  .yaku .lbl{font-size:14px;font-weight:900}
+  .yaku .nt{flex-basis:100%;font-size:12.5px;font-weight:800;line-height:1.6;text-align:center}
+
+  /* あがり/こいこい */
+  .decl{display:flex;flex-direction:column;gap:6px;margin:0}
+  .decl>div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px}
+  .decl dt{font-weight:900;line-height:1.8}
+  .decl dd{margin:0;line-height:1.8}
+  .decl-n{font-size:14.5px;font-weight:800;text-align:center}
+  @media (max-width:520px){ .decl>div{grid-template-columns:minmax(0,1fr);gap:0} }
+  /* 成功/失敗 */
+  .res2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .res{--c:var(--main);overflow:hidden;border:2.5px solid var(--c);border-radius:10px;background:var(--paper)}
+  .res.ng{--c:var(--hl)}
+  .res b{display:block;padding:5px 12px;background:var(--c);color:#fff;font-size:13.5px;font-weight:900;line-height:1.5}
+  .res p{padding:10px 12px 12px;font-size:15px;font-weight:800;line-height:1.6}
+  @media (max-width:560px){ .res2{grid-template-columns:minmax(0,1fr)} }
+
+  /* トークンの移動 */
+  .tokrow{display:flex;flex-wrap:wrap;align-items:center;gap:16px 22px}
+  .tokrow .viz{flex:1 1 280px}
+  .mtab{display:flex;flex-direction:column;gap:6px;margin:0}
+  .mtab>div{display:grid;grid-template-columns:7.5em 5em;overflow:hidden;border:2px solid var(--head);border-radius:999px;font-size:16px;font-weight:900;line-height:1.3}
+  html[data-lang="en"] .mtab>div{grid-template-columns:7em 6.5em}
+  .mtab dt{padding:6px 12px;background:var(--head);color:var(--on-head);text-align:center}
+  .mtab dd{margin:0;padding:6px 12px;background:var(--paper);text-align:center}
+
+  /* Q&A の例 */
+  .qa-ex{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .qa-ex p{font-size:14.5px;line-height:1.7}
+  .qa-ex .viz{padding-top:28px}
+  .qa>div{display:flex;flex-direction:column}
+
+  .warn{--warn-bg:var(--paper)}
+  .panel>p.ja,.panel>p.en{line-height:1.85}

@@ -1,0 +1,71 @@
+  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、黄色い表紙の三角の帯、ひし形の番号、勝利条件の帯、カードの WIN */
+  b{font-weight:800}
+  .content a b{text-decoration:underline;text-underline-offset:3px}
+
+
+  /* 番号:説明書の宝石(ひし形)。横長なので少し大きめに */
+  .snum{width:52px;height:40px}
+  .snum b{font-size:19px}
+  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く */
+  .tc-head{align-items:flex-start;gap:14px}
+  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;padding-top:7px}
+  .tc-txt p{font-size:15.5px;line-height:1.85}
+  .step{gap:16px}
+
+  /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
+  .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
+  .tc-grid{--cols:6;--cols-sm:6;gap:5px}
+  .tc-items{display:flex;flex-direction:column;gap:14px;padding-top:34px}
+  .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
+  .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
+  .tc-item .clbl{flex:1;min-width:0}
+  .tc-lead{width:70px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-lead.sm{width:58px}
+  .tc-sum{width:52px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-marks{display:flex;gap:4px}
+  .tc-marks img{width:34px}
+  @media (max-width:760px){
+    .tc-contents{grid-template-columns:minmax(0,1fr)}
+    .tc-grid{max-width:340px}
+    .tc-items{padding-top:0}
+    .tc-pic{width:96px}
+    .tc-pic .tc-marks img{width:28px}
+  }
+  @media (max-width:560px){ .tc-head{gap:10px} .snum{width:46px;height:36px} .snum b{font-size:17px} .tc-txt{padding-top:5px} }
+
+  /* アピールの勝利条件:説明書・サマリーと同じ黄色の帯 */
+  .tc-cond{display:flex;flex-direction:column;gap:8px;padding:16px 14px 14px;background:var(--soft)}
+  .tc-row{display:grid;grid-template-columns:7.5em auto 22px minmax(0,1fr);align-items:center;gap:10px;padding:7px 18px;border-radius:999px;background:var(--accent);font-size:14.5px;font-weight:800;line-height:1.4}
+  .tc-row b{font-size:1.15em}
+  html[data-lang="en"] .tc-row{grid-template-columns:12.5em auto 22px minmax(0,1fr)}
+  .chips{display:flex;gap:4px}
+  .chips i{display:block;width:20px;height:27px;border:2px solid var(--main);border-radius:4px;rotate:-8deg}
+  .chips i.p{background:var(--main);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
+  .chips i.y{background:var(--accent);box-shadow:0 0 0 1.5px #fff,0 0 0 3px var(--main)}
+  .chips i.r{background:var(--hl);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
+  .tc-to{width:0;height:0;justify-self:center;border-left:13px solid var(--hl);border-block:9px solid transparent}
+  .tc-r{font-size:15px}
+  .tc-note{padding:2px 6px 0;font-size:13px;line-height:1.6}
+  @media (max-width:560px){
+    .tc-row,html[data-lang="en"] .tc-row{grid-template-columns:auto 1fr;grid-template-areas:"c chips" "r r";gap:6px 10px;padding:10px 16px;border-radius:16px}
+    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end}.tc-to{display:none}.tc-r{grid-area:r}
+    .tc-r::before{content:"→ ";color:var(--hl)}
+  }
+
+  /* 場のカードの WIN(説明書の赤い WIN) */
+  .tc-win-row{padding-top:20px}
+  .tc-win{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;color:var(--hl);font:900 14px/1 var(--cond);letter-spacing:.06em}
+  .fig-txt{text-align:left}
+
+  /* ニコ・トリコのキャラ */
+  .tc-call{gap:6px}
+  .tc-chara{width:84px}
+  .tc-pair{width:min(260px,100%)}
+
+  /* よくある質問:説明書と同じく質問は赤 */
+  .qa dt{color:var(--hl)}
+
+  /* おまけ:えかきうた */
+  .tc-ekaki{width:100%;border-radius:10px;box-shadow:0 0 0 2px var(--soft)}
+  .tc-song{padding-left:1.6em;line-height:1.8}

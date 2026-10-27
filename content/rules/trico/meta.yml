@@ -1,0 +1,44 @@
+# TRICO! 遊び方説明書(WEB版)
+key: trico
+title_ja: TRICO!
+title_en: TRICO!
+logo: logo/trico_logo_purple.png
+logo_alt: TRICO!(トリコ)
+players_ja: 2〜3人
+players_en: 2–3
+time_ja: 10〜15分
+time_en: 10–15 min
+age_ja: 6歳から
+age_en: 6+
+printed_ja: 2025年11月発行の説明書に対応
+printed_en: Matches the printed rulebook (November 2025)
+booth: https://pandakinema.booth.pm/items/7555824
+catch_ja: あのコをとりこにするために
+catch_en: To Win Her Heart
+story_ja: どこかに生息するカラフルな鳥、トリコ。3匹のオスは、美しいメス「ニコ」のハートを射止めようとアピールをしています。ただし、それぞれが持ち寄る宝石の色によってニコの好みは変わります。見事ニコに3色の宝石を受け取ってもらえたら、「トリコ!」と高らかに宣言しましょう!
+story_en: "Somewhere lives a colorful bird called Trico. Three males are courting the beautiful female, Nico, trying to win her heart. But Nico’s taste changes with the color of the gems each one brings. If Nico accepts gems of all three colors, proudly declare “Trico!”"
+youtube: ""
+fonts: ["M+PLUS+Rounded+1c:wght@800"]
+theme:
+  main: "#664498"
+  accent: "#fdd000"
+  ink: "#664498"          # 白い座布団の上の文字(説明書と同じ紫)
+  hl: "#d4242b"           # 強調(説明書の赤字)
+  head: "#664498"         # 見出し・番号・図の枠
+  on-head: "#ffffff"
+  cover: "#fdd000"
+  on-cover: "#664498"
+  body: "#664498"
+  on-body: "#fdd000"
+  tex: "url({{img:page/t_tex_c.png}})"
+  tex-size: 92px 160px
+  band: none
+  band-h: 0px
+  step-icon: "url({{img:page/dia.png}})"
+  num: '"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",var(--sans)'   # 遊び方動画と同じ丸ゴシックの太字
+  num-weight: "800"
+  num-y: 42%
+  logo-w: 360px
+  soft: "#e8e3f0"
+nobreak: [アピール, ニコ忘れ, 「トリコ!」, 「ニコ!」, ゾロ目, トリコロール, 得点カード]
+# 更新履歴は content/pages/trico.yml の rules_history(編集画面「作品ページ」)

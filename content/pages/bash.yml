@@ -131,3 +131,8 @@ sections:
   rules_bg: black
   photo_bg: main
   buy_bg: black
+rules_history:
+  - date: 2026-10-26
+    mark: ""
+    text_ja: "WEB版を公開しました。"
+    text_en: "Web edition published."

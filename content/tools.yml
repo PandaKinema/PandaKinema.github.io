@@ -1,4 +1,14 @@
 # PLAY&TOOLS に並ぶツール。main = メインカラー(背景)、accent = アクセントカラー(文字)。key はバナーの順番で使う名前
+- key: rules
+  name: 遊び方説明書(WEB版)
+  url: /rules/
+  title_image: ''
+  image: img/tools/tool_rules_screen.webp
+  thumb: img/tools/tool_rules_thumb.webp
+  intro_ja: 全作品の遊び方説明書。日本語と英語で読めます。
+  intro_en: Rulebooks for every game, in Japanese and English.
+  main: '#f3f2ee'
+  accent: '#1b2228'
 - key: moji
   name: ビビル文字ジェネレータ
   url: https://pandakinema.com/bibilu-moji/

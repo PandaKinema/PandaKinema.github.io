@@ -1,5 +1,5 @@
 # サイトマップ(sitemap.xml)を作る:Google などの検索エンジンに「このサイトにはこのページがあります」と伝える一覧
-# トップ・作品ページ(games/ にあるもの)・PLAY&TOOLS のツール(このサイトの中にあるもの)を載せます
+# トップ・作品ページ(games/ にあるもの)・遊び方説明書・PLAY&TOOLS のツール(このサイトの中にあるもの)を載せます
 # GitHub Actions が保存のたびに動かすので、作品やツールが増えても自動で追加されます
 import os, subprocess, yaml
 from xml.sax.saxutils import escape
@@ -23,6 +23,11 @@ games_dir = os.path.join(ROOT, 'games')
 for key in sorted(os.listdir(games_dir)):
     if os.path.isfile(os.path.join(games_dir, key, 'index.html')):
         pages.append(('games/%s/' % key, 'games/%s/index.html' % key))
+for key in sorted(os.listdir(games_dir)):   # 遊び方説明書(WEB版)
+    if os.path.isfile(os.path.join(games_dir, key, 'rules', 'index.html')):
+        pages.append(('games/%s/rules/' % key, 'games/%s/rules/index.html' % key))
+if os.path.isfile(os.path.join(ROOT, 'rules', 'index.html')):
+    pages.append(('rules/', 'rules/index.html'))
 for t in load('tools'):   # ツールはこのサイトの中にあるものだけ
     u = (t.get('url') or '').strip()
     if u.startswith(SITE_URL):

@@ -1,0 +1,109 @@
+  /* BASH&SMASH! だけで使う図:赤と青のカード、VS、説明書の赤と青の囲み、勝敗の表、得点の重ね方 */
+  .card{--cw:46px;display:block}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:54px} }
+  .card img{border-radius:0;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+  em.b{color:var(--blue)}                       /* 説明書の青字(パリィ) */
+  .tok{width:30px;flex:none}
+
+  /* 内容物 */
+  .cards{--cols:10;--cols-sm:5}
+  .cards img{border-radius:0}
+  .pcards{display:flex;flex-wrap:wrap;gap:10px}
+  .pcards img{width:min(210px,calc(50% - 5px))}
+  .things img.tok{width:40px}
+  .sheet-icon.one span{background:var(--paper);color:var(--ink)}
+
+  /* どんなゲーム?:説明書の表面の「1.」「2.」を左右に */
+  .quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .qitem{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .qitem p{font-size:15px;font-weight:700;line-height:1.7}
+  .qitem .viz{flex:1;align-items:center;padding-top:30px}
+  @media (max-width:620px){ .quick{grid-template-columns:minmax(0,1fr)} }
+
+  /* VS(格闘ゲームの対戦表示) */
+  .duel{display:flex;align-items:center;justify-content:center;gap:10px}
+  .side{position:relative;display:block}
+  .vs{font:400 26px/1 var(--num);letter-spacing:.02em;color:var(--ink)}
+  .flag{position:absolute;left:50%;bottom:calc(100% + 4px);translate:-50% 0;color:var(--hl);font:400 17px/1 var(--num);letter-spacing:.04em;white-space:nowrap}
+  .flag.parry{color:var(--blue)}
+
+  /* STORY:キャラクター */
+  .charas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .chara{display:flex;align-items:flex-end;gap:14px;margin:0;padding:14px 16px 16px;border-radius:14px;background:var(--soft)}
+  .chara img{flex:none;width:auto;height:190px}
+  .chara figcaption{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .chara b{font-size:18px;font-weight:900}
+  .chara p{font-size:14px;font-weight:700;line-height:1.7}
+  @media (max-width:700px){ .charas{grid-template-columns:minmax(0,1fr)} .chara img{height:170px} }
+
+  /* ゲームの準備:説明書と同じ黒い四角の番号 */
+  .sq{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:sq}
+  .sq li{position:relative;padding-left:2em;line-height:1.85;counter-increment:sq}
+  .sq li::before{content:counter(sq);position:absolute;left:0;top:.38em;display:grid;place-items:center;width:1.35em;height:1.35em;background:var(--head);color:var(--on-head);font:400 15px/1 var(--num)}
+  .nsq{display:grid;place-items:center;flex:none;width:22px;height:22px;background:var(--head);color:var(--on-head);font:400 15px/1 var(--num)}
+  .viz.setup{flex-direction:column;align-items:center;gap:16px}
+  .srow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}
+  .sgrp{display:flex;align-items:center;gap:8px}
+  .hand{--hw:40px;--hs:12px;position:relative;display:block;width:calc(var(--hw) + 9 * var(--hs));height:calc(var(--hw) * 1.653)}
+  .hand img{position:absolute;top:0;left:calc(var(--i) * var(--hs));width:var(--hw);box-shadow:-1px 0 3px rgba(0,0,0,.25)}
+  .pcard{width:96px;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+
+  /* 説明書の赤と青の囲み(ヒット=赤、パリィ=青) */
+  .duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  @media (max-width:620px){ .duo{grid-template-columns:minmax(0,1fr)} }
+  .cbx{display:flex;align-items:center;gap:14px;min-width:0;padding:14px 16px;border-radius:14px;color:#fff}
+  .cbx.red{background:var(--main)}
+  .cbx.blue{background:var(--blue)}
+  .cbx p{font-size:14px;font-weight:800;line-height:1.6}
+  .cbx .card img{box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .cbx.blue:has(.pnote){flex-wrap:wrap}
+  .pnote{display:flex;align-items:center;gap:10px;flex-basis:100%}
+  .pnote p{font-size:12.5px}
+  .pcard-wrap{position:relative;flex:none}
+  .pcard-wrap .pcard{width:92px}
+  .tok.on-p1{position:absolute;left:8%;top:44%;width:24px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+
+  /* 勝敗判定の表 */
+  .judge{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+  .tbl-wrap{flex:1 1 320px;min-width:0;overflow-x:auto}
+  .jtable{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13.5px;font-weight:800;line-height:1.5;text-align:center}
+  .jtable th,.jtable td{padding:9px 6px;border:2px solid var(--head)}
+  .jtable th{color:#fff;font-size:14px}
+  .jtable .h-hit{background:var(--main)}
+  .jtable .h-parry{background:var(--blue)}
+  .jtable .corner{background:linear-gradient(to top right,transparent calc(50% - 1px),var(--head) 50%,transparent calc(50% + 1px)) var(--paper)}
+  .same{flex:0 1 200px;display:flex;flex-direction:column;align-items:center;gap:8px;margin-inline:auto}
+  .same .viz{padding:14px 16px}
+  .same p{font-size:12.5px;line-height:1.6;text-align:center}
+
+  /* 得点の重ね方:上のカードの下に、下のカードの帯(右下の数字)が見える */
+  .stk{--cw:46px;--sp:calc(var(--cw) * .27);position:relative;display:block;flex:none;width:var(--cw);height:calc(var(--cw) * 1.653 + var(--n) * var(--sp))}
+  @media (min-width:900px){ .stk{--cw:54px} }
+  .stk img{position:absolute;left:0;top:0;width:100%;z-index:9;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+  .stk img[style]{top:calc(var(--i) * var(--sp));z-index:calc(9 - var(--i))}
+
+  /* ラッシュ */
+  .rush{flex-wrap:wrap;justify-content:center;gap:14px 18px;padding:18px 16px}
+  .rgrp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .rgrp p{text-align:center}
+  .rush .vs{color:#fff}
+  .more{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13.5px;font-weight:900}
+  .bigarrow{width:56px;height:34px;background:#fff;clip-path:polygon(0 30%,58% 30%,58% 0,100% 50%,58% 100%,58% 70%,0 70%)}
+  @media (max-width:620px){ .rush{flex-direction:column} .bigarrow{width:36px;height:44px;clip-path:polygon(30% 0,70% 0,70% 55%,100% 55%,50% 100%,0 55%,30% 55%)} }
+  .rscore{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+  .rscore .prose{flex:1 1 300px}
+  .rscore .ex{flex:0 0 auto;margin-inline:auto}
+  .rscore .ex p{font-size:15px;line-height:1.5}
+  .step .notes{padding-left:0}
+  .notes{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.7}
+  .notes.en li{padding-left:1em;text-indent:-1em}
+  .notes.en li::before{content:"※";color:var(--hl);font-weight:800}
+
+  /* ラウンドの終了 */
+  .total{flex-wrap:wrap;justify-content:center;gap:16px 26px;padding:18px 16px}
+  .stks{display:flex;align-items:flex-start;gap:10px}
+  .total p{font-size:14px;line-height:1.5;text-align:center}
+  .sum{display:block;margin-top:2px;font:400 26px/1.1 var(--num);letter-spacing:.03em}
+  .viz.win{align-items:center;gap:14px 20px}
+  .wcard{width:min(220px,100%);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .youwin{width:min(230px,100%)}

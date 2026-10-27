@@ -1,0 +1,48 @@
+# こいこいのぼり 真打 遊び方説明書(WEB版)
+key: koikoi
+title_ja: こいこいのぼり 真打
+title_en: KOIKOINOBORI SHINUCHI
+series: MINI THEATRE SERIES 01
+logo: logo/koikoilogo.png
+logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
+players_ja: 2人
+players_en: "2"
+time_ja: 5〜10分
+time_en: 5–10 min
+age_ja: 6歳から
+age_en: 6+
+printed_ja: 2026年5月発行の説明書に対応
+printed_en: Matches the printed rulebook (May 2026)
+booth: https://pandakinema.booth.pm/items/8425486
+catch_ja: あげろ!こいのぼり
+catch_en: Raise the Carp Streamers!
+story_ja: 花札の『こいこい』をもとにした、鯉のぼりのカードゲーム。同じ色のこいのぼりをペアで取って役を作り、こいのぼりを高く上げましょう。勝負を決めるか、『こいこい』でさらに点を伸ばすか。3局を終えたとき、相手より高くこいのぼりを上げていた方が勝ちです。
+story_en: A carp-streamer card game based on the hanafuda game “Koi-Koi.” Take carp streamers of the same color in pairs to make sets, and raise your streamer high. Will you settle the round, or call “Koi-Koi” to push your score even higher? After 3 rounds, whoever has raised their streamer higher than their opponent wins.
+youtube: ""
+fonts: ["M+PLUS+Rounded+1c:wght@800"]
+theme:
+  main: "#48b0e5"
+  accent: "#ffffff"
+  ink: "#0a0c0c"
+  hl: "#d4242b"           # 強調(説明書の赤字)
+  head: "#0a0c0c"
+  on-head: "#ffffff"
+  cover: "#48b0e5"
+  on-cover: "#ffffff"
+  body: "#0a0c0c"
+  on-body: "#ffffff"
+  tex: "url({{img:page/k_sei_ura.png}})"
+  tex-size: 122px 122px
+  band: "url({{img:page/mt_sprocket.svg}})"
+  band-h: 20px
+  step-icon: "url({{img:page/k_fish.png}})"
+  num: '"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Arial Rounded MT Bold",sans-serif'
+  num-weight: "800"
+  num-y: 50%
+  logo-w: 340px
+  cover-tex: "url({{img:page/k_sei_top.png}})"
+  cover-tex-size: 122px 122px
+  band-c: "#4c5155"
+  soft: "#e4f3fb"
+nobreak: [こいのぼりカード, そらカード, おさかなトークン, 獲得したカード, こいこい, あがり, 自分側, 相手側, 矢車]
+# 更新履歴は content/pages/koikoi.yml の rules_history(編集画面「作品ページ」)

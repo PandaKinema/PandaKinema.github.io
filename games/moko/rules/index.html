@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b2228">
+<title>モコチャカ 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="モコチャカの遊び方説明書(WEB版)。内容物、モコチャカとは?、カードの呼び方、1.ゲームの準備、2.ゲームの手順、3.コールの方法、4.特殊コール、更新履歴。日本語と英語を切り替えられます。">
+<meta property="og:title" content="モコチャカ 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="モコチャカの遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="https://pandakinema.com/games/moko/rules/">
+<meta property="og:image" content="https://pandakinema.com/img/share/ogp_mokochaka_ticket.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&amp;display=swap">
+<style>
+  /* ===== パンダキネマ 遊び方説明書(WEB版) 共通 =====
+     作品ごとに変えるのは :root の色・書体・アイコンだけ(build.py が meta.yml から差し込む)。
+     紙の説明書と同じ組み:上は表紙(ロゴと物語)、本文に章ごとの白い座布団。強調は赤。
+     背景・帯は作品ページと同じ:表紙=作品ページのSTORYの欄、本文=「どんなゲーム?」の欄、帯は本文の内側(上下)に */
+  :root{
+    --site:#1b2228;        /* サイトの下地 */
+    --bar:#000000;         /* ヘッダー */
+    --paper:#ffffff;       /* 白い座布団 */
+    --red:#d4242b;         /* 説明書の赤字(強調の基本) */
+    --soft:color-mix(in srgb,var(--ink) 10%,transparent);    /* 図の下地(作品ページの --soft で上書き) */
+    --line:color-mix(in srgb,var(--ink) 20%,transparent);
+    --ink-soft:color-mix(in srgb,var(--ink) 72%,transparent);
+    --on-body-soft:color-mix(in srgb,var(--on-body) 14%,transparent);
+    --on-body-line:color-mix(in srgb,var(--on-body) 38%,transparent);
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+    --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+    --bar-h:56px;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar-h) + 64px + env(safe-area-inset-top,0px))}
+  @media (min-width:900px){ html{scroll-padding-top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px))} }
+  body{margin:0;background:var(--site);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar)}
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+  html:not([data-lang="en"]) .en{display:none!important}
+  html[data-lang="en"] .ja{display:none!important}
+  /* 改行:日本語は文節の切れ目(<wbr>)でだけ折り返す。英語は行末をそろえすぎない */
+  .bx{word-break:keep-all;overflow-wrap:anywhere}
+  p,li,dt,dd,h2,h3,figcaption,.lbl{line-break:strict;text-wrap:pretty}
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* ===== ヘッダー(サイト共通) ===== */
+  .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar)}
+  .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:var(--bar-h)}
+  .brand img{height:30px;width:auto}
+  .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);min-width:0;overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font:700 clamp(14px,1.6vw,19px) var(--cond);text-transform:uppercase}
+  .site-nav::-webkit-scrollbar{display:none}
+  .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;text-decoration:none;opacity:.9}
+  .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+  .lang{display:flex;flex:none;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+  .lang button{height:26px;padding:0 9px;border:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:#f3f2ee;color:#000}
+  /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から(サイトのほかのページと同じ) */
+  .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .menu-btn{display:none}
+  @media (max-width:650px){
+    :root{--bar-h:52px}
+    .site-header .bar{position:relative;gap:10px}
+    .brand img{height:26px}
+    .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+    .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+    .menu-btn i{position:relative}
+    .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+    .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+    .navtg:checked~.menu-btn i{background:transparent}
+    .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+    .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+    .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+    .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+    .navtg:checked~.site-nav.site-nav{display:flex}
+    .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+    .site-nav a:first-child{border-top:0}
+    .lang{order:2}
+    .lang button{height:22px;padding:0 7px;font-size:13px}
+  }
+
+  /* ===== レイヤー(作品ページと同じ最大幅、外は下地) ===== */
+  .sheet{max-width:1100px;margin-inline:auto;background:var(--body)}
+
+  /* ===== 表紙(説明書の1面の上と同じ:左にロゴ、右に物語) ===== */
+  .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
+  .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
+  .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
+  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .h1{margin:0;width:min(var(--logo-w,400px),100%)}
+  .h1 img{margin-inline:auto}
+  .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
+  .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0;font-size:15px;font-weight:800}
+  .spec div{display:flex;align-items:baseline;gap:6px}
+  .spec dt{font-size:11px;opacity:.72}
+  .spec dd{margin:0}
+  .cover-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;margin:0;font-size:12.5px;font-weight:700;opacity:.75}
+  .cover-meta a{text-underline-offset:3px}
+  .story{display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent)}
+  .catch{margin:0;font-size:clamp(24px,3.4vw,32px);font-weight:900;line-height:1.25;text-wrap:balance}
+  .story p{margin:0}
+  .story p:not(.catch){font-size:15px;font-weight:700;line-height:1.85}
+  @media (max-width:760px){
+    .cover .inner{grid-template-columns:minmax(0,1fr);padding-block:36px 32px}
+    .story{align-items:center;padding:22px 0 0;border-left:0;border-top:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent);text-align:center}
+  }
+  /* 表紙と本文の境目(作品ごとの帯。なければまっすぐ) */
+  .edge{display:none}
+
+  /* ===== 本文:メインカラーの地(説明書と同じ模様)、左に目次、右に章ごとの白い座布団 ===== */
+  .body{position:relative;background:var(--body) var(--tex,none) center top/var(--tex-size,auto)}
+  /* 帯:作品ページと同じく、色の境目には置かず本文の内側(上下18px)に */
+  .body::before,.body::after{content:"";position:absolute;left:0;right:0;height:var(--band-h,0px);background:var(--band-c,var(--cover));pointer-events:none;
+    -webkit-mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px);mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px)}
+  .body::before{top:18px}
+  .body::after{bottom:18px}
+  .layout{display:grid;grid-template-columns:190px minmax(0,720px);justify-content:center;gap:44px;padding-block:calc(44px + var(--band-space,0px)) calc(64px + var(--band-space,0px))}
+  .toc{position:sticky;top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px));align-self:start;color:var(--on-body)}
+  .toc p{margin:0 0 10px 12px;font:700 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .toc ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+  .toc a{display:block;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;opacity:.82;transition:background .2s,opacity .2s}
+  .toc a:hover{opacity:1;background:var(--on-body-soft)}
+  .toc a.on{opacity:1;background:var(--on-body);color:var(--body)}
+  .toc .sub{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px 10px}
+  .toc .sub a{display:flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;padding:0;border-radius:50%;border:1.5px solid var(--on-body-line);font:var(--num-weight,400) 14px/1 var(--num);font-variant-numeric:lining-nums tabular-nums}
+
+  @media (max-width:899px){
+    .layout{grid-template-columns:minmax(0,1fr);gap:0;padding-block:var(--band-space,0px) calc(48px + var(--band-space,0px))}
+    /* スマホ:横にスライドする目次。並びは画面の端まで続き、端で切れる(余白の内側では切らない) */
+    .toc{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));
+      z-index:20;top:calc(var(--bar-h) + env(safe-area-inset-top,0px));margin-inline:calc(-1 * var(--gl)) calc(-1 * var(--gr));padding:10px 0;background:var(--body);border-bottom:1px solid var(--on-body-soft)}
+    .toc p,.toc .sub{display:none}
+    .toc ol{flex-direction:row;gap:6px;padding-inline:var(--gl) 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-padding-inline:var(--gl) var(--gr);scrollbar-width:none}
+    .toc ol::after{content:"";flex:none;width:calc(var(--gr) - 6px)}   /* 最後の項目のあとにも同じ余白 */
+    .toc li{flex:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{white-space:nowrap;border:1.5px solid var(--on-body-line);padding:6px 13px;font-size:13px}
+    .toc a.on{border-color:var(--on-body)}
+    .content{padding-top:24px}
+  }
+
+  /* ===== 章=白い座布団。見出しはサイト共通の角丸(左の目次と同じ形)。作品が変わっても色だけ差し替え ===== */
+  .content{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .panel{display:flex;flex-direction:column;gap:18px;min-width:0;padding:26px 28px 28px;border-radius:18px;background:var(--paper)}
+  @media (max-width:560px){ .panel{padding:20px 18px 22px;border-radius:14px} }
+  h2{align-self:flex-start;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--head);color:var(--on-head);font-size:clamp(17px,2.2vw,19px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+  /* 章の中の小見出し(説明書の「ニコ忘れ」「特殊カードの時」など) */
+  h4{margin:4px 0 0;font-size:16.5px;font-weight:900;line-height:1.4}
+  h4::before{content:"";display:inline-block;width:6px;height:1em;margin-right:8px;border-radius:2px;background:var(--head);vertical-align:-.12em}
+  .content p{margin:0}
+  /* 行間:本文 1.85/図の中の短い文 1.6 */
+  .prose p,.step>p,.prose li,.step li{line-height:1.85}
+  .prose{display:flex;flex-direction:column;gap:12px}
+  .prose ul,.prose ol,.step ul,.step ol{display:flex;flex-direction:column;gap:4px;margin:0;padding-left:1.4em}
+  em{font-style:normal;font-weight:800;color:var(--hl)}
+
+  /* 動画の枠(長尺の遊び方動画が入る場所) */
+  .screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:8px;background:#000;color:#f3f2ee;overflow:hidden}
+  .screen .soon{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .screen .play{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid rgba(243,242,238,.45)}
+  .screen .play::before{content:"";margin-left:5px;border-left:17px solid rgba(243,242,238,.45);border-block:11px solid transparent}
+  .screen .soon b{font:700 18px/1 var(--cond);letter-spacing:.18em}
+  .screen .soon span{font-size:13px;opacity:.7}
+  .note{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+
+  /* 内容物:ラベル(・○○:○枚)と並べた実物 */
+  .crow{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .crow.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cbox{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .clbl{display:flex;flex-wrap:wrap;font-size:15px;font-weight:800;line-height:1.5}   /* 「・」だけが1行目に残らないように */
+  .clbl::before{content:"・";flex:none}
+  .clbl>span{flex:1 1 0;min-width:0}
+  .clbl small{flex:0 0 100%;margin-top:2px;padding-left:1em;font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .cards{display:grid;grid-template-columns:repeat(var(--cols,10),minmax(0,1fr));gap:6px}
+  .cards img{width:100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .things{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+  .things img{width:var(--tw,46px)}
+  .sheet-icon{display:flex;gap:6px}
+  .sheet-icon span{display:grid;place-items:center;width:40px;height:54px;border-radius:3px;background:var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 14px var(--cond);letter-spacing:.06em}
+  .sheet-icon span:last-child{background:var(--head);color:var(--on-head)}
+  @media (min-width:900px){ .cards{gap:8px} }
+  @media (max-width:560px){ .cards{grid-template-columns:repeat(var(--cols-sm,5),minmax(0,1fr));gap:8px} .crow.two{grid-template-columns:minmax(0,1fr)} }
+
+  /* 人数ごとの表など(説明書の小さな表) */
+  .ptable{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:10px;max-width:calc(var(--cols,2) * 230px);padding:10px;border-radius:14px;background:var(--soft)}
+  .ptable>div{overflow:hidden;border:2px solid var(--head);border-radius:10px;background:var(--paper);text-align:center}
+  .ptable b{display:block;padding:6px;background:var(--head);color:var(--on-head);font-size:15px}
+  .ptable p{padding:10px 8px 12px;font-size:15px;font-weight:800;line-height:1.5}
+  /* 説明書の赤い帯(※注意書き) */
+  .rnote{align-self:flex-start;padding:7px 14px;border-radius:6px;background:var(--hl);color:#fff;font-size:13.5px;font-weight:800;line-height:1.6}
+  .rnote a{text-decoration:none}
+  .rnote a:hover{text-decoration:underline}
+  /* 印刷した説明書の誤りの訂正(その場所に小さく添える。更新履歴には「訂正」の印) */
+  .errata{display:block;margin-top:4px;color:var(--hl);font-size:12px;font-weight:800;line-height:1.5;font-style:normal}
+  /* 枠で囲んだ補足(説明書の「ニコ忘れ」のような囲み) */
+  .box{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px;background:var(--soft)}
+  .box p{line-height:1.8}
+
+  /* ===== ゲームの流れ(1つの座布団の中に手順を並べる) ===== */
+  .flow{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+  .step{display:flex;flex-direction:column;gap:14px;padding-block:24px}
+  .step:first-child{padding-top:4px}
+  .step:last-child{padding-bottom:0}
+  .step + .step{border-top:2px dashed var(--line)}
+  .step-head{display:flex;align-items:center;gap:12px}
+  .snum{position:relative;flex:none;width:44px;height:46px;background:var(--head);-webkit-mask:var(--step-icon) center/contain no-repeat;mask:var(--step-icon) center/contain no-repeat}
+  /* 番号:アイコンの真ん中(作品ごとに --num-y で上下を合わせる) */
+  .snum b{position:absolute;left:0;right:0;top:var(--num-y,50%);translate:0 -50%;color:var(--on-head);font:var(--num-weight,400) 25px/1 var(--num);font-variant-numeric:lining-nums;text-align:center}
+  h3{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+
+  /* ===== 図(説明書の図をカードの画像で組み直したもの) ===== */
+  .viz{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:18px 22px;padding:22px 14px 18px;border-radius:12px;background:var(--soft);overflow-x:auto}
+  .grp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .grp>.lbl,.lbl{font-size:12.5px;font-weight:800;line-height:1.45;text-align:center}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .card{position:relative;display:block;flex:none;width:var(--cw,52px)}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:60px} }
+  .card img{width:100%;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.22)}
+  .card.sel img{outline:3px solid var(--hl);outline-offset:2px}
+  .card.dim img{opacity:.35}
+  .arrow{align-self:center;flex:none;width:0;height:0;border-left:13px solid var(--head);border-block:9px solid transparent;opacity:.85}
+  @media (max-width:560px){ .viz.stack-sm{flex-direction:column;align-items:center} .viz.stack-sm>.arrow{transform:rotate(90deg)} }
+  /* 2つ以上を見くらべる図:点線で区切る */
+  .viz.split{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));align-items:start;gap:0;padding-inline:0}
+  .viz.split>.grp{padding-inline:12px}
+  .viz.split>.grp+.grp{border-left:2px dashed var(--line)}
+  @media (max-width:620px){ .viz.split{grid-template-columns:minmax(0,1fr);gap:18px} .viz.split>.grp+.grp{padding-top:18px;border-left:0;border-top:2px dashed var(--line)} }
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:12px;font-weight:800;white-space:nowrap}
+  .tag.hl{background:var(--hl);color:#fff}
+  .callout{max-width:170px;font-size:12.5px;font-weight:800;line-height:1.6}
+  .callout em{display:block;font-size:15px}
+  .pile{position:relative;width:96px;height:96px}
+  .pile .card{position:absolute;left:24px;top:10px}
+  .deck{position:relative;width:calc(var(--cw,52px) + 12px);height:calc(var(--cw,52px) * 1.4 + 12px)}
+  .deck .card{position:absolute}
+  .deck .card:nth-child(1){left:0;top:0}
+  .deck .card:nth-child(2){left:6px;top:6px}
+  .deck .card:nth-child(3){left:12px;top:12px}
+  .loop{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:13px;font-weight:800}
+  .loop::before{content:"↻";font-size:18px;line-height:1}
+  /* 説明書の図の枠(見出し付き) */
+  .fig{margin:0;overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--paper)}
+  .fig-t{padding:6px 12px;background:var(--head);color:var(--on-head);font-size:13.5px;font-weight:800;text-align:center}
+  .fig .viz{border-radius:0}
+  .fig-txt{max-width:280px;font-size:14px;font-weight:700;line-height:1.6}
+
+  /* よくある質問 */
+  .qa{display:flex;flex-direction:column;gap:14px;margin:0}
+  .qa dt{font-weight:900;line-height:1.6}
+  .qa dd{margin:4px 0 0;padding-left:1.6em;line-height:1.8}
+  .qa dt::before,.qa dd::before{display:inline-block;width:1.6em;margin-left:-1.6em;font-weight:900}
+  .qa dt{padding-left:1.6em}
+  .qa dt::before{content:"Q.";color:var(--hl)}
+  .qa dd::before{content:"A."}
+
+  /* 注意(説明書の注意枠) */
+  .warn{overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--warn-bg,var(--soft))}
+  .warn-t{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 12px;background:var(--head);color:var(--on-head);font-size:16px;font-weight:900}
+  .warn-t svg{flex:none;width:22px;height:20px}
+  .warn ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:14px 18px 16px 34px;font-size:13.5px;font-weight:700;line-height:1.6}
+
+  /* 更新履歴 */
+  .log{display:flex;flex-direction:column;margin:0;padding:0;list-style:none;border-top:1.5px solid var(--line)}
+  .log li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:14px 4px;border-bottom:1.5px solid var(--line);font-size:15px;line-height:1.7}
+  .log time{font:700 18px/1.5 var(--cond);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .log .chg{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:4px;background:var(--hl);color:#fff;font-size:12px;font-weight:800;vertical-align:2px}
+  .legend{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .legend .chg{display:inline-block;padding:0 7px;border-radius:4px;background:var(--hl);color:#fff;font-size:11.5px;font-weight:800}
+
+  /* 作品ページへ */
+  .back{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;padding:13px 26px;border-radius:999px;background:var(--on-body);color:var(--body);font-size:14px;font-weight:800;letter-spacing:.04em;text-decoration:none;transition:translate .15s}
+  .btn:hover{translate:0 -2px}
+  .btn.ghost{background:none;color:var(--on-body);box-shadow:inset 0 0 0 2px var(--on-body)}
+
+  .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));background:var(--bar);color:#9aa3a9;font-size:12px}
+  .site-footer a{color:#f3f2ee;font:700 15px var(--cond);text-decoration:none}
+  .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+  .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media (max-width:650px){ .site-footer{flex-direction:column;gap:8px;text-align:center} }
+
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.toc a{transition:none} }
+
+  /* ===== モコチャカ ===== */
+  :root{
+    --main:#39278b;
+    --accent:#f19ebc;
+    --ink:#39278b;
+    --hl:#d4242b;
+    --head:#39278b;
+    --on-head:#ffffff;
+    --cover:#f19ebc;
+    --on-cover:#39278b;
+    --body:#39278b;
+    --on-body:#f19ebc;
+    --tex:url(../../../img/page/m_tex_c.png?v=03a25b4b);
+    --tex-size:36px 36px;
+    --band:url(../../../img/page/saku_loop.png?v=cc1ed18e);
+    --band-h:24px;
+    --step-icon:url(../../../img/page/m_moko_sil.png?v=03c10615);
+    --num:"Dela Gothic One","Hiragino Sans",sans-serif;
+    --num-y:47%;
+    --logo-w:420px;
+    --soft:#e1dfee;
+    --band-space:60px;
+    --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
+  }
+  /* モコチャカだけで使う見た目
+     説明書と同じく、番号のある章(1〜6)はそれぞれ白い座布団に。見出しの左にモコの形の番号 */
+  .chap-head{display:flex;align-items:center;gap:10px}
+  .chap-head h2{align-self:center}
+  .snum{width:48px;height:45px}
+  .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  /* 目次:長い章名(5.トークン獲得によるボーナス)は2行になってもきれいに */
+  .toc a{border-radius:16px}
+
+  /* 準備の(1)〜(5) */
+  ol.paren{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:p}
+  ol.paren>li{counter-increment:p;position:relative;padding-left:2.2em;line-height:1.85}
+  ol.paren>li::before{content:"(" counter(p) ")";position:absolute;left:0;top:0;font-weight:800}
+  ol.paren .sub{display:block}
+  /* 箇条書き(説明書の「・」) */
+  ul.dot{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+  ul.dot>li{position:relative;padding-left:1.1em;line-height:1.85}
+  ul.dot>li::before{content:"・";position:absolute;left:0}
+
+  /* 説明書のピンクの囲み(ルール):左に動物のアイコン */
+  .crule{display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:12px;background:color-mix(in srgb,var(--accent) 38%,#fff)}
+  .crule .ic{display:flex;flex:none;gap:2px}
+  .crule .ic img{width:40px}
+  @media (max-width:560px){ .crule{flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px} .crule .ic img{width:32px} }
+  .crule ul{flex:1;min-width:0;font-weight:700}
+  /* 例:左にカード3枚、右に説明 */
+  .ex{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 18px;padding-left:4px}
+  .ex .row{gap:6px}
+  .ex .card{--cw:56px}
+  .ex .card img{border-radius:5px}
+  .ex p{font-size:15px;line-height:1.75}
+  .ex p b{color:var(--hl);font-weight:800}
+  .ex .note{display:block;margin-top:4px;font-size:13px;line-height:1.6}
+  @media (max-width:560px){ .ex{grid-template-columns:minmax(0,1fr);justify-items:center;padding-left:0} .ex p{justify-self:stretch} }
+  .notes{display:flex;flex-direction:column;gap:2px;font-size:13.5px;font-weight:700;line-height:1.7}
+  .notes em{font-weight:800}
+
+  /* 場の図:トークンを中心に3つの山(大きさは em でまとめて変える) */
+  .fwrap{--fs:11px;font-size:var(--fs);line-height:1.3}
+  @media (max-width:560px){ .fwrap{--fs:8.4px} }
+  .fwrap.sm{--fs:8.6px}
+  @media (max-width:560px){ .fwrap.sm{--fs:8.4px} }
+  .fld{position:relative;flex:none;width:calc(21 * var(--fs));height:calc(19.5 * var(--fs))}
+  .fld .pc{position:absolute;left:calc((var(--x) - 2) * var(--fs));top:calc((var(--y) - 2.8) * var(--fs));width:calc(4 * var(--fs));rotate:var(--r,0deg);z-index:var(--z,1)}
+  .fld .pc img{width:100%;border-radius:.35em;box-shadow:0 .15em .45em rgba(0,0,0,.28)}
+  .fld .pc.sel img{outline:.3em solid var(--hl);outline-offset:.15em}
+  .fld .pc.slot{height:5.6em;border:.2em dashed var(--ink-soft);border-radius:.4em;background:var(--paper)}
+  .fld .tok{position:absolute;left:calc((var(--x) - 2.4) * var(--fs));top:calc((var(--y) - 2.3) * var(--fs));width:calc(4.8 * var(--fs));z-index:3;filter:drop-shadow(0 .2em .3em rgba(0,0,0,.25))}
+  .fld .t{position:absolute;left:calc(var(--x) * var(--fs));top:calc(var(--y) * var(--fs));translate:-50% -50%;font-size:1.35em;font-weight:900;white-space:nowrap;z-index:5}
+  .fld .t.hl{color:var(--hl);font-size:1.25em;line-height:1.35;text-align:center}
+  .fhand{display:flex;flex-direction:column;align-items:center;gap:.5em}
+  .fhand .dk{position:relative;width:4.6em;height:6.2em}
+  .fhand .dk img{position:absolute;width:4em;border-radius:.35em;box-shadow:0 .15em .4em rgba(0,0,0,.25)}
+  .fhand .dk img:nth-child(1){left:0;top:0}
+  .fhand .dk img:nth-child(2){left:.3em;top:.3em}
+  .fhand .dk img:nth-child(3){left:.6em;top:.6em}
+  .fhand b{font-size:1.35em;font-weight:900}
+  .farrow{flex:none;width:0;height:0;border-left:1.4em solid var(--hl);border-block:1em solid transparent}
+  /* 準備の例(4人):四隅に手札、真ん中に場 */
+  .setup4{display:grid;grid-template-columns:auto auto auto;grid-template-rows:auto auto;align-items:center;justify-items:center;gap:1em 1.2em}
+  .setup4 .fld{grid-column:2;grid-row:1 / span 2}
+  .frow{display:flex;align-items:center;justify-content:center;gap:1em}
+  /* 図1・図2 */
+  .figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .figs .fig .viz{min-height:100%;align-items:center}
+  .fig2{position:relative;width:12em;height:12em}
+  .fig2 .dk{position:absolute;left:1.5em;top:4.2em;width:6em;height:7.4em}
+  .fig2 .dk img{position:absolute;width:5.4em;border-radius:.4em;box-shadow:0 .15em .4em rgba(0,0,0,.25)}
+  .fig2 .dk img:nth-child(1){left:.6em;top:.6em}
+  .fig2 .dk img:nth-child(2){left:.3em;top:.3em}
+  .fig2 .dk .lift{left:0;top:0;transform-origin:50% 0;transform:perspective(30em) rotateX(55deg) translateY(-1.4em)}
+  .fig2 svg{position:absolute;left:5.4em;top:.6em;width:6.4em;height:6em;color:var(--hl)}
+  @media (max-width:620px){ .figs{grid-template-columns:minmax(0,1fr)} }
+  /* ボーナスの図 */
+  .bonus .pick{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 14px;border:2.5px dashed var(--hl);border-radius:14px}
+  .bonus .tokhand{display:flex;align-items:center;gap:8px}
+  .bonus .tokhand img.tk{width:46px}
+  .bonus .fhand{font-size:10px}
+  .bonus .arrow.l{transform:rotate(180deg);border-left-color:var(--hl);opacity:1}
+  @media (max-width:560px){ .bonus{flex-direction:column-reverse;align-items:center} .bonus .arrow.l{transform:rotate(90deg)} }
+
+  .cnote{font-size:13px;line-height:1.6}
+  .manual-thumb img{width:150px;border-radius:4px;box-shadow:0 1px 5px rgba(0,0,0,.25)}
+  .things{--tw:76px}
+  .warn{--warn-bg:color-mix(in srgb,var(--accent) 38%,#fff)}
+  .namecards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:440px;margin-inline:auto}
+  .namecards .grp b{font-size:18px;font-weight:900}
+  .namecards .card{--cw:100%;width:100%;max-width:90px}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="../../../" aria-label="PANDA KINEMA トップへ"><img src="../../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="../../../#news">NEWS</a><a href="../../../#board">BOARD GAME</a><a href="../../../#movie">MOVIE</a><a href="../../../#tools">PLAY&amp;TOOLS</a><a href="../../../#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+        <h1 class="h1"><img src="../../../img/logo/m_logo_navy.png?v=724e4009" alt="モコチャカ MOKOCHAKA"></h1>
+        <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja"><span class="bx">人数</span></span><span class="en">Players</span></dt><dd><span class="ja"><span class="bx">2〜4人</span></span><span class="en">2–4</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">10〜15分</span></span><span class="en">10–15 min</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>6年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja"><span class="bx">ねむりは<wbr>競争だ。</span></span><span class="en">Sleep is a race.</span></p>
+        <p class="ja"><span class="bx">あなたたちは<wbr>眠りの<wbr>浅瀬で<wbr>モコを<wbr>数えていました。<wbr>正確に<wbr>数える<wbr>ほど、<wbr>より<wbr>よい<wbr>眠りに<wbr>近づきます。<wbr>すると<wbr>「まぜて!」と<wbr>パカや<wbr>ポメも<wbr>現れ、<wbr>数えるのが<wbr>だんだんや<wbr>や<wbr>こしくなっていきます。<wbr>やがて数が<wbr>揃うと、<wbr>不思議な<wbr>アルファ波<wbr>「モコチャカ」が<wbr>生まれ、<wbr>眠りはより<wbr>深くなります。<wbr>しかし、<wbr>それを<wbr>阻むのが<wbr>ガブです。<wbr>ガブの<wbr>妨害を<wbr>かいくぐり、<wbr>最も<wbr>深い<wbr>眠りに<wbr>たどり着くのは<wbr>誰でしょうか。</span></p>
+        <p class="en">You were counting Moko in the shallows of sleep. The more accurately you count, the closer you get to a good sleep. Then Paka and Pome show up saying “Let us join!”, and counting gets trickier and trickier. When the numbers line up, a mysterious alpha wave, “Mokochaka,” is born and your sleep grows deeper. But Gabu stands in the way. Who will slip past Gabu and reach the deepest sleep?</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
+        <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
+        <li><a href="#overview"><span class="ja">モコチャカとは?</span><span class="en">What Is Mokochaka?</span></a></li>
+        <li><a href="#cards"><span class="ja">カードの呼び方</span><span class="en">Card Names</span></a></li>
+        <li><a href="#setup"><span class="ja">1.ゲームの準備</span><span class="en">1. Game Setup</span></a></li>
+        <li><a href="#flow"><span class="ja">2.ゲームの手順</span><span class="en">2. Turn Procedure</span></a></li>
+        <li><a href="#call"><span class="ja">3.コールの方法</span><span class="en">3. How to Call</span></a></li>
+        <li><a href="#special"><span class="ja">4.特殊コール</span><span class="en">4. Special Calls</span></a></li>
+        <li><a href="#bonus"><span class="ja">5.トークン獲得によるボーナス</span><span class="en">5. Token Bonus</span></a></li>
+        <li><a href="#penalty"><span class="ja">6.ペナルティ</span><span class="en">6. Penalties</span></a></li>
+        <li><a href="#end"><span class="ja">6.ゲームの終了</span><span class="en">6. End of the Game</span></a></li>
+        <li><a href="#qa">Q&amp;A</a></li>
+        <li><a href="#warnings"><span class="ja">注意</span><span class="en">Warnings</span></a></li>
+        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
+        <div class="screen">
+          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
+        </div>
+        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
+      </section>
+
+      <!-- 内容物 -->
+      <section class="panel" id="contents" aria-labelledby="h-contents">
+        <h2 id="h-contents"><span class="ja"><span class="bx">内容物</span></span><span class="en">Contents</span></h2>
+        <div class="crow">
+          <p class="clbl"><span class="ja"><span class="bx">カード:32枚<small><wbr>(モコ10枚、<wbr>パカ10枚、<wbr>ポメ6枚、<wbr>ガブ6枚)</small></span></span><span class="en">Cards: 32<small>(Moko 10, Paka 10, Pome 6, Gabu 6)</small></span></p>
+          <div class="cards" style="--cols:12;--cols-sm:6" role="img" aria-label="モコ・パカ・ポメ・ガブのカード"><img src="../../../img/parts/mc_m1.webp?v=3b059d4b" alt=""><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""><img src="../../../img/parts/mc_m3.webp?v=cbe36c13" alt=""><img src="../../../img/parts/mc_m4.webp?v=92f45f8e" alt=""><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""><img src="../../../img/parts/mc_o3.webp?v=a006c9e3" alt=""><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""><img src="../../../img/parts/mc_g2.webp?v=545dc536" alt=""></div>
+        </div>
+        <div class="crow two">
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">アクリルトークン:1個</span></span><span class="en">Acrylic token: 1</span></p>
+            <div class="things"><img src="../../../img/parts/m_token.webp?v=dccd8947" alt="アクリルトークン"></div>
+            <p class="cnote"><span class="ja"><span class="bx"><em>※アクリルトークンには<wbr>保護フィルムが<wbr>貼られています。<wbr>ご使用前に、<wbr>必ず<wbr>剥が<wbr>してから<wbr>ご使用ください。</em></span></span><span class="en"><em>The acrylic token comes with a protective film. Always peel it off before use.</em></span></p>
+          </div>
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p>
+            <div class="manual-thumb"><img src="../../../img/gallery/mg_manual1.webp?v=93e39a61" alt="遊び方説明書"></div>
+          </div>
+        </div>
+      </section>
+      <!-- モコチャカとは? -->
+      <section class="panel" id="overview" aria-labelledby="h-overview">
+        <h2 id="h-overview"><span class="ja"><span class="bx">モコチャカとは?</span></span><span class="en">What Is Mokochaka?</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">自分の<wbr>手札から<wbr>カードを<wbr>山に<wbr>出し、<em><wbr>上に<wbr>見えている<wbr>3枚の<wbr>カードの<wbr>動物を<wbr>数えて<wbr>素早く<wbr>名前を<wbr>呼ぶ<wbr>ゲームです。</em></span></p>
+          <p class="ja"><span class="bx">特定の<wbr>条件が<wbr>揃うと<wbr>トークンの<wbr>取り合いが<wbr>発生し、<wbr>勝った<wbr>人は<wbr>山の<wbr>カードを<wbr>自分の<wbr>手札に<wbr>追加します。<wbr>誰かの<wbr>手札が<wbr>なくなったら<wbr>ゲームは<wbr>終了し、<wbr>ガブを<wbr>除いた<wbr>カードが<wbr>1番多かった<wbr>人の<wbr>勝ちです。</span></p>
+          <p class="en">Play cards from your hand onto the piles, and <em>count the animals on the 3 cards showing on top and call out their names as fast as you can.</em></p>
+          <p class="en">When certain conditions line up, everyone grabs for the token, and the winner adds pile cards to their hand. When someone runs out of cards, the game ends, and the player with the most cards, not counting Gabu, wins.</p>
+        </div>
+      </section>
+      <!-- カードの呼び方 -->
+      <section class="panel" id="cards" aria-labelledby="h-cards">
+        <h2 id="h-cards"><span class="ja"><span class="bx">カードの<wbr>呼び方</span></span><span class="en">Card Names</span></h2>
+        <p><span class="ja"><span class="bx">1枚の<wbr>カードには<wbr>1〜4匹の<wbr>動物が<wbr>います。</span></span><span class="en">Each card shows 1 to 4 animals.</span></p>
+        <div class="viz"><div class="namecards"><div class="grp"><span class="card"><img src="../../../img/parts/mc_m1.webp?v=3b059d4b" alt=""></span><b><span class="ja"><span class="bx">モコ</span></span><span class="en">Moko</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><b><span class="ja"><span class="bx">パカ</span></span><span class="en">Paka</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><b><span class="ja"><span class="bx">ポメ</span></span><span class="en">Pome</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""></span><b><span class="ja"><span class="bx">ガブ</span></span><span class="en">Gabu</span></b></div></div></div>
+      </section>
+      <!-- 1.ゲームの準備 -->
+      <section class="panel" id="setup" aria-labelledby="h-setup" data-toc="1.ゲームの準備|1. Game Setup">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>1</b></span><h2 id="h-setup"><span class="vh">1.</span><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2></div>
+        <ol class="paren">
+          <li><span class="ja"><span class="bx">アクリルトークンを<wbr>テーブルの<wbr>中央など<wbr>全員が<wbr>手に<wbr>取りやすい<wbr>位置に<wbr>置きます。</span></span><span class="en">Place the acrylic token somewhere everyone can easily reach, such as the middle of the table.</span></li>
+          <li><span class="ja"><span class="bx">トークンを<wbr>囲むように、<wbr>ランダムな<wbr>3枚の<wbr>カードを<wbr>並べてください。<span class="sub"><em><wbr>3枚の<wbr>カード<wbr>それぞれを<wbr>山</em>と<wbr>呼び、<em><wbr>山と<wbr>トークンの<wbr>置かれている<wbr>場所を<wbr>場</em>と<wbr>呼びます。</span></span></span><span class="en">Lay out 3 random cards around the token. <span class="sub"><em>Each of these 3 cards is called a pile</em>, and <em>the area with the piles and the token is called the play area.</em></span></span></li>
+          <li><span class="ja"><span class="bx">残りの<wbr>カードを<wbr>裏向きで<wbr>良く<wbr>混ぜ、<wbr>全員に<wbr>同じ<wbr>枚数に<wbr>なるように<wbr>配ります。<em><wbr>(内容は<wbr>見ない)</em><span class="sub"><em>※配りきれずに<wbr>余った<wbr>カードは、<wbr>並んでいる<wbr>3つの<wbr>山の<wbr>どこかに<wbr>適当に<wbr>重ねてください。</em></span></span></span><span class="en">Shuffle the remaining cards well face down and deal them so everyone gets the same number. <em>(Do not look at them.)</em><span class="sub"><em>If any cards are left over, stack them on any of the 3 piles.</em></span></span></li>
+          <li><span class="ja"><span class="bx">各自、<wbr>渡された<wbr>自分の<wbr>手札を<wbr>裏向きで<wbr>片手に<wbr>持ちます。<wbr>手元に<wbr>おいても<wbr>構いません。</span></span><span class="en">Each player holds their own hand face down in one hand. You may also leave it on the table in front of you.</span></li>
+          <li><span class="ja"><span class="bx">最近<wbr>あんまり<wbr>眠れていない<wbr>人が<wbr>最初の<wbr>スタートプレイヤーです。</span></span><span class="en">Whoever has been sleeping the least lately is the first start player.</span></li>
+        </ol>
+        <figure class="fig"><figcaption class="fig-t"><span class="ja"><span class="bx">準備の<wbr>例<wbr>(4人)</span></span><span class="en">Setup example (4 players)</span></figcaption><div class="viz"><div class="fwrap"><div class="setup4" role="img" aria-label="真ん中にトークン、その周りに3枚のカードを並べて山にする。4人の手札は裏向き。配りきれずに余ったカードは山に重ねる"><div class="fhand" style="grid-column:1;grid-row:1"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><div class="fld"><span class="pc" style="--x:10.5;--y:4.4;--r:0deg;--z:1"><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""></span><span class="pc" style="--x:13.7;--y:3.5;--r:12deg;--z:2"><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""></span><img class="tok" src="../../../img/parts/m_token.webp?v=dccd8947" alt="" style="--x:10.5;--y:10.2"><span class="pc" style="--x:5.6;--y:14.6;--r:40deg;--z:1"><img src="../../../img/parts/mc_m3.webp?v=cbe36c13" alt=""></span><span class="pc" style="--x:15.4;--y:14.6;--r:-40deg;--z:1"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><span class="t" style="--x:4.2;--y:9.6"><span class="ja"><span class="bx">場</span></span><span class="en">Play area</span></span><span class="t" style="--x:7.2;--y:3.0"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:1.4;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:19.6;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t hl" style="--x:17.6;--y:9.2"><span class="ja"><span class="bx">余った<wbr>分は<br><wbr>重ねる。</span></span><span class="en">Extra cards<br>go on a pile.</span></span></div><div class="fhand" style="grid-column:3;grid-row:1"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><div class="fhand" style="grid-column:1;grid-row:2"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><div class="fhand" style="grid-column:3;grid-row:2"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div></div></div></div></figure>
+      </section>
+      <!-- 2.ゲームの手順 -->
+      <section class="panel" id="flow" aria-labelledby="h-flow" data-toc="2.ゲームの手順|2. Turn Procedure">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>2</b></span><h2 id="h-flow"><span class="vh">2.</span><span class="ja"><span class="bx">ゲームの<wbr>手順</span></span><span class="en">Turn Procedure</span></h2></div>
+        <ul class="dot">
+          <li><span class="ja"><span class="bx">スタートプレイヤーから<wbr>順番に<wbr>時計回りで<wbr>手番<wbr>(自分の<wbr>番)を<wbr>行っていきます。</span></span><span class="en">Starting with the start player, take turns (your turn) going clockwise.</span></li>
+          <li><span class="ja"><span class="bx">手番の<wbr>プレイヤーは、<wbr>自分の<wbr>手札の<wbr>いちばん上の<wbr>カードを<wbr>めくって、<em><wbr>3つの<wbr>山の<wbr>うち、<wbr>好きな<wbr>場所に<wbr>表向きで<wbr>重ねます。</em><wbr>そして、<wbr>なるべく<wbr>素早く<em><wbr>「コール」</em>を<wbr>行います。</span></span><span class="en">On your turn, flip the top card of your hand and <em>place it face up on whichever of the 3 piles you like.</em> Then make a <em>“call”</em> as fast as you can.</span></li>
+          <li><span class="ja"><span class="bx">コールが<wbr>終わったら<wbr>次の<wbr>プレイヤーの<wbr>手番に<wbr>なります。</span></span><span class="en">Once the call is made, it is the next player’s turn.</span></li>
+        </ul>
+        <div class="viz"><div class="fwrap"><div class="frow" role="img" aria-label="手札のいちばん上のカードをめくって、3つの山のうち好きな山に表向きで重ねる"><div class="fhand"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><span class="farrow" aria-hidden="true"></span><div class="fld"><span class="pc" style="--x:10.5;--y:4.4;--r:0deg;--z:1"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><img class="tok" src="../../../img/parts/m_token.webp?v=dccd8947" alt="" style="--x:10.5;--y:10.2"><span class="pc" style="--x:5.6;--y:14.6;--r:40deg;--z:1"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span><span class="pc sel" style="--x:6.2;--y:14.0;--r:34deg;--z:2"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span><span class="pc" style="--x:15.4;--y:14.6;--r:-40deg;--z:1"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><span class="t" style="--x:7.2;--y:3.0"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:1.4;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:19.6;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span></div></div></div></div>
+        <h4><span class="ja"><span class="bx">カードの<wbr>出し方</span></span><span class="en">How to Play a Card</span></h4>
+        <ul class="dot">
+          <li><span class="ja"><span class="bx">カードを<wbr>重ねる<wbr>山は<wbr>自由ですが、<wbr>山が<wbr>3つよりも<wbr>少なかった<wbr>時は<em><wbr>3つに<wbr>なるように<wbr>優先して<wbr>置いてください。</em><wbr>(図1)</span></span><span class="en">You may place your card on any pile, but if there are fewer than 3 piles, <em>always place it so that there are 3 piles.</em> (Fig. 1)</span></li>
+          <li><span class="ja"><span class="bx">カードを<wbr>めくる<wbr>時は、<wbr>他の<wbr>人が<wbr>先に<wbr>表側を<wbr>見られるように、<em><wbr>奥側から<wbr>めくってください。</em><wbr>(図2)</span></span><span class="en">When you flip a card, <em>flip it from the far side</em> so that the other players see its face first. (Fig. 2)</span></li>
+        </ul>
+        <div class="figs"><figure class="fig"><figcaption class="fig-t"><span class="ja"><span class="bx">図1</span></span><span class="en">Fig. 1</span></figcaption><div class="viz"><div class="fwrap sm"><div class="frow" role="img" aria-label="山が2つしかないときは、空いているところに置いて3つにする"><div class="fhand"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><span class="farrow" aria-hidden="true"></span><div class="fld"><span class="pc" style="--x:10.5;--y:4.4;--r:0deg;--z:1"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><img class="tok" src="../../../img/parts/m_token.webp?v=dccd8947" alt="" style="--x:10.5;--y:10.2"><span class="pc slot" style="--x:5.6;--y:14.6;--r:40deg"></span><span class="pc" style="--x:15.4;--y:14.6;--r:-40deg;--z:1"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><span class="t" style="--x:7.2;--y:3.0"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:1.4;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:19.6;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span></div></div></div></div></figure><figure class="fig"><figcaption class="fig-t"><span class="ja"><span class="bx">図2</span></span><span class="en">Fig. 2</span></figcaption><div class="viz"><div class="fwrap"><div class="fig2" role="img" aria-label="手札のカードは奥側からめくる"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="lift" src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><svg viewBox="0 0 64 60" aria-hidden="true"><path d="M8 14 C 30 0, 54 8, 54 40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M42 36 L54 52 L63 34 Z" fill="currentColor"/></svg></div></div></div></figure></div>
+      </section>
+      <!-- 3.コールの方法 -->
+      <section class="panel" id="call" aria-labelledby="h-call" data-toc="3.コールの方法|3. How to Call">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>3</b></span><h2 id="h-call"><span class="vh">3.</span><span class="ja"><span class="bx">コールの<wbr>方法</span></span><span class="en">How to Call</span></h2></div>
+        <div class="prose">
+          <p class="ja"><span class="bx">カードを<wbr>山に<wbr>重ねると、<wbr>上に<wbr>見えている<wbr>カードが<wbr>1枚ずつ<wbr>変わります。<wbr>上に<wbr>見えている<wbr>3枚の<wbr>カードの<wbr>動物の<wbr>数を<wbr>数え、<wbr>多い<wbr>順に<wbr>並べて<wbr>名前を<wbr>呼ぶ<wbr>ことを<em><wbr>「コール」</em>と<wbr>言います。<em><wbr>コールは<wbr>カードを<wbr>置いてから<wbr>3秒以内に<wbr>行いましょう。</em></span></p>
+          <p class="en">Each time a card is placed on a pile, the card showing on top changes. Counting the animals on the 3 cards showing on top and calling out their names in order from most to fewest is called a <em>“call.”</em> <em>Make your call within 3 seconds of placing your card.</em></p>
+        </div>
+        <div class="ex"><div class="row" role="img" aria-label="モコ2匹、パカ5匹"><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span><span class="card"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span><span class="card"><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>モコが<wbr>2匹、<wbr>パカが<wbr>5匹の<wbr>ため、<wbr>この<wbr>手番の<wbr>プレイヤーは<em><wbr>「パカモコ」</em>と<wbr>コールする。</span></span><span class="en"><b>Example:</b> There are 2 Moko and 5 Paka, so the player whose turn it is calls <em>“Pakamoko.”</em></span></p></div>
+        <p><span class="ja"><span class="bx">ただし、<wbr>コールには<wbr>以下の<wbr>ルールが<wbr>あります。</span></span><span class="en">However, calls follow these rules:</span></p>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_pome.webp?v=cb4e65dd" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">ポメが<wbr>いる<wbr>時は、<wbr>かわいいので<wbr>数に<wbr>関係<wbr>なく<em><wbr>必ず<wbr>最初に<wbr>呼ぶ。</em></span></span><span class="en">If there is a Pome, it is so cute that you <em>always call it first</em>, no matter how many there are.</span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="ポメ1匹、パカ4匹"><span class="card"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><span class="card"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span><span class="card"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>ポメが<wbr>1匹、<wbr>パカが<wbr>4匹で<wbr>パカの<wbr>方が<wbr>多いが、<wbr>ポメは<wbr>必ず<wbr>最初に<wbr>呼ぶので、<wbr>この<wbr>手番の<wbr>プレイヤーは<em><wbr>「ポメパカ」</em>と<wbr>コールする。</span></span><span class="en"><b>Example:</b> There is 1 Pome and 4 Paka. There are more Paka, but Pome is always called first, so the player calls <em>“Pomepaka.”</em></span></p></div>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_gabu.webp?v=01efb296" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">ガブが<wbr>いる<wbr>時は、<wbr>モコを<wbr>食べてしまうので<wbr>ガブの<wbr>数だけ<wbr>モコを<wbr>減らす。</span></span><span class="en">If there is a Gabu, it eats Moko, so subtract one Moko for each Gabu.</span></li><li><span class="ja"><span class="bx">ガブは<em><wbr>ガブしかいない<wbr>時のみ<wbr>名前を<wbr>呼ぶ。</em></span></span><span class="en"><em>Call Gabu’s name only when Gabu is the only animal.</em></span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="モコ2匹、ガブ2匹、パカ3匹"><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span><span class="card"><img src="../../../img/parts/mc_g2.webp?v=545dc536" alt=""></span><span class="card"><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>モコが<wbr>2匹、<wbr>パカが<wbr>3匹、<wbr>ガブが<wbr>2匹。<wbr>この<wbr>場合、<wbr>モコが<wbr>ガブの<wbr>数だけ<wbr>減って<wbr>0に<wbr>なるので、<wbr>手番の<wbr>プレイヤーは<em><wbr>「パカ」</em>と<wbr>コールする。</span></span><span class="en"><b>Example:</b> There are 2 Moko, 3 Paka and 2 Gabu. The Moko are reduced by the number of Gabu to 0, so the player calls <em>“Paka.”</em></span><span class="note"><span class="ja"><span class="bx"><em>※0以下に<wbr>なった<wbr>動物は<wbr>いない<wbr>ものとして<wbr>扱い、<wbr>名前は<wbr>呼びません。</em></span></span><span class="en"><em>An animal reduced to 0 or fewer counts as not being there, and its name is not called.</em></span></span></p></div>
+        <div class="ex"><div class="row" role="img" aria-label="モコ4匹、ガブ4匹"><span class="card"><img src="../../../img/parts/mc_m4.webp?v=92f45f8e" alt=""></span><span class="card"><img src="../../../img/parts/mc_g2.webp?v=545dc536" alt=""></span><span class="card"><img src="../../../img/parts/mc_g2.webp?v=545dc536" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>モコが<wbr>4匹、<wbr>ガブが<wbr>4匹。<wbr>この<wbr>場合、<wbr>モコが<wbr>ガブの<wbr>分減って<wbr>0に<wbr>なり、<wbr>ガブ以外の<wbr>動物が<wbr>いないので、<wbr>手番の<wbr>プレイヤーは<em><wbr>「ガブ」</em>と<wbr>コールする。</span></span><span class="en"><b>Example:</b> There are 4 Moko and 4 Gabu. The Moko are reduced by the Gabu to 0, and there are no animals other than Gabu, so the player calls <em>“Gabu.”</em></span></p></div>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">3枚の<wbr>カードが<wbr>すべて<wbr>同じ<wbr>動物の<wbr>場合、<wbr>その<wbr>動物の<wbr>名前を<wbr>2回続けて<wbr>コールする</span></span><span class="en">If all 3 cards show the same animal, call that animal’s name twice in a row.</span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="モコ8匹"><span class="card"><img src="../../../img/parts/mc_m4.webp?v=92f45f8e" alt=""></span><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>モコが<wbr>8匹。<wbr>3枚の<wbr>カードが<wbr>全て<wbr>モコなので、<wbr>手番の<wbr>プレイヤーは<em><wbr>「モコモコ」</em>と<wbr>コールする。</span></span><span class="en"><b>Example:</b> There are 8 Moko. All 3 cards are Moko, so the player calls <em>“Mokomoko.”</em></span><span class="note"><span class="ja"><span class="bx"><em>※パカなら<wbr>「パカパカ」、<wbr>ポメなら<wbr>「ポメポメ」、<wbr>ガブなら<wbr>「ガブガブ」に<wbr>なる。</em></span></span><span class="en"><em>For Paka it is “Pakapaka,” for Pome “Pomepome,” and for Gabu “Gabugabu.”</em></span></span></p></div>
+      </section>
+      <!-- 4.特殊コール -->
+      <section class="panel" id="special" aria-labelledby="h-special" data-toc="4.特殊コール|4. Special Calls">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>4</b></span><h2 id="h-special"><span class="vh">4.</span><span class="ja"><span class="bx">特殊コール</span></span><span class="en">Special Calls</span></h2></div>
+        <div class="prose">
+          <p class="ja"><span class="bx">場の<wbr>カードが<wbr>特定の<wbr>条件に<wbr>なった<wbr>とき、<wbr>特殊な<wbr>コールが<wbr>発生します。<em><wbr>その<wbr>場合、<wbr>全員で<wbr>トークンの<wbr>取り合いを<wbr>行います。</em><wbr>気が<wbr>ついた<wbr>プレイヤーは、<wbr>コールを<wbr>しながら<wbr>中央の<wbr>トークンを<wbr>素早く<wbr>取ってください。</span></p>
+          <p class="en">When the cards in the play area meet certain conditions, a special call occurs. <em>When that happens, everyone grabs for the token.</em> Whoever notices should quickly grab the token in the middle while making the call.</p>
+        </div>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_paka.webp?v=44fa7d74" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">ガブを<wbr>除く<wbr>ちょうど<wbr>2種類の<wbr>動物の<wbr>数が<wbr>同じ<wbr>とき、<em><wbr>「モコチャカ」</em>と<wbr>コールしながら<wbr>トークンを<wbr>取る。</span></span><span class="en">When exactly 2 kinds of animals, not counting Gabu, have the same number, grab the token while calling <em>“Mokochaka.”</em></span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="モコ4匹、パカ3匹、ガブ1匹"><span class="card"><img src="../../../img/parts/mc_m4.webp?v=92f45f8e" alt=""></span><span class="card"><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""></span><span class="card"><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>モコが<wbr>4匹、<wbr>パカが<wbr>3匹、<wbr>ガブが<wbr>1匹。<wbr>ガブの<wbr>数だけ<wbr>モコが<wbr>減って<wbr>3匹に<wbr>なるので、<wbr>モコと<wbr>パカが<wbr>3匹で<wbr>同じ<wbr>数に<wbr>なり、<em><wbr>「モコチャカ」</em>に<wbr>なる。</span></span><span class="en"><b>Example:</b> There are 4 Moko, 3 Paka and 1 Gabu. The Moko are reduced by the number of Gabu to 3, so Moko and Paka both have 3, making it <em>“Mokochaka.”</em></span></p></div>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_paka.webp?v=44fa7d74" alt=""><img src="../../../img/chara/m_pome.webp?v=cb4e65dd" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">ガブを<wbr>除く<wbr>3種の<wbr>動物が<wbr>すべて<wbr>場に<wbr>存在する<wbr>とき、<em><wbr>「チャカモコ」</em>と<wbr>コールしながら<wbr>トークンを<wbr>取る。</span></span><span class="en">When all 3 kinds of animals other than Gabu are in the play area, grab the token while calling <em>“Chakamoko.”</em></span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="ポメ2匹、パカ3匹、モコ1匹"><span class="card"><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""></span><span class="card"><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""></span><span class="card"><img src="../../../img/parts/mc_m1.webp?v=3b059d4b" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>ポメが<wbr>2匹、<wbr>パカが<wbr>3匹、<wbr>モコが<wbr>1匹。<wbr>ガブ以外の<wbr>3種が<wbr>揃っているので、<em><wbr>「チャカモコ」</em>に<wbr>なる。</span></span><span class="en"><b>Example:</b> There are 2 Pome, 3 Paka and 1 Moko. All 3 kinds other than Gabu are there, so it is <em>“Chakamoko.”</em></span></p></div>
+        <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_paka.webp?v=44fa7d74" alt=""><img src="../../../img/chara/m_pome.webp?v=cb4e65dd" alt=""></span><ul class="dot"><li><span class="ja"><span class="bx">ガブを<wbr>除く<wbr>3種類の<wbr>動物が<wbr>すべて<wbr>場に<wbr>存在し、<wbr>さらに<wbr>数も<wbr>すべて<wbr>同じ<wbr>とき、<em><wbr>「チャカモコチャカ」</em>と<wbr>コールしながら<wbr>トークンを<wbr>取る。</span></span><span class="en">When all 3 kinds of animals other than Gabu are in the play area and they all have the same number, grab the token while calling <em>“Chakamokochaka.”</em></span></li></ul></div>
+        <div class="ex"><div class="row" role="img" aria-label="ポメ2匹、パカ2匹、モコ2匹"><span class="card"><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""></span><span class="card"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>ガブ以外の<wbr>3種が<wbr>揃っていて、<wbr>さらに<wbr>全て<wbr>2匹なので<em><wbr>「チャカモコチャカ」</em>に<wbr>なる。</span></span><span class="en"><b>Example:</b> All 3 kinds other than Gabu are there, and there are 2 of each, so it is <em>“Chakamokochaka.”</em></span></p></div>
+        <div class="notes"><span class="ja"><span class="bx"><em>※モコチャカと<wbr>チャカモコが<wbr>同時に<wbr>成立している<wbr>場合、<wbr>どちらを<wbr>コールしても<wbr>正解です。</em></span></span><span class="en"><em>If Mokochaka and Chakamoko both apply at the same time, either call is correct.</em></span><span class="ja"><span class="bx"><em>※<wbr>特殊コールの<wbr>条件を<wbr>満たしている<wbr>場合、<wbr>通常の<wbr>コールよりも<wbr>特殊コールを<wbr>優先します。</em></span></span><span class="en"><em>When the conditions for a special call are met, the special call takes priority over a normal call.</em></span><span class="ja"><span class="bx"><em>※トークンを<wbr>取ってから<wbr>コールしてはいけません。<wbr>必ず<wbr>コールしながら<wbr>取ってください。</em></span></span><span class="en"><em>Do not grab the token first and then call. Always grab it while calling.</em></span></div>
+      </section>
+      <!-- 5.トークン獲得によるボーナス -->
+      <section class="panel" id="bonus" aria-labelledby="h-bonus" data-toc="5.トークン獲得によるボーナス|5. Token Bonus">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>5</b></span><h2 id="h-bonus"><span class="vh">5.</span><span class="ja"><span class="bx">トークン獲得に<wbr>よる<wbr>ボーナス</span></span><span class="en">Token Bonus</span></h2></div>
+        <div class="prose">
+          <p class="ja"><span class="bx">トークンを<wbr>最も<wbr>早く<wbr>取った<wbr>プレイヤーは、<wbr>場の<wbr>3つの<wbr>山の<wbr>うち、<em><wbr>好きな<wbr>2つの<wbr>山の<wbr>全ての<wbr>カードを<wbr>獲得し、<wbr>手札の<wbr>1番下に<wbr>追加します。</em></span></p>
+          <p class="en">The player who grabbed the token first <em>takes all the cards in any 2 of the 3 piles in the play area and adds them to the bottom of their hand.</em></p>
+        </div>
+        <div class="viz bonus" role="img" aria-label="トークンを取った人は、3つの山のうち好きな2つの山を獲得して手札に加える"><div class="grp"><div class="tokhand"><img class="tk" src="../../../img/parts/m_token.webp?v=dccd8947" alt=""><div class="fhand"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div></div></div><span class="arrow l" aria-hidden="true"></span><div class="grp"><div class="row"><span class="card dim"><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""></span><span class="card sel"><img src="../../../img/parts/mc_m3.webp?v=cbe36c13" alt=""></span><span class="card sel"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span></div><span class="tag hl"><span class="ja"><span class="bx">獲得して<wbr>手札に<wbr>(どの<wbr>山でも<wbr>OK)</span></span><span class="en">Add to your hand (any 2 piles)</span></span></div></div>
+        <div class="prose">
+          <p class="ja"><span class="bx">さらに<wbr>チャカモコチャカで<wbr>トークンを<wbr>取った<wbr>場合、<wbr>2つの<wbr>山の<wbr>全ての<wbr>カードに<wbr>加え、<em><wbr>全員の<wbr>手札の<wbr>上から<wbr>1枚受け取り、<wbr>自分の<wbr>手札の<wbr>1番下に<wbr>追加します。</em></span></p>
+          <p class="en">If you grabbed the token with Chakamokochaka, then in addition to all the cards in the 2 piles, <em>take 1 card from the top of every other player’s hand and add them to the bottom of your own hand.</em></p>
+          <p class="rnote"><span class="ja"><span class="bx">※2<wbr>人プレイの<wbr>時は<wbr>任意の<wbr>1つの<wbr>山を<wbr>獲得します。</span></span><span class="en">In a 2-player game, take any 1 pile.</span></p>
+          <p class="ja"><span class="bx">ボーナス獲得の<wbr>処理を<wbr>終えたら、<em><wbr>トークンを<wbr>取った<wbr>プレイヤーから</em><wbr>手番を<wbr>再開します。</span></p>
+          <p class="en">Once the bonus is done, <em>play resumes with the player who grabbed the token.</em></p>
+        </div>
+      </section>
+      <!-- 6.ペナルティ -->
+      <section class="panel" id="penalty" aria-labelledby="h-penalty" data-toc="6.ペナルティ|6. Penalties">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>6</b></span><h2 id="h-penalty"><span class="vh">6.</span><span class="ja"><span class="bx">ペナルティ</span></span><span class="en">Penalties</span></h2></div>
+        <div class="prose">
+          <p><span class="ja"><span class="bx"><em>次の<wbr>いずれかの<wbr>場合は<wbr>ペナルティと<wbr>なります。</em></span></span><span class="en"><em>Any of the following results in a penalty:</em></span></p>
+          <div class="box"><ul class="dot">
+            <li><span class="ja"><span class="bx">コールに<wbr>詰まったり、<wbr>間違えてしまった</span></span><span class="en">You got stuck on your call or called wrong</span></li>
+            <li><span class="ja"><span class="bx">コールするまでに<wbr>3秒以上<wbr>かかってしまった</span></span><span class="en">You took 3 seconds or more to call</span></li>
+            <li><span class="ja"><span class="bx">条件が<wbr>成立していないのに<wbr>トークンを<wbr>取った</span></span><span class="en">You grabbed the token when the conditions were not met</span></li>
+            <li><span class="ja"><span class="bx">コールを<wbr>する<wbr>前に<wbr>トークンを<wbr>取った</span></span><span class="en">You grabbed the token before calling</span></li>
+          </ul></div>
+          <p class="ja"><span class="bx">ペナルティと<wbr>なった<wbr>プレイヤーは、<em><wbr>他の<wbr>プレイヤーから<wbr>自由に<wbr>1人を<wbr>選んで、<wbr>自分の<wbr>手札の<wbr>上から<wbr>1枚を<wbr>渡さなければなりません。</em><wbr>渡された<wbr>人は<wbr>自分の<wbr>手札の<wbr>1番下に<wbr>追加します。</span></p>
+          <p class="en">A player who gets a penalty <em>must choose any 1 other player and give them 1 card from the top of their hand.</em> The player who receives it adds it to the bottom of their hand.</p>
+          <p class="rnote"><span class="ja"><span class="bx">※2<wbr>人プレイの<wbr>時は<wbr>手札の<wbr>上から<wbr>2枚渡してください。</span></span><span class="en">In a 2-player game, give 2 cards from the top of your hand.</span></p>
+          <p class="ja"><span class="bx">この<wbr>処理を<wbr>終えたら、<em><wbr>ペナルティに<wbr>なった<wbr>人の<wbr>左隣の<wbr>プレイヤーから</em><wbr>手番を<wbr>再開します。</span></p>
+          <p class="en">Once this is done, <em>play resumes with the player to the left of the penalized player.</em></p>
+        </div>
+      </section>
+      <!-- 6.ゲームの終了(説明書でも6) -->
+      <section class="panel" id="end" aria-labelledby="h-end" data-toc="6.ゲームの終了|6. End of the Game">
+        <div class="chap-head"><span class="snum" aria-hidden="true"><b>6</b></span><h2 id="h-end"><span class="vh">6.</span><span class="ja"><span class="bx">ゲームの<wbr>終了</span></span><span class="en">End of the Game</span></h2></div>
+        <div class="prose">
+          <p class="ja"><span class="bx"><em>誰かが<wbr>手札の<wbr>最後の<wbr>1枚を<wbr>出して<wbr>手番を<wbr>終えたら、<wbr>ゲーム終了です。</em><wbr>各プレイヤーは<wbr>手札の<wbr>枚数を<wbr>数え、<wbr>最も<wbr>多い<wbr>人が<wbr>勝ちです。<em><wbr>ただし、<wbr>ガブは<wbr>枚数に<wbr>含めません。</em></span></p>
+          <p class="ja"><span class="bx">勝利した<wbr>プレイヤーは、<wbr>より<wbr>良い<wbr>眠りに<wbr>つける<wbr>ことでしょう。<wbr>勝利した<wbr>プレイヤーが<wbr>複数いた<wbr>場合は、<wbr>喜びを<wbr>分かち合いながら<wbr>眠りに<wbr>つきましょう。</span></p>
+          <p class="en"><em>When someone plays the last card from their hand and finishes their turn, the game ends.</em> Each player counts the cards in their hand, and the player with the most cards wins. <em>However, Gabu cards are not counted.</em></p>
+          <p class="en">The winner will surely drift into a better sleep. If there are several winners, share the joy as you fall asleep together.</p>
+        </div>
+      </section>
+      <!-- Q&A -->
+      <section class="panel" id="qa" aria-labelledby="h-qa">
+        <h2 id="h-qa">Q&amp;A</h2>
+        <dl class="qa">
+          <div><dt><span class="ja"><span class="bx">ガブが<wbr>いて<wbr>モコが<wbr>0以下に<wbr>なった<wbr>場合は?</span></span><span class="en">What if there is a Gabu and the Moko drop to 0 or fewer?</span></dt><dd><span class="ja"><span class="bx">モコは<wbr>いない<wbr>ものとして<wbr>扱い、<wbr>コールしません。</span></span><span class="en">Treat the Moko as not being there, and do not call them.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">モコチャカと<wbr>チャカモコが<wbr>同時に<wbr>成立したら?</span></span><span class="en">What if Mokochaka and Chakamoko both apply at the same time?</span></dt><dd><span class="ja"><span class="bx">どちらを<wbr>コールしても<wbr>構いません。</span></span><span class="en">You may call either one.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">同時に<wbr>トークンを<wbr>取った<wbr>場合は?</span></span><span class="en">What if two players grab the token at the same time?</span></dt><dd><span class="ja"><span class="bx">先に<wbr>トークンに<wbr>触った<wbr>プレイヤーが<wbr>勝者です。<wbr>トークンは<wbr>触るのではなく<wbr>明確に<wbr>掴むと<wbr>判定が<wbr>しやすくなります。</span></span><span class="en">The player who touched the token first wins. Clearly grabbing the token, rather than just touching it, makes this easier to judge.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">モコチャカって<wbr>何?</span></span><span class="en">What does “Mokochaka” mean?</span></dt><dd><span class="ja"><span class="bx">もともと<wbr>身内で<wbr>使っていた<wbr>意味の<wbr>ない<wbr>言葉です。<wbr>犬の<wbr>お尻など<wbr>何かが<wbr>モコモコしている<wbr>様を<wbr>表す<wbr>形容詞と<wbr>して<wbr>使ったりしていました。<wbr>語感が<wbr>面白いので<wbr>ゲームに<wbr>できそう!と<wbr>思ったのが<wbr>この<wbr>ゲームの<wbr>できた<wbr>きっかけです。</span></span><span class="en">It is a meaningless word we used among family and friends. We sometimes used it to describe something fluffy, like a dog’s bottom. The sound was so fun that we thought it could become a game, and that is how this game began.</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">参考に<wbr>した<wbr>ゲームは?</span></span><span class="en">Which games inspired this one?</span></dt><dd><span class="ja"><span class="bx">ドデリド、<wbr>忍者バナナ、<wbr>ハリガリあたりを<wbr>参考に<wbr>しました。<wbr>それらを<wbr>ベースに<wbr>しつつ、<wbr>対戦要素を<wbr>強化し、<wbr>少ない<wbr>カード枚数でも<wbr>実現できる<wbr>形に<wbr>調整しました。</span></span><span class="en">We drew on games such as Dodelido, Ninja Banana and Halli Galli. Using them as a base, we strengthened the head-to-head element and adjusted the game so it works with only a few cards.</span></dd></div>
+        </dl>
+      </section>
+      <!-- 注意 -->
+      <section class="panel" id="warnings" aria-labelledby="h-warn" data-toc="注意|Warnings">
+        <div class="warn">
+          <p class="warn-t" id="h-warn" role="heading" aria-level="2"><svg viewBox="0 0 22 20" aria-hidden="true"><path d="M11 1.2 21 18.8H1z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 6.6v6.2" stroke="var(--head)" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="15.6" r="1.4" fill="var(--head)"/></svg><span class="ja"><span class="bx">注意<wbr>(必ず<wbr>お読みください)</span></span><span class="en">WARNINGS</span></p>
+          <ul class="ja">
+            <li><span class="bx">誤飲・窒息の<wbr>危険が<wbr>ありますので、<wbr>3才未満の<wbr>お子様には<wbr>絶対に<wbr>与えないでください。</span></li>
+            <li><span class="bx">アクリルトークンには<wbr>保護フィルムが<wbr>貼られています。<wbr>ご使用前に、<wbr>必ず<wbr>剥が<wbr>してから<wbr>ご使用ください。</span></li>
+          </ul>
+          <ul class="en">
+            <li><b>WARNING: CHOKING HAZARD — Not for children under 3 years.</b></li>
+            <li>The acrylic token comes with a protective film. Always peel it off before use.</li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
+        <ol class="log">
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+        </ol>
+        <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="../"><span class="ja"><span class="bx">モコチャカの<wbr>作品ページへ</span></span><span class="en">Back to Mokochaka</span></a>
+        <a class="btn ghost" href="https://pandakinema.booth.pm/items/8311555" target="_blank" rel="noopener"><span class="ja"><span class="bx">BOOTHで<wbr>購入</span></span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="../../../rules/"><span class="ja"><span class="bx">遊び方説明書の<wbr>一覧へ</span></span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja"><span class="bx">この<wbr>サイトは<wbr>アクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener"><wbr>Googleアナリティクス</a>を<wbr>使用しています</span></span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

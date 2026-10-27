@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b2228">
+<title>BASH&SMASH! 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="BASH&SMASH!の遊び方説明書(WEB版)。内容物、どんなゲーム?、STORY、ゲームの準備、ゲームの進め方、ラウンド、ゲームの終了、注意、更新履歴。日本語と英語を切り替えられます。">
+<meta property="og:title" content="BASH&SMASH! 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="BASH&SMASH!の遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="https://pandakinema.com/games/bash/rules/">
+<meta property="og:image" content="https://pandakinema.com/img/share/ogp_bash_ticket.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&amp;display=swap">
+<style>
+  /* ===== パンダキネマ 遊び方説明書(WEB版) 共通 =====
+     作品ごとに変えるのは :root の色・書体・アイコンだけ(build.py が meta.yml から差し込む)。
+     紙の説明書と同じ組み:上は表紙(ロゴと物語)、本文に章ごとの白い座布団。強調は赤。
+     背景・帯は作品ページと同じ:表紙=作品ページのSTORYの欄、本文=「どんなゲーム?」の欄、帯は本文の内側(上下)に */
+  :root{
+    --site:#1b2228;        /* サイトの下地 */
+    --bar:#000000;         /* ヘッダー */
+    --paper:#ffffff;       /* 白い座布団 */
+    --red:#d4242b;         /* 説明書の赤字(強調の基本) */
+    --soft:color-mix(in srgb,var(--ink) 10%,transparent);    /* 図の下地(作品ページの --soft で上書き) */
+    --line:color-mix(in srgb,var(--ink) 20%,transparent);
+    --ink-soft:color-mix(in srgb,var(--ink) 72%,transparent);
+    --on-body-soft:color-mix(in srgb,var(--on-body) 14%,transparent);
+    --on-body-line:color-mix(in srgb,var(--on-body) 38%,transparent);
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif;
+    --cond:"DIN Condensed","Avenir Next Condensed","Arial Narrow","Helvetica Neue",var(--sans);
+    --bar-h:56px;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar-h) + 64px + env(safe-area-inset-top,0px))}
+  @media (min-width:900px){ html{scroll-padding-top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px))} }
+  body{margin:0;background:var(--site);color:var(--ink);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;font-feature-settings:"palt";overflow-x:clip}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar)}
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+  html:not([data-lang="en"]) .en{display:none!important}
+  html[data-lang="en"] .ja{display:none!important}
+  /* 改行:日本語は文節の切れ目(<wbr>)でだけ折り返す。英語は行末をそろえすぎない */
+  .bx{word-break:keep-all;overflow-wrap:anywhere}
+  p,li,dt,dd,h2,h3,figcaption,.lbl{line-break:strict;text-wrap:pretty}
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* ===== ヘッダー(サイト共通) ===== */
+  .site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar)}
+  .site-header .bar{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);min-height:var(--bar-h)}
+  .brand img{height:30px;width:auto}
+  .site-nav{display:flex;gap:clamp(12px,2.2vw,30px);min-width:0;overflow-x:auto;scrollbar-width:none;color:#f3f2ee;font:700 clamp(14px,1.6vw,19px) var(--cond);text-transform:uppercase}
+  .site-nav::-webkit-scrollbar{display:none}
+  .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;text-decoration:none;opacity:.9}
+  .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
+  .lang{display:flex;flex:none;margin-left:auto;border:1.5px solid #f3f2ee;border-radius:2px}
+  .lang button{height:26px;padding:0 9px;border:0;background:none;color:#9aa3a9;font:700 16px var(--cond);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:#f3f2ee;color:#000}
+  /* スマホ:ロゴとJA/ENだけ。カテゴリは右のメニュー(≡)から(サイトのほかのページと同じ) */
+  .navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .menu-btn{display:none}
+  @media (max-width:650px){
+    :root{--bar-h:52px}
+    .site-header .bar{position:relative;gap:10px}
+    .brand img{height:26px}
+    .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-right:-6px;cursor:pointer}
+    .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+    .menu-btn i{position:relative}
+    .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+    .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+    .navtg:checked~.menu-btn i{background:transparent}
+    .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+    .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+    .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+    .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+    .navtg:checked~.site-nav.site-nav{display:flex}
+    .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+    .site-nav a:first-child{border-top:0}
+    .lang{order:2}
+    .lang button{height:22px;padding:0 7px;font-size:13px}
+  }
+
+  /* ===== レイヤー(作品ページと同じ最大幅、外は下地) ===== */
+  .sheet{max-width:1100px;margin-inline:auto;background:var(--body)}
+
+  /* ===== 表紙(説明書の1面の上と同じ:左にロゴ、右に物語) ===== */
+  .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
+  .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
+  .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
+  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .h1{margin:0;width:min(var(--logo-w,400px),100%)}
+  .h1 img{margin-inline:auto}
+  .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
+  .spec{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0;font-size:15px;font-weight:800}
+  .spec div{display:flex;align-items:baseline;gap:6px}
+  .spec dt{font-size:11px;opacity:.72}
+  .spec dd{margin:0}
+  .cover-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 16px;margin:0;font-size:12.5px;font-weight:700;opacity:.75}
+  .cover-meta a{text-underline-offset:3px}
+  .story{display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent)}
+  .catch{margin:0;font-size:clamp(24px,3.4vw,32px);font-weight:900;line-height:1.25;text-wrap:balance}
+  .story p{margin:0}
+  .story p:not(.catch){font-size:15px;font-weight:700;line-height:1.85}
+  @media (max-width:760px){
+    .cover .inner{grid-template-columns:minmax(0,1fr);padding-block:36px 32px}
+    .story{align-items:center;padding:22px 0 0;border-left:0;border-top:2px solid color-mix(in srgb,var(--on-cover) 22%,transparent);text-align:center}
+  }
+  /* 表紙と本文の境目(作品ごとの帯。なければまっすぐ) */
+  .edge{display:none}
+
+  /* ===== 本文:メインカラーの地(説明書と同じ模様)、左に目次、右に章ごとの白い座布団 ===== */
+  .body{position:relative;background:var(--body) var(--tex,none) center top/var(--tex-size,auto)}
+  /* 帯:作品ページと同じく、色の境目には置かず本文の内側(上下18px)に */
+  .body::before,.body::after{content:"";position:absolute;left:0;right:0;height:var(--band-h,0px);background:var(--band-c,var(--cover));pointer-events:none;
+    -webkit-mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px);mask:var(--band,none) repeat-x 0 0/auto var(--band-h,0px)}
+  .body::before{top:18px}
+  .body::after{bottom:18px}
+  .layout{display:grid;grid-template-columns:190px minmax(0,720px);justify-content:center;gap:44px;padding-block:calc(44px + var(--band-space,0px)) calc(64px + var(--band-space,0px))}
+  .toc{position:sticky;top:calc(var(--bar-h) + 24px + env(safe-area-inset-top,0px));align-self:start;color:var(--on-body)}
+  .toc p{margin:0 0 10px 12px;font:700 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .toc ol{display:flex;flex-direction:column;gap:2px;margin:0;padding:0;list-style:none}
+  .toc a{display:block;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;opacity:.82;transition:background .2s,opacity .2s}
+  .toc a:hover{opacity:1;background:var(--on-body-soft)}
+  .toc a.on{opacity:1;background:var(--on-body);color:var(--body)}
+  .toc .sub{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px 10px}
+  .toc .sub a{display:flex;align-items:center;justify-content:center;flex:none;width:26px;height:26px;padding:0;border-radius:50%;border:1.5px solid var(--on-body-line);font:var(--num-weight,400) 14px/1 var(--num);font-variant-numeric:lining-nums tabular-nums}
+
+  @media (max-width:899px){
+    .layout{grid-template-columns:minmax(0,1fr);gap:0;padding-block:var(--band-space,0px) calc(48px + var(--band-space,0px))}
+    /* スマホ:横にスライドする目次。並びは画面の端まで続き、端で切れる(余白の内側では切らない) */
+    .toc{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));
+      z-index:20;top:calc(var(--bar-h) + env(safe-area-inset-top,0px));margin-inline:calc(-1 * var(--gl)) calc(-1 * var(--gr));padding:10px 0;background:var(--body);border-bottom:1px solid var(--on-body-soft)}
+    .toc p,.toc .sub{display:none}
+    .toc ol{flex-direction:row;gap:6px;padding-inline:var(--gl) 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-padding-inline:var(--gl) var(--gr);scrollbar-width:none}
+    .toc ol::after{content:"";flex:none;width:calc(var(--gr) - 6px)}   /* 最後の項目のあとにも同じ余白 */
+    .toc li{flex:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{white-space:nowrap;border:1.5px solid var(--on-body-line);padding:6px 13px;font-size:13px}
+    .toc a.on{border-color:var(--on-body)}
+    .content{padding-top:24px}
+  }
+
+  /* ===== 章=白い座布団。見出しはサイト共通の角丸(左の目次と同じ形)。作品が変わっても色だけ差し替え ===== */
+  .content{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .panel{display:flex;flex-direction:column;gap:18px;min-width:0;padding:26px 28px 28px;border-radius:18px;background:var(--paper)}
+  @media (max-width:560px){ .panel{padding:20px 18px 22px;border-radius:14px} }
+  h2{align-self:flex-start;margin:0;padding:.42em 1.15em .46em;border-radius:999px;background:var(--head);color:var(--on-head);font-size:clamp(17px,2.2vw,19px);font-weight:800;line-height:1.25;letter-spacing:.03em}
+  /* 章の中の小見出し(説明書の「ニコ忘れ」「特殊カードの時」など) */
+  h4{margin:4px 0 0;font-size:16.5px;font-weight:900;line-height:1.4}
+  h4::before{content:"";display:inline-block;width:6px;height:1em;margin-right:8px;border-radius:2px;background:var(--head);vertical-align:-.12em}
+  .content p{margin:0}
+  /* 行間:本文 1.85/図の中の短い文 1.6 */
+  .prose p,.step>p,.prose li,.step li{line-height:1.85}
+  .prose{display:flex;flex-direction:column;gap:12px}
+  .prose ul,.prose ol,.step ul,.step ol{display:flex;flex-direction:column;gap:4px;margin:0;padding-left:1.4em}
+  em{font-style:normal;font-weight:800;color:var(--hl)}
+
+  /* 動画の枠(長尺の遊び方動画が入る場所) */
+  .screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;border-radius:8px;background:#000;color:#f3f2ee;overflow:hidden}
+  .screen .soon{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .screen .play{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:2px solid rgba(243,242,238,.45)}
+  .screen .play::before{content:"";margin-left:5px;border-left:17px solid rgba(243,242,238,.45);border-block:11px solid transparent}
+  .screen .soon b{font:700 18px/1 var(--cond);letter-spacing:.18em}
+  .screen .soon span{font-size:13px;opacity:.7}
+  .note{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+
+  /* 内容物:ラベル(・○○:○枚)と並べた実物 */
+  .crow{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .crow.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cbox{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .clbl{display:flex;flex-wrap:wrap;font-size:15px;font-weight:800;line-height:1.5}   /* 「・」だけが1行目に残らないように */
+  .clbl::before{content:"・";flex:none}
+  .clbl>span{flex:1 1 0;min-width:0}
+  .clbl small{flex:0 0 100%;margin-top:2px;padding-left:1em;font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .cards{display:grid;grid-template-columns:repeat(var(--cols,10),minmax(0,1fr));gap:6px}
+  .cards img{width:100%;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .things{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+  .things img{width:var(--tw,46px)}
+  .sheet-icon{display:flex;gap:6px}
+  .sheet-icon span{display:grid;place-items:center;width:40px;height:54px;border-radius:3px;background:var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 14px var(--cond);letter-spacing:.06em}
+  .sheet-icon span:last-child{background:var(--head);color:var(--on-head)}
+  @media (min-width:900px){ .cards{gap:8px} }
+  @media (max-width:560px){ .cards{grid-template-columns:repeat(var(--cols-sm,5),minmax(0,1fr));gap:8px} .crow.two{grid-template-columns:minmax(0,1fr)} }
+
+  /* 人数ごとの表など(説明書の小さな表) */
+  .ptable{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:10px;max-width:calc(var(--cols,2) * 230px);padding:10px;border-radius:14px;background:var(--soft)}
+  .ptable>div{overflow:hidden;border:2px solid var(--head);border-radius:10px;background:var(--paper);text-align:center}
+  .ptable b{display:block;padding:6px;background:var(--head);color:var(--on-head);font-size:15px}
+  .ptable p{padding:10px 8px 12px;font-size:15px;font-weight:800;line-height:1.5}
+  /* 説明書の赤い帯(※注意書き) */
+  .rnote{align-self:flex-start;padding:7px 14px;border-radius:6px;background:var(--hl);color:#fff;font-size:13.5px;font-weight:800;line-height:1.6}
+  .rnote a{text-decoration:none}
+  .rnote a:hover{text-decoration:underline}
+  /* 印刷した説明書の誤りの訂正(その場所に小さく添える。更新履歴には「訂正」の印) */
+  .errata{display:block;margin-top:4px;color:var(--hl);font-size:12px;font-weight:800;line-height:1.5;font-style:normal}
+  /* 枠で囲んだ補足(説明書の「ニコ忘れ」のような囲み) */
+  .box{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px;background:var(--soft)}
+  .box p{line-height:1.8}
+
+  /* ===== ゲームの流れ(1つの座布団の中に手順を並べる) ===== */
+  .flow{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+  .step{display:flex;flex-direction:column;gap:14px;padding-block:24px}
+  .step:first-child{padding-top:4px}
+  .step:last-child{padding-bottom:0}
+  .step + .step{border-top:2px dashed var(--line)}
+  .step-head{display:flex;align-items:center;gap:12px}
+  .snum{position:relative;flex:none;width:44px;height:46px;background:var(--head);-webkit-mask:var(--step-icon) center/contain no-repeat;mask:var(--step-icon) center/contain no-repeat}
+  /* 番号:アイコンの真ん中(作品ごとに --num-y で上下を合わせる) */
+  .snum b{position:absolute;left:0;right:0;top:var(--num-y,50%);translate:0 -50%;color:var(--on-head);font:var(--num-weight,400) 25px/1 var(--num);font-variant-numeric:lining-nums;text-align:center}
+  h3{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+
+  /* ===== 図(説明書の図をカードの画像で組み直したもの) ===== */
+  .viz{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:18px 22px;padding:22px 14px 18px;border-radius:12px;background:var(--soft);overflow-x:auto}
+  .grp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .grp>.lbl,.lbl{font-size:12.5px;font-weight:800;line-height:1.45;text-align:center}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .card{position:relative;display:block;flex:none;width:var(--cw,52px)}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:60px} }
+  .card img{width:100%;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.22)}
+  .card.sel img{outline:3px solid var(--hl);outline-offset:2px}
+  .card.dim img{opacity:.35}
+  .arrow{align-self:center;flex:none;width:0;height:0;border-left:13px solid var(--head);border-block:9px solid transparent;opacity:.85}
+  @media (max-width:560px){ .viz.stack-sm{flex-direction:column;align-items:center} .viz.stack-sm>.arrow{transform:rotate(90deg)} }
+  /* 2つ以上を見くらべる図:点線で区切る */
+  .viz.split{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));align-items:start;gap:0;padding-inline:0}
+  .viz.split>.grp{padding-inline:12px}
+  .viz.split>.grp+.grp{border-left:2px dashed var(--line)}
+  @media (max-width:620px){ .viz.split{grid-template-columns:minmax(0,1fr);gap:18px} .viz.split>.grp+.grp{padding-top:18px;border-left:0;border-top:2px dashed var(--line)} }
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:12px;font-weight:800;white-space:nowrap}
+  .tag.hl{background:var(--hl);color:#fff}
+  .callout{max-width:170px;font-size:12.5px;font-weight:800;line-height:1.6}
+  .callout em{display:block;font-size:15px}
+  .pile{position:relative;width:96px;height:96px}
+  .pile .card{position:absolute;left:24px;top:10px}
+  .deck{position:relative;width:calc(var(--cw,52px) + 12px);height:calc(var(--cw,52px) * 1.4 + 12px)}
+  .deck .card{position:absolute}
+  .deck .card:nth-child(1){left:0;top:0}
+  .deck .card:nth-child(2){left:6px;top:6px}
+  .deck .card:nth-child(3){left:12px;top:12px}
+  .loop{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--head);color:var(--on-head);font-size:13px;font-weight:800}
+  .loop::before{content:"↻";font-size:18px;line-height:1}
+  /* 説明書の図の枠(見出し付き) */
+  .fig{margin:0;overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--paper)}
+  .fig-t{padding:6px 12px;background:var(--head);color:var(--on-head);font-size:13.5px;font-weight:800;text-align:center}
+  .fig .viz{border-radius:0}
+  .fig-txt{max-width:280px;font-size:14px;font-weight:700;line-height:1.6}
+
+  /* よくある質問 */
+  .qa{display:flex;flex-direction:column;gap:14px;margin:0}
+  .qa dt{font-weight:900;line-height:1.6}
+  .qa dd{margin:4px 0 0;padding-left:1.6em;line-height:1.8}
+  .qa dt::before,.qa dd::before{display:inline-block;width:1.6em;margin-left:-1.6em;font-weight:900}
+  .qa dt{padding-left:1.6em}
+  .qa dt::before{content:"Q.";color:var(--hl)}
+  .qa dd::before{content:"A."}
+
+  /* 注意(説明書の注意枠) */
+  .warn{overflow:hidden;border:2px solid var(--head);border-radius:12px;background:var(--warn-bg,var(--soft))}
+  .warn-t{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 12px;background:var(--head);color:var(--on-head);font-size:16px;font-weight:900}
+  .warn-t svg{flex:none;width:22px;height:20px}
+  .warn ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:14px 18px 16px 34px;font-size:13.5px;font-weight:700;line-height:1.6}
+
+  /* 更新履歴 */
+  .log{display:flex;flex-direction:column;margin:0;padding:0;list-style:none;border-top:1.5px solid var(--line)}
+  .log li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:14px 4px;border-bottom:1.5px solid var(--line);font-size:15px;line-height:1.7}
+  .log time{font:700 18px/1.5 var(--cond);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .log .chg{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:4px;background:var(--hl);color:#fff;font-size:12px;font-weight:800;vertical-align:2px}
+  .legend{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .legend .chg{display:inline-block;padding:0 7px;border-radius:4px;background:var(--hl);color:#fff;font-size:11.5px;font-weight:800}
+
+  /* 作品ページへ */
+  .back{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;padding:13px 26px;border-radius:999px;background:var(--on-body);color:var(--body);font-size:14px;font-weight:800;letter-spacing:.04em;text-decoration:none;transition:translate .15s}
+  .btn:hover{translate:0 -2px}
+  .btn.ghost{background:none;color:var(--on-body);box-shadow:inset 0 0 0 2px var(--on-body)}
+
+  .site-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px));background:var(--bar);color:#9aa3a9;font-size:12px}
+  .site-footer a{color:#f3f2ee;font:700 15px var(--cond);text-decoration:none}
+  .site-footer .ga-note{display:block;margin-top:4px;font-size:10px;opacity:.7}
+  .site-footer .ga-note a{font:inherit;letter-spacing:0;color:inherit;text-decoration:underline;text-underline-offset:2px}
+  @media (max-width:650px){ .site-footer{flex-direction:column;gap:8px;text-align:center} }
+
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.toc a{transition:none} }
+
+  /* ===== BASH&SMASH! ===== */
+  :root{
+    --main:#e60039;
+    --accent:#ffffff;
+    --ink:#000000;
+    --hl:#d4242b;
+    --head:#000000;
+    --on-head:#ffffff;
+    --cover:#e60039;
+    --on-cover:#ffffff;
+    --body:#000000;
+    --on-body:#ffffff;
+    --tex:url(../../../img/page/s_tex_c_ffffff.png?v=bdc7d7f7);
+    --tex-size:24px 24px;
+    --band-h:20px;
+    --step-icon:url(../../../img/page/s_star_sil.png?v=9c60f75e);
+    --num:"Bangers","Impact","Arial Narrow",sans-serif;
+    --num-weight:400;
+    --num-y:64%;
+    --logo-w:300px;
+    --blue:#1574c4;
+    --warn-bg:#ffffff;
+    --cover-tex:url(../../../img/page/s_tex_w.png?v=27e8f9ae);
+    --cover-tex-size:24px 24px;
+    --band:url(../../../img/page/mt_sprocket.svg?v=404578e1);
+    --band-c:#4c5155;
+    --soft:#fbd9e1;
+    --band-space:56px;
+    --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
+  }
+  /* BASH&SMASH! だけで使う図:赤と青のカード、VS、説明書の赤と青の囲み、勝敗の表、得点の重ね方 */
+  .card{--cw:46px;display:block}
+  @media (min-width:900px){ .step .card,.panel .viz .card{--cw:54px} }
+  .card img{border-radius:0;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+  em.b{color:var(--blue)}                       /* 説明書の青字(パリィ) */
+  .tok{width:30px;flex:none}
+
+  /* 内容物 */
+  .cards{--cols:10;--cols-sm:5}
+  .cards img{border-radius:0}
+  .pcards{display:flex;flex-wrap:wrap;gap:10px}
+  .pcards img{width:min(210px,calc(50% - 5px))}
+  .things img.tok{width:40px}
+  .sheet-icon.one span{background:var(--paper);color:var(--ink)}
+
+  /* どんなゲーム?:説明書の表面の「1.」「2.」を左右に */
+  .quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .qitem{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .qitem p{font-size:15px;font-weight:700;line-height:1.7}
+  .qitem .viz{flex:1;align-items:center;padding-top:30px}
+  @media (max-width:620px){ .quick{grid-template-columns:minmax(0,1fr)} }
+
+  /* VS(格闘ゲームの対戦表示) */
+  .duel{display:flex;align-items:center;justify-content:center;gap:10px}
+  .side{position:relative;display:block}
+  .vs{font:400 26px/1 var(--num);letter-spacing:.02em;color:var(--ink)}
+  .flag{position:absolute;left:50%;bottom:calc(100% + 4px);translate:-50% 0;color:var(--hl);font:400 17px/1 var(--num);letter-spacing:.04em;white-space:nowrap}
+  .flag.parry{color:var(--blue)}
+
+  /* STORY:キャラクター */
+  .charas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .chara{display:flex;align-items:flex-end;gap:14px;margin:0;padding:14px 16px 16px;border-radius:14px;background:var(--soft)}
+  .chara img{flex:none;width:auto;height:190px}
+  .chara figcaption{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .chara b{font-size:18px;font-weight:900}
+  .chara p{font-size:14px;font-weight:700;line-height:1.7}
+  @media (max-width:700px){ .charas{grid-template-columns:minmax(0,1fr)} .chara img{height:170px} }
+
+  /* ゲームの準備:説明書と同じ黒い四角の番号 */
+  .sq{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:sq}
+  .sq li{position:relative;padding-left:2em;line-height:1.85;counter-increment:sq}
+  .sq li::before{content:counter(sq);position:absolute;left:0;top:.38em;display:grid;place-items:center;width:1.35em;height:1.35em;background:var(--head);color:var(--on-head);font:400 15px/1 var(--num)}
+  .nsq{display:grid;place-items:center;flex:none;width:22px;height:22px;background:var(--head);color:var(--on-head);font:400 15px/1 var(--num)}
+  .viz.setup{flex-direction:column;align-items:center;gap:16px}
+  .srow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}
+  .sgrp{display:flex;align-items:center;gap:8px}
+  .hand{--hw:40px;--hs:12px;position:relative;display:block;width:calc(var(--hw) + 9 * var(--hs));height:calc(var(--hw) * 1.653)}
+  .hand img{position:absolute;top:0;left:calc(var(--i) * var(--hs));width:var(--hw);box-shadow:-1px 0 3px rgba(0,0,0,.25)}
+  .pcard{width:96px;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+
+  /* 説明書の赤と青の囲み(ヒット=赤、パリィ=青) */
+  .duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  @media (max-width:620px){ .duo{grid-template-columns:minmax(0,1fr)} }
+  .cbx{display:flex;align-items:center;gap:14px;min-width:0;padding:14px 16px;border-radius:14px;color:#fff}
+  .cbx.red{background:var(--main)}
+  .cbx.blue{background:var(--blue)}
+  .cbx p{font-size:14px;font-weight:800;line-height:1.6}
+  .cbx .card img{box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .cbx.blue:has(.pnote){flex-wrap:wrap}
+  .pnote{display:flex;align-items:center;gap:10px;flex-basis:100%}
+  .pnote p{font-size:12.5px}
+  .pcard-wrap{position:relative;flex:none}
+  .pcard-wrap .pcard{width:92px}
+  .tok.on-p1{position:absolute;left:8%;top:44%;width:24px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+
+  /* 勝敗判定の表 */
+  .judge{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+  .tbl-wrap{flex:1 1 320px;min-width:0;overflow-x:auto}
+  .jtable{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13.5px;font-weight:800;line-height:1.5;text-align:center}
+  .jtable th,.jtable td{padding:9px 6px;border:2px solid var(--head)}
+  .jtable th{color:#fff;font-size:14px}
+  .jtable .h-hit{background:var(--main)}
+  .jtable .h-parry{background:var(--blue)}
+  .jtable .corner{background:linear-gradient(to top right,transparent calc(50% - 1px),var(--head) 50%,transparent calc(50% + 1px)) var(--paper)}
+  .same{flex:0 1 200px;display:flex;flex-direction:column;align-items:center;gap:8px;margin-inline:auto}
+  .same .viz{padding:14px 16px}
+  .same p{font-size:12.5px;line-height:1.6;text-align:center}
+
+  /* 得点の重ね方:上のカードの下に、下のカードの帯(右下の数字)が見える */
+  .stk{--cw:46px;--sp:calc(var(--cw) * .27);position:relative;display:block;flex:none;width:var(--cw);height:calc(var(--cw) * 1.653 + var(--n) * var(--sp))}
+  @media (min-width:900px){ .stk{--cw:54px} }
+  .stk img{position:absolute;left:0;top:0;width:100%;z-index:9;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+  .stk img[style]{top:calc(var(--i) * var(--sp));z-index:calc(9 - var(--i))}
+
+  /* ラッシュ */
+  .rush{flex-wrap:wrap;justify-content:center;gap:14px 18px;padding:18px 16px}
+  .rgrp{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .rgrp p{text-align:center}
+  .rush .vs{color:#fff}
+  .more{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13.5px;font-weight:900}
+  .bigarrow{width:56px;height:34px;background:#fff;clip-path:polygon(0 30%,58% 30%,58% 0,100% 50%,58% 100%,58% 70%,0 70%)}
+  @media (max-width:620px){ .rush{flex-direction:column} .bigarrow{width:36px;height:44px;clip-path:polygon(30% 0,70% 0,70% 55%,100% 55%,50% 100%,0 55%,30% 55%)} }
+  .rscore{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+  .rscore .prose{flex:1 1 300px}
+  .rscore .ex{flex:0 0 auto;margin-inline:auto}
+  .rscore .ex p{font-size:15px;line-height:1.5}
+  .step .notes{padding-left:0}
+  .notes{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.7}
+  .notes.en li{padding-left:1em;text-indent:-1em}
+  .notes.en li::before{content:"※";color:var(--hl);font-weight:800}
+
+  /* ラウンドの終了 */
+  .total{flex-wrap:wrap;justify-content:center;gap:16px 26px;padding:18px 16px}
+  .stks{display:flex;align-items:flex-start;gap:10px}
+  .total p{font-size:14px;line-height:1.5;text-align:center}
+  .sum{display:block;margin-top:2px;font:400 26px/1.1 var(--num);letter-spacing:.03em}
+  .viz.win{align-items:center;gap:14px 20px}
+  .wcard{width:min(220px,100%);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .youwin{width:min(230px,100%)}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="../../../" aria-label="PANDA KINEMA トップへ"><img src="../../../img/site/logo_icon.png?v=76f2abc4" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="../../../#news">NEWS</a><a href="../../../#board">BOARD GAME</a><a href="../../../#movie">MOVIE</a><a href="../../../#tools">PLAY&amp;TOOLS</a><a href="../../../#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+        <p class="series">MINI THEATRE SERIES 02</p>
+        <h1 class="h1"><img src="../../../img/logo/bashlogo_4C.png?v=05a46cc7" alt="BASH&SMASH! バッシュ&スマッシュ"></h1>
+        <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja"><span class="bx">人数</span></span><span class="en">Players</span></dt><dd><span class="ja"><span class="bx">2人</span></span><span class="en">2</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">5〜10分</span></span><span class="en">5–10 min</span></dd></div>
+          <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">2026年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja"><span class="bx">読みきれ。<wbr>叩き込め!</span></span><span class="en">Read them. Strike hard!</span></p>
+        <p class="ja"><span class="bx">やる<wbr>ことは<wbr>ただ<wbr>1つ。<wbr>手札から<wbr>1枚出すだけ。<wbr>相手より<wbr>大きい<wbr>数字を<wbr>出せば<wbr>得点ゲット!<wbr>しかし、<wbr>相手の<wbr>カードが<wbr>裏向きだった<wbr>場合は<wbr>「パリィ」が<wbr>発動し、<wbr>得点を<wbr>奪われてしまう。<wbr>さらに、<wbr>カードの<wbr>合計が<wbr>10に<wbr>なると<wbr>「ラッシュ」<wbr>突入!ラッシュ中は<wbr>ルールが<wbr>反転し、<wbr>小さい<wbr>数字が<wbr>勝利する。<wbr>攻めるか<wbr>受けるか。<wbr>この<wbr>一手を<wbr>見切り、<wbr>勝つのは<wbr>どっちだ!?</span></p>
+        <p class="en">There’s only one thing to do: play one card from your hand. Play a bigger number than your opponent to score! But if their card is face down, a “Parry” triggers and they steal the points. And when the cards add up to 10, it’s a “Rush”! During a Rush the rule flips and the smaller number wins. Attack or defend? Read this one move. Who will win!?</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
+        <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
+        <li><a href="#overview"><span class="ja">どんなゲーム?</span><span class="en">Game Overview</span></a></li>
+        <li><a href="#story">STORY</a></li>
+        <li><a href="#setup"><span class="ja">ゲームの準備</span><span class="en">Game Setup</span></a></li>
+        <li><a href="#flow"><span class="ja">ゲームの進め方</span><span class="en">How to Play</span></a>
+          <div class="sub" aria-label="手順"><a href="#step1">1</a><a href="#step2">2</a><a href="#step3">3</a><a href="#step4">4</a></div></li>
+        <li><a href="#end"><span class="ja">ラウンド、ゲームの終了</span><span class="en">End of the Round and Game</span></a></li>
+        <li><a href="#warnings"><span class="ja">注意</span><span class="en">Warnings</span></a></li>
+        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
+        <div class="screen">
+          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
+        </div>
+        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
+      </section>
+
+      <!-- 内容物 -->
+      <section class="panel" id="contents" aria-labelledby="h-contents">
+        <h2 id="h-contents"><span class="ja"><span class="bx">内容物</span></span><span class="en">Contents</span></h2>
+        <div class="crow">
+          <p class="clbl"><span class="ja"><span class="bx">数字カード:2セット<wbr>(1〜10が<wbr>1枚ずつ)</span></span><span class="en">Number Cards: 2 sets (one each of 1–10)</span></p>
+          <div class="cards" role="img" aria-label="赤と青の、1から10までの数字カード">
+            <img src="../../../img/parts/bc2_r1.webp?v=247c22f8" alt=""><img src="../../../img/parts/bc2_r2.webp?v=80bdbe95" alt=""><img src="../../../img/parts/bc2_r3.webp?v=44c7c08f" alt=""><img src="../../../img/parts/bc2_r4.webp?v=dce394e8" alt=""><img src="../../../img/parts/bc2_r5.webp?v=0be22b27" alt=""><img src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""><img src="../../../img/parts/bc2_r7.webp?v=f6d5607d" alt=""><img src="../../../img/parts/bc2_r8.webp?v=9ac48b29" alt=""><img src="../../../img/parts/bc2_r9.webp?v=f586f35a" alt=""><img src="../../../img/parts/bc2_r10.webp?v=77fcf86b" alt="">
+            <img src="../../../img/parts/bc2_b1.webp?v=9b8b0654" alt=""><img src="../../../img/parts/bc2_b2.webp?v=26cf7e71" alt=""><img src="../../../img/parts/bc2_b3.webp?v=9a8e37de" alt=""><img src="../../../img/parts/bc2_b4.webp?v=201d114a" alt=""><img src="../../../img/parts/bc2_b5.webp?v=eea3a3f3" alt=""><img src="../../../img/parts/bc2_b6.webp?v=62c6c94c" alt=""><img src="../../../img/parts/bc2_b7.webp?v=dbcb74b6" alt=""><img src="../../../img/parts/bc2_b8.webp?v=7140c502" alt=""><img src="../../../img/parts/bc2_b9.webp?v=50927bf6" alt=""><img src="../../../img/parts/bc2_b10.webp?v=57a1d1c6" alt="">
+          </div>
+        </div>
+        <div class="crow">
+          <p class="clbl"><span class="ja"><span class="bx">プレイヤーカード:2枚</span></span><span class="en">Player Cards: 2</span></p>
+          <div class="pcards" role="img" aria-label="バッシュとリンリンのプレイヤーカード"><img src="../../../img/chara/s_pbash.webp?v=09d88de2" alt=""><img src="../../../img/chara/s_plin.webp?v=c30cb83e" alt=""></div>
+        </div>
+        <div class="crow two">
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">星トークン:2個</span></span><span class="en">Star Tokens: 2</span></p>
+            <div class="things" role="img" aria-label="星トークン2個"><img class="tok" src="../../../img/parts/s_token.svg?v=39410af9" alt=""><img class="tok" src="../../../img/parts/s_token.svg?v=39410af9" alt=""></div>
+            <p class="note"><span class="ja"><span class="bx">※頒布<wbr>時期に<wbr>よって<wbr>トークンの<wbr>形状が<wbr>多少異なる<wbr>場合が<wbr>あります。<wbr>ご了承ください。</span></span><span class="en">The token shape may vary slightly depending on when the game was distributed.</span></p>
+          </div>
+          <div class="cbox">
+            <p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p>
+            <div class="sheet-icon one" aria-hidden="true"><span>JA</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- どんなゲーム?(説明書の表面の「1.」「2.」) -->
+      <section class="panel" id="overview" aria-labelledby="h-overview">
+        <h2 id="h-overview"><span class="ja"><span class="bx">どんな<wbr>ゲーム?</span></span><span class="en">Game Overview</span></h2>
+        <div class="quick">
+          <div class="qitem">
+            <h4><span class="ja"><span class="bx">1.同時に<wbr>カードを<wbr>出し合う!</span></span><span class="en">1. Play Cards at the Same Time!</span></h4>
+            <p class="ja"><span class="bx">数の<wbr>大きい方が<wbr>ヒットになる!勝った<wbr>数字が<wbr>得点。</span></p>
+<p class="en">The bigger number is a hit! The winning number is your score.</p>
+            <div class="viz" role="img" aria-label="赤の3と青の5を出し合い、大きい青の5がヒット"><div class="duel"><span class="side"><span class="card"><img src="../../../img/parts/bc2_r3.webp?v=44c7c08f" alt=""></span></span><b class="vs" aria-hidden="true">VS</b><span class="side"><b class="flag">HIT!</b><span class="card"><img src="../../../img/parts/bc2_b5.webp?v=eea3a3f3" alt=""></span></span></div></div>
+          </div>
+          <div class="qitem">
+            <h4><span class="ja"><span class="bx">2.裏向きで<wbr>出すと<wbr>パリィ!</span></span><span class="en">2. Play Face Down to Parry!</span></h4>
+            <p class="ja"><span class="bx">相手の<wbr>出した<wbr>数字に<wbr>関係<wbr>なく<wbr>得点を<wbr>奪うことができる!</span></p>
+<p class="en">You steal the points no matter what number your opponent played!</p>
+            <div class="viz" role="img" aria-label="赤が裏向きで出してパリィ。青の4に関係なく得点を奪う"><div class="duel"><span class="side"><b class="flag parry">Parry!</b><span class="card"><img src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""></span></span><b class="vs" aria-hidden="true">VS</b><span class="side"><span class="card"><img src="../../../img/parts/bc2_b4.webp?v=201d114a" alt=""></span></span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="panel" id="story" aria-labelledby="h-story">
+        <h2 id="h-story">STORY</h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">大都市、<wbr>グリッドシティでは<wbr>至る<wbr>ところで<wbr>バトルが<wbr>行われていた。<wbr>全ての<wbr>バトルは<wbr>ショーと<wbr>して<wbr>配信され、<wbr>勝者は<wbr>ポイントを<wbr>手に<wbr>する。<wbr>この<wbr>街で<wbr>頂点に<wbr>立てば<wbr>願いが<wbr>叶うと<wbr>いう<wbr>噂を<wbr>信じて<wbr>ファイターたちは<wbr>戦い続ける。</span></p>
+<p class="en">In the metropolis of Grid City, battles broke out everywhere. Every battle was streamed as a show, and the winner earned points. Believing the rumor that whoever reaches the top of this city gets their wish, the fighters keep on battling.</p>
+        </div>
+        <div class="charas">
+          <figure class="chara">
+            <img src="../../../img/chara/s_bash_stand.webp?v=867c4196" alt="バッシュ" width="496" height="820">
+            <figcaption><b><span class="ja"><span class="bx">バッシュ</span></span><span class="en">Bash</span></b><p class="ja"><span class="bx">行方<wbr>不明に<wbr>なった<wbr>兄“スマッシュ”を<wbr>追って<wbr>グリッドシティに<wbr>たどり着いた<wbr>少年。<wbr>まっすぐな<wbr>性格で<wbr>曲がったことが<wbr>大嫌い。</span></p>
+<p class="en">A boy who came to Grid City chasing his missing brother, “Smash.” Honest and straightforward, he hates anything crooked.</p></figcaption>
+          </figure>
+          <figure class="chara">
+            <img src="../../../img/chara/s_linlin_stand.webp?v=a9737ca7" alt="リンリン" width="520" height="786">
+            <figcaption><b><span class="ja"><span class="bx">リンリン</span></span><span class="en">Linlin</span></b><p class="ja"><span class="bx">グリッドシティの<wbr>チャイナタウン育ちの<wbr>少女。<wbr>足技を<wbr>使いこなす<wbr>スピードファイター。<wbr>勝気な<wbr>性格で<wbr>卑怯者が<wbr>嫌い。</span></p>
+<p class="en">A girl raised in Grid City’s Chinatown. A speed fighter who masters kicks. Strong-willed, she hates cowards.</p></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 準備 -->
+      <section class="panel" id="setup" aria-labelledby="h-setup">
+        <h2 id="h-setup"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2>
+        <ol class="sq ja">
+          <li><span class="bx">任意の<wbr>プレイヤーカードを<wbr>選びます。<em><wbr>(性能差は<wbr>ありません)</em></span></li>
+          <li><span class="bx">キャラクターに<wbr>対応する<wbr>色の<wbr>数字カードの<wbr>セットを<wbr>受け取り、<wbr>手札と<wbr>して<wbr>持ちます。<wbr>星トークンも<wbr>1つずつ<wbr>持ちます。</span></li>
+          <li><span class="bx">お互いの<wbr>準備が<wbr>できたら<wbr>勝負を<wbr>始めましょう!</span></li>
+        </ol>
+        <ol class="sq en">
+          <li>Choose any player card. <em>(They all have the same abilities.)</em></li>
+          <li>Take the set of number cards in your character’s color and hold it as your hand. Each player also takes one star token.</li>
+          <li>When you are both ready, let the fight begin!</li>
+        </ol>
+        <div class="viz setup">
+          <div class="srow" role="img" aria-label="リンリン:星トークン1個、青の数字カード10枚の手札、プレイヤーカード"><span class="sgrp"><img class="tok" src="../../../img/parts/s_token.svg?v=39410af9" alt=""><span class="nsq" aria-hidden="true">2</span><span class="hand"><img style="--i:0" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:1" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:2" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:3" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:4" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:5" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:6" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:7" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:8" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""><img style="--i:9" src="../../../img/parts/bc2_bback.webp?v=9c223f4d" alt=""></span></span><span class="sgrp"><img class="pcard" src="../../../img/chara/s_plin.webp?v=c30cb83e" alt=""><span class="nsq" aria-hidden="true">1</span></span></div>
+          <div class="srow" role="img" aria-label="バッシュ:星トークン1個、赤の数字カード10枚の手札、プレイヤーカード"><span class="sgrp"><img class="tok" src="../../../img/parts/s_token.svg?v=39410af9" alt=""><span class="nsq" aria-hidden="true">2</span><span class="hand"><img style="--i:0" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:1" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:2" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:3" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:4" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:5" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:6" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:7" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:8" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""><img style="--i:9" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""></span></span><span class="sgrp"><img class="pcard" src="../../../img/chara/s_pbash.webp?v=09d88de2" alt=""><span class="nsq" aria-hidden="true">1</span></span></div>
+        </div>
+      </section>
+
+      <!-- ゲームの進め方 -->
+      <section class="panel" id="flow" aria-labelledby="h-flow">
+        <h2 id="h-flow"><span class="ja"><span class="bx">ゲームの<wbr>進め方</span></span><span class="en">How to Play</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">プレイヤーは<wbr>手札から<wbr>カードを<wbr>同時に<wbr>出して<wbr>バトルを<wbr>行います。<wbr>ヒットまたは<wbr>パリィで<wbr>得点を<wbr>獲得し、<wbr>これを<wbr>1ターンと<wbr>します。<em><wbr>手札が<wbr>なくなるまでを<wbr>1ラウンド<wbr>(最大10ターン)</em>とし、<wbr>2ラウンド先取した<wbr>プレイヤーが<wbr>勝利します。</span></p>
+<p class="en">Players battle by playing cards from their hands at the same time. You score with a Hit or a Parry, and this is one turn. <em>A round lasts until your hands run out (up to 10 turns)</em>, and the first player to win 2 rounds wins.</p>
+        </div>
+        <ol class="flow">
+
+          <li class="step" id="step1">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>1</b></span><h3><span class="ja"><span class="bx">手札から<wbr>カードを<wbr>出す</span></span><span class="en">Play a Card from Your Hand</span></h3></div>
+            <p class="ja"><span class="bx">お互いに<wbr>手札から<wbr>カードを<wbr>1枚選び、<wbr>「せーの!」で<wbr>同時に<wbr>出します。<em><wbr>ヒット<wbr>(攻め)は<wbr>表向き</em>、<em class="b"><wbr>パリィ<wbr>(受け)は<wbr>裏向き</em>で<wbr>出します。<wbr>パリィは<wbr>1ラウンドに<wbr>2回まで<wbr>使用でき、<wbr>連続して<wbr>使う<wbr>ことは<wbr>できません。<wbr>使用したら、<wbr>プレイヤーカードに<wbr>星トークンを<wbr>1つ置いてください。</span></p>
+<p class="en">Each player chooses one card from their hand, and you both play it at the same time on “Ready… go!” <em>Play a Hit (attack) face up</em>, and <em class="b">a Parry (defend) face down.</em> You can Parry up to twice per round, but not twice in a row. After you Parry, place a star token on your player card.</p>
+            <div class="duo">
+              <div class="cbx red" role="img" aria-label="ヒット(攻め)のときは表向き"><span class="card"><img src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""></span><p><span class="ja"><span class="bx">ヒット<wbr>(攻め)の<wbr>ときは<wbr>表向き</span></span><span class="en">Hit (attack): play face up</span></p></div>
+              <div class="cbx blue" role="img" aria-label="パリィ(受け)のときは裏向き。プレイヤーカードのParry1に星トークンを置く">
+                <span class="card"><img src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""></span><p><span class="ja"><span class="bx">パリィ<wbr>(受け)の<wbr>ときは<wbr>裏向き</span></span><span class="en">Parry (defend): play face down</span></p>
+                <div class="pnote"><span class="pcard-wrap"><img class="pcard" src="../../../img/chara/s_pbash.webp?v=09d88de2" alt=""><img class="tok on-p1" src="../../../img/parts/s_token.svg?v=39410af9" alt=""></span><p><span class="ja"><span class="bx">Parry1に<wbr>星トークンを<wbr>置く<wbr>(2回目は<wbr>Parry2に<wbr>移動)</span></span><span class="en">Place a star token on Parry&nbsp;1 (move it to Parry&nbsp;2 the second time)</span></p></div>
+              </div>
+            </div>
+          </li>
+
+          <li class="step" id="step2">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>2</b></span><h3><span class="ja"><span class="bx">勝敗判定</span></span><span class="en">Decide the Winner</span></h3></div>
+            <p class="ja"><span class="bx">お互いに<wbr>カードを<wbr>出したら、<wbr>以下の<wbr>表の<wbr>とおりに<wbr>判定します。</span></p>
+<p class="en">Once both cards are out, decide the result using the table below.</p>
+            <div class="judge">
+              <div class="tbl-wrap">
+                <table class="jtable">
+                  <thead><tr><td class="corner" aria-hidden="true"></td><th scope="col" class="h-hit"><span class="ja"><span class="bx">ヒット<wbr>(攻め)</span></span><span class="en">Hit (attack)</span></th><th scope="col" class="h-parry"><span class="ja"><span class="bx">パリィ<wbr>(受け)</span></span><span class="en">Parry (defend)</span></th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row" class="h-hit"><span class="ja"><span class="bx">ヒット<wbr>(攻め)</span></span><span class="en">Hit (attack)</span></th><td><span class="ja"><span class="bx">数字の<wbr>大きい方が<wbr>ヒット成功!</span></span><span class="en">The bigger number’s Hit succeeds!</span></td><td><span class="ja"><span class="bx">パリィが<wbr>成功!</span></span><span class="en">The Parry succeeds!</span></td></tr>
+                    <tr><th scope="row" class="h-parry"><span class="ja"><span class="bx">パリィ<wbr>(受け)</span></span><span class="en">Parry (defend)</span></th><td><span class="ja"><span class="bx">パリィが<wbr>成功!</span></span><span class="en">The Parry succeeds!</span></td><td><span class="ja"><span class="bx">打ち消しと<wbr>なる。<wbr>(捨て札)</span></span><span class="en">They cancel out. (Discard)</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="same">
+                <div class="viz" role="img" aria-label="青の3と赤の3。同じ数字のヒットどうし"><div class="duel"><span class="side"><span class="card"><img src="../../../img/parts/bc2_b3.webp?v=9a8e37de" alt=""></span></span><b class="vs" aria-hidden="true">VS</b><span class="side"><span class="card"><img src="../../../img/parts/bc2_r3.webp?v=44c7c08f" alt=""></span></span></div></div>
+                <p><em><span class="ja"><span class="bx">※<wbr>お互いに<wbr>ヒットで<wbr>同値の<wbr>数字だった<wbr>時も<wbr>打ち消しと<wbr>なります。</span></span><span class="en">If both players Hit with the same number, they also cancel out.</span></em></p>
+              </div>
+            </div>
+          </li>
+
+          <li class="step" id="step3">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>3</b></span><h3><span class="ja"><span class="bx">得点の<wbr>獲得</span></span><span class="en">Score Points</span></h3></div>
+            <p class="ja"><span class="bx">ヒットまたは<wbr>パリィを<wbr>成功させた<wbr>プレイヤーは、<wbr>カードを<wbr>得点と<wbr>して<wbr>獲得します。<wbr>それぞれ<wbr>決まった<wbr>重ね方で<wbr>手元に<wbr>置きます。</span></p>
+<p class="en">The player whose Hit or Parry succeeds takes the cards as points. Place them in front of you, stacked as shown below.</p>
+            <div class="duo">
+              <div class="cbx red" role="img" aria-label="ヒットが成功したとき:勝った赤の6を、青の2の上にして重ねる"><span class="stk" style="--n:1"><img src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""><img style="--i:1" src="../../../img/parts/bc2_b2.webp?v=26cf7e71" alt=""></span><p><span class="ja"><span class="bx">ヒットが<wbr>成功した<wbr>とき:<br>勝った<wbr>数字を<wbr>上に<wbr>して<wbr>重ねる。</span></span><span class="en">When a Hit succeeds:<br>stack them with the winning number on top.</span></p></div>
+              <div class="cbx blue" role="img" aria-label="パリィが成功したとき:受けた青の6を、裏向きのカードの上にして重ねる"><span class="stk" style="--n:1"><img src="../../../img/parts/bc2_b6.webp?v=62c6c94c" alt=""><img style="--i:1" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""></span><p><span class="ja"><span class="bx">パリィが<wbr>成功した<wbr>とき:<br>受けた<wbr>数字を<wbr>上に<wbr>して<wbr>重ねる。</span></span><span class="en">When a Parry succeeds:<br>stack them with the number you received on top.</span></p></div>
+            </div>
+            <p class="ja"><span class="bx">この<wbr>時、<em><wbr>上に<wbr>ある<wbr>数字が<wbr>得点と<wbr>なり、<wbr>2ターン目以降の<wbr>得点は<wbr>隣に<wbr>並べていきます。</em><wbr>打ち消しの<wbr>場合は<wbr>全て<wbr>捨て札に<wbr>なり得点は<wbr>発生しません。</span></p>
+<p class="en"><em>The number on top is your score, and from the second turn on, line up your points side by side.</em> If the cards cancel out, they are all discarded and no one scores.</p>
+          </li>
+
+          <li class="step" id="step4">
+            <div class="step-head"><span class="snum" aria-hidden="true"><b>4</b></span><h3><span class="ja"><span class="bx">ラッシュの<wbr>発生</span></span><span class="en">A Rush Begins</span></h3></div>
+            <p class="ja"><span class="bx">お互いが<wbr>ヒット<wbr>(攻め)で<wbr>出した<em><wbr>カードの<wbr>合計が<wbr>10に<wbr>なった<wbr>とき、<wbr>ラッシュが<wbr>発生します。</em><wbr>お互いの<wbr>プレイヤーは<wbr>ターンを<wbr>継続したまま、<wbr>追加で<wbr>カードを<wbr>出します。<wbr>ラッシュ中は<wbr>ルールが<wbr>反転し、<wbr>小さい<wbr>数字が<wbr>ヒット成功となります!また、<wbr>合計が<wbr>10に<wbr>なる<wbr>限り、<wbr>ラッシュは<wbr>継続します。</span></p>
+<p class="en">When both players Hit and <em>the two cards add up to 10, a Rush begins.</em> Both players continue the turn and play another card. During a Rush the rule flips, and the smaller number’s Hit succeeds! The Rush keeps going as long as the total is 10.</p>
+            <div class="cbx red rush" role="img" aria-label="赤の6と青の4で合計10、ラッシュ発生。もう1枚出して赤の1と青の2、小さい1の赤プレイヤーがヒット成功">
+              <div class="rgrp"><div class="duel"><span class="side"><span class="card"><img src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""></span></span><b class="vs" aria-hidden="true">VS</b><span class="side"><span class="card"><img src="../../../img/parts/bc2_b4.webp?v=201d114a" alt=""></span></span></div><p><span class="ja"><span class="bx">出した<wbr>カードが<wbr>6と<wbr>4で<br><wbr>合計10。<wbr>ラッシュ発生!</span></span><span class="en">The cards are 6 and 4:<br>a total of 10. Rush!</span></p></div>
+              <div class="more"><span><span class="ja"><span class="bx">もう<wbr>1枚出す</span></span><span class="en">Play one more card</span></span><b class="bigarrow" aria-hidden="true"></b></div>
+              <div class="rgrp"><div class="duel"><span class="side"><span class="card"><img src="../../../img/parts/bc2_r1.webp?v=247c22f8" alt=""></span></span><b class="vs" aria-hidden="true">VS</b><span class="side"><span class="card"><img src="../../../img/parts/bc2_b2.webp?v=26cf7e71" alt=""></span></span></div><p><span class="ja"><span class="bx">1の<wbr>方が<wbr>小さいので<br><wbr>赤プレイヤーが<wbr>ヒット成功!</span></span><span class="en">1 is smaller, so the<br>red player’s Hit succeeds!</span></p></div>
+            </div>
+            <div class="rscore">
+              <div class="prose"><p class="ja"><span class="bx">ラッシュ時の<wbr>得点は、<em><wbr>最後に<wbr>勝った<wbr>数字×カードの<wbr>枚数</em>と<wbr>なります。<wbr>最後に<wbr>勝った<wbr>数字を<wbr>いちばん上に<wbr>して、<wbr>その<wbr>ターンに<wbr>出した<wbr>カードを<wbr>重ねます。</span></p>
+<p class="en">In a Rush, your score is <em>the last winning number × the number of cards.</em> Put the last winning number on top and stack the cards played that turn under it.</p></div>
+              <div class="cbx blue ex" role="img" aria-label="赤の1をいちばん上に、青の2、赤の6、青の4を重ねる。1×4枚で4点"><span class="stk" style="--n:3"><img src="../../../img/parts/bc2_r1.webp?v=247c22f8" alt=""><img style="--i:1" src="../../../img/parts/bc2_b2.webp?v=26cf7e71" alt=""><img style="--i:2" src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""><img style="--i:3" src="../../../img/parts/bc2_b4.webp?v=201d114a" alt=""></span><p><span class="ja"><span class="bx">例:<br>1×4枚で<br><wbr>4点</span></span><span class="en">Example:<br>1 × 4 cards<br>= 4 points</span></p></div>
+            </div>
+            <ul class="notes ja">
+              <li><span class="bx"><em>※5と<wbr>5は<wbr>同値ですが、<wbr>合計が<wbr>10に<wbr>なる<wbr>ためラッシュが<wbr>優先され、<wbr>打ち消しには<wbr>なりません。</em></span></li>
+              <li><span class="bx"><em>※ラッシュ中は<wbr>パリィは<wbr>使用できません。</em></span></li>
+              <li><span class="bx"><em>※ラッシュ中に<wbr>打ち消しに<wbr>なった<wbr>場合、<wbr>それまでに<wbr>出した<wbr>カードは<wbr>全て<wbr>捨て札に<wbr>なります。</em></span></li>
+            </ul>
+            <ul class="notes en">
+              <li><em>5 and 5 are the same number, but they add up to 10, so the Rush takes priority and they do not cancel out.</em></li>
+              <li><em>You cannot Parry during a Rush.</em></li>
+              <li><em>If the cards cancel out during a Rush, all cards played up to that point are discarded.</em></li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ラウンド、ゲームの終了 -->
+      <section class="panel" id="end" aria-labelledby="h-end">
+        <h2 id="h-end"><span class="ja"><span class="bx">ラウンド、<wbr>ゲームの<wbr>終了</span></span><span class="en">End of the Round and Game</span></h2>
+        <div class="prose">
+          <p class="ja"><span class="bx">手札が<wbr>なくなったら、<wbr>その<wbr>ラウンドは<wbr>終了です。<wbr>それぞれが<wbr>獲得した<wbr>得点を<wbr>合計し、<wbr>得点の<wbr>高い<wbr>プレイヤーが<wbr>ラウンドの<wbr>勝者と<wbr>なります。</span></p>
+<p class="en">When your hands run out, the round ends. Each player adds up the points they took, and the player with the higher score wins the round.</p>
+        </div>
+        <div class="cbx red total" role="img" aria-label="得点の例:6、9、5、1×4で合計24点">
+          <div class="stks"><span class="stk" style="--n:1"><img src="../../../img/parts/bc2_r6.webp?v=b1d67d4c" alt=""><img style="--i:1" src="../../../img/parts/bc2_b2.webp?v=26cf7e71" alt=""></span><span class="stk" style="--n:1"><img src="../../../img/parts/bc2_r9.webp?v=f586f35a" alt=""><img style="--i:1" src="../../../img/parts/bc2_b3.webp?v=9a8e37de" alt=""></span><span class="stk" style="--n:1"><img src="../../../img/parts/bc2_b5.webp?v=eea3a3f3" alt=""><img style="--i:1" src="../../../img/parts/bc2_rback.webp?v=b1730b59" alt=""></span><span class="stk" style="--n:3"><img src="../../../img/parts/bc2_r1.webp?v=247c22f8" alt=""><img style="--i:1" src="../../../img/parts/bc2_b3.webp?v=9a8e37de" alt=""><img style="--i:2" src="../../../img/parts/bc2_r2.webp?v=80bdbe95" alt=""><img style="--i:3" src="../../../img/parts/bc2_b8.webp?v=7140c502" alt=""></span></div>
+          <p><span class="ja"><span class="bx">(得点の<wbr>例)<br><b class="sum">6+9+5+<wbr>(1×4)=24</b></span></span><span class="en">(Example score)<br><b class="sum">6+9+5+(1×4)=24</b></span></p>
+        </div>
+        <div class="prose">
+          <p class="ja"><span class="bx">勝者が<wbr>決まったら、<wbr>再度<wbr>「ゲームの<wbr>準備」を<wbr>行い、<wbr>次の<wbr>ラウンドを<wbr>開始します。<em><wbr>先に<wbr>2ラウンド先取した<wbr>プレイヤーが<wbr>ゲームの<wbr>勝者です。</em><wbr>勝利した<wbr>プレイヤーは<wbr>プレイヤーカードを<wbr>裏返し、<wbr>勝利セリフを<wbr>相手に<wbr>見せつけましょう!</span></p>
+<p class="en">Once the round has a winner, do “Game Setup” again and start the next round. <em>The first player to win 2 rounds wins the game.</em> The winner flips their player card over and shows off their victory line to the opponent!</p>
+        </div>
+        <div class="viz win" role="img" aria-label="プレイヤーカードの裏の勝利セリフ「やったぜ!つぎのあいてはだれだ?」と YOU WIN!">
+          <img class="wcard" src="../../../img/parts/sc_wbash.webp?v=510d84e3" alt="">
+          <img class="youwin" src="../../../img/parts/s_youwin.webp?v=80d4db30" alt="YOU WIN!">
+        </div>
+      </section>
+
+      <!-- 注意 -->
+      <section class="panel" id="warnings" aria-labelledby="h-warn" data-toc="注意|Warnings">
+        <div class="warn">
+          <p class="warn-t" id="h-warn" role="heading" aria-level="2"><svg viewBox="0 0 22 20" aria-hidden="true"><path d="M11 1.2 21 18.8H1z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 6.6v6.2" stroke="var(--head)" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="15.6" r="1.4" fill="var(--head)"/></svg><span class="ja"><span class="bx">注意<wbr>(必ず<wbr>お読みください)</span></span><span class="en">WARNINGS</span></p>
+          <ul class="ja">
+            <li><span class="bx">小部品が<wbr>あります。<wbr>誤飲・窒息の<wbr>危険が<wbr>ありますので、<wbr>3才未満の<wbr>お子様には<wbr>絶対に<wbr>与えないでください。</span></li>
+          </ul>
+          <ul class="en">
+            <li><b>WARNING: CHOKING HAZARD — Small parts. Not for children under 3 years.</b></li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
+        <ol class="log">
+          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+        </ol>
+        <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="../"><span class="ja"><span class="bx">BASH&amp;SMASH!の<wbr>作品ページへ</span></span><span class="en">Back to BASH&SMASH!</span></a>
+        <a class="btn ghost" href="https://pandakinema.booth.pm/items/8425512" target="_blank" rel="noopener"><span class="ja"><span class="bx">BOOTHで<wbr>購入</span></span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="../../../rules/"><span class="ja"><span class="bx">遊び方説明書の<wbr>一覧へ</span></span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja"><span class="bx">この<wbr>サイトは<wbr>アクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener"><wbr>Googleアナリティクス</a>を<wbr>使用しています</span></span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

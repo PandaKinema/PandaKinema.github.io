@@ -1,0 +1,48 @@
+# イカタコ 遊び方説明書(WEB版)
+key: ikatako
+title_ja: イカタコ
+title_en: IKATAKO
+logo: logo/logo_ikatako.png
+logo_alt: イカタコ IKATAKO
+players_ja: 1〜6人
+players_en: 1–6
+time_ja: 5〜15分
+time_en: 5–15 min
+age_ja: 8歳から
+age_en: 8+
+printed_ja: 2025年11月発行の説明書に対応
+printed_en: Matches the printed rulebook (November 2025)
+booth: https://pandakinema.booth.pm/items/7555957
+catch_ja: 反射神経で生還せよ
+catch_en: Survive on your reflexes
+story_ja: めくられたカードに正しく反応し、できるだけ多くの得点を集めて生還を目指す潜水系リアクションゲーム!謎に包まれた「イカタコ海溝」。小型潜水艇「トリトーン号」で深海へ挑むあなたを待ちうけているのは、巨大なイカとタコ!しかし、この潜水艇にはジェスチャーコントロール機能が搭載されています!対応するいずれかの手をあげれば危機を回避することができるのです。様々な困難に対処し、深海からの生還を目指しましょう!
+story_en: React correctly to each card, collect as many points as you can, and make it back alive in this deep-sea reaction game! In the mysterious “Ikatako Trench,” what awaits you aboard the small submarine “Tritone” is a giant squid and octopus! But this sub has gesture controls! Raise the matching hand and you can escape the danger. Overcome every trouble and make it back from the deep!
+youtube: ""
+fonts: ["M+PLUS+Rounded+1c:wght@800"]
+theme:
+  main: "#0073bd"
+  accent: "#ffffff"
+  navy: "#00215d"         # アクセントカラー2(説明書の紺)
+  ink: "#00215d"
+  hl: "#d4242b"           # 強調(説明書の赤字)
+  head: "#00215d"
+  on-head: "#ffffff"
+  cover: "#0073bd"
+  on-cover: "#ffffff"
+  body: "#00215d"
+  on-body: "#ffffff"
+  tex: none
+  tex-size: 80px 48px
+  band: "url({{img:page/i_band.png}})"
+  band-h: 20px
+  step-icon: "url({{img:page/i_ika.png}})"   # ロゴのイカ
+  num: '"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",var(--sans)'
+  num-weight: "800"
+  num-y: 60%
+  logo-w: 420px
+  cover-tex: "url({{img:page/i_bg_tex2.webp}})"
+  cover-tex-size: 726px 730px
+  band-c: "#ffffff"
+  soft: "#d9eaf5"
+nobreak: [ノーマルカード, 特殊カード, 危険カード, トラブルカード, ミス山, 得点カード, スタートプレイヤー, ゲームオーバー, ゲームクリア, 潜水艇, トリトーン号, イカタコ海溝, 上下逆さま, 最終得点評価, ソロルール用サマリー, 対戦ルール, 協力ルール, ソロルール, うずしお, サルベージ, リピート, ミラー, ナンバー, テンタクルズ]
+# 更新履歴は content/pages/ikatako.yml の rules_history(編集画面「作品ページ」)

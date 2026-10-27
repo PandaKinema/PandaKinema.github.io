@@ -124,3 +124,12 @@ credits:
   - role_ja: 発行
     name_ja: 2025年11月
     name_en: November 2025
+rules_history:
+  - date: 2026-10-26
+    mark: errata
+    text_ja: "説明書の誤りを訂正しました(内容物:ノーマルカードは「4、5×3枚」/対戦ルール:「イカタコ(18)」は両手/協力ルール:ミス山はサルベージの効果で回収できる)。"
+    text_en: "Corrected errors in the printed rulebook (Contents: normal cards are 4 and 5 ×3 each / Versus rules: raise both hands for Ikatako (18) / Co-op rules: a miss pile can be taken back with Salvage)."
+  - date: 2026-10-26
+    mark: ""
+    text_ja: "WEB版を公開しました。"
+    text_en: "Web edition published."

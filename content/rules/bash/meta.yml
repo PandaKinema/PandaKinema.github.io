@@ -1,0 +1,52 @@
+# BASH&SMASH! 遊び方説明書(WEB版)  MINI THEATRE SERIES 02
+key: bash
+title_ja: BASH&SMASH!
+title_en: BASH&SMASH!
+series: MINI THEATRE SERIES 02
+logo: logo/bashlogo_4C.png
+logo_alt: BASH&SMASH! バッシュ&スマッシュ
+players_ja: 2人
+players_en: "2"
+time_ja: 5〜10分
+time_en: 5–10 min
+age_ja: 6歳から
+age_en: 6+
+printed_ja: 2026年5月発行の説明書に対応
+printed_en: Matches the printed rulebook (May 2026)
+booth: https://pandakinema.booth.pm/items/8425512
+catch_ja: 読みきれ。叩き込め!
+catch_en: Read them. Strike hard!
+story_ja: やることはただ1つ。手札から1枚出すだけ。相手より大きい数字を出せば得点ゲット!しかし、相手のカードが裏向きだった場合は「パリィ」が発動し、得点を奪われてしまう。さらに、カードの合計が10になると「ラッシュ」突入!ラッシュ中はルールが反転し、小さい数字が勝利する。攻めるか受けるか。この一手を見切り、勝つのはどっちだ!?
+story_en: "There’s only one thing to do: play one card from your hand. Play a bigger number than your opponent to score! But if their card is face down, a “Parry” triggers and they steal the points. And when the cards add up to 10, it’s a “Rush”! During a Rush the rule flips and the smaller number wins. Attack or defend? Read this one move. Who will win!?"
+youtube: ""
+fonts: [Bangers]
+theme:
+  main: "#e60039"
+  accent: "#ffffff"
+  ink: "#000000"
+  hl: "#d4242b"           # 強調(説明書の赤字)
+  head: "#000000"
+  on-head: "#ffffff"
+  cover: "#e60039"
+  on-cover: "#ffffff"
+  body: "#000000"
+  on-body: "#ffffff"
+  tex: "url({{img:page/s_tex_c_ffffff.png}})"
+  tex-size: 24px 24px
+  band-h: 20px
+  step-icon: "url({{img:page/s_star_sil.png}})"
+  num: '"Bangers","Impact","Arial Narrow",sans-serif'   # 遊び方動画と同じ書体
+  num-weight: "400"
+  num-y: 64%
+  logo-w: 300px
+  blue: "#1574c4"         # 図の青(青いカード・パリィ。作品ページと同じ)
+  warn-bg: "#ffffff"
+  cover-tex: "url({{img:page/s_tex_w.png}})"
+  cover-tex-size: 24px 24px
+  band: "url({{img:page/mt_sprocket.svg}})"
+  band-c: "#4c5155"
+  soft: "#fbd9e1"
+nobreak: [ヒット, パリィ, ラッシュ, プレイヤーカード, 星トークン, 打ち消し, グリッドシティ, チャイナタウン, スピードファイター, 赤プレイヤー, 使いこなす,
+  "(攻め)", "(受け)", "「せーの!」", "(WEB版)", 2026年5月, 遊び方動画, "とき:", "1枚ずつ)", "ありません)", "お読みください)",
+  "出し合う!", "になる!", "できる!", "始めましょう!", "となります!", "見せつけましょう!", "ゲット!", "突入!", "どっちだ!?", "叩き込め!", "パリィ!", "成功!", "発生!"]
+# 更新履歴は content/pages/bash.yml の rules_history(編集画面「作品ページ」)

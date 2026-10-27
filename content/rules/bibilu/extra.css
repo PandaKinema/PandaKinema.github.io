@@ -1,0 +1,33 @@
+  /* ビビルの塔だけで使う図:王冠と星(説明シート)、青い欄の塔と目盛り、天罰マーク、得点の式 */
+  .mk-box{display:flex;justify-content:center;height:30px;margin-top:8px}
+  .crown{display:flex;align-items:flex-end;justify-content:center;width:30px;height:24px;padding-bottom:3px;background:var(--gold);color:var(--main);font:900 12px/1 var(--sans);clip-path:polygon(0 100%,0 18%,25% 52%,50% 4%,75% 52%,100% 18%,100% 100%)}
+  .star{width:28px;height:27px;background:var(--gold);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+  .col{display:flex;align-items:flex-end;gap:3px;padding:5px 5px 5px 2px;border-radius:7px;background:var(--sky)}
+  .col.red{background:var(--hl)}
+  .col{--cw:42px;--ch:calc(var(--cw) * 1.4);--st:calc(var(--cw) * .58)}
+  @media (min-width:900px){ .step .col{--cw:50px} .big8{width:90px} }
+  .ruler{position:relative;width:15px;height:calc(var(--ch) + (var(--n) - 1) * var(--st));margin:0;padding:0;list-style:none}
+  .ruler li{position:absolute;left:0;right:0;bottom:calc(var(--i) * var(--st));height:var(--st);display:grid;place-items:center;color:#fff;font:900 12px/1 var(--sans)}
+  .stack{position:relative;width:var(--cw);height:calc(var(--ch) + (var(--n) - 1) * var(--st))}
+  .stack img{position:absolute;left:0;bottom:calc(var(--i) * var(--st));width:var(--cw);border-radius:3px;box-shadow:0 -2px 4px rgba(0,0,0,.28)}
+  .tag.sky{background:var(--sky);color:#fff}
+  .callout.wide{max-width:230px;text-align:center}
+  .big8{position:relative;width:78px}
+  .big8 img{width:100%;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+  .big8 .marks{position:absolute;left:84%;top:13%;width:15%;height:30%;border:2.5px solid var(--hl);border-radius:4px}
+  .big8 .marks-l{position:absolute;left:calc(100% + 4px);top:16%;color:var(--hl);font-size:11.5px;font-weight:900;line-height:1.25;writing-mode:vertical-rl}
+  .formula{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:260px;text-align:center}
+  .formula .eq{color:var(--hl);font-size:22px;font-weight:900;line-height:1.3}
+  .formula .ex{font-size:13.5px;font-weight:700;line-height:1.6;text-align:left}
+  .formula .ex b{display:block}
+  .howto{align-items:center;gap:18px 24px}
+  .howto-pic{display:flex;align-items:flex-end;gap:10px;padding:8px 10px;border-radius:8px;background:var(--sky)}
+  .howto-pic .col{--cw:56px}
+  .col.plain{padding:0;background:none}
+  .col.plain:first-child{flex-direction:column;align-items:center;gap:0}
+  .here{margin-bottom:6px;color:#fff;font-size:13px;font-weight:900;text-align:center}
+  .one{position:relative;width:var(--cw)}
+  .one img{width:100%;border-radius:3px}
+  .one .line{position:absolute;left:-3px;right:-3px;bottom:41.5%;height:3px;background:#fff;box-shadow:0 0 0 1.5px var(--sky)}
+  .howto-txt{max-width:260px;font-size:14.5px;font-weight:700;line-height:1.6}
+  .warn{--warn-bg:var(--accent)}

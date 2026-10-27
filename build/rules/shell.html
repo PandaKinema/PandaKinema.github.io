@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#1b2228">
+<title>{{title_ja}} 遊び方説明書(WEB版) | パンダキネマ</title>
+<meta name="description" content="{{title_ja}}の遊び方説明書(WEB版)。{{toc_text}}。日本語と英語を切り替えられます。">
+<meta property="og:title" content="{{title_ja}} 遊び方説明書(WEB版) | パンダキネマ">
+<meta property="og:site_name" content="パンダキネマ">
+<meta property="og:type" content="website">
+<meta property="og:description" content="{{title_ja}}の遊び方説明書(WEB版)。日本語と英語を切り替えられます。">
+<meta property="og:url" content="{{page_url}}">
+<meta property="og:image" content="{{og_image}}">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Googleアナリティクス(アクセス解析) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJKV3T71PZ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-ZJKV3T71PZ");</script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+{{fonts}}
+<style>
+{{common_css}}
+  /* ===== {{title_ja}} ===== */
+  :root{
+{{theme}}
+  }
+{{extra_css}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="bar gut">
+    <a class="brand" href="{{root}}" aria-label="PANDA KINEMA トップへ"><img src="{{img:site/logo_icon.png}}" alt="PANDA KINEMA" width="240" height="240"></a>
+    <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+    <nav class="site-nav" aria-label="サイト"><a href="{{root}}#news">NEWS</a><a href="{{root}}#board">BOARD GAME</a><a href="{{root}}#movie">MOVIE</a><a href="{{root}}#tools">PLAY&amp;TOOLS</a><a href="{{root}}#about">ABOUT</a></nav>
+    <div class="lang" role="group" aria-label="言語 / Language"><button type="button" id="lang-ja" data-l="ja" aria-pressed="true">JA</button><button type="button" id="lang-en" data-l="en" aria-pressed="false">EN</button></div>
+    <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
+  </div>
+</header>
+
+<div class="sheet">
+  <!-- 表紙(説明書の1面の上と同じ) -->
+  <div class="cover">
+    <div class="inner gut">
+      <div class="title-block">
+{{series}}        <h1 class="h1"><img src="{{logo}}" alt="{{logo_alt}}"></h1>
+        <p class="doc-name"><span class="ja">遊び方説明書(WEB版)</span><span class="en">Rulebook (Web edition)</span></p>
+        <dl class="spec">
+          <div><dt><span class="ja">人数</span><span class="en">Players</span></dt><dd><span class="ja">{{players_ja}}</span><span class="en">{{players_en}}</span></dd></div>
+          <div><dt><span class="ja">時間</span><span class="en">Time</span></dt><dd><span class="ja">{{time_ja}}</span><span class="en">{{time_en}}</span></dd></div>
+          <div><dt><span class="ja">年齢</span><span class="en">Age</span></dt><dd><span class="ja">{{age_ja}}</span><span class="en">{{age_en}}</span></dd></div>
+        </dl>
+        <p class="cover-meta"><a href="#history"><span class="ja">最終更新 {{updated}}</span><span class="en">Last updated {{updated}}</span></a><span><span class="ja">{{printed_ja}}</span><span class="en">{{printed_en}}</span></span></p>
+      </div>
+      <div class="story">
+        <p class="catch"><span class="ja">{{catch_ja}}</span><span class="en">{{catch_en}}</span></p>
+        <p class="ja">{{story_ja}}</p>
+        <p class="en">{{story_en}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <div class="body">
+  <div class="layout gut">
+    <nav class="toc" aria-label="目次">
+      <p>Contents</p>
+      <ol>
+{{toc}}
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- 動画 -->
+      <section class="panel" id="video" aria-labelledby="h-video">
+        <h2 id="h-video"><span class="ja">動画で見る</span><span class="en">Watch the Video</span></h2>
+{{video}}
+      </section>
+
+{{body}}
+
+      <!-- 更新履歴 -->
+      <section class="panel" id="history" aria-labelledby="h-history">
+        <h2 id="h-history"><span class="ja">更新履歴</span><span class="en">Update History</span></h2>
+        <ol class="log">
+{{history}}
+        </ol>
+        <p class="legend"><span class="ja">ルールが変わった更新には <span class="chg">ルール変更</span>、印刷した説明書の誤りを直した更新には <span class="chg">訂正</span> の印を付けます。</span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
+      </section>
+
+      <div class="back">
+        <a class="btn" href="{{game_page}}"><span class="ja">{{title_ja}}の作品ページへ</span><span class="en">Back to {{title_en}}</span></a>
+        <a class="btn ghost" href="{{booth}}" target="_blank" rel="noopener"><span class="ja">BOOTHで購入</span><span class="en">Buy on BOOTH</span> <span aria-hidden="true">↗</span></a>
+        <a class="btn ghost" href="{{rules_index}}"><span class="ja">遊び方説明書の一覧へ</span><span class="en">All rulebooks</span></a>
+      </div>
+    </main>
+  </div>
+  </div>
+</div>
+
+<footer class="site-footer gut"><span>©2015-2026 Panda Kinema<small class="ga-note"><span class="ja">このサイトはアクセス解析に<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleアナリティクス</a>を使用しています</span><span class="en">This site uses <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google Analytics</a></span></small></span><a href="#top" id="totop">BACK TO TOP ↑</a></footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  /* 言語:ボタンで切り替え、選んだほうを覚えておく(サイトのほかのページと共通) */
+  function setLang(l){
+    root.setAttribute('data-lang',l); root.lang=l;
+    [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===l)) });
+    try{ localStorage.setItem('pk-lang',l) }catch(e){}
+  }
+  var q=(location.search.match(/[?&]lang=(ja|en)/)||[])[1], saved=null; try{ saved=localStorage.getItem('pk-lang') }catch(e){}   /* ?lang=en でも開ける */
+  setLang(q||(saved==='en'?'en':'ja'));
+  [].forEach.call(document.querySelectorAll('.site-nav a'),function(a){ a.addEventListener('click',function(){ document.getElementById('navtg').checked=false }) });
+  [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.addEventListener('click',function(){ setLang(b.dataset.l) }) });
+
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('totop').addEventListener('click',function(e){ e.preventDefault(); scrollTo({top:0,behavior:reduce?'auto':'smooth'}) });
+
+  /* 目次:今読んでいるところを示す(スマホでは、読んでいる章が変わったときだけ横に送る) */
+  var links=[].slice.call(document.querySelectorAll('.toc ol>li>a'));
+  var list=document.querySelector('.toc ol');
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')) });
+  var last=-1;
+  function mark(){
+    var y=innerHeight*.3, cur=0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=y) cur=i });
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4) cur=secs.length-1;   /* いちばん下まで来たら最後の項目 */
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur) });
+    if(cur===last) return; last=cur;
+    var a=links[cur];
+    if(list.scrollWidth>list.clientWidth){
+      var l=a.getBoundingClientRect().left-list.getBoundingClientRect().left+list.scrollLeft-(list.clientWidth-a.offsetWidth)/2;
+      list.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'});
+    }
+  }
+  var t=0; addEventListener('scroll',function(){ if(!t) t=requestAnimationFrame(function(){ t=0; mark() }) },{passive:true});
+  addEventListener('resize',function(){ last=-1; mark() }); mark();
+})();
+</script>
+</body>
+</html>

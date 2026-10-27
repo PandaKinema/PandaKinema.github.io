@@ -341,7 +341,7 @@ def apply(key):
     _tags = [x for x in re.split(r'[\s,、#]+', str((t or {}).get('hashtag') or '')) if x] or [re.sub(r'[^\w]', '', _nm)]
     _text = '『%s』%s' % (_nm, str(d.get('catch_ja') or '').strip())
     g['share_url'] = 'https://x.com/intent/post?' + _up.urlencode({'text': _text, 'url': 'https://pandakinema.com/games/%s/' % key, 'hashtags': ','.join(['パンダキネマ'] + _tags)})
-    g['manual_ja'] = d.get('manual_ja') or '#'
+    g['manual_ja'] = d.get('manual_ja') or ('rules/' if os.path.isfile(os.path.join(ROOT, 'content', 'rules', key, 'body.html')) else '#')   # 空なら遊び方説明書(WEB版)
     g['manual_en'] = d.get('manual_en') or g['manual_ja']
     g['site'] = site
     g['games'] = games
@@ -2156,7 +2156,7 @@ TEMPLATE = r'''<!doctype html>
 {{steps_html}}
         <div class="flow-ui" hidden><button class="fnav prev" type="button" aria-label="前のカード">‹</button><div class="flow-bar" aria-hidden="true"><span></span></div><button class="fnav next" type="button" aria-label="次のカード">›</button></div>
       </div>
-      <div class="manual-link reveal"><p>{{L:くわしいルールは遊び方説明書で|Full rules are in the rulebook}}</p><a class="btn" lang="ja" href="{{manual_ja}}" target="_blank" rel="noopener">遊び方説明書を読む <span aria-hidden="true">↗</span></a><a class="btn" lang="en" href="{{manual_en}}" target="_blank" rel="noopener">Read the rulebook <span aria-hidden="true">↗</span></a></div>
+      <div class="manual-link reveal"><p>{{L:くわしいルールは遊び方説明書で|Full rules are in the rulebook}}</p><a class="btn" lang="ja" href="{{manual_ja}}"{{manual_tgt}}>遊び方説明書を読む <span aria-hidden="true">{{manual_ar}}</span></a><a class="btn" lang="en" href="{{manual_en}}"{{manual_tgt}}>Read the rulebook <span aria-hidden="true">{{manual_ar}}</span></a></div>
     </div>
   </section>
 
@@ -2432,10 +2432,11 @@ def tool_card(t):   # トップと同じツールのカード(閉じたカード
     sel = str(t.get('bg') or 'main')
     cbg = c.get(sel, c['main'])
     cfg = c['accent'] if sel == 'main' else (c['main'] if sel == 'accent' else max((c['main'], c['accent']), key=lambda x: contrast(x, cbg)))
+    tgt = ' target="_blank" rel="noopener"' if str(t['url']).startswith('http') else ''   # サイトの中のページ(/rules/ など)は同じタブで
     if t.get('front'):
-        return '      <li><a class="bg-card" href="%s" target="_blank" rel="noopener"><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (e(t['url']), imgname(t['front']), e(t['name']), new)
-    return '      <li><a class="bg-card bg-tool" href="%s" target="_blank" rel="noopener" style="background:%s;color:%s">%s<span class="bt-name">%s</span>%s</a></li>' % (
-        e(t['url']), e(cbg), e(cfg), tool_art(t), tool_title(t), new)
+        return '      <li><a class="bg-card" href="%s"%s><img src="../../img/%s" alt="%s" loading="lazy">%s</a></li>' % (e(t['url']), tgt, imgname(t['front']), e(t['name']), new)
+    return '      <li><a class="bg-card bg-tool" href="%s"%s style="background:%s;color:%s">%s<span class="bt-name">%s</span>%s</a></li>' % (
+        e(t['url']), tgt, e(cbg), e(cfg), tool_art(t), tool_title(t), new)
 OGP_CACHE = None
 def link_card(x):   # リンク(note の記事など):ページのOGPからタイトル・画像・サイト名を読んでカードに
     global OGP_CACHE
@@ -2568,7 +2569,7 @@ def render(key):
         catch=br(e(g['catch'])), intro=rich_L(g['intro']), intro_img=g['intro_img'][0], intro_alt=e(g['intro_img'][1]), intro_cls=g['intro_img'][2],
         summary=rich_L(g['summary']),
         spec_html='\n'.join('            <div><dt>%s</dt><dd>%s</dd></div>' % (e(a), e(b)) for a, b in g['spec']),
-        steps_html=steps, tabs_html=tabs_html, **{'st_' + k: g.get('sec_style', {}).get(k, '') for k in ('video', 'story', 'rules', 'photo', 'buy')}, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']),
+        steps_html=steps, tabs_html=tabs_html, **{'st_' + k: g.get('sec_style', {}).get(k, '') for k in ('video', 'story', 'rules', 'photo', 'buy')}, manual_ja=e(g['manual_ja']), manual_en=e(g['manual_en']), manual_tgt=(' target="_blank" rel="noopener"' if g['manual_ja'].startswith('http') else ''), manual_ar=('↗' if g['manual_ja'].startswith('http') else '→'),
         gallery_html='\n'.join(['          <figure class="gslide"><button class="gitem" type="button" aria-label="%sを大きく見る"><img src="{{img:%s}}" alt="%s" loading="lazy"></button><figcaption>{{L:%s|%s}}</figcaption></figure>' % (e(t), f, e(t), e(t), e(te)) for f, t, te, c in g.get('gallery', [])]
                                 + ['          <figure class="gslide"><div class="gph">{{L:%s(準備中)|%s (coming soon)}}</div></figure>' % (e(t), e(te)) for t, te in g.get('gallery_todo', [])]),
         gdots_html=''.join('<button type="button" aria-label="%d枚目"%s></button>' % (i + 1, ' aria-current="true"' if i == 0 else '') for i in range(len(g.get('gallery', [])) + len(g.get('gallery_todo', [])))),
