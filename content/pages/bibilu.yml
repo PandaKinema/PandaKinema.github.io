@@ -83,7 +83,7 @@ steps:
 gallery:
   - image: img/gallery/g_rule.webp
     caption_ja: 説明シート「ビビルの塔はこんなゲーム!」
-    caption_en: Rules summary sheet
+    caption_en: Overview sheet “This is The Tower of Bibilu!”
     wide: true
   - image: img/package/g_pkg_front.webp
     caption_ja: パッケージ(表)

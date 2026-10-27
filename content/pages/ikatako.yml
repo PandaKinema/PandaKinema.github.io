@@ -28,7 +28,7 @@ intro_ja: |-
   様々な困難に対処し、深海からの生還を目指しましょう!
 intro_en: React correctly to each card, collect as many points as you can, and
   make it back alive in this **deep-sea reaction game**! In the mysterious
-  “Ikatako Trench,” what awaits you in the small submarine “Triton” is a **giant
+  “Ikatako Trench,” what awaits you in the small submarine “Tritone” is a **giant
   squid and octopus**! But this sub has gesture controls! Raise the right hand
   and you can escape danger. Overcome every trouble and make it back from the
   deep!
@@ -85,7 +85,7 @@ steps:
 gallery:
   - image: img/gallery/ig_sheet.webp
     caption_ja: 説明シート「反射神経で生還せよ」
-    caption_en: Rules summary sheet
+    caption_en: Overview sheet “Survive on your reflexes”
     wide: true
   - image: img/package/pkg_ikatako.webp
     caption_ja: パッケージ

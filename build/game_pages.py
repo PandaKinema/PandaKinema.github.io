@@ -1392,9 +1392,10 @@ TEMPLATE = r'''<!doctype html>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#1b2228">
-  <title>{{title}} | PANDA KINEMA</title>
+  <title>{{title}} | パンダキネマ</title>
   <meta name="description" content="{{description}}">
-  <meta property="og:title" content="{{title}} | PANDA KINEMA">
+  <meta property="og:title" content="{{title}} | パンダキネマ">
+  <meta property="og:site_name" content="パンダキネマ">
   <meta property="og:type" content="website">
   <meta property="og:description" content="{{description}}">
   <meta name="twitter:card" content="summary_large_image">

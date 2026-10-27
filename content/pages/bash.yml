@@ -99,14 +99,16 @@ gallery:
     wide: true
   - image: img/gallery/BASH_img.jpg
     caption_ja: バッシュ イラスト
+    caption_en: Bash illustration
     wide: false
   - image: img/gallery/LINLIN_img.jpg
     caption_ja: リンリン イラスト
+    caption_en: Linlin illustration
     wide: false
 pkg: img/package/mini_bash.webp
 fab_pkg: img/package/mini_bash.webp
 contents_ja: 数字カード20枚、プレイヤーカード2枚、星トークン2個、遊び方説明書1枚
-contents_en: 2 sets of number cards (1–10), 2 player cards, 2 star tokens, rulebook
+contents_en: 20 number cards, 2 player cards, 2 star tokens, rulebook
 credits:
   - role_ja: ゲームデザイン・アートワーク
     name_ja: ゐするぎ
