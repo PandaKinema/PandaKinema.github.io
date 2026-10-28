@@ -2551,6 +2551,8 @@ el("printBtn").addEventListener("click",async()=>{const b=el("printBtn"),t=b.tex
 
 
 
+/* ヘッダーの高さ(タブレット幅で2段になる)を、下の作業エリアの高さの計算に使う */
+{const hd=document.querySelector("header"),setH=()=>document.documentElement.style.setProperty("--hdr-h",hd.offsetHeight+"px");setH();if(window.ResizeObserver)new ResizeObserver(()=>{setH();fitPaper()}).observe(hd);}
 cardOrientation=(el("paperOrientation").value==="portrait")?"landscape":"portrait";
 startDeck();
 setPaper();renderSheet();syncControls();
