@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>カードモックツクール β（改良テスト版） | Card Mock Maker</title>
+<title>カードモックツクール（改良テスト版） | Card Mock Maker</title>
 <meta name="robots" content="noindex">
 <meta name="description" content="ボードゲーム・カードゲームのカードモックをブラウザ上で作成・印刷できる無料ツール。テンプレート、画像、テキストボックス、PDF保存・再編集に対応。">
 <meta name="theme-color" content="#f3f3f3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
-<meta property="og:title" content="カードモックツクール β | Card Mock Maker">
+<meta property="og:title" content="カードモックツクール | Card Mock Maker">
 <meta property="og:description" content="カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
@@ -23,7 +23,6 @@
   <div class="app-brand">
     <a class="pk-home" href="/" title="パンダキネマのサイトへ" aria-label="パンダキネマのサイトへ"><i aria-hidden="true"></i></a>
     <span class="app-logo" role="img" aria-label="カードモックツクール"></span>
-    <span class="beta-badge">β</span>
     <span class="brand-en">Card Mock Maker</span>
   </div>
   <div class="history-controls" aria-label="履歴">
@@ -40,10 +39,13 @@
   <select id="impositionMode" title="面付けモード"><option value="duplex">両面（折り）</option><option value="both">両面印刷</option><option value="single">片面</option></select>
   <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
   <span class="toolbar-spacer header-action-gap"></span>
-  <button id="editablePdfBtn">PDF保存</button>
-  <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
-  <button id="printBtn" class="primary">印刷</button>
-  <button id="settingsBtn" class="icon-btn settings-btn" type="button" title="メニュー" aria-label="メニュー" aria-expanded="false" aria-controls="settingsPop">•••</button>
+  <div class="header-actions">
+    <button id="editablePdfBtn">PDF保存</button>
+    <input id="loadPdf" type="file" accept="application/pdf,.pdf" class="hidden">
+    <button id="printBtn" class="primary">印刷</button>
+    <a id="helpBtn" class="icon-btn help-btn" href="guide/" target="_blank" rel="noopener" title="使い方" aria-label="使い方">?</a>
+    <button id="settingsBtn" class="icon-btn settings-btn" type="button" title="メニュー" aria-label="メニュー" aria-expanded="false" aria-controls="settingsPop">•••</button>
+  </div>
   <span id="fitStatus" class="size-note hidden"></span>
 </header>
 
@@ -56,7 +58,6 @@
     <button type="button" class="open-export">画像で書き出す</button>
     <button type="button" class="open-tpl">マイテンプレート</button>
   </div>
-  <a class="settings-help" href="guide/" target="_blank" rel="noopener">使い方を見る</a>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
   <div class="settings-row" data-mslot="units"><label for="unitText">文字の単位</label><select id="unitText"><option value="pt">pt</option><option value="Q">級（Q）</option><option value="px">px</option></select></div>
@@ -151,7 +152,6 @@
         <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
         <button type="button" class="open-sample">見本を開く</button>
         <button type="button" class="open-bulk">表から一括作成</button>
-        <a class="empty-help" href="guide/" target="_blank" rel="noopener">使い方</a>
       </div>
       <div id="duplexBar" class="duplex-bar" hidden>
         <div class="seg" role="group" aria-label="表示する面"><button type="button" data-view-side="front" aria-pressed="true">オモテ面</button><button type="button" data-view-side="back" aria-pressed="false">ウラ面</button></div>
@@ -237,7 +237,6 @@
           </div>
           <div class="m-group-title">言語 / Language</div>
           <div class="lang-switch m-lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
-          <a class="m-help-link" href="guide/" target="_blank" rel="noopener">使い方を見る</a>
           <div class="app-copyright">©2026 Panda Kinema</div>
         </div>
       </div>
@@ -499,7 +498,7 @@
   </div>
 
   <div class="public-beta-note">
-    <strong>β版</strong>
+    <strong>Ver.1.0</strong>
     <span>画像や編集データはブラウザ内で処理され、サーバーへ送信されません。</span>
   </div>
   <div class="app-copyright">©2026 Panda Kinema</div>

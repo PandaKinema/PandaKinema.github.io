@@ -4,7 +4,7 @@
 (function(){
 const EN={
   // ---- アプリ全体
-  "カードモックツクール":"Card Mock Maker","β":"β","β版":"Beta",
+  "カードモックツクール":"Card Mock Maker",
   "パンダキネマのサイトへ":"Go to the Panda Kinema site",
   "履歴":"History","取り消し":"Undo","やり直し":"Redo","取り消し（⌘Z / Ctrl+Z）":"Undo (⌘Z / Ctrl+Z)","やり直し（⇧⌘Z / Ctrl+Y）":"Redo (⇧⌘Z / Ctrl+Y)",
   "用紙サイズ":"Paper size","用紙方向":"Paper orientation","横":"Landscape","縦":"Portrait","カードサイズ":"Card size",
@@ -108,7 +108,7 @@ const EN={
   "マイテンプレート「{name}」で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並び、このテンプレートでつながります。":"Each row becomes one card using your template \"{name}\". The new cards are added after your existing cards and linked to this template.",
   "{name}の基本の見た目で、表の1行を1枚のカードにします。作ったカードは今あるカードのあとに並びます。作ったカードは同じテンプレートでつながるので、どれか1枚の色などを変えると全部に反映されます。":"Each row becomes one card in the basic {name} style, added after your existing cards. The new cards are linked by one template, so changing the colours etc. on any of them changes them all.",
   "このテンプレートには文字を入れる場所がありません。トランプ・トレカ・ワードゲームか、テキストボックスのあるテンプレートを選んでください。":"This template has nowhere to put text. Choose playing card, trading card, word game, or a template with text boxes.",
-  "使い方を見る":"How to use","使い方":"Guide",
+  "使い方":"Guide",
   "マイテンプレート":"My templates","名前":"Name",
   "このカードの見た目を保存します。保存したテンプレートは、面の種類の「マイテンプレート」から選べます。このブラウザで作るほかの作品でも使えます。":"Saves this card's look. Pick saved templates from \"My templates\" under Face type — also in your other projects in this browser.",
   "まだマイテンプレートがありません。カードの見た目を整えたら、下の「テンプレートとして保存」で作れます。":"No templates yet. Once a card looks right, use \"Save as template\" below.",
@@ -137,7 +137,7 @@ const EN={
   "これ以上カードを増やせません（最大{n}ページ）":"Can't add more cards (up to {n} pages).",
   "ドラゴン":"Dragon","このカードを出したとき、山札からカードを1枚引く。":"When you play this card, draw a card.",
   // ---- メタ
-  "カードモックツクール β（改良テスト版） | Card Mock Maker":"Card Mock Maker β (test build)",
+  "カードモックツクール（改良テスト版） | Card Mock Maker":"Card Mock Maker (test build)",
 };
 const PATTERNS=[
   [/^カード(\d+)（ページ内(\d+)）・(オモテ|ウラ)$/,(m)=>`Card ${m[1]} (#${m[2]} on page) · ${m[3]==="オモテ"?"Front":"Back"}`],
@@ -219,7 +219,7 @@ function setLang(l,{save=true}={}){
   lang=l==="en"?"en":"ja";
   document.documentElement.lang=lang;
   if(save){try{localStorage.setItem("pk-lang",lang)}catch(e){}}
-  if(lang==="en"){applyTo(document.body);document.title=T("カードモックツクール β（改良テスト版） | Card Mock Maker")}
+  if(lang==="en"){applyTo(document.body);document.title=T("カードモックツクール（改良テスト版） | Card Mock Maker")}
   else{restoreAll();document.title=document.documentElement.dataset.jaTitle||document.title}
   document.querySelectorAll("[data-lang-btn]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.langBtn===lang)));
   document.dispatchEvent(new CustomEvent("cmm-langchange",{detail:{lang}}));
