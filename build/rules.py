@@ -187,6 +187,12 @@ def series_band(meta):
     return '        <p class="series">%s</p>\n' % H.escape(meta['series'])
 
 
+def yt_id(v):   # YouTube のURLでもIDでもOK
+    v = str(v or '').strip()
+    m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/|live/)([\w-]{11})', v)
+    return m.group(1) if m else v
+
+
 def build_page(key):
     d = os.path.join(SRC, key)
     meta = load(os.path.join(d, 'meta.yml'))
@@ -201,7 +207,9 @@ def build_page(key):
     hist = history_of(key, meta)
 
     # 遊び方動画:youtube を入れた作品だけ「動画で見る」を出す(準備中の作品は章ごと出さない)
-    yt = meta.get('youtube')
+    # meta.yml の youtube が空なら、編集画面の動画(content/videos.yml)の「遊び方動画」のURLを使う
+    yt = yt_id(meta.get('youtube')) or next((yt_id(v.get('youtube')) for v in (load(os.path.join(ROOT, 'content', 'videos.yml')) or [])
+                                             if v.get('work') == key and v.get('kind_ja') == '遊び方動画' and v.get('youtube')), '')
     video = ''
     if yt:
         toc_items.insert(0, '        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>')

@@ -16,7 +16,9 @@
   intro_ja: |-
     塔を建てたい。でも高すぎると天罰！
     天罰にビビりながらできるだけ立派な塔を建てよう！
-  intro_en: Reveal number cards at the same time and build tall towers to score points.
+  intro_en: |-
+    You want to build a tower. But build it too high, and divine punishment strikes!
+    Keep one eye on the heavens and build the grandest tower you can!
   page: games/bibilu/
   booth: https://pandakinema.booth.pm/items/8795134
 - key: trico
@@ -79,7 +81,7 @@
   genre_ja: パターン認識・アクション
   genre_en: Pattern recognition / Action
   intro_ja: 場に出た動物の名前を呼ぶ、混乱系アクションゲーム！
-  intro_en: Sleep is a race.
+  intro_en: A chaotic action game where you call out the names of the animals in play!
   page: games/moko/
   booth: https://pandakinema.booth.pm/items/8311555
 - key: koikoi
