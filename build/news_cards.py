@@ -14,7 +14,7 @@ SITE_URL = 'https://pandakinema.com/'
 FONT_DIR = os.path.join(ROOT, 'build', 'fonts')
 CARD_DIR = os.path.join(ROOT, 'img', 'share', 'news')
 PAGE_DIR = os.path.join(ROOT, 'news')
-VERSION = 'v2'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
+VERSION = 'v3'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
 
 OUTER = '#0a0c0c'                    # チケットのまわり(キネマブラック)
 DEFAULT = ('#fff5d7', '#1b2228')     # 作品に関係しないニュース:アイボリーのチケット
@@ -348,7 +348,7 @@ def lines_for(t, f, maxw, maxlines, split=True):
 def news_title(t, maxw):
     t = re.sub(r'(?<=[^\x00-\x7f])!', '！', t)   # 日本語のあとの ! ? は全角に(英字のあと(TRICO! など)はそのまま)
     t = re.sub(r'(?<=[^\x00-\x7f])\?', '？', t)
-    sizes = ((76, 2), (68, 2), (60, 3), (52, 3), (46, 4))
+    sizes = ((64, 2), (58, 2), (52, 3), (46, 3), (40, 4))
     lines = None
     for split in (False, True):   # まずは言葉の途中で折り返さない大きさを探す
         for size, maxlines in sizes:
@@ -359,7 +359,7 @@ def news_title(t, maxw):
         if lines:
             break
     if not lines:
-        size = 46; f = font('maru', size); lines = [t]
+        size = 40; f = font('maru', size); lines = [t]
     lh = int(size * 1.15 * S)
     img = Image.new('RGBA', (int(maxw * S * 1.3), lh * len(lines) + size * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
@@ -369,9 +369,9 @@ def news_title(t, maxw):
 
 
 def category_box(t):
-    f = font('maru', 26)
-    pad_x, pad_y, bw = 16 * S, 9 * S, 3 * S
-    w = int(mwidth(t, f)); asc = int(26 * S * .86)
+    f = font('maru', 22)
+    pad_x, pad_y, bw = 14 * S, 8 * S, 3 * S
+    w = int(mwidth(t, f)); asc = int(22 * S * .86)
     img = Image.new('RGBA', (w + pad_x * 2 + bw * 2, asc + pad_y * 2 + bw * 2), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     d.rounded_rectangle((bw // 2, bw // 2, img.width - 1 - bw // 2, img.height - 1 - bw // 2), radius=5 * S, outline=TEXT, width=bw)
@@ -394,10 +394,7 @@ def news_card(n, games=None):
     logo = tinted(os.path.join(ROOT, 'img', 'site', 'logo_en.png'), TEXT, 264, 41)
     img.alpha_composite(logo, ((W - logo.width) // 2, (88 * S - logo.height) // 2))
     # 下の帯:日付をまん中に
-    date = Image.new('RGBA', (W, 88 * S), (0, 0, 0, 0))
-    fd = font('maru', 58)
-    draw_tight(ImageDraw.Draw(date), 0, 70 * S, news_date(n.get('date')), fd, TEXT)
-    date = date.crop(date.getchannel('A').getbbox())
+    date = text_layer([(news_date(n.get('date')), font('cn', 38), 38 * .1)], TEXT)
     img.alpha_composite(date, ((W - date.width) // 2, 542 * S + (88 * S - date.height) // 2))
     # 右:スポットライトの中のキネマ
     if os.path.exists(KINEMA):
@@ -409,7 +406,7 @@ def news_card(n, games=None):
     cat = str(n.get('cat_ja') or '').strip()
     if cat:
         parts = [category_box(cat), title]
-    block = stack(parts, [26] if cat else [])
+    block = stack(parts, [22] if cat else [])
     img.alpha_composite(block, (99 * S, int(315 * S - block.height / 2)))
     return img.convert('RGB').resize((1200, 630), Image.LANCZOS)
 
