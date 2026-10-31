@@ -51,7 +51,25 @@ a{color:inherit}
 .site-nav a{display:flex;align-items:center;height:28px;white-space:nowrap;opacity:.9;text-decoration:none}
 .site-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
 .cap{display:block;line-height:1;text-box:trim-both cap alphabetic}
-@media(max-width:650px){.brand img{height:26px}.site-nav{gap:12px;font-size:14px}}
+.navtg{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.menu-btn{display:none}
+@media(max-width:650px){
+ .brand img{height:26px}
+ .site-header .bar{position:relative;gap:10px;min-height:52px}
+ .menu-btn{display:grid;place-items:center;order:3;flex:none;width:36px;height:36px;margin-left:auto;margin-right:-6px;cursor:pointer}
+ .menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:20px;height:2px;border-radius:1px;background:#f3f2ee;transition:transform .25s ease,background .2s ease}
+ .menu-btn i{position:relative}
+ .menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+ .menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+ .navtg:checked~.menu-btn i{background:transparent}
+ .navtg:checked~.menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+ .navtg:checked~.menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+ .navtg:focus-visible~.menu-btn{outline:2px solid #fff;outline-offset:2px}
+ .site-header .site-nav{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;overflow:visible;padding:6px 0 14px;background:rgba(0,0,0,.94);font-size:17px;box-shadow:0 14px 24px rgba(0,0,0,.35)}
+ .navtg:checked~.site-nav.site-nav{display:flex}
+ .site-header .site-nav a{height:auto;padding:12px max(16px,4vw);border-top:1px solid rgba(255,255,255,.08)}
+ .site-nav a:first-child{border-top:0}
+}
 
 /* 紙(黒い下地の上に載ったレイヤー)。ビビル文字の模様を薄く乗算 */
 .paper{position:relative;isolation:isolate;max-width:1280px;margin-inline:auto;background:var(--paper)}
@@ -162,12 +180,57 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .keys{margin-top:10px}
 .keys .btn{font-size:13px;padding:9px}
 
+/* 4つのボタン:PCは1列、スマホは2×2 */
+.row4{flex-wrap:wrap}
+.row4 .btn{flex:1 1 calc(50% - 4px)}
+@media(min-width:900px){.row4 .btn{flex:1 1 0;font-size:13.5px;padding:12px 4px;letter-spacing:.02em}}
+
+/* みんなの碑文 */
+.wallSec{padding:64px 16px 0}
+.wallNote{margin:0;font-size:12px;color:var(--ink2);line-height:1.7;text-align:center}
+.wallNote span{display:inline-block}
+.wallNote .wallCount{display:block;margin-top:2px;font-weight:700}
+.wallCount:empty{display:none}
+.wall{list-style:none;margin:0 auto;padding:0;max-width:1060px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;align-items:start}
+.slab{position:relative;border-radius:6px;overflow:hidden;background:#9f823f;box-shadow:0 10px 22px rgba(9,20,28,.28)}
+.slab.new{animation:slabIn .9s ease both}
+@keyframes slabIn{0%{transform:scale(.9);opacity:0;box-shadow:0 0 0 0 rgba(255,245,215,.9)}60%{transform:scale(1.03);opacity:1}100%{transform:none;box-shadow:0 10px 22px rgba(9,20,28,.28),0 0 0 3px rgba(255,245,215,.85)}}
+.slabBtn{appearance:none;display:block;width:100%;border:0;padding:0;margin:0;background:none;color:#fff;font:inherit;cursor:pointer;text-align:center}
+.slabNo{display:block;height:16px;padding:0 7px;background:#173f53;color:rgba(255,245,215,.72);font:700 9px/16px var(--cond);letter-spacing:.08em;text-align:left}
+.slabBody{display:flex;flex-direction:column;gap:7px;padding:12px 11px 11px}
+.sLine{display:flex;justify-content:center;gap:2.13%;min-height:12px}
+.sg{display:flex;flex-direction:column;align-items:center;gap:4px;width:14.89%}
+.sg svg{width:100%;height:auto;aspect-ratio:1;display:block}
+.sg i{display:block;height:12px;font-style:normal;font-size:10px;font-weight:700;line-height:12px;color:#fff5d7}
+.sg i::before{content:"？";color:rgba(255,245,215,.45)}
+.sg i:empty::before{content:""}
+.sg b{display:none;font-weight:700}
+.slab.open .sg i::before{content:none}
+.slab.open .sg b{display:inline;animation:kanaIn .3s ease both;animation-delay:var(--d,0ms)}
+.slabDel{display:none;position:absolute;top:0;right:0;height:16px;padding:0 8px;border:0;border-radius:0 0 0 6px;background:#c8412c;color:#fff;font:700 10px/16px var(--sans);cursor:pointer}
+.admin-on .slabDel{display:block}
+.slab.confirm .slabDel{background:#8a1f10}
+.wallStatus{margin:16px 0 0;font-size:13px;color:var(--ink2);text-align:center}
+.wallStatus:empty{display:none}
+.wallFoot{margin-top:18px;text-align:center}
+.wallFoot .btn{flex:none;padding:10px 32px}
+.wallAdmin{display:none;justify-content:center;align-items:center;gap:10px;margin-top:18px;font-size:12px;color:var(--ink2)}
+.admin-on .wallAdmin{display:flex}
+.wallAdmin input{width:160px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--field);color:var(--ink);font:inherit}
+
+/* 刻む前の確認 */
+.dlg{max-width:min(340px,calc(100vw - 32px));border:0;padding:20px 18px 16px;text-align:center}
+.dlg::backdrop{background:rgba(9,20,28,.6)}
+.dlg h3{margin:0 0 14px;font-size:18px;letter-spacing:.03em}
+.dlgSlab{list-style:none;margin:0 auto;padding:0;width:min(220px,100%)}
+.dlg .row{margin-top:16px}
+
 /* 関連コンテンツ(作品ページと同じ形) */
 .related{padding:56px 16px 64px;text-align:center}
 .secHead{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0 0 26px}
 .secHead .en{margin:0;padding-left:.34em;font-size:11px;font-weight:800;letter-spacing:.34em;opacity:.72}
 .secRow{display:flex;align-items:center;gap:16px}
-.secRow::before,.secRow::after{content:"";flex:none;width:26px;height:26px;background:currentColor;-webkit-mask:url(/new/img/page/b_tupa_sten.png) center/contain no-repeat;mask:url(/new/img/page/b_tupa_sten.png) center/contain no-repeat}
+.secRow::before,.secRow::after{content:"";flex:none;width:26px;height:26px;background:currentColor;-webkit-mask:url(/img/page/b_tupa_sten.png) center/contain no-repeat;mask:url(/img/page/b_tupa_sten.png) center/contain no-repeat}
 .pill{display:inline-block;margin:0;padding:.42em 1.15em .46em;border-radius:999px;font-weight:800;line-height:1.25;letter-spacing:.03em;background:var(--pri-bg);color:var(--pri-fg);font-size:clamp(17px,1.9vw,21px)}
 .relRow{list-style:none;margin:0;padding:0;display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
 .relCard{display:flex;flex-direction:column;width:300px;max-width:100%;border-radius:10px;overflow:hidden;background:#fff;color:#1b2228;text-align:left;text-decoration:none;box-shadow:0 14px 26px -16px rgba(0,0,0,.45);transition:translate .2s ease}
@@ -254,11 +317,13 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 </style>
 </head>
 <body>
-<!-- サイトのトップを /new/ から入れ替えたら、このページの「/new/」を外す -->
+<!-- ヘッダー:トップ・作品ページと同じ(スマホはメニューボタン) -->
 <header class="site-header">
  <div class="bar">
-  <a class="brand" href="/new/"><img src="/new/img/site/logo_icon.png" alt="PANDA KINEMA"></a>
-  <nav class="site-nav" aria-label="サイト"><a href="/new/#news"><span class="cap">NEWS</span></a><a href="/new/#board"><span class="cap">BOARD GAME</span></a><a href="/new/#movie"><span class="cap">MOVIE</span></a><a href="/new/#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="/new/#about"><span class="cap">ABOUT</span></a></nav>
+  <a class="brand" href="/"><img src="/img/site/logo_icon.png" alt="PANDA KINEMA"></a>
+  <input class="navtg" type="checkbox" id="navtg" aria-label="メニューを開く">
+  <nav class="site-nav" aria-label="サイト"><a href="/#news"><span class="cap">NEWS</span></a><a href="/#board"><span class="cap">BOARD GAME</span></a><a href="/#movie"><span class="cap">MOVIE</span></a><a href="/#tools"><span class="cap">PLAY&amp;TOOLS</span></a><a href="/#about"><span class="cap">ABOUT</span></a></nav>
+  <label class="menu-btn" for="navtg" aria-label="メニュー"><i></i></label>
  </div>
 </header>
 
@@ -289,10 +354,11 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
    </div>
    <p class="note"><span>ひらがな・カタカナ・英数字・！？ーが使えます</span><span>(漢字は不可)</span><br><span>6文字ごとに折り返し。</span><span>トゥーパを押すと文字が消えます。</span></p>
    <p id="missing" class="status" aria-live="polite"></p>
-   <div class="row">
+   <div class="row row4">
     <button id="savePng" class="btn primary">保存する</button>
     <button id="sharePage" class="btn secondary">共有する</button>
     <button id="shareXMaker" class="btn secondary">Xでシェア</button>
+    <button id="carve" class="btn secondary">碑文に刻む</button>
    </div>
    <div id="admin" class="admin hidden">
     <p class="note">管理者モード(収録字形:<span id="glyphCount"></span>文字)</p>
@@ -348,11 +414,31 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
  </div>
 </main>
 
+<!-- みんなの碑文(Cloudflare の bibilu-wall に保存。bibilu-moji/share/wall-worker.js) -->
+<section id="wallSec" class="wallSec" aria-labelledby="wall-title">
+ <header class="secHead"><p class="en" aria-hidden="true">INSCRIPTIONS</p><div class="secRow"><h2 class="pill" id="wall-title">みんなの碑文</h2></div>
+  <p class="wallNote"><span>みんなが刻んだビビル文字。</span><span>押すと読みが開きます。</span><span id="wallCount" class="wallCount"></span></p></header>
+ <ul id="wall" class="wall"></ul>
+ <p id="wallStatus" class="wallStatus" aria-live="polite"></p>
+ <div class="wallFoot"><button id="wallMore" class="btn secondary hidden" type="button">もっと見る</button></div>
+ <div class="wallAdmin"><input id="wallKey" type="password" placeholder="管理キー" autocomplete="off" aria-label="管理キー"><span>「消す」で壁から外します</span></div>
+</section>
+
+<dialog id="carveDlg" class="dlg cushion" aria-labelledby="carveTitle">
+ <h3 id="carveTitle">みんなの碑文に刻みますか？</h3>
+ <ul class="dlgSlab"><li id="carvePreview" class="slab open"></li></ul>
+ <p class="note">だれでも見られる壁に残ります。</p>
+ <div class="row">
+  <button id="carveNo" class="btn secondary" type="button">やめる</button>
+  <button id="carveGo" class="btn primary" type="button">刻む</button>
+ </div>
+</dialog>
+
 <!-- 関連コンテンツ(作品ページと同じ形のカード) -->
 <section class="related" aria-labelledby="related-title">
  <header class="secHead"><p class="en" aria-hidden="true">RELATED</p><div class="secRow"><h2 class="pill" id="related-title">関連コンテンツ</h2></div></header>
  <ul class="relRow">
-  <li><a class="relCard" href="/new/games/bibilu/"><span class="ro-vis" style="background:#153e53;color:#fff5d7"><img class="ro-pkg" src="/new/img/package/pkg_bibilu.webp" alt="" loading="lazy"><span class="ro-logo" role="img" aria-label="ビビルの塔" style="--lg:url(/new/img/logo/logo_bibilu.png);aspect-ratio:1244/344;background:#fff5d7"></span></span><span class="bl-t"><b>ビビルの塔</b><span class="ro-intro">数字カードを同時に出し、高い塔を建てて得点を競うゲームです。</span><small>BOARD GAME</small></span></a></li>
+  <li><a class="relCard" href="/games/bibilu/"><span class="ro-vis" style="background:#153e53;color:#fff5d7"><img class="ro-pkg" src="/img/package/pkg_bibilu.webp" alt="" loading="lazy"><span class="ro-logo" role="img" aria-label="ビビルの塔" style="--lg:url(/img/logo/logo_bibilu.png);aspect-ratio:1244/344;background:#fff5d7"></span></span><span class="bl-t"><b>ビビルの塔</b><span class="ro-intro">数字カードを同時に出し、高い塔を建てて得点を競うゲームです。</span><small>BOARD GAME</small></span></a></li>
  </ul>
 </section>
 </div>
@@ -852,7 +938,7 @@ $("#makeMine").onclick=()=>{
 let taps=0,timer,lastTouch=0;
 function countSecretTap(){
  taps++; clearTimeout(timer); timer=setTimeout(()=>taps=0,3500);
- if(taps>=5){ $("#admin").classList.toggle("hidden"); $("#glyphCount").textContent=Object.keys(glyphs).length; taps=0; }
+ if(taps>=5){ $("#admin").classList.toggle("hidden"); document.body.classList.toggle("admin-on",!$("#admin").classList.contains("hidden")); $("#glyphCount").textContent=Object.keys(glyphs).length; taps=0; }
 }
 function bindSecretTap(el){
  if(!el)return;
@@ -862,6 +948,111 @@ function bindSecretTap(el){
 }
 bindSecretTap($("#secretTitle"));
 bindSecretTap($("#secretTagline"));
+
+/* ---- メニュー(スマホ):リンクを押したら閉じる ---- */
+document.querySelectorAll(".site-nav a").forEach(a=>a.addEventListener("click",()=>{ $("#navtg").checked=false; }));
+
+/* ---- みんなの碑文 ---- */
+const WALL_SERVER="https://bibilu-wall.pandak11415.workers.dev";
+const WALL_MAX_CHARS=36, WALL_MAX_LINES=6;
+let wallOldest=0, wallTotal=0, wallBusy=false;
+function slabInner(text,no){
+ let n=0;
+ return (no?`<span class="slabNo">No.${no}</span>`:`<span class="slabNo">&nbsp;</span>`)+
+  `<span class="slabBody">${linesFor(text).map(line=>`<span class="sLine">${line.map(ch=>{
+    const sp=ch===" "||ch==="　";
+    return `<span class="sg">${glyphSvg(sp?" ":ch)}<i>${sp?"":`<b style="--d:${(n++)*60}ms">${ch}</b>`}</i></span>`;
+  }).join("")}</span>`).join("")}</span>`;
+}
+function slabHTML(item,isNew){
+ const text=unpacked(item.p);
+ if(!text) return "";
+ return `<li class="slab${isNew?" new":""}" data-id="${item.id}"><button type="button" class="slabBtn" aria-pressed="false" aria-label="碑文 No.${item.id}(押すと読みが開きます)">${slabInner(text,item.id)}</button><button type="button" class="slabDel">消す</button></li>`;
+}
+function setWallCount(n){
+ wallTotal=Math.max(0,n);
+ $("#wallCount").textContent=wallTotal?`これまでに刻まれた碑文:${wallTotal}`:"";
+ $("#wallStatus").textContent=wallTotal||$("#wall").children.length?"":"まだ碑文はありません。最初のひとつを刻んでみよう。";
+}
+async function wallLoad(before){
+ if(wallBusy) return;
+ wallBusy=true;
+ if(!before) $("#wallStatus").textContent="碑文を読みこんでいます…";
+ try{
+   const r=await fetch(WALL_SERVER+"/wall"+(before?"?before="+before:""));
+   const j=await r.json();
+   if(!j.ok) throw new Error(j.error);
+   $("#wall").insertAdjacentHTML("beforeend",j.items.map(it=>slabHTML(it)).join(""));
+   if(j.items.length) wallOldest=j.items[j.items.length-1].id;
+   $("#wallMore").classList.toggle("hidden",!j.more);
+   setWallCount(j.total);
+ }catch(e){
+   $("#wallStatus").textContent="碑文を読みこめませんでした。時間をおいて開きなおしてください。";
+ }
+ wallBusy=false;
+}
+$("#wallMore").onclick=()=>wallLoad(wallOldest);
+// 壁が見えそうになったら読みこむ
+if("IntersectionObserver" in window){
+ const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ io.disconnect(); wallLoad(0); } },{rootMargin:"600px 0px"});
+ io.observe($("#wallSec"));
+}else wallLoad(0);
+// 押すと読みが開く(もう一度押すと閉じる)
+$("#wall").addEventListener("click",e=>{
+ const del=e.target.closest(".slabDel");
+ if(del){ hideSlab(del.closest(".slab")); return; }
+ const b=e.target.closest(".slabBtn"); if(!b) return;
+ const li=b.closest(".slab"); const open=!li.classList.contains("open");
+ li.classList.toggle("open",open); b.setAttribute("aria-pressed",String(open));
+});
+// 碑文に刻む
+let carveP=null;
+$("#carve").onclick=()=>{
+ const raw=$("#text").value;
+ if(!raw.trim()){ toast("ことばを入力してから刻んでください"); return; }
+ const t=normalizeText(raw).replace(/!/g,"！").replace(/\?/g,"？").replace(/\s+$/,"");
+ const p=packed(t);
+ if(p===null){ toast("ビビル文字にない文字は刻めません"); return; }
+ if(Array.from(t.replace(/[ 　\n]/g,"")).length>WALL_MAX_CHARS||linesFor(t).length>WALL_MAX_LINES){ toast(`刻めるのは${WALL_MAX_LINES}行・${WALL_MAX_CHARS}文字までです`); return; }
+ carveP=p;
+ $("#carvePreview").innerHTML=`<span class="slabBtn">${slabInner(t)}</span>`;
+ $("#carveGo").disabled=false;
+ $("#carveDlg").showModal();
+};
+$("#carveNo").onclick=()=>$("#carveDlg").close();
+$("#carveGo").onclick=async()=>{
+ if(!carveP) return;
+ $("#carveGo").disabled=true;
+ try{
+   const r=await fetch(WALL_SERVER+"/wall",{method:"POST",headers:{"content-type":"text/plain;charset=UTF-8"},body:JSON.stringify({p:carveP})});
+   const j=await r.json();
+   if(!j.ok){ toast(j.error||"刻めませんでした"); $("#carveGo").disabled=false; return; }
+   $("#carveDlg").close();
+   $("#wall").insertAdjacentHTML("afterbegin",slabHTML(j.item,true));
+   setWallCount(wallTotal+1);
+   toast(`みんなの碑文に刻みました(No.${j.item.id})`);
+   $("#wallSec").scrollIntoView({behavior:"smooth",block:"start"});
+ }catch(e){ toast("刻めませんでした。時間をおいてもう一度どうぞ"); $("#carveGo").disabled=false; }
+};
+// 管理者:壁から外す(管理キーは Cloudflare の ADMIN_KEY と同じもの)
+try{ $("#wallKey").value=localStorage.getItem("bibilu-wall-key")||""; }catch(e){}
+async function hideSlab(li){
+ const key=$("#wallKey").value.trim();
+ if(!key){ toast("管理キーを入れてください"); $("#wallKey").focus(); return; }
+ const del=li.querySelector(".slabDel");
+ if(!li.classList.contains("confirm")){
+   li.classList.add("confirm"); del.textContent="本当に消す";
+   setTimeout(()=>{ li.classList.remove("confirm"); del.textContent="消す"; },3000);
+   return;
+ }
+ try{
+   const r=await fetch(WALL_SERVER+"/hide",{method:"POST",headers:{"content-type":"application/json","x-admin-key":key},body:JSON.stringify({id:+li.dataset.id})});
+   const j=await r.json();
+   if(!j.ok){ toast(j.error||"消せませんでした"); return; }
+   try{ localStorage.setItem("bibilu-wall-key",key); }catch(e){}
+   li.remove(); setWallCount(wallTotal-1); toast("壁から外しました");
+ }catch(e){ toast("消せませんでした"); }
+}
 
 /* ---- 起動 ---- */
 const hash=new URLSearchParams(location.hash.slice(1)),p=hash.get("p"),q=hash.get("q");
