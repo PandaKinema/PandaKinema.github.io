@@ -309,7 +309,9 @@
     .vposter:not([disabled]):hover .vplay{scale:1.08}
     .vposter[disabled] .vplay{opacity:.5}
     .vmeta{position:absolute;right:14px;top:14px;display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:999px;background:rgba(0,0,0,.66);color:#fff;font-size:13px;font-weight:800}
-    .vsoon{padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.2);font-size:11px;font-weight:400;letter-spacing:.1em}
+    /* 準備中の動画: ポスターを暗くして、真ん中に「準備中」 */
+    .vsoon{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:.5em 1.25em .55em calc(1.25em + .24em);border:2px solid rgba(255,255,255,.85);border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:clamp(15px,2.2vw,26px);font-weight:800;letter-spacing:.24em;line-height:1;white-space:nowrap}
+    .vslide.soon .vposter img,.js .cinema.on .vslide.soon .vposter img{filter:brightness(.4) saturate(.85)}
     .vslide iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
     .vnav{position:absolute;top:50%;translate:0 -50%;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:#111;font-size:22px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:opacity .2s ease}
     .vnav.prev{left:-22px}.vnav.next{right:-22px}
@@ -862,7 +864,7 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-          <figure class="vslide" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/trico_poster.webp?v=545844ee" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></span></button></figure>
+          <figure class="vslide soon" data-yt="" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/trico_howto_poster.jpg?v=c531c83f" alt="" loading="lazy"><span class="vsoon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
