@@ -182,11 +182,10 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 
 /* 4つのボタン:PCは1列、スマホは2×2 */
 /* みんなの碑文にも刻む(保存・共有のときに) */
-.carveOpt{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px 7px;margin:10px 0 0;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;text-align:center}
+.carveOpt{display:flex;justify-content:center;align-items:center;gap:7px;margin:10px 0 0;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;text-align:center}
 .carveOpt input{width:17px;height:17px;margin:0;accent-color:var(--ink);cursor:pointer}
-.carveOpt small{flex-basis:100%;font-size:11px;font-weight:400;color:var(--ink2)}
-@media(min-width:900px){.carveOpt{margin-top:8px;font-size:12.5px}.carveOpt small{flex-basis:auto;font-size:10.5px}.table{margin-top:10px}}
-@media(min-width:900px) and (max-height:780px){.carveOpt{margin-top:6px}.carveOpt small{display:none}}
+@media(min-width:900px){.carveOpt{margin-top:8px;font-size:12.5px}.table{margin-top:10px}}
+@media(min-width:900px) and (max-height:780px){.carveOpt{margin-top:6px}}
 
 /* みんなの碑文 */
 .wallSec{padding:64px 16px 0}
@@ -358,7 +357,7 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
     <button id="sharePage" class="btn secondary">共有する</button>
     <button id="shareXMaker" class="btn secondary">Xでシェア</button>
    </div>
-   <label class="carveOpt"><input type="checkbox" id="carveOpt" checked><span>みんなの碑文にも刻む</span><small>(だれでも見られる壁に残ります)</small></label>
+   <label class="carveOpt"><input type="checkbox" id="carveOpt" checked><span>みんなの碑文にも刻む</span></label>
    <div id="admin" class="admin hidden">
     <p class="note">管理者モード(収録字形:<span id="glyphCount"></span>文字)</p>
     <div class="row">
