@@ -64,7 +64,7 @@ characters:
       It has the power to build towers.
 
       It believes in ancient legends and holds tower building dear.
-contents_ja: カード40枚(1〜10が4セット)、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚
+contents_ja: カード40枚、トゥーパ トークン5個、遊び方説明書(JA/EN)各1枚
 contents_en: 40 cards (1–10 ×4), 5 Tupa tokens, rulebook (JA/EN)
 price_ja: 3,300円
 price_en: ¥3,300
@@ -82,17 +82,10 @@ steps:
     text_en: When hands run out, the game ends! **Highest “top number × height” wins!**
 gallery:
   - image: img/gallery/g_rule.webp
-    caption_ja: 説明シート「ビビルの塔はこんなゲーム!」
+    caption_ja: ビビルの塔はこんなゲーム!
     caption_en: Overview sheet “This is The Tower of Bibilu!”
     wide: true
-  - image: img/package/g_pkg_front.webp
-    caption_ja: パッケージ(表)
-    caption_en: Box (front)
-    wide: false
-  - image: img/package/g_pkg_back.webp
-    caption_ja: パッケージ(裏)
-    caption_en: Box (back)
-    wide: false
+  - wide: false
 gallery_todo:
   - text_ja: プレイ中の写真
     text_en: Gameplay photos
@@ -125,6 +118,6 @@ credits:
     name_en: October 2026
 rules_history:
   - date: 2026-11-01
-    mark: ""
-    text_ja: "WEB版を公開しました。"
-    text_en: "Web edition published."
+    text_ja: WEB版を公開しました。
+    text_en: Web edition published.
+prefer_white: false
