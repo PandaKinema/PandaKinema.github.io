@@ -38,6 +38,7 @@
     html:has(#lang-en:checked) [lang="ja"]{display:none !important}
     .js-only{display:none !important}
     .jsc .js-only{display:flex !important}
+    .jsc .js-only[hidden]{display:none !important}
     /* 英字(細長い書体)は、文字の上下の余白を削って大文字の高さで中央にそろえる */
     .cap,.sec-h h2,.news h2{display:block;line-height:1;text-box:trim-both cap alphabetic}
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
@@ -496,15 +497,9 @@
   </section>
 
   <section class="sec" id="movie" aria-labelledby="movie-title">
-    <div class="sec-h"><h2 class="cond" id="movie-title">MOVIE</h2><label class="shuf js-only"><input type="checkbox" id="shuffle"><i aria-hidden="true"></i><span lang="ja">シャッフル再生</span><span lang="en">Shuffle play</span></label></div>
+    <div class="sec-h"><h2 class="cond" id="movie-title">MOVIE</h2><label class="shuf js-only" hidden><input type="checkbox" id="shuffle"><i aria-hidden="true"></i><span lang="ja">シャッフル再生</span><span lang="en">Shuffle play</span></label></div>
     <ul class="vrow" id="vrow">
         <li><button class="vid" type="button" data-yt="y-kmQJgl9Dg" aria-label="ビビルの塔"><img src="img/video/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>ビビルの塔</b><small><span lang="ja">PV</span><span lang="en">Promo video</span></small></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="ビビルの塔"><img src="img/video/bibilu_poster.jpg?v=2701f76e" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>ビビルの塔</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="TRICO!"><img src="img/video/trico_poster.webp?v=545844ee" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>TRICO!</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="イカタコ"><img src="img/video/ikatako_poster.jpg?v=06824a1d" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>イカタコ</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="モコチャカ"><img src="img/video/moko_poster.jpg?v=982b3da5" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>モコチャカ</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="こいこいのぼり 真打"><img src="img/video/koikoi_poster.jpg?v=08d67709" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>こいこいのぼり 真打</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
-        <li><button class="vid" type="button" data-yt="" aria-label="BASH&amp;SMASH!"><img src="img/video/bash_poster.jpg?v=d296e9ca" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>BASH&amp;SMASH!</b><small><span lang="ja">遊び方動画</span><span lang="en">How to play</span></small></span><span class="v-soon"><span lang="ja">準備中</span><span lang="en">Coming soon</span></span></button></li>
     </ul>
     <div class="pager js-only" data-for="vrow"><button class="tri prev" type="button" aria-label="前へ"></button><div class="pd"></div><button class="tri next" type="button" aria-label="次へ"></button></div>
   </section>
