@@ -3,6 +3,7 @@
 # GitHub に保存すると .github/workflows/build.yml がこれを自動で動かします。
 # 手元で動かすとき:  pip install pyyaml pillow  →  python build/build.py
 import html as H, os, re, sys
+import news_cards   # ニュースの共有カード(build/news_cards.py)
 import yaml
 from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -338,7 +339,7 @@ def post_page():
     items = []
     for i, n in enumerate(NEWS or []):
         link = str(n.get('link') or '').strip()
-        url = link if link.startswith('http') else (SITE_URL + link.lstrip('/') if link else SITE_URL)
+        url = news_cards.news_url(n)   # タイトルと日付の入ったカードが出る共有ページ(開くとリンク先へ移動)
         tags = ['パンダキネマ']
         m = _re.match(r'games/([\w-]+)/?', link)
         g = next((x for x in GAMES if m and x['key'] == m.group(1)), None)
@@ -359,7 +360,7 @@ h1{font-size:22px}.note{color:#9aa3a9;font-size:13px;line-height:1.8}.it{margin:
 textarea{box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid #3a464f;border-radius:8px;background:#151b20;color:#f3f2ee;font-family:inherit;font-size:15px;line-height:1.7;resize:vertical}.u{display:none}
 .row{display:flex;align-items:center;gap:10px;margin:10px 0 0}.cnt{margin-right:auto;font-size:12px;color:#9aa3a9}.cnt.over{color:#ff6b6b;font-weight:700}
 button,.go{display:inline-flex;align-items:center;height:36px;padding:0 16px;border:1px solid #3a464f;border-radius:999px;background:none;color:#f3f2ee;font-family:inherit;font-size:13px;font-weight:700;white-space:nowrap;text-decoration:none;cursor:pointer}.go{border:0;background:#fff;color:#000}</style></head>
-<body><main><h1>Xの告知文</h1><p class="note">ニュースごとに、Xに投稿する文を用意しています(新しい順)。文はここで直してから「Xに投稿する」を押すと、Xの投稿画面が開きます。ニュースを保存して1〜2分すると、ここにも出ます。<br>このページはサイトからはリンクしていません(検索にも出ません)。</p>""" + cards + """</main>
+<body><main><h1>Xの告知文</h1><p class="note">ニュースごとに、Xに投稿する文を用意しています(新しい順)。文はここで直してから「Xに投稿する」を押すと、Xの投稿画面が開きます。ニュースを保存して1〜2分すると、ここにも出ます。<br>文の中のURLは、そのニュースの共有用ページです。Xに貼ると、タイトルと日付の入ったチケットのカードが出ます(開いた人はニュースのリンク先へ移動します)。<br>このページはサイトからはリンクしていません(検索にも出ません)。</p>""" + cards + """</main>
 <script>
 function w(t){var n=0;t=t.replace(/https?:\\/\\/\\S+/g,function(){n+=23;return""});for(var c of t){n+=/[\\u1100-\\uffff]/.test(c)&&!/[\\u2000-\\u200d\\u2010-\\u201f\\u2032-\\u2037]/.test(c)?2:1}return n}
 document.querySelectorAll(".it").forEach(function(s){var ta=s.querySelector("textarea"),go=s.querySelector(".go"),cn=s.querySelector(".cnt");

@@ -1,31 +1,7 @@
-- date: 2026-10-19
-  cat_ja: 公開
-  cat_en: Launch
-  text_ja: 『カードモックツクールβ』を公開しました。
-  text_en: “Card Mock Maker β” is now available.
-  body_ja: ボードゲームのカードのモックを作れるツールです。ぜひボードゲームづくりに役立てていただければと思います。フィードバックもお待ちしております。
-  link: https://pandakinema.com/card-mock-maker/
-  body_en: A tool for making mockups of board game cards. We hope it helps with your board game making. Feedback is very welcome, too.
-- date: 2026-10-18
+- date: 2026-11-01
   cat_ja: お知らせ
   cat_en: News
-  text_ja: ゲームマーケット2026秋、お疲れ様でした!
-  text_en: Thank you for visiting us at Game Market 2026 Autumn!
-- date: 2026-10-17
-  cat_ja: 新作
-  cat_en: New
-  text_ja: 『ビビルの塔』を発売しました。
-  text_en: “The Tower of Bibilu” is out now.
-  link: games/bibilu/
-- date: 2026-05-23
-  cat_ja: 発売
-  cat_en: Release
-  text_ja: 『モコチャカ』を発売しました。
-  text_en: “MOKOCHAKA” is out now.
-  link: https://gamemarket.jp/game/187698
-- date: 2025-11-22
-  cat_ja: 発売
-  cat_en: Release
-  text_ja: 『TRICO!』を発売しました。
-  text_en: “TRICO!” is out now.
-  link: games/trico/
+  text_ja: 公式サイトをオープンしました。
+  text_en: Our official website is now open.
+  body_ja: パンダキネマのはじめての公式サイトです。全作品の紹介と30秒でわかる遊び方動画、遊び方説明書(WEB版)、ツールをまとめています。
+  body_en: This is Panda Kinema's first official website, gathering every game, 30-second how-to-play videos, web rulebooks and tools.

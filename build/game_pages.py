@@ -1311,8 +1311,8 @@ def sduel(a, b, ta='', tb='', extra=''):
 
 GAMES['bash'] = dict(
     video_tex=True,   # 動画の背景にも模様
-    title='BASH&SMASH',
-    description='BASH&SMASH(バッシュ&スマッシュ):手札から1枚出すだけの、格闘ゲーム風の読み合いゲーム。2人用。パンダキネマ。',
+    title='BASH&SMASH!',
+    description='BASH&SMASH!(バッシュ&スマッシュ):手札から1枚出すだけの、格闘ゲーム風の読み合いゲーム。2人用。パンダキネマ。',
     theme='''
       --glow:255,220,120;
       --band:url({{img:s_band.png}}); --band-h:20px;            /* 帯の模様:星(星トークン) */
