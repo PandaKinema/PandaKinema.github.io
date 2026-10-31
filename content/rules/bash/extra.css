@@ -1,7 +1,9 @@
   /* BASH&SMASH! だけで使う図:赤と青のカード、VS、説明書の赤と青の囲み、勝敗の表、得点の重ね方 */
   .card{--cw:46px;display:block}
   @media (min-width:900px){ .step .card,.panel .viz .card{--cw:54px} }
+  /* カードは角丸にしない(画像の角の透けはカードの黒い縁の色で埋める) */
   .card img{border-radius:0;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+  .card img,.cards img,.hand img,.stk img,.pcards img,img.pcard{border-radius:0;background:#262221}
   em.b{color:var(--blue)}                       /* 説明書の青字(パリィ) */
   .tok{width:30px;flex:none}
 
@@ -103,7 +105,7 @@
   .total{flex-wrap:wrap;justify-content:center;gap:16px 26px;padding:18px 16px}
   .stks{display:flex;align-items:flex-start;gap:10px}
   .total p{font-size:14px;line-height:1.5;text-align:center}
-  .sum{display:block;margin-top:2px;font:400 26px/1.1 var(--num);letter-spacing:.03em}
+  .sum{display:block;margin-top:4px;font-family:var(--sans);font-size:22px;font-weight:900;line-height:1.3;letter-spacing:.02em}   /* 得点の計算式は普通の書体で(読みやすさ優先) */
   .viz.win{align-items:center;gap:14px 20px}
   .wcard{width:min(220px,100%);box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .youwin{width:min(230px,100%)}

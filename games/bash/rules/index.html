@@ -328,7 +328,9 @@
   /* BASH&SMASH! だけで使う図:赤と青のカード、VS、説明書の赤と青の囲み、勝敗の表、得点の重ね方 */
   .card{--cw:46px;display:block}
   @media (min-width:900px){ .step .card,.panel .viz .card{--cw:54px} }
+  /* カードは角丸にしない(画像の角の透けはカードの黒い縁の色で埋める) */
   .card img{border-radius:0;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+  .card img,.cards img,.hand img,.stk img,.pcards img,img.pcard{border-radius:0;background:#262221}
   em.b{color:var(--blue)}                       /* 説明書の青字(パリィ) */
   .tok{width:30px;flex:none}
 
@@ -430,7 +432,7 @@
   .total{flex-wrap:wrap;justify-content:center;gap:16px 26px;padding:18px 16px}
   .stks{display:flex;align-items:flex-start;gap:10px}
   .total p{font-size:14px;line-height:1.5;text-align:center}
-  .sum{display:block;margin-top:2px;font:400 26px/1.1 var(--num);letter-spacing:.03em}
+  .sum{display:block;margin-top:4px;font-family:var(--sans);font-size:22px;font-weight:900;line-height:1.3;letter-spacing:.02em}   /* 得点の計算式は普通の書体で(読みやすさ優先) */
   .viz.win{align-items:center;gap:14px 20px}
   .wcard{width:min(220px,100%);box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .youwin{width:min(230px,100%)}
@@ -461,7 +463,7 @@
           <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">5〜10分</span></span><span class="en">5–10 min</span></dd></div>
           <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
         </dl>
-        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">2026年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.11.01</span></span><span class="en">Last updated 2026.11.01</span></a><span><span class="ja"><span class="bx">2026年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
       </div>
       <div class="story">
         <p class="catch"><span class="ja"><span class="bx">読みきれ。<wbr>叩き込め!</span></span><span class="en">Read them. Strike hard!</span></p>
@@ -477,7 +479,6 @@
     <nav class="toc" aria-label="目次">
       <p>Contents</p>
       <ol>
-        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
         <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
         <li><a href="#overview"><span class="ja">どんなゲーム?</span><span class="en">Game Overview</span></a></li>
         <li><a href="#story">STORY</a></li>
@@ -492,14 +493,7 @@
 
     <main class="content">
 
-      <!-- 動画 -->
-      <section class="panel" id="video" aria-labelledby="h-video">
-        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
-        <div class="screen">
-          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
-        </div>
-        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
-      </section>
+      <!-- 動画(作品の meta.yml に youtube があるときだけ) -->
 
       <!-- 内容物 -->
       <section class="panel" id="contents" aria-labelledby="h-contents">
@@ -709,7 +703,7 @@
       <section class="panel" id="history" aria-labelledby="h-history">
         <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
         <ol class="log">
-          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+          <li><time datetime="2026-11-01">2026.11.01</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
         </ol>
         <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
       </section>

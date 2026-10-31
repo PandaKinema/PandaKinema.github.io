@@ -40,6 +40,6 @@ theme:
   logo-w: 400px
   gold: "#f2d756"
   sky: "#2b9fd9"
-  soft: "#dce2e5"
+  soft: "#eef1f3"
 nobreak: []
 # 更新履歴は content/pages/bibilu.yml の rules_history(編集画面「作品ページ」)

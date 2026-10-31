@@ -7,7 +7,8 @@
   /* こいのぼりカード(縦長) */
   .card{--cw:44px}
   @media (min-width:900px){ .step .card,.panel .viz .card{--cw:46px} }
-  .card img{border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.22)}
+  /* カードは白い縁なので角丸にせず、うすいグレーの線で縁取る(画像の角の透けは白で埋める) */
+  .card img,.things.kcards img,.skies img,.sky>img:not(.fish){border-radius:0;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.16),0 1px 4px rgba(0,0,0,.16)}
   .card.up{translate:0 -10px}
   .hand{display:flex}
   .hand .card+.card{margin-left:calc(var(--cw) * -.52)}
@@ -24,7 +25,6 @@
   .summ{--tw:190px}
   .summ img{border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .fish1{--tw:60px}
-  .things img{border-radius:3px}
 
   /* どんなゲーム?(説明書の表面の2つ) */
   .genre{margin:-6px 0 0}
@@ -45,7 +45,7 @@
 
   /* そらカードとおさかなトークン */
   .sky{position:relative;display:flex;gap:2px;width:var(--sw,236px)}
-  .sky>img{width:calc(50% - 1px);border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .sky>img{width:calc(50% - 1px)}
   /* トークンは胴(尾びれを除いた部分)の真ん中が --fx に来るように置く */
   .sky>img.fish{position:absolute;left:var(--fx);top:50%;width:13%;border-radius:0;box-shadow:none;translate:-41% -50%;z-index:2;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 2px rgba(0,0,0,.45))}
   .sky>img.fish.ghost{opacity:.3}

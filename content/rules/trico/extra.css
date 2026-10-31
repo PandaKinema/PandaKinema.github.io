@@ -1,4 +1,4 @@
-  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、黄色い表紙の三角の帯、ひし形の番号、勝利条件の帯、カードの WIN */
+  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、ひし形の番号、勝利条件(サマリーと同じ黄色の帯)、カードの WIN */
   b{font-weight:800}
   .content a b{text-decoration:underline;text-underline-offset:3px}
 
@@ -6,11 +6,21 @@
   /* 番号:説明書の宝石(ひし形)。横長なので少し大きめに */
   .snum{width:52px;height:40px}
   .snum b{font-size:19px}
-  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く */
-  .tc-head{align-items:flex-start;gap:14px}
-  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;padding-top:7px}
+  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く。番号は本文の高さの真ん中に */
+  .tc-head{align-items:center;gap:14px}
+  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
   .tc-txt p{font-size:15.5px;line-height:1.85}
   .step{gap:16px}
+
+  /* カード:画像の角丸(白い縁)に合わせる */
+  .card img,.cards img{border-radius:4.2%/3%}
+  /* 小見出し(2人用ルール・終了):サマリーと同じ黄色の帯 */
+  .prose h3.tc-band{align-self:flex-start;margin-top:6px;padding:.32em 1.1em .36em;border-radius:999px;background:var(--accent);color:var(--main);font-size:17px;font-weight:800;line-height:1.3}
+  .prose h3.tc-band:first-child{margin-top:0}
+  /* 手順1:左右のカードの上端を揃える */
+  .viz.tc-top{align-items:flex-start}
+  .viz.tc-top>.arrow{align-self:flex-start;margin-top:calc(var(--cw,52px) * .7 - 9px)}
+  @media (min-width:900px){ .viz.tc-top>.arrow{margin-top:33px} }
 
   /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
   .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
@@ -19,9 +29,7 @@
   .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
   .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
   .tc-item .clbl{flex:1;min-width:0}
-  .tc-lead{width:70px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .tc-lead.sm{width:58px}
-  .tc-sum{width:52px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-one{width:52px;border-radius:4.2%/3%;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-marks{display:flex;gap:4px}
   .tc-marks img{width:34px}
@@ -34,28 +42,37 @@
   }
   @media (max-width:560px){ .tc-head{gap:10px} .snum{width:46px;height:36px} .snum b{font-size:17px} .tc-txt{padding-top:5px} }
 
-  /* アピールの勝利条件:説明書・サマリーと同じ黄色の帯 */
-  .tc-cond{display:flex;flex-direction:column;gap:8px;padding:16px 14px 14px;background:var(--soft)}
-  .tc-row{display:grid;grid-template-columns:7.5em auto 22px minmax(0,1fr);align-items:center;gap:10px;padding:7px 18px;border-radius:999px;background:var(--accent);font-size:14.5px;font-weight:800;line-height:1.4}
-  .tc-row b{font-size:1.15em}
-  html[data-lang="en"] .tc-row{grid-template-columns:12.5em auto 22px minmax(0,1fr)}
-  .chips{display:flex;gap:4px}
-  .chips i{display:block;width:20px;height:27px;border:2px solid var(--main);border-radius:4px;rotate:-8deg}
-  .chips i.p{background:var(--main);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
-  .chips i.y{background:var(--accent);box-shadow:0 0 0 1.5px #fff,0 0 0 3px var(--main)}
-  .chips i.r{background:var(--hl);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
-  .tc-to{width:0;height:0;justify-self:center;border-left:13px solid var(--hl);border-block:9px solid transparent}
-  .tc-r{font-size:15px}
-  .tc-note{padding:2px 6px 0;font-size:13px;line-height:1.6}
+  /* アピールの勝利条件:サマリーと同じ黄色の帯。カードは帯からはみ出すくらい大きく、傾けて */
+  .tc-cond{display:flex;flex-direction:column;gap:16px;padding:6px 0 2px;color:var(--main);font-family:var(--num)}
+  .tc-cond-t{align-self:center;margin:0 0 2px;padding:.28em 1.5em .32em;border-radius:999px;background:var(--accent);font-size:clamp(20px,2.6vw,25px);font-weight:800;line-height:1.25;letter-spacing:.04em;text-align:center}
+  .tc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto minmax(0,1fr);align-items:center;gap:0 clamp(10px,1.8vw,18px);min-height:56px;padding:0 clamp(16px,2.6vw,28px);border-radius:999px;background:var(--accent);font-size:clamp(16px,1.9vw,19px);font-weight:800;line-height:1.3}
+  .tc-c b{font-size:1.3em;letter-spacing:.02em}
+  .tc-r{text-align:center}
+  .tc-r.sm{font-size:.86em}
+  .tc-r em{color:var(--hl)}
+  .chips{display:flex;gap:5px;margin-block:-9px}
+  .chips i{display:block;width:30px;height:40px;border:3px solid #fff;border-radius:6px;box-shadow:0 0 0 2.5px var(--main);rotate:15deg}
+  .chips i.p{background:#7a5ba6}
+  .chips i.y{background:#fbc900}
+  .chips i.r{background:#e8323c}
+  .tc-to{width:30px;height:28px;background:var(--hl);clip-path:polygon(0 30%,52% 30%,52% 0,100% 50%,52% 100%,52% 70%,0 70%)}
+  .tc-note{margin:0;color:var(--hl);font-size:14px;font-weight:800;line-height:1.6;text-align:center}
+  html[data-lang="en"] .tc-c{font-size:.92em}
+  @media (min-width:561px){ html[data-lang="en"] .tc-row{grid-template-columns:minmax(0,1.3fr) auto auto minmax(0,1fr)} }
   @media (max-width:560px){
-    .tc-row,html[data-lang="en"] .tc-row{grid-template-columns:auto 1fr;grid-template-areas:"c chips" "r r";gap:6px 10px;padding:10px 16px;border-radius:16px}
-    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end}.tc-to{display:none}.tc-r{grid-area:r}
-    .tc-r::before{content:"→ ";color:var(--hl)}
+    .tc-cond{gap:12px}
+    .tc-row{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"c chips" "r r";gap:10px 10px;padding:12px 16px 10px;border-radius:22px;font-size:16px}
+    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end;margin-block:-4px 0}.chips i{width:24px;height:32px;border-width:2.5px;border-radius:5px;box-shadow:0 0 0 2px var(--main)}
+    .tc-to{display:none}
+    .tc-r{grid-area:r;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.55)}
+    .tc-r::before{content:"";flex:none;width:22px;height:20px;background:var(--hl);clip-path:polygon(0 30%,52% 30%,52% 0,100% 50%,52% 100%,52% 70%,0 70%)}
+    .tc-r.sm{font-size:.9em}
+    .tc-note{font-size:13px;text-align:left}
   }
 
-  /* 場のカードの WIN(説明書の赤い WIN) */
-  .tc-win-row{padding-top:20px}
-  .tc-win{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;color:var(--hl);font:900 14px/1 var(--cond);letter-spacing:.06em}
+  /* 場のカードの WIN:赤い札を傾けてカードの上に */
+  .tc-win-row{padding-top:16px}
+  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;rotate:-9deg;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
   .fig-txt{text-align:left}
 
   /* ニコ・トリコのキャラ */
@@ -65,7 +82,3 @@
 
   /* よくある質問:説明書と同じく質問は赤 */
   .qa dt{color:var(--hl)}
-
-  /* おまけ:えかきうた */
-  .tc-ekaki{width:100%;border-radius:10px;box-shadow:0 0 0 2px var(--soft)}
-  .tc-song{padding-left:1.6em;line-height:1.8}

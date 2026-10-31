@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1b2228">
 <title>モコチャカ 遊び方説明書(WEB版) | パンダキネマ</title>
-<meta name="description" content="モコチャカの遊び方説明書(WEB版)。内容物、モコチャカとは?、カードの呼び方、1.ゲームの準備、2.ゲームの手順、3.コールの方法、4.特殊コール、更新履歴。日本語と英語を切り替えられます。">
+<meta name="description" content="モコチャカの遊び方説明書(WEB版)。内容物、モコチャカとは?、カードの呼び方、かんたんルール、1.ゲームの準備、2.ゲームの手順、3.コールの方法、更新履歴。日本語と英語を切り替えられます。">
 <meta property="og:title" content="モコチャカ 遊び方説明書(WEB版) | パンダキネマ">
 <meta property="og:site_name" content="パンダキネマ">
 <meta property="og:type" content="website">
@@ -408,6 +408,22 @@
   .namecards .grp b{font-size:18px;font-weight:900}
   .namecards .card{--cw:100%;width:100%;max-width:90px}
 
+  /* かんたんルール(サマリーの表面):最初の方にまとめて。小見出しはピンクの帯 */
+  .ez-lead{margin:0;padding:12px 18px;border-radius:12px;background:color-mix(in srgb,var(--accent) 38%,#fff);font-size:15px;font-weight:800;line-height:1.7}
+  .ez-lead a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  .ez-sec{display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:2px dashed color-mix(in srgb,var(--ink) 18%,transparent)}
+  .ez-lead+.ez-sec{padding-top:4px;border-top:0}
+  .ez-sec h3{align-self:flex-start;padding:.3em 1.05em .34em;border-radius:999px;background:var(--accent);color:var(--main);font-size:17px;font-weight:900;line-height:1.3}
+  .ez-sec>p,.ez-two p{line-height:1.85}
+  .ez-two{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px 20px}
+  .ez-two .viz{padding:14px 16px}
+  @media (max-width:620px){ .ez-two{grid-template-columns:minmax(0,1fr)} }
+  .ez-rules{font-size:15.5px;font-weight:800}
+  .ez-c{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+  .ez-c p{font-weight:800;line-height:1.6}
+  .ez-ex{font-size:13px;line-height:1.6;color:var(--hl)}
+  .ez-ex,.ez-c .ez-ex{font-weight:700}
+
 </style>
 </head>
 <body>
@@ -433,7 +449,7 @@
           <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">10〜15分</span></span><span class="en">10–15 min</span></dd></div>
           <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
         </dl>
-        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>6年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.11.01</span></span><span class="en">Last updated 2026.11.01</span></a><span><span class="ja"><span class="bx">202<wbr>6年5月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (May 2026)</span></span></p>
       </div>
       <div class="story">
         <p class="catch"><span class="ja"><span class="bx">ねむりは<wbr>競争だ。</span></span><span class="en">Sleep is a race.</span></p>
@@ -449,10 +465,10 @@
     <nav class="toc" aria-label="目次">
       <p>Contents</p>
       <ol>
-        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
         <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
         <li><a href="#overview"><span class="ja">モコチャカとは?</span><span class="en">What Is Mokochaka?</span></a></li>
         <li><a href="#cards"><span class="ja">カードの呼び方</span><span class="en">Card Names</span></a></li>
+        <li><a href="#easy"><span class="ja">かんたんルール</span><span class="en">Easy Rules</span></a></li>
         <li><a href="#setup"><span class="ja">1.ゲームの準備</span><span class="en">1. Game Setup</span></a></li>
         <li><a href="#flow"><span class="ja">2.ゲームの手順</span><span class="en">2. Turn Procedure</span></a></li>
         <li><a href="#call"><span class="ja">3.コールの方法</span><span class="en">3. How to Call</span></a></li>
@@ -468,14 +484,7 @@
 
     <main class="content">
 
-      <!-- 動画 -->
-      <section class="panel" id="video" aria-labelledby="h-video">
-        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
-        <div class="screen">
-          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
-        </div>
-        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
-      </section>
+      <!-- 動画(作品の meta.yml に youtube があるときだけ) -->
 
       <!-- 内容物 -->
       <section class="panel" id="contents" aria-labelledby="h-contents">
@@ -511,6 +520,52 @@
         <h2 id="h-cards"><span class="ja"><span class="bx">カードの<wbr>呼び方</span></span><span class="en">Card Names</span></h2>
         <p><span class="ja"><span class="bx">1枚の<wbr>カードには<wbr>1〜4匹の<wbr>動物が<wbr>います。</span></span><span class="en">Each card shows 1 to 4 animals.</span></p>
         <div class="viz"><div class="namecards"><div class="grp"><span class="card"><img src="../../../img/parts/mc_m1.webp?v=3b059d4b" alt=""></span><b><span class="ja"><span class="bx">モコ</span></span><span class="en">Moko</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><b><span class="ja"><span class="bx">パカ</span></span><span class="en">Paka</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><b><span class="ja"><span class="bx">ポメ</span></span><span class="en">Pome</span></b></div><div class="grp"><span class="card"><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""></span><b><span class="ja"><span class="bx">ガブ</span></span><span class="en">Gabu</span></b></div></div></div>
+      </section>
+      <!-- かんたんルール(サマリーの表面) -->
+      <section class="panel ez" id="easy" aria-labelledby="h-easy">
+        <h2 id="h-easy"><span class="ja"><span class="bx">かんたんルール</span></span><span class="en">Easy Rules</span></h2>
+        <p class="ez-lead"><span class="ja"><span class="bx">最初は<wbr>こちらの<wbr>ルールで<wbr>遊ぶ<wbr>ことを<wbr>オススメします!物足りなくなったら<a href="#setup"><wbr>通常ルール</a>を<wbr>遊んで<wbr>みてください。</span></span><span class="en">We recommend starting with these rules! When you want more, try the <a href="#setup">standard rules</a>.</span></p>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">1.ゲームの<wbr>準備</span></span><span class="en">1. Game Setup</span></h3>
+          <div class="ez-two">
+            <p><span class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜ場に<wbr>3枚<wbr>並べます。<wbr>中央に<wbr>トークンを<wbr>置いてください。<wbr>残りの<wbr>カードを<wbr>全員に<wbr>均等に<wbr>配り、<wbr>余った<wbr>カードが<wbr>出たら<wbr>場の<wbr>3枚に<wbr>適当に<wbr>重ねてください。<wbr>手札は<wbr>裏向きの<wbr>束で<wbr>持ち、<wbr>最近<wbr>眠れていない<wbr>人が<wbr>スタートプレイヤーです。</span></span><span class="en">Shuffle the cards well and lay out 3 in the play area. Put the token in the middle. Deal the rest evenly to everyone, and if any cards are left over, stack them on any of the 3 cards in the play area. Hold your hand as a face-down stack. Whoever has not been sleeping well lately is the start player.</span></p>
+            <div class="viz"><div class="fwrap sm"><div class="fld" role="img" aria-label="真ん中にトークン、その周りに3枚のカードを並べる。余ったカードは場の3枚に重ねる"><span class="pc" style="--x:10.5;--y:4.4;--r:0deg;--z:1"><img src="../../../img/parts/mc_o2.webp?v=4e86d656" alt=""></span><span class="pc" style="--x:13.7;--y:3.5;--r:12deg;--z:2"><img src="../../../img/parts/mc_g1.webp?v=2e6d5046" alt=""></span><img class="tok" src="../../../img/parts/m_token.webp?v=dccd8947" alt="" style="--x:10.5;--y:10.2"><span class="pc" style="--x:5.6;--y:14.6;--r:40deg;--z:1"><img src="../../../img/parts/mc_m3.webp?v=cbe36c13" alt=""></span><span class="pc" style="--x:15.4;--y:14.6;--r:-40deg;--z:1"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><span class="t" style="--x:4.2;--y:9.6"><span class="ja"><span class="bx">場</span></span><span class="en">Play area</span></span><span class="t hl" style="--x:17.6;--y:9.2"><span class="ja"><span class="bx">余った<wbr>分は<br><wbr>重ねる。</span></span><span class="en">Extra cards<br>go on a pile.</span></span></div></div></div>
+          </div>
+        </div>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">2.ゲームの<wbr>終了条件</span></span><span class="en">2. End of the Game</span></h3>
+          <p><span class="ja"><span class="bx">誰かの<wbr>手札が<wbr>なくなったら<wbr>ゲーム終了です。<em><wbr>ガブを<wbr>除いた</em><wbr>手札が<wbr>最も<wbr>多い<wbr>人が<wbr>勝ちに<wbr>なります。</span></span><span class="en">The game ends when someone runs out of cards. The player with the most cards in hand, <em>not counting Gabu</em>, wins.</span></p>
+        </div>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">3.ゲームの<wbr>流れ</span></span><span class="en">3. How to Play</span></h3>
+          <p><span class="ja"><span class="bx">自分の<wbr>番に<wbr>なったら、<wbr>手札を<wbr>上から<wbr>1枚めくって、<wbr>3つの<wbr>うち<wbr>好きな<wbr>場所に<wbr>重ねます。<wbr>その後、<wbr>場の<wbr>カードを<wbr>見て<em><wbr>コール</em>を<wbr>行います。<wbr>コールを<wbr>行ったら<wbr>次の<wbr>人の<wbr>番に<wbr>なります。</span></span><span class="en">On your turn, flip the top card of your hand and place it on whichever of the 3 spots you like. Then look at the cards in the play area and make a <em>call</em>. After your call, it is the next player’s turn.</span></p>
+          <div class="notes"><span class="ja"><span class="bx"><em>※場の<wbr>カードが<wbr>3つよりも<wbr>少なかった<wbr>時は<wbr>空いた<wbr>ところを<wbr>優先して<wbr>置きます。<wbr>(図1)</em></span></span><span class="en"><em>If there are fewer than 3 cards in the play area, place your card in an empty spot first. (Fig. 1)</em></span><span class="ja"><span class="bx"><em>※カードを<wbr>めくる<wbr>時は、<wbr>奥側から<wbr>めくってください。<wbr>(図2)</em></span></span><span class="en"><em>When you flip a card, flip it from the far side. (Fig. 2)</em></span><span class="ja"><span class="bx"><em>※コールは<wbr>自分の<wbr>番の<wbr>人だけが<wbr>行います。<wbr>他の<wbr>人は<wbr>行いません。</em></span></span><span class="en"><em>Only the player whose turn it is makes a call. The others do not.</em></span></div>
+          <div class="figs"><figure class="fig"><figcaption class="fig-t"><span class="ja"><span class="bx">図1</span></span><span class="en">Fig. 1</span></figcaption><div class="viz"><div class="fwrap sm"><div class="frow" role="img" aria-label="山が2つしかないときは、空いているところに置いて3つにする"><div class="fhand"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><b><span class="ja"><span class="bx">手札</span></span><span class="en">Hand</span></b></div><span class="farrow" aria-hidden="true"></span><div class="fld"><span class="pc" style="--x:10.5;--y:4.4;--r:0deg;--z:1"><img src="../../../img/parts/mc_o1.webp?v=c87dbe38" alt=""></span><img class="tok" src="../../../img/parts/m_token.webp?v=dccd8947" alt="" style="--x:10.5;--y:10.2"><span class="pc slot" style="--x:5.6;--y:14.6;--r:40deg"></span><span class="pc" style="--x:15.4;--y:14.6;--r:-40deg;--z:1"><img src="../../../img/parts/mc_p1.webp?v=c727d89c" alt=""></span><span class="t" style="--x:7.2;--y:3.0"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:1.4;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span><span class="t" style="--x:19.6;--y:18.4"><span class="ja"><span class="bx">山</span></span><span class="en">Pile</span></span></div></div></div></div></figure><figure class="fig"><figcaption class="fig-t"><span class="ja"><span class="bx">図2</span></span><span class="en">Fig. 2</span></figcaption><div class="viz"><div class="fwrap"><div class="fig2" role="img" aria-label="手札のカードは奥側からめくる"><span class="dk"><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""><img class="lift" src="../../../img/parts/mc_ura.webp?v=f8ecea8c" alt=""></span><svg viewBox="0 0 64 60" aria-hidden="true"><path d="M8 14 C 30 0, 54 8, 54 40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M42 36 L54 52 L63 34 Z" fill="currentColor"/></svg></div></div></div></figure></div>
+        </div>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">4.コール</span></span><span class="en">4. Calling</span></h3>
+          <p><span class="ja"><span class="bx">場に<wbr>ある<wbr>カードを<wbr>見て、<wbr>動物の<wbr>名前を<wbr>呼ぶ<wbr>ことを<wbr>コールと<wbr>言います。<wbr>コールには<wbr>下記の<wbr>ルールが<wbr>あります。</span></span><span class="en">Looking at the cards in the play area and calling out the animals’ names is called a call. Calls follow these rules:</span></p>
+          <ul class="dot ez-rules">
+            <li><span class="ja"><span class="bx"><em>数の<wbr>多い<wbr>順に<wbr>呼ぶ</em></span></span><span class="en"><em>Call them in order from most to fewest</em></span></li>
+            <li><span class="ja"><span class="bx"><em>0以下に<wbr>なった<wbr>動物は<wbr>呼ばない</em></span></span><span class="en"><em>Do not call animals that drop to 0 or fewer</em></span></li>
+            <li><span class="ja"><span class="bx"><em>ポメは<wbr>かわいいので<wbr>必ず<wbr>最初に<wbr>呼ぶ</em></span></span><span class="en"><em>Pome is so cute that it is always called first</em></span></li>
+            <li><span class="ja"><span class="bx"><em>ガブの<wbr>数だけ<wbr>モコを<wbr>減らす</em></span></span><span class="en"><em>Subtract one Moko for each Gabu</em></span></li>
+            <li><span class="ja"><span class="bx"><em>ガブは<wbr>ガブしかいない<wbr>時だけ<wbr>呼ぶ</em></span></span><span class="en"><em>Call Gabu only when Gabu is the only animal</em></span></li>
+          </ul>
+          <div class="ex"><div class="row" role="img" aria-label="モコ2匹、パカ5匹"><span class="card"><img src="../../../img/parts/mc_m2.webp?v=16b56ce4" alt=""></span><span class="card"><img src="../../../img/parts/mc_p2.webp?v=99f60a12" alt=""></span><span class="card"><img src="../../../img/parts/mc_p3.webp?v=76b8ce61" alt=""></span></div><p><span class="ja"><span class="bx"><b>例:</b>パカ5、<wbr>モコ2なので<em><wbr>「パカモコ」</em></span></span><span class="en"><b>Example:</b> 5 Paka and 2 Moko, so <em>“Pakamoko”</em></span></p></div>
+        </div>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">5.トークンの<wbr>取り合い</span></span><span class="en">5. Grabbing the Token</span></h3>
+          <p><span class="ja"><span class="bx">場の<wbr>カードが<wbr>次の<wbr>条件を<wbr>満たした<wbr>とき、<em><wbr>「モコチャカ」</em>と<wbr>言いながら<em><wbr>全員で</em><wbr>トークンを<wbr>取り合います。</span></span><span class="en">When the cards in the play area meet either condition below, <em>everyone</em> grabs for the token while saying <em>“Mokochaka.”</em></span></p>
+          <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_paka.webp?v=44fa7d74" alt=""></span><div class="ez-c"><p><span class="ja"><span class="bx">ガブを<wbr>除く<wbr>2種類以上の<wbr>動物の<wbr>数が<wbr>同じ<wbr>とき</span></span><span class="en">When 2 or more kinds of animals, not counting Gabu, have the same number</span></p><p class="ez-ex"><span class="ja"><span class="bx">例1:モコ3・パカ3・ポメ2や、<wbr>モコ2・パカ2・ポメ2など。<br><wbr>例2:モコ4・パカ3・ガブ1など。<wbr>ガブの<wbr>分モコが<wbr>減ると<wbr>モコと<wbr>パカが<wbr>3で<wbr>同じ。</span></span><span class="en">Example 1: Moko 3, Paka 3, Pome 2, or Moko 2, Paka 2, Pome 2, and so on.<br>Example 2: Moko 4, Paka 3, Gabu 1, and so on. Once the Moko are reduced by the Gabu, Moko and Paka both have 3.</span></p></div></div>
+          <div class="crule"><span class="ic" aria-hidden="true"><img src="../../../img/chara/m_moko.webp?v=de0fbd38" alt=""><img src="../../../img/chara/m_paka.webp?v=44fa7d74" alt=""><img src="../../../img/chara/m_pome.webp?v=cb4e65dd" alt=""></span><div class="ez-c"><p><span class="ja"><span class="bx">ガブを<wbr>除く<wbr>3種の<wbr>動物が<wbr>すべて<wbr>場に<wbr>存在する<wbr>とき</span></span><span class="en">When all 3 kinds of animals other than Gabu are in the play area</span></p></div></div>
+          <div class="notes"><span class="ja"><span class="bx"><em>※モコチャカの<wbr>条件を<wbr>満たすときは<wbr>コールよりも<wbr>モコチャカが<wbr>優先されます。</em></span></span><span class="en"><em>When the Mokochaka conditions are met, Mokochaka takes priority over a call.</em></span><span class="ja"><span class="bx"><em>※トークンを<wbr>取ってから<wbr>言うと<wbr>ペナルティです。<wbr>「モコチャカ」と<wbr>言いながら<wbr>取る!</em></span></span><span class="en"><em>Saying it after you grab the token is a penalty. Grab it while saying “Mokochaka”!</em></span></div>
+          <p><span class="ja"><span class="bx">トークンを<wbr>取った<wbr>人は<wbr>場の<wbr>カードの<wbr>山を<wbr>2つ<wbr>選んで<wbr>獲得し、<wbr>自分の<wbr>手札の<wbr>下に<wbr>加えます。<em><wbr>(2人の<wbr>時は<wbr>山1つ)</em>トークンを<wbr>取った<wbr>人から<wbr>再開します。</span></span><span class="en">The player who grabbed the token chooses 2 piles in the play area, takes them, and adds them to the bottom of their hand. <em>(1 pile with 2 players.)</em> Play resumes with the player who grabbed the token.</span></p>
+        </div>
+        <div class="ez-sec">
+          <h3><span class="ja"><span class="bx">6.ペナルティ</span></span><span class="en">6. Penalties</span></h3>
+          <p><span class="ja"><span class="bx">コールを<wbr>間違えたり、<wbr>成立してないのに<wbr>トークンを<wbr>取った<wbr>時、<wbr>また<wbr>何も<wbr>言わずに<wbr>トークンを<wbr>取った<wbr>時は<em><wbr>ペナルティ</em>と<wbr>なります。<em><wbr>手札の<wbr>上から<wbr>1枚を<wbr>他の<wbr>プレイヤーに<wbr>渡します。<wbr>(2人の<wbr>時は<wbr>2枚)</em>手札の<wbr>下に<wbr>加えてください。<wbr>ペナルティに<wbr>なった<wbr>人の<wbr>次の<wbr>人から<wbr>再開します。</span></span><span class="en">If you call wrong, grab the token when the conditions are not met, or grab the token without saying anything, you get a <em>penalty</em>. <em>Give the top card of your hand to another player. (2 cards with 2 players.)</em> They add it to the bottom of their hand. Play resumes with the player after the penalized player.</span></p>
+        </div>
       </section>
       <!-- 1.ゲームの準備 -->
       <section class="panel" id="setup" aria-labelledby="h-setup" data-toc="1.ゲームの準備|1. Game Setup">
@@ -647,7 +702,7 @@
       <section class="panel" id="history" aria-labelledby="h-history">
         <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
         <ol class="log">
-          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+          <li><time datetime="2026-11-01">2026.11.01</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
         </ol>
         <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
       </section>

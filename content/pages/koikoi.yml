@@ -100,11 +100,11 @@ credits:
     name_ja: 2026年5月
     name_en: May 2026
 rules_history:
-  - date: 2026-10-26
+  - date: 2026-11-01
     mark: errata
     text_ja: "説明書の誤りを訂正しました(Q&Aの例:「5点」ではなく「10点」を獲得した場合)。"
     text_en: "Corrected an error in the printed rulebook (Q&A example: scoring 10 points, not 5)."
-  - date: 2026-10-26
+  - date: 2026-11-01
     mark: ""
     text_ja: "WEB版を公開しました。"
     text_en: "Web edition published."

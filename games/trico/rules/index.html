@@ -320,7 +320,7 @@
     --band-space:0px;
     --film-icon:url(../../../img/page/mt_film.svg?v=0b9bc3ee);
   }
-  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、黄色い表紙の三角の帯、ひし形の番号、勝利条件の帯、カードの WIN */
+  /* TRICO! だけで使う見た目:説明書と同じ紫の太字、ひし形の番号、勝利条件(サマリーと同じ黄色の帯)、カードの WIN */
   b{font-weight:800}
   .content a b{text-decoration:underline;text-underline-offset:3px}
 
@@ -328,11 +328,21 @@
   /* 番号:説明書の宝石(ひし形)。横長なので少し大きめに */
   .snum{width:52px;height:40px}
   .snum b{font-size:19px}
-  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く */
-  .tc-head{align-items:flex-start;gap:14px}
-  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;padding-top:7px}
+  /* 手順に見出しがない(説明書どおり)ので、番号の横に本文を置く。番号は本文の高さの真ん中に */
+  .tc-head{align-items:center;gap:14px}
+  .tc-txt{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
   .tc-txt p{font-size:15.5px;line-height:1.85}
   .step{gap:16px}
+
+  /* カード:画像の角丸(白い縁)に合わせる */
+  .card img,.cards img{border-radius:4.2%/3%}
+  /* 小見出し(2人用ルール・終了):サマリーと同じ黄色の帯 */
+  .prose h3.tc-band{align-self:flex-start;margin-top:6px;padding:.32em 1.1em .36em;border-radius:999px;background:var(--accent);color:var(--main);font-size:17px;font-weight:800;line-height:1.3}
+  .prose h3.tc-band:first-child{margin-top:0}
+  /* 手順1:左右のカードの上端を揃える */
+  .viz.tc-top{align-items:flex-start}
+  .viz.tc-top>.arrow{align-self:flex-start;margin-top:calc(var(--cw,52px) * .7 - 9px)}
+  @media (min-width:900px){ .viz.tc-top>.arrow{margin-top:33px} }
 
   /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
   .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
@@ -341,9 +351,7 @@
   .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
   .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
   .tc-item .clbl{flex:1;min-width:0}
-  .tc-lead{width:70px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .tc-lead.sm{width:58px}
-  .tc-sum{width:52px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-one{width:52px;border-radius:4.2%/3%;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-marks{display:flex;gap:4px}
   .tc-marks img{width:34px}
@@ -356,28 +364,37 @@
   }
   @media (max-width:560px){ .tc-head{gap:10px} .snum{width:46px;height:36px} .snum b{font-size:17px} .tc-txt{padding-top:5px} }
 
-  /* アピールの勝利条件:説明書・サマリーと同じ黄色の帯 */
-  .tc-cond{display:flex;flex-direction:column;gap:8px;padding:16px 14px 14px;background:var(--soft)}
-  .tc-row{display:grid;grid-template-columns:7.5em auto 22px minmax(0,1fr);align-items:center;gap:10px;padding:7px 18px;border-radius:999px;background:var(--accent);font-size:14.5px;font-weight:800;line-height:1.4}
-  .tc-row b{font-size:1.15em}
-  html[data-lang="en"] .tc-row{grid-template-columns:12.5em auto 22px minmax(0,1fr)}
-  .chips{display:flex;gap:4px}
-  .chips i{display:block;width:20px;height:27px;border:2px solid var(--main);border-radius:4px;rotate:-8deg}
-  .chips i.p{background:var(--main);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
-  .chips i.y{background:var(--accent);box-shadow:0 0 0 1.5px #fff,0 0 0 3px var(--main)}
-  .chips i.r{background:var(--hl);border-color:#fff;box-shadow:0 0 0 1.5px var(--main)}
-  .tc-to{width:0;height:0;justify-self:center;border-left:13px solid var(--hl);border-block:9px solid transparent}
-  .tc-r{font-size:15px}
-  .tc-note{padding:2px 6px 0;font-size:13px;line-height:1.6}
+  /* アピールの勝利条件:サマリーと同じ黄色の帯。カードは帯からはみ出すくらい大きく、傾けて */
+  .tc-cond{display:flex;flex-direction:column;gap:16px;padding:6px 0 2px;color:var(--main);font-family:var(--num)}
+  .tc-cond-t{align-self:center;margin:0 0 2px;padding:.28em 1.5em .32em;border-radius:999px;background:var(--accent);font-size:clamp(20px,2.6vw,25px);font-weight:800;line-height:1.25;letter-spacing:.04em;text-align:center}
+  .tc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto minmax(0,1fr);align-items:center;gap:0 clamp(10px,1.8vw,18px);min-height:56px;padding:0 clamp(16px,2.6vw,28px);border-radius:999px;background:var(--accent);font-size:clamp(16px,1.9vw,19px);font-weight:800;line-height:1.3}
+  .tc-c b{font-size:1.3em;letter-spacing:.02em}
+  .tc-r{text-align:center}
+  .tc-r.sm{font-size:.86em}
+  .tc-r em{color:var(--hl)}
+  .chips{display:flex;gap:5px;margin-block:-9px}
+  .chips i{display:block;width:30px;height:40px;border:3px solid #fff;border-radius:6px;box-shadow:0 0 0 2.5px var(--main);rotate:15deg}
+  .chips i.p{background:#7a5ba6}
+  .chips i.y{background:#fbc900}
+  .chips i.r{background:#e8323c}
+  .tc-to{width:30px;height:28px;background:var(--hl);clip-path:polygon(0 30%,52% 30%,52% 0,100% 50%,52% 100%,52% 70%,0 70%)}
+  .tc-note{margin:0;color:var(--hl);font-size:14px;font-weight:800;line-height:1.6;text-align:center}
+  html[data-lang="en"] .tc-c{font-size:.92em}
+  @media (min-width:561px){ html[data-lang="en"] .tc-row{grid-template-columns:minmax(0,1.3fr) auto auto minmax(0,1fr)} }
   @media (max-width:560px){
-    .tc-row,html[data-lang="en"] .tc-row{grid-template-columns:auto 1fr;grid-template-areas:"c chips" "r r";gap:6px 10px;padding:10px 16px;border-radius:16px}
-    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end}.tc-to{display:none}.tc-r{grid-area:r}
-    .tc-r::before{content:"→ ";color:var(--hl)}
+    .tc-cond{gap:12px}
+    .tc-row{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"c chips" "r r";gap:10px 10px;padding:12px 16px 10px;border-radius:22px;font-size:16px}
+    .tc-c{grid-area:c}.chips{grid-area:chips;justify-self:end;margin-block:-4px 0}.chips i{width:24px;height:32px;border-width:2.5px;border-radius:5px;box-shadow:0 0 0 2px var(--main)}
+    .tc-to{display:none}
+    .tc-r{grid-area:r;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.55)}
+    .tc-r::before{content:"";flex:none;width:22px;height:20px;background:var(--hl);clip-path:polygon(0 30%,52% 30%,52% 0,100% 50%,52% 100%,52% 70%,0 70%)}
+    .tc-r.sm{font-size:.9em}
+    .tc-note{font-size:13px;text-align:left}
   }
 
-  /* 場のカードの WIN(説明書の赤い WIN) */
-  .tc-win-row{padding-top:20px}
-  .tc-win{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;color:var(--hl);font:900 14px/1 var(--cond);letter-spacing:.06em}
+  /* 場のカードの WIN:赤い札を傾けてカードの上に */
+  .tc-win-row{padding-top:16px}
+  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;rotate:-9deg;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
   .fig-txt{text-align:left}
 
   /* ニコ・トリコのキャラ */
@@ -387,10 +404,6 @@
 
   /* よくある質問:説明書と同じく質問は赤 */
   .qa dt{color:var(--hl)}
-
-  /* おまけ:えかきうた */
-  .tc-ekaki{width:100%;border-radius:10px;box-shadow:0 0 0 2px var(--soft)}
-  .tc-song{padding-left:1.6em;line-height:1.8}
 
 </style>
 </head>
@@ -417,7 +430,7 @@
           <div><dt><span class="ja"><span class="bx">時間</span></span><span class="en">Time</span></dt><dd><span class="ja"><span class="bx">10〜15分</span></span><span class="en">10–15 min</span></dd></div>
           <div><dt><span class="ja"><span class="bx">年齢</span></span><span class="en">Age</span></dt><dd><span class="ja"><span class="bx">6歳から</span></span><span class="en">6+</span></dd></div>
         </dl>
-        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.10.26</span></span><span class="en">Last updated 2026.10.26</span></a><span><span class="ja"><span class="bx">202<wbr>5年11月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (November 2025)</span></span></p>
+        <p class="cover-meta"><a href="#history"><span class="ja"><span class="bx">最終更新 2026.11.01</span></span><span class="en">Last updated 2026.11.01</span></a><span><span class="ja"><span class="bx">202<wbr>5年11月発行の<wbr>説明書に<wbr>対応</span></span><span class="en">Matches the printed rulebook (November 2025)</span></span></p>
       </div>
       <div class="story">
         <p class="catch"><span class="ja"><span class="bx">あの<wbr>コを<wbr>とりこに<wbr>する<wbr>ために</span></span><span class="en">To Win Her Heart</span></p>
@@ -433,7 +446,6 @@
     <nav class="toc" aria-label="目次">
       <p>Contents</p>
       <ol>
-        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>
         <li><a href="#contents"><span class="ja">内容物</span><span class="en">Contents</span></a></li>
         <li><a href="#overview"><span class="ja">ゲームの目的</span><span class="en">Object of the Game</span></a></li>
         <li><a href="#setup"><span class="ja">ゲームの準備</span><span class="en">Game Setup</span></a></li>
@@ -445,21 +457,13 @@
         <li><a href="#two"><span class="ja">2人用ルール</span><span class="en">2-Player Rules</span></a>
           <div class="sub" aria-label="手順"><a href="#two1">1</a><a href="#two2">2</a><a href="#two3">3</a><a href="#two4">4</a></div></li>
         <li><a href="#qa"><span class="ja">よくある質問</span><span class="en">FAQ</span></a></li>
-        <li><a href="#extra"><span class="ja">おまけ</span><span class="en">Bonus</span></a></li>
         <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>
       </ol>
     </nav>
 
     <main class="content">
 
-      <!-- 動画 -->
-      <section class="panel" id="video" aria-labelledby="h-video">
-        <h2 id="h-video"><span class="ja"><span class="bx">動画で<wbr>見る</span></span><span class="en">Watch the Video</span></h2>
-        <div class="screen">
-          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja"><span class="bx">遊び方動画<wbr>(準備中)</span></span><span class="en">How-to-play video in production</span></span></div>
-        </div>
-        <p class="note"><span class="ja"><span class="bx">この<wbr>動画だけで<wbr>遊べるように、<wbr>説明書の<wbr>内容を<wbr>ひと通り<wbr>紹介する<wbr>予定です。</span></span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>
-      </section>
+      <!-- 動画(作品の meta.yml に youtube があるときだけ) -->
 
       <!-- 内容物 -->
       <section class="panel" id="contents" aria-labelledby="h-contents">
@@ -468,16 +472,16 @@
           <div class="crow">
             <p class="clbl"><span class="ja"><span class="bx">ゲームカード:30枚<wbr>(各色<wbr>10枚)</span></span><span class="en">Game cards: 30 (10 of each color)</span></p>
             <div class="cards tc-grid" role="img" aria-label="黄・紫・赤の3、6、9、12、15、18、21、24、27、30のカード">
-              <img src="../../../img/parts/tc_c_y3.webp?v=fd9ea070" alt=""><img src="../../../img/parts/tc_c_y6.webp?v=e777b1ce" alt=""><img src="../../../img/parts/tc_c_y9.webp?v=eaa00abe" alt=""><img src="../../../img/parts/tc_c_y12.webp?v=7e705880" alt=""><img src="../../../img/parts/tc_c_y15.webp?v=731fd254" alt=""><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt="">
-              <img src="../../../img/parts/tc_c_y21.webp?v=d321e6df" alt=""><img src="../../../img/parts/tc_c_y24.webp?v=0f396c7b" alt=""><img src="../../../img/parts/tc_c_y27.webp?v=4d688aaf" alt=""><img src="../../../img/parts/tc_c_y30.webp?v=42546b29" alt=""><img src="../../../img/parts/tc_c_p3.webp?v=85308139" alt=""><img src="../../../img/parts/tc_c_p6.webp?v=418bc5c3" alt="">
-              <img src="../../../img/parts/tc_c_p9.webp?v=69feb8c1" alt=""><img src="../../../img/parts/tc_c_p12.webp?v=8a257d60" alt=""><img src="../../../img/parts/tc_c_p15.webp?v=860b34b0" alt=""><img src="../../../img/parts/tc_c_p18.webp?v=9d863611" alt=""><img src="../../../img/parts/tc_c_p21.webp?v=7802e703" alt=""><img src="../../../img/parts/tc_c_p24.webp?v=3b262144" alt="">
-              <img src="../../../img/parts/tc_c_p27.webp?v=2617982b" alt=""><img src="../../../img/parts/tc_c_p30.webp?v=12295aba" alt=""><img src="../../../img/parts/tc_c_r3.webp?v=0076f195" alt=""><img src="../../../img/parts/tc_c_r6.webp?v=b6c54ef4" alt=""><img src="../../../img/parts/tc_c_r9.webp?v=f051e875" alt=""><img src="../../../img/parts/tc_c_r12.webp?v=51ef9f2f" alt="">
-              <img src="../../../img/parts/tc_c_r15.webp?v=888cebc2" alt=""><img src="../../../img/parts/tc_c_r18.webp?v=0827b46c" alt=""><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""><img src="../../../img/parts/tc_c_r24.webp?v=c7af30c4" alt=""><img src="../../../img/parts/tc_c_r27.webp?v=5196dd63" alt=""><img src="../../../img/parts/tc_c_r30.webp?v=0724f65e" alt="">
+              <img src="../../../img/parts/tcr_y3.webp?v=ecfd919a" alt=""><img src="../../../img/parts/tcr_y6.webp?v=664a919d" alt=""><img src="../../../img/parts/tcr_y9.webp?v=ba2f0100" alt=""><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""><img src="../../../img/parts/tcr_y15.webp?v=21458fd3" alt=""><img src="../../../img/parts/tcr_y18.webp?v=8652d0fa" alt="">
+              <img src="../../../img/parts/tcr_y21.webp?v=5380b8f4" alt=""><img src="../../../img/parts/tcr_y24.webp?v=89e3915a" alt=""><img src="../../../img/parts/tcr_y27.webp?v=a730e587" alt=""><img src="../../../img/parts/tcr_y30.webp?v=c5874a7a" alt=""><img src="../../../img/parts/tcr_p3.webp?v=0de77eb9" alt=""><img src="../../../img/parts/tcr_p6.webp?v=61caba49" alt="">
+              <img src="../../../img/parts/tcr_p9.webp?v=4ba0a00c" alt=""><img src="../../../img/parts/tcr_p12.webp?v=4b717c55" alt=""><img src="../../../img/parts/tcr_p15.webp?v=1db33e30" alt=""><img src="../../../img/parts/tcr_p18.webp?v=c95cd7f2" alt=""><img src="../../../img/parts/tcr_p21.webp?v=c1bfc590" alt=""><img src="../../../img/parts/tcr_p24.webp?v=8bfd167e" alt="">
+              <img src="../../../img/parts/tcr_p27.webp?v=84101de6" alt=""><img src="../../../img/parts/tcr_p30.webp?v=45ee2d77" alt=""><img src="../../../img/parts/tcr_r3.webp?v=882f0553" alt=""><img src="../../../img/parts/tcr_r6.webp?v=d6b03955" alt=""><img src="../../../img/parts/tcr_r9.webp?v=aa05e6f9" alt=""><img src="../../../img/parts/tcr_r12.webp?v=d2f8ea0f" alt="">
+              <img src="../../../img/parts/tcr_r15.webp?v=a36c45bf" alt=""><img src="../../../img/parts/tcr_r18.webp?v=27855d46" alt=""><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""><img src="../../../img/parts/tcr_r24.webp?v=17868bf1" alt=""><img src="../../../img/parts/tcr_r27.webp?v=dd9935b2" alt=""><img src="../../../img/parts/tcr_r30.webp?v=bca3a468" alt="">
             </div>
           </div>
           <div class="tc-items">
-            <div class="tc-item"><span class="tc-pic"><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></span><p class="clbl"><span class="ja"><span class="bx">リードプレイヤーマーカー:1枚</span></span><span class="en">Lead player marker: 1</span></p></div>
-            <div class="tc-item"><span class="tc-pic"><img class="tc-sum" src="../../../img/parts/tc_summary_sm.webp?v=f7f9162c" alt=""></span><p class="clbl"><span class="ja"><span class="bx">サマリー:1枚</span></span><span class="en">Summary card: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><img class="tc-one" src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><p class="clbl"><span class="ja"><span class="bx">リードプレイヤーマーカー<wbr>:1枚</span></span><span class="en">Lead player marker: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><img class="tc-one" src="../../../img/parts/tcr_sum.webp?v=31b5f47c" alt=""></span><p class="clbl"><span class="ja"><span class="bx">サマリー:1枚</span></span><span class="en">Summary card: 1</span></p></div>
             <div class="tc-item"><span class="tc-pic"><img class="tc-man" src="../../../img/parts/tc_manual_sm.webp?v=191b726d" alt=""></span><p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p></div>
             <div class="tc-item"><span class="tc-pic"><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></span><p class="clbl"><span class="ja"><span class="bx">トリコマーカー:3個</span></span><span class="en">Trico markers: 3</span></p></div>
           </div>
@@ -488,8 +492,8 @@
       <section class="panel" id="overview" aria-labelledby="h-overview">
         <h2 id="h-overview"><span class="ja"><span class="bx">ゲームの<wbr>目的</span></span><span class="en">Object of the Game</span></h2>
         <div class="prose">
-          <p class="ja"><span class="bx">カードを<wbr>手札から<wbr>出し合い、<wbr>場に<wbr>出た色の<wbr>数で<wbr>勝敗が<wbr>決まる<b><wbr>「アピール」</b>を<wbr>行います。<wbr>勝った<wbr>プレイヤーは<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>獲得します。<wbr>これを<wbr>繰り返し、<wbr>得点カードの<wbr>中に<wbr>3色が<wbr>揃ったら、<b><wbr>「トリコ!」</b>と<wbr>宣言して<wbr>ラウンド勝利と<wbr>なります。<wbr>最初に<wbr>2回ラウンド勝利した<wbr>プレイヤーが<wbr>この<wbr>ゲームの<wbr>勝者です。</span></p>
-          <p class="en">Players play cards from their hands in an <b>“Appeal,”</b> where the number of colors on the table decides the winner. The winner takes any one of the 3 cards on the table. Repeat this, and when your scoring cards include all 3 colors, declare <b>“Trico!”</b> to win the round. The first player to win 2 rounds wins the game.</p>
+          <p class="ja"><span class="bx">カードを<wbr>手札から<wbr>出し合い、<wbr>場に<wbr>出た色の<wbr>数で<wbr>勝敗が<wbr>決まる<em><wbr>「アピール」</em>を<wbr>行います。<wbr>勝った<wbr>プレイヤーは<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>獲得します。<wbr>これを<wbr>繰り返し、<wbr>得点カードの<wbr>中に<wbr>3色が<wbr>揃ったら、<em><wbr>「トリコ!」</em>と<wbr>宣言して<wbr>ラウンド勝利と<wbr>なります。<wbr>最初に<wbr>2回ラウンド勝利した<wbr>プレイヤーが<wbr>この<wbr>ゲームの<wbr>勝者です。</span></p>
+          <p class="en">Players play cards from their hands in an <em>“Appeal,”</em> where the number of colors on the table decides the winner. The winner takes any one of the 3 cards on the table. Repeat this, and when your scoring cards include all 3 colors, declare <em>“Trico!”</em> to win the round. The first player to win 2 rounds wins the game.</p>
         </div>
       </section>
 
@@ -498,12 +502,12 @@
         <h2 id="h-setup"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h2>
         <div class="prose">
           <p class="rnote"><a href="#two"><span class="ja"><span class="bx">※こちらは<wbr>3人用の<wbr>ルールです。<wbr>2人で<wbr>遊ぶ際は<wbr>下の<wbr>「2人用ルール」を<wbr>参照してください。</span></span><span class="en">These are the rules for 3 players. For 2 players, see “2-Player Rules” below.</span></a></p>
-          <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>全員に<wbr>配り切ります。<wbr>1人に<wbr>配られる<wbr>手札は<wbr>10枚です。<br><wbr>適当な<wbr>方法で<b><wbr>リードプレイヤー<wbr>(親)</b>を<wbr>決めたら、<wbr>その<wbr>人は<wbr>リードプレイヤーマーカーを<wbr>受け取り、<wbr>手元に<wbr>置いてください。<b><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。</b><wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
-          <p class="en">Shuffle the cards well and deal them all out. Each player gets a hand of 10 cards.<br>Choose a <b>lead player</b> in any way you like. That player takes the lead player marker and places it in front of them. <b>The winner of each round takes a Trico marker.</b> To start, place the markers where everyone can reach them.</p>
+          <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>全員に<wbr>配り切ります。<wbr>1人に<wbr>配られる<wbr>手札は<wbr>10枚です。<br><wbr>適当な<wbr>方法で<em><wbr>リードプレイヤー<wbr>(親)</em>を<wbr>決めたら、<wbr>その<wbr>人は<wbr>リードプレイヤーマーカーを<wbr>受け取り、<wbr>手元に<wbr>置いてください。<em><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。</em><wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
+          <p class="en">Shuffle the cards well and deal them all out. Each player gets a hand of 10 cards.<br>Choose a <em>lead player</em> in any way you like. That player takes the lead player marker and places it in front of them. <em>The winner of each round takes a Trico marker.</em> To start, place the markers where everyone can reach them.</p>
           <div class="viz" role="img" aria-label="3人に手札を10枚ずつ配り、リードプレイヤーはリードプレイヤーマーカーを受け取る。トリコマーカーは全員が手の届く位置に置く">
-            <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><div class="row" style="align-items:center"><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><img class="tc-lead sm" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
-            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
-            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><div class="row" style="align-items:center"><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
             <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">トリコマーカー</span></span><span class="en">Trico markers</span></span><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
           </div>
         </div>
@@ -521,10 +525,10 @@
           <li class="step" id="step1">
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>1</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">リードプレイヤーが<wbr>手札から<wbr>1枚、<wbr>カードを<wbr>表向きに<wbr>公開します。</span></p><p class="en">The lead player plays one card from their hand face up.</p></div></div>
-            <div class="viz" role="img" aria-label="リードプレイヤーが赤の21を表向きに出す">
-              <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""></div>
+            <div class="viz tc-top" role="img" aria-label="リードプレイヤーが赤の21を表向きに出す">
+              <div class="grp"><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span></div>
               <span class="arrow" aria-hidden="true"></span>
-              <div class="grp"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
+              <div class="grp"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
             </div>
           </li>
 
@@ -532,33 +536,31 @@
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>2</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">他の<wbr>2人の<wbr>プレイヤーは<wbr>手札から<wbr>裏向きで<wbr>1枚カードを<wbr>出し、<wbr>同時に<wbr>表向きに<wbr>公開します。<wbr>この<wbr>時、<wbr>場に<wbr>揃った<wbr>色の<wbr>数で<wbr>勝敗を<wbr>決めます。</span></p><p class="en">The other two players each play one card face down from their hands, then reveal them at the same time. The number of colors now on the table decides the winner.</p></div></div>
             <div class="viz stack-sm" role="img" aria-label="2人が裏向きで出したカードを同時に公開すると、場は赤の21、紫の30、黄の12になった">
-              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">裏向きで<wbr>出す</span></span><span class="en">Face down</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">裏向きで<wbr>出す</span></span><span class="en">Face down</span></span></div>
               <span class="arrow" aria-hidden="true"></span>
-              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同時に<wbr>表向きに<wbr>公開</span></span><span class="en">Reveal together</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="card"><img src="../../../img/parts/tcr_p30.webp?v=45ee2d77" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">同時に<wbr>表向きに<wbr>公開</span></span><span class="en">Reveal together</span></span></div>
             </div>
           </li>
 
           <li class="step" id="step3">
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>3</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">勝利条件に<wbr>従い、<wbr>アピールの<wbr>勝者を<wbr>確定します。<br><em><wbr>この<wbr>時、<wbr>勝った<wbr>カードが<wbr>複数あった<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札と<wbr>なります。</em></span></p><p class="en">Determine the winner of the Appeal using the winning conditions.<br><em>If more than one card wins, the Appeal is void and all the cards go to the discard pile.</em></p></div></div>
-            <figure class="fig">
-              <figcaption class="fig-t"><span class="ja"><span class="bx">アピールの<wbr>勝利条件</span></span><span class="en">Winning Conditions for an Appeal</span></figcaption>
-              <div class="tc-cond">
-                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>1色</b></span></span><span class="en"><b>1 color</b> on the table</span></span><span class="chips" aria-label="紫・紫・紫"><i class="p"></i><i class="p"></i><i class="p"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
-                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>2色</b></span></span><span class="en"><b>2 colors</b> on the table</span></span><span class="chips" aria-label="紫・紫・黄"><i class="p"></i><i class="p"></i><i class="y"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><em><span class="ja"><span class="bx">同じ<wbr>色の<wbr>中で<wbr>最も<wbr>小さい<wbr>数</span></span><span class="en">Lowest number of the matching color</span></em></span></div>
-                <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">場の<wbr>色が<b><wbr>3色</b></span></span><span class="en"><b>3 colors</b> on the table</span></span><span class="chips" aria-label="紫・黄・赤"><i class="p"></i><i class="y"></i><i class="r"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
-                <p class="tc-note"><em><span class="ja"><span class="bx">※<wbr>勝った<wbr>カードが<wbr>複数あった<wbr>場合この<wbr>アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札に<wbr>なる。</span></span><span class="en">If more than one card wins, this Appeal is void and all the cards are discarded.</span></em></p>
-              </div>
-            </figure>
+            <div class="tc-cond" role="group" aria-labelledby="tc-cond-t">
+              <p class="tc-cond-t" id="tc-cond-t"><span class="ja"><span class="bx">アピールの<wbr>勝利条件</span></span><span class="en">How to Win an Appeal</span></p>
+              <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">・場の<wbr>色が<b><wbr>1色</b></span></span><span class="en">・<b>1 color</b> on the table</span></span><span class="chips" role="img" aria-label="紫・紫・紫"><i class="p"></i><i class="p"></i><i class="p"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
+              <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">・場の<wbr>色が<b><wbr>2色</b></span></span><span class="en">・<b>2 colors</b> on the table</span></span><span class="chips" role="img" aria-label="紫・紫・黄"><i class="p"></i><i class="p"></i><i class="y"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r sm"><span class="ja"><span class="bx">同じ<wbr>色の<wbr>中で<br><wbr>最も<em><wbr>小さい</em><wbr>数</span></span><span class="en"><em>Lowest</em> number<br>of the matching color</span></span></div>
+              <div class="tc-row"><span class="tc-c"><span class="ja"><span class="bx">・場の<wbr>色が<b><wbr>3色</b></span></span><span class="en">・<b>3 colors</b> on the table</span></span><span class="chips" role="img" aria-label="紫・黄・赤"><i class="p"></i><i class="y"></i><i class="r"></i></span><span class="tc-to" aria-hidden="true"></span><span class="tc-r"><span class="ja"><span class="bx">最も<wbr>大きい<wbr>数</span></span><span class="en">Highest number</span></span></div>
+              <p class="tc-note"><span class="ja"><span class="bx">※<wbr>勝った<wbr>カードが<wbr>複数あった<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>全て<wbr>捨て札に<wbr>なる。</span></span><span class="en">If more than one card wins, the Appeal is void and all the cards are discarded.</span></p>
+            </div>
             <div class="viz" role="img" aria-label="場の色が3色なので、最も大きい紫の30の勝ち">
-              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tcr_p30.webp?v=45ee2d77" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
             </div>
             <figure class="fig">
               <figcaption class="fig-t"><span class="ja"><span class="bx">アピールの<wbr>例</span></span><span class="en">Appeal Examples</span></figcaption>
               <div class="viz split">
-                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tc_p3.webp?v=761eae70" alt=""></span><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_r27.webp?v=2cf7026f" alt=""></span><span class="arrow" aria-hidden="true"></span><span class="card sel"><img src="../../../img/parts/tc_p3.webp?v=761eae70" alt=""></span></div>
+                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tcr_p3.webp?v=0de77eb9" alt=""></span><span class="card"><img src="../../../img/parts/tcr_p24.webp?v=8bfd167e" alt=""></span><span class="card"><img src="../../../img/parts/tcr_r27.webp?v=dd9935b2" alt=""></span><span class="arrow" aria-hidden="true"></span><span class="card sel"><img src="../../../img/parts/tcr_p3.webp?v=0de77eb9" alt=""></span></div>
                   <p class="fig-txt"><span class="ja"><span class="bx">場の<wbr>色が<em><wbr>2色</em>なので<wbr>紫の<wbr>中で<em><wbr>最も<wbr>小さい</em><em><wbr>3の<wbr>勝ち!</em></span></span><span class="en"><em>2 colors</em> on the table, so the <em>lowest</em> purple card, <em>3, wins!</em></span></p></div>
-                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tc_y24.webp?v=e85d8da9" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_r30.webp?v=0724f65e" alt=""></span></div>
+                <div class="grp"><div class="row" style="align-items:center"><span class="card"><img src="../../../img/parts/tcr_y24.webp?v=89e3915a" alt=""></span><span class="card"><img src="../../../img/parts/tcr_p30.webp?v=45ee2d77" alt=""></span><span class="card"><img src="../../../img/parts/tcr_r30.webp?v=bca3a468" alt=""></span></div>
                   <p class="fig-txt"><span class="ja"><span class="bx">場の<wbr>色が<em><wbr>3色</em>だが、<wbr>紫と<wbr>赤が<wbr>30で<em><wbr>同じ<wbr>大きさなので、<wbr>この<wbr>アピールは<wbr>無効。</em></span></span><span class="en"><em>3 colors</em> on the table, but purple and red are both 30. <em>They tie, so this Appeal is void.</em></span></p></div>
               </div>
             </figure>
@@ -568,9 +570,9 @@
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>4</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">アピールの<wbr>勝者は<wbr>場に<wbr>出た<wbr>3枚の<wbr>カードの<wbr>うち、<wbr>好きな<wbr>カードを<wbr>1枚獲得し、<wbr>手元に<wbr>表向きで<wbr>置きます。<b><wbr>(手札には<wbr>加えません)</b><br>また、<em><wbr>リードプレイヤーが<wbr>アピールに<wbr>勝った<wbr>場合は<wbr>さらに<wbr>もう<wbr>1枚獲得する<wbr>ことができます。</em></span></p><p class="en">The winner of the Appeal takes any one of the 3 cards on the table and places it face up in front of them. <b>(Do not add it to your hand.)</b><br>Also, <em>if the lead player wins the Appeal, they may take one more card.</em></p></div></div>
             <div class="viz stack-sm" role="img" aria-label="アピールの勝者は場の3枚から好きなカードを1枚獲得し、手元に表向きで置く">
-              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_c_r21.webp?v=b1aef3d6" alt=""></span><span class="card"><img src="../../../img/parts/tc_p30.webp?v=a550956f" alt=""></span><span class="card sel"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="card"><img src="../../../img/parts/tcr_p30.webp?v=45ee2d77" alt=""></span><span class="card sel"><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
               <span class="arrow" aria-hidden="true"></span>
-              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手元に<wbr>表向きで<wbr>置く</span></span><span class="en">Face up in front of you</span></span></div>
+              <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手元に<wbr>表向きで<wbr>置く</span></span><span class="en">Face up in front of you</span></span></div>
             </div>
           </li>
 
@@ -578,8 +580,8 @@
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>5</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">場に<wbr>残った<wbr>カードは<wbr>捨て札と<wbr>して<wbr>裏向きで<wbr>重ねて<wbr>おきます。<br><wbr>アピールの<wbr>勝者は<wbr>次の<wbr>リードプレイヤーと<wbr>なり、<wbr>リードプレイヤーマーカーを<wbr>受け取ります。<wbr>(以後<wbr>❶から<wbr>繰り返し)</span></p><p class="en">Stack the cards left on the table face down as the discard pile.<br>The winner of the Appeal becomes the next lead player and takes the lead player marker. (Repeat from ❶.)</p></div></div>
             <div class="viz" role="img" aria-label="場に残ったカードは捨て札に。アピールの勝者がリードプレイヤーマーカーを受け取り、❶から繰り返す">
-              <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">捨て札</span></span><span class="en">Discard pile</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div></div>
-              <div class="grp"><span class="tag"><span class="ja"><span class="bx">アピールの<wbr>勝者</span></span><span class="en">Appeal winner</span></span><img class="tc-lead" src="../../../img/parts/tc_lead_h.webp?v=f03780f8" alt=""><span class="lbl"><span class="ja"><span class="bx">リードプレイヤーマーカー</span></span><span class="en">Lead player marker</span></span></div>
+              <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">捨て札</span></span><span class="en">Discard pile</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div></div>
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">アピールの<wbr>勝者</span></span><span class="en">Appeal winner</span></span><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤーマーカー</span></span><span class="en">Lead player marker</span></span></div>
               <div class="grp" style="align-self:center"><span class="loop"><span class="ja"><span class="bx">以後<wbr>❶から<wbr>繰り返し</span></span><span class="en">Repeat from ❶</span></span></div>
             </div>
           </li>
@@ -593,7 +595,7 @@
           <p class="ja"><span class="bx">獲得した<wbr>カードが<wbr>2色に<wbr>なったら、<em><wbr>「ニコ!」</em>と<wbr>宣言します。</span></p>
           <p class="en">When the cards you have taken show 2 colors, declare <em>“Nico!”</em></p>
           <div class="viz" role="img" aria-label="獲得したカードが紫と黄の2色になったら「ニコ!」と宣言する">
-            <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_y6.webp?v=eedbd274" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">2色</span></span><span class="en">2 colors</span></span></div>
+            <div class="grp"><div class="row"><span class="card"><img src="../../../img/parts/tcr_p24.webp?v=8bfd167e" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y6.webp?v=664a919d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">2色</span></span><span class="en">2 colors</span></span></div>
             <span class="arrow" aria-hidden="true"></span>
             <div class="grp tc-call"><img class="tc-chara" src="../../../img/chara/t_nico.webp?v=c1b4542c" alt=""><span class="tag hl"><span class="ja"><span class="bx">「ニコ!」</span></span><span class="en">“Nico!”</span></span></div>
           </div>
@@ -612,8 +614,8 @@
           <p class="ja"><span class="bx">獲得した<wbr>カードが<wbr>3色に<wbr>なったら、<em><wbr>「トリコ!」</em>と<wbr>宣言します。<br><wbr>宣言した<wbr>プレイヤーは<wbr>ラウンドの<wbr>勝者と<wbr>なり、<b><wbr>トリコマーカーを<wbr>1つ<wbr>獲得します。</b><br><wbr>また、<em><wbr>トリコに<wbr>なった<wbr>3枚の<wbr>カードが<wbr>いずれも<wbr>同じ<wbr>数字だった<wbr>場合は<wbr>トリコマーカーを<wbr>2つ<wbr>獲得し、<wbr>ゲームの<wbr>勝者と<wbr>なります。</em></span></p>
           <p class="en">When the cards you have taken show all 3 colors, declare <em>“Trico!”</em><br>The player who declares it wins the round and <b>takes 1 Trico marker.</b><br>Also, <em>if the 3 cards that make your Trico all show the same number, you take 2 Trico markers and win the game.</em></p>
           <div class="viz split" role="img" aria-label="3色になったら「トリコ!」でトリコマーカーを1つ獲得。3枚がいずれも同じ数字ならトリコマーカーを2つ獲得">
-            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">「トリコ!」</span></span><span class="en">“Trico!”</span></span><div class="row"><span class="card"><img src="../../../img/parts/tc_p24.webp?v=3dfd348e" alt=""></span><span class="card"><img src="../../../img/parts/tc_y6.webp?v=eedbd274" alt=""></span><span class="card"><img src="../../../img/parts/tc_r15.webp?v=1d279c82" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー1つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
-            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">いずれも<wbr>同じ<wbr>数字</span></span><span class="en">All the same number</span></span><div class="row"><span class="card"><img src="../../../img/parts/tc_p12.webp?v=7743f0db" alt=""></span><span class="card"><img src="../../../img/parts/tc_y12.webp?v=55b15df4" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_r12.webp?v=51ef9f2f" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー2つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">「トリコ!」</span></span><span class="en">“Trico!”</span></span><div class="row"><span class="card"><img src="../../../img/parts/tcr_p24.webp?v=8bfd167e" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y6.webp?v=664a919d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_r15.webp?v=a36c45bf" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー1つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
+            <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">いずれも<wbr>同じ<wbr>数字</span></span><span class="en">All the same number</span></span><div class="row"><span class="card"><img src="../../../img/parts/tcr_p12.webp?v=4b717c55" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y12.webp?v=e090c5c6" alt=""></span><span class="card"><img src="../../../img/parts/tcr_r12.webp?v=d2f8ea0f" alt=""></span></div><span class="tc-marks" aria-label="トリコマーカー2つ"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
           </div>
           <div class="box">
             <h4><span class="ja"><span class="bx">誰も<wbr>トリコに<wbr>ならなかった<wbr>時</span></span><span class="en">If No One Gets a Trico</span></h4>
@@ -627,10 +629,10 @@
       <section class="panel" id="end" aria-labelledby="h-end" data-toc="ラウンド・ゲームの終了|End of Round &amp; Game">
         <h2 id="h-end"><span class="ja"><span class="bx">ラウンドの<wbr>終了・ゲームの<wbr>終了</span></span><span class="en">End of the Round and Game</span></h2>
         <div class="prose">
-          <h3><span class="ja"><span class="bx">ラウンドの<wbr>終了</span></span><span class="en">End of the Round</span></h3>
+          <h3 class="tc-band"><span class="ja"><span class="bx">ラウンドの<wbr>終了</span></span><span class="en">End of the Round</span></h3>
           <p class="ja"><span class="bx"><em>誰かが<wbr>トリコマーカーを<wbr>獲得した<wbr>時、<wbr>ラウンドは<wbr>終了します。</em><wbr>ラウンドが<wbr>終了したら<wbr>全ての<wbr>カードを<wbr>回収し、<a href="#setup"><b><wbr>「ゲームの<wbr>準備」</b></a>から<wbr>再度次の<wbr>ラウンドを<wbr>行ってください。<wbr>この<wbr>時、<em><wbr>前の<wbr>ラウンドの<wbr>勝者が<wbr>次の<wbr>ラウンドで<wbr>リードプレイヤーと<wbr>なります。</em></span></p>
           <p class="en"><em>The round ends when someone takes a Trico marker.</em> Gather all the cards and play the next round, starting again from <a href="#setup"><b>“Game Setup.”</b></a> <em>The winner of the previous round becomes the lead player for the next round.</em></p>
-          <h3><span class="ja"><span class="bx">ゲームの<wbr>終了</span></span><span class="en">End of the Game</span></h3>
+          <h3 class="tc-band"><span class="ja"><span class="bx">ゲームの<wbr>終了</span></span><span class="en">End of the Game</span></h3>
           <p class="ja"><span class="bx">誰かが<wbr>トリコマーカーを<wbr>2つ<wbr>獲得した<wbr>時、<wbr>ゲームは<wbr>終了します。<wbr>ニコの<wbr>ハートを<wbr>射止めたのは<wbr>勝利した<wbr>あなたです!</span></p>
           <p class="en">The game ends when someone has 2 Trico markers. The one who won Nico’s heart is you, the winner!</p>
           <div class="viz" role="img" aria-label="トリコマーカーを2つ獲得したらゲームの勝者">
@@ -647,26 +649,26 @@
         <div class="prose">
           <p class="ja"><span class="bx">トリコを<wbr>2人で<wbr>遊ぶ時は、<wbr>少しだけ<wbr>遊び方が<wbr>変化します。<wbr>残った<wbr>10枚の<wbr>カードを<b><wbr>仮想プレイヤー</b>と<wbr>して<wbr>扱い、<b><wbr>常に<wbr>リードプレイヤーの<wbr>役割を<wbr>務めます。</b><wbr>仮想プレイヤーが<wbr>勝利した<wbr>場合アピールは<wbr>無効と<wbr>なり、<wbr>捨て札に<wbr>なります。<wbr>2人の<wbr>プレイヤーは<wbr>仮想プレイヤーが<wbr>勝たないように<wbr>しつつ、<wbr>お互いを<wbr>出し抜かなければいけません。</span></p>
           <p class="en">When playing TRICO with 2 players, the rules change slightly. The 10 leftover cards act as a <b>virtual player</b>, which <b>always takes the role of lead player.</b> If the virtual player wins, the Appeal is void and the cards are discarded. The two players must outwit each other while keeping the virtual player from winning.</p>
-          <h3><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h3>
+          <h3 class="tc-band"><span class="ja"><span class="bx">ゲームの<wbr>準備</span></span><span class="en">Game Setup</span></h3>
           <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>手札を<wbr>10<wbr>枚ずつ<wbr>配ります。<br><wbr>残った<wbr>10枚の<wbr>カードは<wbr>積み重ねて<wbr>山札の<wbr>状態に<wbr>して、<em><wbr>仮想プレイヤー</em>と<wbr>して<wbr>扱います。<br><em><wbr>2人用ルールでは<wbr>リードプレイヤーマーカーは<wbr>使用しません。<wbr>常に<wbr>仮想プレイヤーが<wbr>リードプレイヤーを<wbr>務めます。</em><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。<wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
           <p class="en">Shuffle the cards well and deal 10 cards to each player.<br>Stack the 10 remaining cards as a deck. This deck is the <em>virtual player</em>.<br><em>The lead player marker is not used in the 2-player rules. The virtual player is always the lead player.</em> The winner of each round takes a Trico marker. To start, place the markers where everyone can reach them.</p>
-          <h3><span class="ja"><span class="bx">アピールの<wbr>流れ</span></span><span class="en">The Appeal</span></h3>
+          <h3 class="tc-band"><span class="ja"><span class="bx">アピールの<wbr>流れ</span></span><span class="en">The Appeal</span></h3>
         </div>
         <ol class="flow">
           <li class="step" id="two1">
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>1</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">仮想プレイヤーの<wbr>山札の<wbr>上から<wbr>1枚、<wbr>カードを<wbr>表向きに<wbr>公開します。</span></p><p class="en">Reveal the top card of the virtual player’s deck face up.</p></div></div>
             <div class="viz" role="img" aria-label="仮想プレイヤーの山札の上から1枚、黄の18を表向きに公開する">
-              <div class="grp"><span class="tag"><span class="ja"><span class="bx">仮想プレイヤー<wbr>(山札)</span></span><span class="en">Virtual player (deck)</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span><span class="card"><img src="../../../img/parts/tc_ura.webp?v=1c6ad391" alt=""></span></div></div>
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">仮想プレイヤー<wbr>(山札)</span></span><span class="en">Virtual player (deck)</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div></div>
               <span class="arrow" aria-hidden="true"></span>
-              <div class="grp"><span class="card"><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
+              <div class="grp"><span class="card"><img src="../../../img/parts/tcr_y18.webp?v=8652d0fa" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
             </div>
           </li>
           <li class="step" id="two2">
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>2</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">他の<wbr>2人の<wbr>プレイヤーは<wbr>手札から<wbr>裏向きで<wbr>1枚カードを<wbr>出し、<wbr>同時に<wbr>表向きに<wbr>公開します。<wbr>この<wbr>時、<wbr>場に<wbr>揃った<wbr>色の<wbr>数で<wbr>勝敗を<wbr>決めます。</span></p><p class="en">The two players each play one card face down from their hands, then reveal them at the same time. The number of colors now on the table decides the winner.</p></div></div>
             <div class="viz" role="img" aria-label="場は黄の18、27、15で1色なので、最も大きい27の勝ち">
-              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tc_c_y18.webp?v=a2e94906" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tc_c_y27.webp?v=4d688aaf" alt=""></span><span class="card"><img src="../../../img/parts/tc_c_y15.webp?v=731fd254" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
+              <div class="grp"><div class="row tc-win-row"><span class="card"><img src="../../../img/parts/tcr_y18.webp?v=8652d0fa" alt=""></span><span class="card sel"><b class="tc-win">WIN</b><img src="../../../img/parts/tcr_y27.webp?v=a730e587" alt=""></span><span class="card"><img src="../../../img/parts/tcr_y15.webp?v=21458fd3" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">場</span></span><span class="en">Table</span></span></div>
             </div>
           </li>
           <li class="step" id="two3">
@@ -700,30 +702,12 @@
         </dl>
       </section>
 
-      <!-- おまけ -->
-      <section class="panel" id="extra" aria-labelledby="h-extra">
-        <h2 id="h-extra"><span class="ja"><span class="bx">おまけ</span></span><span class="en">Bonus</span></h2>
-        <div class="prose">
-          <h3><span class="ja"><span class="bx">みんなでかこう!TRICO!えかきうた</span></span><span class="en">Let’s All Draw TRICO! — A Drawing Song</span></h3>
-          <img class="tc-ekaki" src="../../../img/unused/t_ekaki.webp?v=12479c3d" alt="①西からのぼったおひさまが ②ずれてはんしゃしているよ ③今日もいい日だにじゅうまる! ④ここはくちばしいっぽんせん ⑤足としっぽをかいたなら ⑥あっという間にトリコだね! キミもかいてみよう!!" width="1286" height="511">
-          <ol class="en tc-song">
-            <li>The sun that rose in the west…</li>
-            <li>…is reflecting a little off to the side.</li>
-            <li>Another good day: a double circle!</li>
-            <li>Here’s the beak, one straight line.</li>
-            <li>Once you draw the feet and tail…</li>
-            <li>…in no time at all, it’s a Trico!</li>
-          </ol>
-          <p class="en"><b>Try drawing one yourself!</b></p>
-        </div>
-      </section>
-
 
       <!-- 更新履歴 -->
       <section class="panel" id="history" aria-labelledby="h-history">
         <h2 id="h-history"><span class="ja"><span class="bx">更新履歴</span></span><span class="en">Update History</span></h2>
         <ol class="log">
-          <li><time datetime="2026-10-26">2026.10.26</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
+          <li><time datetime="2026-11-01">2026.11.01</time><span><span class="ja"><span class="bx">WEB版を<wbr>公開しました。</span></span><span class="en">Web edition published.</span></span></li>
         </ol>
         <p class="legend"><span class="ja"><span class="bx">ルールが<wbr>変わった<wbr>更新には <span class="chg">ルール変更</span>、<wbr>印刷した<wbr>説明書の<wbr>誤りを<wbr>直した<wbr>更新には <span class="chg">訂正</span> の<wbr>印を<wbr>付けます。</span></span><span class="en">Updates that change the rules are marked <span class="chg">Rule change</span>, and fixes to errors in the printed rulebook are marked <span class="chg">Correction</span>.</span></p>
       </section>

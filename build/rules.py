@@ -188,17 +188,19 @@ def build_page(key):
     page_yml = load(os.path.join(ROOT, 'content', 'pages', key + '.yml')) if os.path.isfile(os.path.join(ROOT, 'content', 'pages', key + '.yml')) else {}
 
     toc_items, toc_plain = make_toc(body)
-    toc_items.insert(0, '        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>')
     toc_items.append('        <li><a href="#history"><span class="ja">更新履歴</span><span class="en">Updates</span></a></li>')
     hist = history_of(key, meta)
 
+    # 遊び方動画:youtube を入れた作品だけ「動画で見る」を出す(準備中の作品は章ごと出さない)
     yt = meta.get('youtube')
+    video = ''
     if yt:
-        video = ('        <div class="screen"><iframe src="https://www.youtube-nocookie.com/embed/%s" title="%s 遊び方動画" '
-                 'allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy" style="position:absolute;inset:0;width:100%%;height:100%%;border:0"></iframe></div>') % (H.escape(yt), H.escape(meta['title_ja']))
-    else:
-        video = ('        <div class="screen">\n          <div class="soon"><span class="play" aria-hidden="true"></span><b>COMING SOON</b><span><span class="ja">遊び方動画(準備中)</span><span class="en">How-to-play video in production</span></span></div>\n        </div>\n'
-                 '        <p class="note"><span class="ja">この動画だけで遊べるように、説明書の内容をひと通り紹介する予定です。</span><span class="en">This video will cover the full rules, so you can start playing from the video alone.</span></p>')
+        toc_items.insert(0, '        <li><a href="#video"><span class="ja">動画で見る</span><span class="en">Video</span></a></li>')
+        video = ('      <section class="panel" id="video" aria-labelledby="h-video">\n'
+                 '        <h2 id="h-video"><span class="ja">動画で見る</span><span class="en">Watch the Video</span></h2>\n'
+                 '        <div class="screen"><iframe src="https://www.youtube-nocookie.com/embed/%s" title="%s 遊び方動画" '
+                 'allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy" style="position:absolute;inset:0;width:100%%;height:100%%;border:0"></iframe></div>\n'
+                 '      </section>\n') % (H.escape(yt), H.escape(meta['title_ja']))
 
     th = dict(meta['theme'])
     try:   # 帯があれば、本文の上下に帯ぶんの余白(18px + 帯 + 18px)
@@ -233,6 +235,7 @@ def build_page(key):
     if not og:
         p = re.sub(r'<meta property="og:image"[^>]*>\n', '', p)
     p = phrase_all(p, NOBREAK + (meta.get('nobreak') or []))
+    p = p.replace('{{wbr}}', '<wbr>')   # 本文で折り返してよい位置を手で指定するとき
     return meta, hist, p
 
 
