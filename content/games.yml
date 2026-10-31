@@ -13,7 +13,9 @@
   age: "6"
   genre_ja: バッティング・ハンドマネジメント
   genre_en: Simultaneous play / Hand management
-  intro_ja: 数字カードを同時に出し、高い塔を建てて得点を競うゲームです。
+  intro_ja: |-
+    塔を建てたい。でも高すぎると天罰！
+    天罰にビビりながらできるだけ立派な塔を建てよう！
   intro_en: Reveal number cards at the same time and build tall towers to score points.
   page: games/bibilu/
   booth: https://pandakinema.booth.pm/items/8795134
@@ -76,7 +78,7 @@
   age: "6"
   genre_ja: パターン認識・アクション
   genre_en: Pattern recognition / Action
-  intro_ja: ねむりは競争だ。
+  intro_ja: 場に出た動物の名前を呼ぶ、混乱系アクションゲーム！
   intro_en: Sleep is a race.
   page: games/moko/
   booth: https://pandakinema.booth.pm/items/8311555
