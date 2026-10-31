@@ -2369,7 +2369,10 @@ TEMPLATE = r'''<!doctype html>
     var id=(s.getAttribute("data-yt")||"").trim(), btn=s.querySelector(".vposter"), title=s.getAttribute("data-title");
     if(!id){ btn.disabled=true; btn.setAttribute("aria-label",title+"(準備中)"); return }
     var soon=s.querySelector(".vsoon"); if(soon) soon.remove();
-    btn.querySelector("img").src="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+    /* サムネイルの欄に画像があればそれを使う。なければYouTubeの高画質サムネイル(なければ標準の大きさ) */
+    if(!s.hasAttribute("data-poster")){ var im=btn.querySelector("img"), lo="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+      im.onload=function(){ if(im.naturalWidth<=120&&im.src!==lo) im.src=lo }; im.onerror=function(){ im.onerror=null; im.src=lo };
+      im.src="https://i.ytimg.com/vi/"+id+"/maxresdefault.jpg" }
     btn.setAttribute("aria-label",title+"を再生");
     btn.addEventListener("click",function(){
       var f=document.createElement("iframe");
@@ -2584,8 +2587,8 @@ def render(key):
         chara_note=e(g.get('chara_note', '')).replace('\n', '<br>'),
         fab_pkg=g.get('fab_pkg', 'bibilu_pkg_sm.webp'),
         # YouTubeのURLがない動画は「準備中」: ポスターを暗くして、▶の代わりに真ん中に「準備中」
-        videos_html='\n'.join('          <figure class="vslide%s" data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="%s" alt="" loading="lazy">%s<span class="vmeta">%s</span></button></figure>' % (
-            '' if v.get('youtube') else ' soon', e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']),
+        videos_html='\n'.join('          <figure class="vslide%s"%s data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="%s" alt="" loading="lazy">%s<span class="vmeta">%s</span></button></figure>' % (
+            '' if v.get('youtube') else ' soon', ' data-poster' if v.get('poster') else '', e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']),
             '<span class="vplay" aria-hidden="true">▶</span>' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>', LL(v, 'kind')) for v in g['videos']),
         vdots_html=''.join('<button type="button"%s>%s</button>' % (' aria-current="true"' if i == 0 else '', LL(v, 'kind')) for i, v in enumerate(g['videos'])),
         lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),

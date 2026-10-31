@@ -272,10 +272,15 @@ def render():
             '<p class="nm-link"><a class="wb" href="%s"%s>%s%s</a></p>' % (e(x['link']), ext(x['link']), AR, L('リンクを開く', 'Open link')) if x.get('link') else '')
         for k, x in enumerate(NEWS))
     cards = [card(g) for g in GAMES]
-    def vposter(v):   # ポスター画像の欄が空なら、YouTubeのサムネイルを使う
-        return ('img/' + img(v['poster'])) if v.get('poster') else 'https://i.ytimg.com/vi/%s/hqdefault.jpg' % yt_id(v.get('youtube'))
-    vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
-                     % (e(yt_id(v.get('youtube'))), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), e(vposter(v)), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), T(v.get('kind_ja'), v.get('kind_en')),
+    def vposter(v):   # サムネイルの欄が空なら、YouTubeの高画質サムネイル(なければ標準の大きさ)
+        if v.get('poster'):
+            return 'src="img/%s"' % e(img(v['poster']))
+        i = e(yt_id(v.get('youtube')))
+        lo = 'https://i.ytimg.com/vi/%s/hqdefault.jpg' % i
+        return ('src="https://i.ytimg.com/vi/%s/maxresdefault.jpg" onload="if(this.naturalWidth&lt;=120&amp;&amp;this.src!==\'%s\')this.src=\'%s\'" '
+                'onerror="this.onerror=null;this.src=\'%s\'"') % (i, lo, lo, lo)
+    vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img %s alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
+                     % (e(yt_id(v.get('youtube'))), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), vposter(v), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), T(v.get('kind_ja'), v.get('kind_en')),
                         '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS if v.get('youtube'))   # 準備中(YouTubeのURLがない)ものは出さない
     tools = '\n'.join(card(t, tool=True) for t in TOOLS)
     tools += '\n        <li class="card soon"><span>COMING SOON</span></li>'
