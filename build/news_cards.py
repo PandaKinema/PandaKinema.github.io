@@ -1,4 +1,4 @@
-# ニュースの共有カード:ニュースごとに、タイトルと日付が入ったチケット型の画像(1200×630)と、
+# ニュースの共有カード:ニュースごとに、タイトルと日付が入ったシネスコ型の画像(1200×630、キネマが案内)と、
 # Xで共有するためのページ(news/<id>/)を作ります。post.html の「Xに投稿する」はこのページのURLを使うので、
 # Xに投稿するとこのカードが出ます。ページを開いた人は、そのニュースのリンク先(なければトップのニュース)へ移動します。
 # 一度作ったカードとページは消しません(すでにXに投稿したカードが消えないように)。
@@ -14,7 +14,7 @@ SITE_URL = 'https://pandakinema.com/'
 FONT_DIR = os.path.join(ROOT, 'build', 'fonts')
 CARD_DIR = os.path.join(ROOT, 'img', 'share', 'news')
 PAGE_DIR = os.path.join(ROOT, 'news')
-VERSION = 'v1'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
+VERSION = 'v2'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
 
 OUTER = '#0a0c0c'                    # チケットのまわり(キネマブラック)
 DEFAULT = ('#fff5d7', '#1b2228')     # 作品に関係しないニュース:アイボリーのチケット
@@ -36,7 +36,7 @@ def load(n):
 
 
 def font(kind, size):
-    names = {'jp': ['NotoSansCJKjp-Bold-subset.otf'], 'cn': ['texgyreheroscn-bold.otf']}[kind]
+    names = {'jp': ['NotoSansCJKjp-Bold-subset.otf'], 'cn': ['texgyreheroscn-bold.otf'], 'maru': ['MPLUSRounded1c-Black-subset.ttf']}[kind]
     for n in names:
         p = os.path.join(FONT_DIR, n)
         if os.path.exists(p):
@@ -267,20 +267,151 @@ def stack(layers, gaps):
     return img
 
 
-def news_card(n, games):
-    g = related_game(n, games)
-    bg, ink = TICKET.get(g['key'], (g.get('main'), g.get('accent'))) if g else DEFAULT
-    cat_en = str(n.get('cat_en') or 'News').upper()
-    block = stack([label('NEWS', str(n.get('cat_ja') or ''), ink),
-                   title_layer(str(n.get('text_ja') or '').strip(), ink, 680)], [34])
-    d = str(n.get('date') or '').strip().replace('-', '.').replace('/', '.')
-    ym, day = (d[:7], d[8:10]) if len(d) >= 10 else (d, '')
-    stub = stub_head(ink) + [
-        (text_layer([(ym, font('cn', 26), 26 * .16)], ink), 222),
-        (text_layer([(day, font('cn', 150), 0)], ink), 269),
-        (icon(ink, 64), 430),
-        (text_layer([('PandaKinema.com', font('cn', 24), 24 * .06)], ink), 515)]
-    return ticket(bg, ink, block, stub)
+# ---------- ニュースのカード(シネスコ) ----------
+BAR = '#080404'          # 上下の黒帯
+SCREEN = '#1a242b'       # まん中(スクリーン)
+TEXT = '#ffffff'
+KINEMA = os.path.join(ROOT, 'build', 'parts', 'news_kinema.png')   # スポットライトの中のキネマ(差し替えるときはこの画像を)
+
+
+def glyph(ch, f, _c={}):
+    """1文字の左右のインクの位置(字詰め用)"""
+    k = (ch, f.path, f.size)
+    if k not in _c:
+        im = Image.new('L', (f.size * 3, f.size * 3))
+        ImageDraw.Draw(im).text((f.size, f.size * 2), ch, font=f, fill=255, anchor='ls')
+        b = im.getbbox()
+        _c[k] = (b[0] - f.size, b[2] - f.size) if b else (0, int(f.size * .3))
+    return _c[k]
+
+
+def adv(ch, f):
+    """字詰め(文字のインクの幅+左右に少し)。句読点や!?のまわりは少しあける"""
+    if ch == ' ' or ch == '\u3000':
+        return f.size * (.3 if ch == ' ' else .6), 0
+    l, r = glyph(ch, f)
+    side = f.size * .04
+    pre = f.size * .12 if ch in '！？' else 0
+    post = f.size * .28 if ch in '、。' else 0
+    return (r - l) + side * 2 + pre + post, -l + side + pre
+
+
+def mwidth(t, f):
+    return sum(adv(ch, f)[0] for ch in t)
+
+
+def draw_tight(d, x, base, t, f, color):
+    for ch in t:
+        w, off = adv(ch, f)
+        if ch.strip():
+            d.text((x + off, base), ch, font=f, fill=color, anchor='ls')
+        x += w
+    return x
+
+
+def lines_for(t, f, maxw, maxlines, split=True):
+    maxw = maxw * S
+    ps = []
+    for p in phrases(t):
+        if mwidth(p, f) > maxw:
+            if not split:
+                return None
+            cur = ''
+            for ch in p:
+                if cur and mwidth(cur + ch, f) > maxw and ch not in NO_START:
+                    ps.append(cur); cur = ''
+                cur += ch
+            ps += [cur] if cur else []
+        else:
+            ps.append(p)
+    n = len(ps)
+    for k in range(1, maxlines + 1):
+        if k > n:
+            break
+        best = None
+        def rec(start, k, acc):
+            nonlocal best
+            if k == 1:
+                cand = acc + [''.join(ps[start:])]
+                m = max(mwidth(x, f) for x in cand)
+                if best is None or m < best[0]:
+                    best = (m, cand)
+                return
+            for j in range(start + 1, n - k + 2):
+                rec(j, k - 1, acc + [''.join(ps[start:j])])
+        rec(0, k, [])
+        if best and best[0] <= maxw:
+            return best[1]
+    return None
+
+
+def news_title(t, maxw):
+    t = re.sub(r'(?<=[^\x00-\x7f])!', '！', t)   # 日本語のあとの ! ? は全角に(英字のあと(TRICO! など)はそのまま)
+    t = re.sub(r'(?<=[^\x00-\x7f])\?', '？', t)
+    sizes = ((76, 2), (68, 2), (60, 3), (52, 3), (46, 4))
+    lines = None
+    for split in (False, True):   # まずは言葉の途中で折り返さない大きさを探す
+        for size, maxlines in sizes:
+            f = font('maru', size)
+            lines = lines_for(t, f, maxw, maxlines, split)
+            if lines:
+                break
+        if lines:
+            break
+    if not lines:
+        size = 46; f = font('maru', size); lines = [t]
+    lh = int(size * 1.15 * S)
+    img = Image.new('RGBA', (int(maxw * S * 1.3), lh * len(lines) + size * S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    for i, line in enumerate(lines):
+        draw_tight(d, size * S, int(size * S * 1.0) + i * lh, line, f, TEXT)
+    return img.crop(img.getchannel('A').getbbox())
+
+
+def category_box(t):
+    f = font('maru', 26)
+    pad_x, pad_y, bw = 16 * S, 9 * S, 3 * S
+    w = int(mwidth(t, f)); asc = int(26 * S * .86)
+    img = Image.new('RGBA', (w + pad_x * 2 + bw * 2, asc + pad_y * 2 + bw * 2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((bw // 2, bw // 2, img.width - 1 - bw // 2, img.height - 1 - bw // 2), radius=5 * S, outline=TEXT, width=bw)
+    draw_tight(d, bw + pad_x, bw + pad_y + asc, t, f, TEXT)
+    return img
+
+
+def news_date(v):
+    p = re.findall(r'\d+', str(v or ''))
+    return '%s.%d.%d' % (p[0], int(p[1]), int(p[2])) if len(p) >= 3 else str(v or '')
+
+
+def news_card(n, games=None):
+    W, H = 1200 * S, 630 * S
+    img = Image.new('RGBA', (W, H), SCREEN)
+    d = ImageDraw.Draw(img)
+    d.rectangle((0, 0, W, 88 * S - 1), fill=BAR)
+    d.rectangle((0, 542 * S, W, H), fill=BAR)
+    # 上の帯:ロゴをまん中に
+    logo = tinted(os.path.join(ROOT, 'img', 'site', 'logo_en.png'), TEXT, 264, 41)
+    img.alpha_composite(logo, ((W - logo.width) // 2, (88 * S - logo.height) // 2))
+    # 下の帯:日付をまん中に
+    date = Image.new('RGBA', (W, 88 * S), (0, 0, 0, 0))
+    fd = font('maru', 58)
+    draw_tight(ImageDraw.Draw(date), 0, 70 * S, news_date(n.get('date')), fd, TEXT)
+    date = date.crop(date.getchannel('A').getbbox())
+    img.alpha_composite(date, ((W - date.width) // 2, 542 * S + (88 * S - date.height) // 2))
+    # 右:スポットライトの中のキネマ
+    if os.path.exists(KINEMA):
+        k = Image.open(KINEMA).convert('RGBA').resize((379 * S, 379 * S), Image.LANCZOS)
+        img.alpha_composite(k, ((932 - 190) * S, (315 - 190) * S))
+    # 左:カテゴリとタイトル(かたまりごと、スクリーンの上下まん中)
+    title = news_title(str(n.get('text_ja') or '').strip(), 600)
+    parts = [title]
+    cat = str(n.get('cat_ja') or '').strip()
+    if cat:
+        parts = [category_box(cat), title]
+    block = stack(parts, [26] if cat else [])
+    img.alpha_composite(block, (99 * S, int(315 * S - block.height / 2)))
+    return img.convert('RGB').resize((1200, 630), Image.LANCZOS)
 
 
 def tool_card(name, logo, sub, bg, ink):
