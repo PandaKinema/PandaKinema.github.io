@@ -14,7 +14,7 @@ SITE_URL = 'https://pandakinema.com/'
 FONT_DIR = os.path.join(ROOT, 'build', 'fonts')
 CARD_DIR = os.path.join(ROOT, 'img', 'share', 'news')
 PAGE_DIR = os.path.join(ROOT, 'news')
-VERSION = 'v3'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
+VERSION = 'v4'   # カードのデザインを変えたら上げる(全部のカードが新しいIDで作り直される)
 
 OUTER = '#0a0c0c'                    # チケットのまわり(キネマブラック)
 DEFAULT = ('#fff5d7', '#1b2228')     # 作品に関係しないニュース:アイボリーのチケット
