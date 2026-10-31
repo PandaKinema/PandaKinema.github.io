@@ -788,7 +788,7 @@
     <div class="screen-band">
       <div class="vplayer">
         <div class="vtrack" tabindex="0">
-          <figure class="vslide" data-yt="ZzzojLXqOvs" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/bash_howto_poster.jpg?v=dcc4e02a" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span></span></button></figure>
+          <figure class="vslide" data-poster data-yt="ZzzojLXqOvs" data-title="遊び方動画"><button class="vposter" type="button"><img src="../../img/video/bash_howto_poster.jpg?v=dcc4e02a" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta"><span lang="ja">遊び方動画</span><span lang="en">How to play</span></span></button></figure>
         </div>
         <button class="vnav prev" type="button" aria-label="前の動画">‹</button>
         <button class="vnav next" type="button" aria-label="次の動画">›</button>
@@ -1061,7 +1061,10 @@
     var id=(s.getAttribute("data-yt")||"").trim(), btn=s.querySelector(".vposter"), title=s.getAttribute("data-title");
     if(!id){ btn.disabled=true; btn.setAttribute("aria-label",title+"(準備中)"); return }
     var soon=s.querySelector(".vsoon"); if(soon) soon.remove();
-    btn.querySelector("img").src="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+    /* サムネイルの欄に画像があればそれを使う。なければYouTubeの高画質サムネイル(なければ標準の大きさ) */
+    if(!s.hasAttribute("data-poster")){ var im=btn.querySelector("img"), lo="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+      im.onload=function(){ if(im.naturalWidth<=120&&im.src!==lo) im.src=lo }; im.onerror=function(){ im.onerror=null; im.src=lo };
+      im.src="https://i.ytimg.com/vi/"+id+"/maxresdefault.jpg" }
     btn.setAttribute("aria-label",title+"を再生");
     btn.addEventListener("click",function(){
       var f=document.createElement("iframe");

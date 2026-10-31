@@ -1098,7 +1098,10 @@
     var id=(s.getAttribute("data-yt")||"").trim(), btn=s.querySelector(".vposter"), title=s.getAttribute("data-title");
     if(!id){ btn.disabled=true; btn.setAttribute("aria-label",title+"(準備中)"); return }
     var soon=s.querySelector(".vsoon"); if(soon) soon.remove();
-    btn.querySelector("img").src="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+    /* サムネイルの欄に画像があればそれを使う。なければYouTubeの高画質サムネイル(なければ標準の大きさ) */
+    if(!s.hasAttribute("data-poster")){ var im=btn.querySelector("img"), lo="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+      im.onload=function(){ if(im.naturalWidth<=120&&im.src!==lo) im.src=lo }; im.onerror=function(){ im.onerror=null; im.src=lo };
+      im.src="https://i.ytimg.com/vi/"+id+"/maxresdefault.jpg" }
     btn.setAttribute("aria-label",title+"を再生");
     btn.addEventListener("click",function(){
       var f=document.createElement("iframe");
