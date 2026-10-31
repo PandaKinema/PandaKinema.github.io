@@ -317,6 +317,7 @@ def apply(key):
             g[k] = LL(d, k)
     for st, ds in zip(g['steps'], d.get('steps') or []):
         st['b'] = LL(ds, 'text')
+    g['gallery_show'] = bool(d.get('gallery_show'))   # 編集画面の「ギャラリーを公開する」。オフのあいだはギャラリーの欄ごと出さない
     if d.get('gallery') is not None:
         g['gallery'] = [(imgname(x['image']), str(x.get('caption_ja') or ''), str(x.get('caption_en') or x.get('caption_ja') or ''), 'wide' if x.get('wide') else '') for x in d['gallery'] if x.get('image')]
     if d.get('gallery_todo') is not None:
@@ -2596,6 +2597,10 @@ def render(key):
     s = re.sub(r'\{\{img:([\w.\-/]+)\}\}', lambda m: uri(m.group(1)), s)
     s = re.sub(r'\.\./\.\./img/([\w.\-/]+\.(?:png|webp|jpg|jpeg|gif|svg|mp4))', lambda m: '../../img/' + media.path(m.group(1)), s)   # 名前だけで書いた画像をフォルダの中の場所に
     assert '{{' not in s, re.findall(r'\{\{[^}]*\}\}', s)[:5]
+    if not g.get('gallery_show'):
+        s = re.sub(r'\n  <section class="band band-c" id="photo".*?\n  </section>\n', '\n', s, count=1, flags=re.S)
+        # 遊び方と購入がとなり合うので、境目の模様の帯は1本だけに
+        s = re.sub(r'(<section class="band tex buy" id="buy"[^>]*>\s*)<div class="gband top" aria-hidden="true"></div>', r'\1', s, count=1)
     return s
 
 if __name__ == '__main__':

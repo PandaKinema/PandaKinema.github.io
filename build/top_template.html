@@ -37,6 +37,7 @@
     html:has(#lang-en:checked) [lang="ja"]{display:none !important}
     .js-only{display:none !important}
     .jsc .js-only{display:flex !important}
+    .jsc .js-only[hidden]{display:none !important}
     /* 英字(細長い書体)は、文字の上下の余白を削って大文字の高さで中央にそろえる */
     .cap,.sec-h h2,.news h2{display:block;line-height:1;text-box:trim-both cap alphabetic}
     @supports not (text-box:trim-both cap alphabetic){ :root{--cond:"Avenir Next Condensed","DIN Condensed","Arial Narrow","Helvetica Neue",var(--sans)} }
@@ -472,7 +473,7 @@
   </section>
 
   <section class="sec" id="movie" aria-labelledby="movie-title">
-    <div class="sec-h"><h2 class="cond" id="movie-title">MOVIE</h2><label class="shuf js-only"><input type="checkbox" id="shuffle"><i aria-hidden="true"></i>{{L:シャッフル再生|Shuffle play}}</label></div>
+    <div class="sec-h"><h2 class="cond" id="movie-title">MOVIE</h2><label class="shuf js-only"{{shuf_hidden}}><input type="checkbox" id="shuffle"><i aria-hidden="true"></i>{{L:シャッフル再生|Shuffle play}}</label></div>
     <ul class="vrow" id="vrow">
 {{vids}}
     </ul>

@@ -211,6 +211,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
@@ -361,6 +362,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
@@ -511,6 +513,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
@@ -661,6 +664,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
@@ -811,6 +815,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"
@@ -961,6 +966,7 @@ content:
               - { name: mark, label: 印, type: select, options: { values: [ { value: "", label: "なし" }, { value: rule, label: "ルール変更" }, { value: errata, label: "訂正(説明書の誤りを直した)" } ] } }
               - { name: text_ja, label: 内容, type: string, required: true }
               - { name: text_en, label: 内容(英語), type: string, hidden: true }
+          - { name: gallery_show, label: ギャラリーを公開する, type: boolean, description: "オンにすると、作品ページにギャラリーが出ます。オフのあいだはギャラリーの欄ごと出ません" }
           - name: gallery
             label: ギャラリー
             description: "1枚ずつ大きく表示して、◀▶で切り替えます(上から順に)。押すと拡大"

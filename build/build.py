@@ -274,14 +274,14 @@ def render():
     cards = [card(g) for g in GAMES]
     vids = '\n'.join('        <li><button class="vid" type="button" data-yt="%s" aria-label="%s"><img src="img/%s" alt="" loading="lazy"><span class="v-play" aria-hidden="true">▶</span><span class="v-t"><b>%s</b><small>%s</small></span>%s</button></li>'
                      % (e(yt_id(v.get('youtube'))), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), img(v['poster']), e(GAME_NAME.get(v.get('work')) or v.get('title') or ''), T(v.get('kind_ja'), v.get('kind_en')),
-                        '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS)
+                        '' if v.get('youtube') else '<span class="v-soon">%s</span>' % L('準備中', 'Coming soon')) for v in VIDEOS if v.get('youtube'))   # 準備中(YouTubeのURLがない)ものは出さない
     tools = '\n'.join(card(t, tool=True) for t in TOOLS)
     tools += '\n        <li class="card soon"><span>COMING SOON</span></li>'
 
     ogp = ''
     if SITE.get('ogp_image'):
         ogp = '  <meta property="og:url" content="%s">\n  <meta property="og:image" content="%simg/%s">' % (SITE_URL, SITE_URL, img(SITE['ogp_image']))
-    v = dict(catw='%.2f' % catw, total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
+    v = dict(shuf_hidden='' if sum(1 for x in VIDEOS if x.get('youtube')) > 1 else ' hidden', catw='%.2f' % catw, total=total, radios=radios, bars=bars, cyc=cyc, pick=pick, slides='\n'.join(slides), slide=slide, news=news, cards='\n'.join(cards), vids=vids, tools=tools,
              booth=e(SITE['booth']), x=e(SITE['x']), gm=e(SITE['gamemarket']), mail=e(SITE['mail']), note=e(SITE['note']), member_x=e(SITE['member_x']),
              about=T(SITE.get('about_ja'), SITE.get('about_en')), ogp=ogp, modals=modals,
              site_description=e(''.join(l.strip() for l in str(SITE.get('about_ja') or '').split('\n')) or 'パンダキネマ:世界観から遊びまでを1つの作品として制作する創作サークル。'),
