@@ -181,9 +181,12 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .keys .btn{font-size:13px;padding:9px}
 
 /* 4つのボタン:PCは1列、スマホは2×2 */
-.row4{flex-wrap:wrap}
-.row4 .btn{flex:1 1 calc(50% - 4px)}
-@media(min-width:900px){.row4 .btn{flex:1 1 0;font-size:13.5px;padding:12px 4px;letter-spacing:.02em}}
+/* みんなの碑文にも刻む(保存・共有のときに) */
+.carveOpt{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px 7px;margin:10px 0 0;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;text-align:center}
+.carveOpt input{width:17px;height:17px;margin:0;accent-color:var(--ink);cursor:pointer}
+.carveOpt small{flex-basis:100%;font-size:11px;font-weight:400;color:var(--ink2)}
+@media(min-width:900px){.carveOpt{margin-top:8px;font-size:12.5px}.carveOpt small{flex-basis:auto;font-size:10.5px}.table{margin-top:10px}}
+@media(min-width:900px) and (max-height:780px){.carveOpt{margin-top:6px}.carveOpt small{display:none}}
 
 /* みんなの碑文 */
 .wallSec{padding:64px 16px 0}
@@ -220,12 +223,6 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 .admin-on .wallAdmin{display:flex}
 .wallAdmin input{width:160px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--field);color:var(--ink);font:inherit}
 
-/* 刻む前の確認 */
-.dlg{max-width:min(340px,calc(100vw - 32px));border:0;padding:20px 18px 16px;text-align:center}
-.dlg::backdrop{background:rgba(9,20,28,.6)}
-.dlg h3{margin:0 0 14px;font-size:18px;letter-spacing:.03em}
-.dlgSlab{list-style:none;margin:0 auto;padding:0;width:min(220px,100%)}
-.dlg .row{margin-top:16px}
 
 /* 関連コンテンツ(作品ページと同じ形) */
 .related{padding:56px 16px 64px;text-align:center}
@@ -356,12 +353,12 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
    </div>
    <p class="note"><span>ひらがな・カタカナ・英数字・！？ーが使えます</span><span>(漢字は不可)</span><br><span>6文字ごとに折り返し。</span><span>トゥーパを押すと文字が消えます。</span></p>
    <p id="missing" class="status" aria-live="polite"></p>
-   <div class="row row4">
+   <div class="row">
     <button id="savePng" class="btn primary">保存する</button>
     <button id="sharePage" class="btn secondary">共有する</button>
     <button id="shareXMaker" class="btn secondary">Xでシェア</button>
-    <button id="carve" class="btn secondary">碑文に刻む</button>
    </div>
+   <label class="carveOpt"><input type="checkbox" id="carveOpt" checked><span>みんなの碑文にも刻む</span><small>(だれでも見られる壁に残ります)</small></label>
    <div id="admin" class="admin hidden">
     <p class="note">管理者モード(収録字形:<span id="glyphCount"></span>文字)</p>
     <div class="row">
@@ -419,22 +416,13 @@ textarea:focus{outline:none;border-color:var(--ink3);box-shadow:0 0 0 3px var(--
 <!-- みんなの碑文(Cloudflare の bibilu-wall に保存。bibilu-moji/share/wall-worker.js) -->
 <section id="wallSec" class="wallSec" aria-labelledby="wall-title">
  <header class="secHead"><p class="en" aria-hidden="true">INSCRIPTIONS</p><div class="secRow"><h2 class="pill" id="wall-title">みんなの碑文</h2></div>
-  <p class="wallNote"><span>みんなが刻んだビビル文字。</span><span>押すと読みが開きます。</span><span id="wallCount" class="wallCount"></span></p></header>
+  <p class="wallNote"><span>みんなが保存・共有したビビル文字。</span><span>押すと読みが開きます。</span><span id="wallCount" class="wallCount"></span></p></header>
  <ul id="wall" class="wall"></ul>
  <p id="wallStatus" class="wallStatus" aria-live="polite"></p>
  <div class="wallFoot"><button id="wallMore" class="btn secondary hidden" type="button">もっと見る</button></div>
  <div class="wallAdmin"><input id="wallKey" type="password" placeholder="管理キー" autocomplete="off" aria-label="管理キー"><span>「消す」で壁から外します</span></div>
 </section>
 
-<dialog id="carveDlg" class="dlg cushion" aria-labelledby="carveTitle">
- <h3 id="carveTitle">みんなの碑文に刻みますか？</h3>
- <ul class="dlgSlab"><li id="carvePreview" class="slab open"></li></ul>
- <p class="note">だれでも見られる壁に残ります。</p>
- <div class="row">
-  <button id="carveNo" class="btn secondary" type="button">やめる</button>
-  <button id="carveGo" class="btn primary" type="button">刻む</button>
- </div>
-</dialog>
 
 <!-- 関連コンテンツ(作品ページと同じ形のカード) -->
 <section class="related" aria-labelledby="related-title">
@@ -574,7 +562,7 @@ function fitPC(){
  if(!mqPC.matches){ c.style.width=c.style.height=""; panel.style.minHeight=""; return; }
  const ar=c.width/c.height||1;
  const colW=$(".stage").clientWidth;
- const room=innerHeight-(panel.getBoundingClientRect().top+scrollY)-20;   // 画面に収まる高さ
+ const room=innerHeight-(panel.getBoundingClientRect().top+scrollY)-10;   // 画面に収まる高さ
  let h;
  if(challengeText===null){ panel.style.minHeight=""; h=Math.min(panel.offsetHeight,Math.max(room,320)); }
  else h=Math.max(room,320);
@@ -694,7 +682,7 @@ function download(blob,name){
  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
  setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
-$("#savePng").onclick=async()=>{ refresh(); download(await blobOf($("#preview")),"ビビル文字.png"); };
+$("#savePng").onclick=async()=>{ carveQuiet(); refresh(); download(await blobOf($("#preview")),"ビビル文字.png"); };
 
 // URL用:対応文字を1文字ずつ短い番号にして詰める。旧 #q=Base64 も読めます。
 const URL_CHARS=Array.from(new Set([
@@ -764,8 +752,8 @@ function shareToX(text){
  shareImage(text,shareUrlFor(text),{xFallback:true});
 }
 // 何も入力していないときは、表示中のサンプルをそのまま共有する
-$("#sharePage").onclick=()=>{ const t=normalizeText(currentText()); shareImage(t,shareUrlFor(t)); };
-$("#shareXMaker").onclick=()=>shareToX(normalizeText(currentText()));
+$("#sharePage").onclick=()=>{ carveQuiet(); const t=normalizeText(currentText()); shareImage(t,shareUrlFor(t)); };
+$("#shareXMaker").onclick=()=>{ carveQuiet(); shareToX(normalizeText(currentText())); };
 $("#shareX").onclick=()=>shareToX(challengeText||"");
 
 /* ---- ビビル文字のSVG(こたえ・もじひょう・管理者用) ---- */
@@ -1007,35 +995,29 @@ $("#wall").addEventListener("click",e=>{
  const li=b.closest(".slab"); const open=!li.classList.contains("open");
  li.classList.toggle("open",open); b.setAttribute("aria-pressed",String(open));
 });
-// 碑文に刻む
-let carveP=null;
-$("#carve").onclick=()=>{
- const raw=$("#text").value;
- if(!raw.trim()){ toast("ことばを入力してから刻んでください"); return; }
+// 碑文に刻む:保存・共有のときに、チェックが入っていれば刻む(刻めないときは何も言わない)
+try{ if(localStorage.getItem("bibilu-wall-opt")==="0") $("#carveOpt").checked=false; }catch(e){}
+$("#carveOpt").addEventListener("change",()=>{ try{ localStorage.setItem("bibilu-wall-opt",$("#carveOpt").checked?"1":"0"); }catch(e){} });
+let lastCarved="";
+async function carveQuiet(){
+ if(!$("#carveOpt").checked || challengeText!==null) return;
+ const raw=$("#text").value;   // サンプル(何も入力していないとき)は刻まない
+ if(!raw.trim()) return;
  const t=normalizeText(raw).replace(/!/g,"！").replace(/\?/g,"？").replace(/\s+$/,"");
  const p=packed(t);
- if(p===null){ toast("ビビル文字にない文字は刻めません"); return; }
- if(Array.from(t.replace(/[ 　\n]/g,"")).length>WALL_MAX_CHARS||linesFor(t).length>WALL_MAX_LINES){ toast(`刻めるのは${WALL_MAX_LINES}行・${WALL_MAX_CHARS}文字までです`); return; }
- carveP=p;
- $("#carvePreview").innerHTML=`<span class="slabBtn">${slabInner(t)}</span>`;
- $("#carveGo").disabled=false;
- $("#carveDlg").showModal();
-};
-$("#carveNo").onclick=()=>$("#carveDlg").close();
-$("#carveGo").onclick=async()=>{
- if(!carveP) return;
- $("#carveGo").disabled=true;
+ if(p===null || p===lastCarved) return;
+ if(Array.from(t.replace(/[ 　\n]/g,"")).length>WALL_MAX_CHARS||linesFor(t).length>WALL_MAX_LINES) return;
+ lastCarved=p;
  try{
-   const r=await fetch(WALL_SERVER+"/wall",{method:"POST",headers:{"content-type":"text/plain;charset=UTF-8"},body:JSON.stringify({p:carveP})});
+   const r=await fetch(WALL_SERVER+"/wall",{method:"POST",headers:{"content-type":"text/plain;charset=UTF-8"},body:JSON.stringify({p})});
    const j=await r.json();
-   if(!j.ok){ toast(j.error||"刻めませんでした"); $("#carveGo").disabled=false; return; }
-   $("#carveDlg").close();
+   if(!j.ok){ if(r.status===429) lastCarved=""; return; }   // 時間をおけば次は刻める
    $("#wall").insertAdjacentHTML("afterbegin",slabHTML(j.item,true));
    setWallCount(wallTotal+1);
-   toast(`みんなの碑文に刻みました(No.${j.item.id})`);
-   $("#wallSec").scrollIntoView({behavior:"smooth",block:"start"});
- }catch(e){ toast("刻めませんでした。時間をおいてもう一度どうぞ"); $("#carveGo").disabled=false; }
-};
+   const msg=`みんなの碑文 No.${j.item.id} に刻みました`;
+   if($("#toast").classList.contains("show")) setTimeout(()=>toast(msg),2300); else toast(msg);
+ }catch(e){ lastCarved=""; }
+}
 // 管理者:壁から外す(管理キーは Cloudflare の ADMIN_KEY と同じもの)
 try{ $("#wallKey").value=localStorage.getItem("bibilu-wall-key")||""; }catch(e){}
 async function hideSlab(li){
