@@ -1571,7 +1571,9 @@ TEMPLATE = r'''<!doctype html>
     .vposter:not([disabled]):hover .vplay{scale:1.08}
     .vposter[disabled] .vplay{opacity:.5}
     .vmeta{position:absolute;right:14px;top:14px;display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:999px;background:rgba(0,0,0,.66);color:#fff;font-size:13px;font-weight:800}
-    .vsoon{padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.2);font-size:11px;font-weight:400;letter-spacing:.1em}
+    /* 準備中の動画: ポスターを暗くして、真ん中に「準備中」 */
+    .vsoon{position:absolute;left:50%;top:50%;translate:-50% -50%;padding:.5em 1.25em .55em calc(1.25em + .24em);border:2px solid rgba(255,255,255,.85);border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:clamp(15px,2.2vw,26px);font-weight:800;letter-spacing:.24em;line-height:1;white-space:nowrap}
+    .vslide.soon .vposter img,.js .cinema.on .vslide.soon .vposter img{filter:brightness(.4) saturate(.85)}
     .vslide iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
     .vnav{position:absolute;top:50%;translate:0 -50%;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:#111;font-size:22px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:opacity .2s ease}
     .vnav.prev{left:-22px}.vnav.next{right:-22px}
@@ -2581,8 +2583,10 @@ def render(key):
         piece_img=g.get('piece_img', ''), piece_alt=e(g.get('piece_alt', '')),
         chara_note=e(g.get('chara_note', '')).replace('\n', '<br>'),
         fab_pkg=g.get('fab_pkg', 'bibilu_pkg_sm.webp'),
-        videos_html='\n'.join('          <figure class="vslide" data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="%s" alt="" loading="lazy"><span class="vplay" aria-hidden="true">▶</span><span class="vmeta">%s%s</span></button></figure>' % (
-            e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']), LL(v, 'kind'), '' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>') for v in g['videos']),
+        # YouTubeのURLがない動画は「準備中」: ポスターを暗くして、▶の代わりに真ん中に「準備中」
+        videos_html='\n'.join('          <figure class="vslide%s" data-yt="%s" data-title="%s"><button class="vposter" type="button"><img src="%s" alt="" loading="lazy">%s<span class="vmeta">%s</span></button></figure>' % (
+            '' if v.get('youtube') else ' soon', e(yt(v.get('youtube'))), e(str(v.get('kind_ja') or '')), ('../../img/' + imgname(v['poster'])) if v.get('poster') else uri(g['poster']),
+            '<span class="vplay" aria-hidden="true">▶</span>' if v.get('youtube') else '<span class="vsoon">{{L:準備中|Coming soon}}</span>', LL(v, 'kind')) for v in g['videos']),
         vdots_html=''.join('<button type="button"%s>%s</button>' % (' aria-current="true"' if i == 0 else '', LL(v, 'kind')) for i, v in enumerate(g['videos'])),
         lineup_html='\n'.join([game_card(x) for x in g['games'].values() if x['key'] != key] + [tool_card(t) for t in g['tools']]),
         related_html=series_html(g, key) + related_html(g, key),
