@@ -98,9 +98,11 @@
   .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
   .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
   .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
-  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
-  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  /* シリーズ(ミニシアター):タイトルの上に黒い帯(角は丸めない)。白いシリーズのロゴを中に */
+  .series{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:6px 12px 5px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series:not(:has(img))::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .series:has(img){align-self:stretch;padding:9px 16px}
+  .series img{width:min(300px,100%);height:auto}
   .h1{margin:0;width:min(var(--logo-w,400px),100%)}
   .h1 img{margin-inline:auto}
   .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
@@ -345,16 +347,21 @@
   @media (min-width:900px){ .viz.tc-top>.arrow{margin-top:33px} }
 
   /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
-  .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
+  .tc-contents{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:24px 28px;align-items:start}
   .tc-grid{--cols:6;--cols-sm:6;gap:5px}
   .tc-items{display:flex;flex-direction:column;gap:14px;padding-top:34px}
   .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
-  .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
+  .tc-pic{flex:none;display:flex;justify-content:center;width:84px}
   .tc-item .clbl{flex:1;min-width:0}
   .tc-one{width:52px;border-radius:4.2%/3%;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-one.tc-lh{width:76px;border-radius:3%/4.2%}
+  /* リードプレイヤーマーカーは横向きが正しい向き。図ではカードと同じ高さに */
+  .card.tc-lh{width:calc(var(--cw,52px) * 1.957)}
+  .card.tc-lh img{border-radius:3%/4.2%}
+  .tc-man{width:84px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-marks{display:flex;gap:4px}
   .tc-marks img{width:34px}
+  .tc-pic .tc-marks img{width:26px}
   @media (max-width:760px){
     .tc-contents{grid-template-columns:minmax(0,1fr)}
     .tc-grid{max-width:340px}
@@ -392,9 +399,9 @@
     .tc-note{font-size:13px;text-align:left}
   }
 
-  /* 場のカードの WIN:赤い札を傾けてカードの上に */
+  /* 場のカードの WIN:赤い札をカードの上に */
   .tc-win-row{padding-top:16px}
-  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;rotate:-9deg;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
+  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
   .fig-txt{text-align:left}
 
   /* ニコ・トリコのキャラ */
@@ -480,7 +487,7 @@
             </div>
           </div>
           <div class="tc-items">
-            <div class="tc-item"><span class="tc-pic"><img class="tc-one" src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><p class="clbl"><span class="ja"><span class="bx">リードプレイヤーマーカー<wbr>:1枚</span></span><span class="en">Lead player marker: 1</span></p></div>
+            <div class="tc-item"><span class="tc-pic"><img class="tc-one tc-lh" src="../../../img/parts/tcr_lead.webp?v=389b5e34" alt=""></span><p class="clbl"><span class="ja"><span class="bx">リードプレイヤーマーカー<wbr>:1枚</span></span><span class="en">Lead player marker: 1</span></p></div>
             <div class="tc-item"><span class="tc-pic"><img class="tc-one" src="../../../img/parts/tcr_sum.webp?v=31b5f47c" alt=""></span><p class="clbl"><span class="ja"><span class="bx">サマリー:1枚</span></span><span class="en">Summary card: 1</span></p></div>
             <div class="tc-item"><span class="tc-pic"><img class="tc-man" src="../../../img/parts/tc_manual_sm.webp?v=191b726d" alt=""></span><p class="clbl"><span class="ja"><span class="bx">遊び方説明書:<wbr>1枚</span></span><span class="en">Rulebook: 1</span></p></div>
             <div class="tc-item"><span class="tc-pic"><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></span><p class="clbl"><span class="ja"><span class="bx">トリコマーカー:3個</span></span><span class="en">Trico markers: 3</span></p></div>
@@ -505,7 +512,7 @@
           <p class="ja"><span class="bx">カードを<wbr>よく<wbr>混ぜて<wbr>全員に<wbr>配り切ります。<wbr>1人に<wbr>配られる<wbr>手札は<wbr>10枚です。<br><wbr>適当な<wbr>方法で<em><wbr>リードプレイヤー<wbr>(親)</em>を<wbr>決めたら、<wbr>その<wbr>人は<wbr>リードプレイヤーマーカーを<wbr>受け取り、<wbr>手元に<wbr>置いてください。<em><wbr>トリコマーカーは<wbr>ラウンドの<wbr>勝者が<wbr>獲得します。</em><wbr>最初は<wbr>全員が<wbr>手の<wbr>届く<wbr>適当な<wbr>位置に<wbr>置いてください。</span></p>
           <p class="en">Shuffle the cards well and deal them all out. Each player gets a hand of 10 cards.<br>Choose a <em>lead player</em> in any way you like. That player takes the lead player marker and places it in front of them. <em>The winner of each round takes a Trico marker.</em> To start, place the markers where everyone can reach them.</p>
           <div class="viz" role="img" aria-label="3人に手札を10枚ずつ配り、リードプレイヤーはリードプレイヤーマーカーを受け取る。トリコマーカーは全員が手の届く位置に置く">
-            <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><div class="row" style="align-items:center"><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
+            <div class="grp"><span class="tag"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span><div class="row" style="align-items:center"><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="card tc-lh"><img src="../../../img/parts/tcr_lead.webp?v=389b5e34" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
             <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
             <div class="grp"><span class="tag"><span class="ja"><span class="bx">プレイヤー</span></span><span class="en">Player</span></span><div class="deck"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div><span class="lbl"><span class="ja"><span class="bx">手札<wbr>10枚</span></span><span class="en">10 cards</span></span></div>
             <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">トリコマーカー</span></span><span class="en">Trico markers</span></span><span class="tc-marks" aria-hidden="true"><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""><img src="../../../img/parts/t_marker.webp?v=5ae7ebe2" alt=""></span></div>
@@ -526,7 +533,7 @@
             <div class="step-head tc-head"><span class="snum" aria-hidden="true"><b>1</b></span>
               <div class="tc-txt"><p class="ja"><span class="bx">リードプレイヤーが<wbr>手札から<wbr>1枚、<wbr>カードを<wbr>表向きに<wbr>公開します。</span></p><p class="en">The lead player plays one card from their hand face up.</p></div></div>
             <div class="viz tc-top" role="img" aria-label="リードプレイヤーが赤の21を表向きに出す">
-              <div class="grp"><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span></div>
+              <div class="grp"><span class="card tc-lh"><img src="../../../img/parts/tcr_lead.webp?v=389b5e34" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤー</span></span><span class="en">Lead player</span></span></div>
               <span class="arrow" aria-hidden="true"></span>
               <div class="grp"><span class="card"><img src="../../../img/parts/tcr_r21.webp?v=c45572cb" alt=""></span><span class="lbl"><span class="ja"><span class="bx">表<wbr>向きに<wbr>公開</span></span><span class="en">Face up</span></span></div>
             </div>
@@ -581,7 +588,7 @@
               <div class="tc-txt"><p class="ja"><span class="bx">場に<wbr>残った<wbr>カードは<wbr>捨て札と<wbr>して<wbr>裏向きで<wbr>重ねて<wbr>おきます。<br><wbr>アピールの<wbr>勝者は<wbr>次の<wbr>リードプレイヤーと<wbr>なり、<wbr>リードプレイヤーマーカーを<wbr>受け取ります。<wbr>(以後<wbr>❶から<wbr>繰り返し)</span></p><p class="en">Stack the cards left on the table face down as the discard pile.<br>The winner of the Appeal becomes the next lead player and takes the lead player marker. (Repeat from ❶.)</p></div></div>
             <div class="viz" role="img" aria-label="場に残ったカードは捨て札に。アピールの勝者がリードプレイヤーマーカーを受け取り、❶から繰り返す">
               <div class="grp"><span class="tag hl"><span class="ja"><span class="bx">捨て札</span></span><span class="en">Discard pile</span></span><div class="deck" aria-hidden="true"><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span><span class="card"><img src="../../../img/parts/tcr_ura.webp?v=77e4165d" alt=""></span></div></div>
-              <div class="grp"><span class="tag"><span class="ja"><span class="bx">アピールの<wbr>勝者</span></span><span class="en">Appeal winner</span></span><span class="card"><img src="../../../img/parts/tcr_lead.webp?v=0d9d5cf2" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤーマーカー</span></span><span class="en">Lead player marker</span></span></div>
+              <div class="grp"><span class="tag"><span class="ja"><span class="bx">アピールの<wbr>勝者</span></span><span class="en">Appeal winner</span></span><span class="card tc-lh"><img src="../../../img/parts/tcr_lead.webp?v=389b5e34" alt=""></span><span class="lbl"><span class="ja"><span class="bx">リードプレイヤーマーカー</span></span><span class="en">Lead player marker</span></span></div>
               <div class="grp" style="align-self:center"><span class="loop"><span class="ja"><span class="bx">以後<wbr>❶から<wbr>繰り返し</span></span><span class="en">Repeat from ❶</span></span></div>
             </div>
           </li>

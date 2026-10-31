@@ -98,9 +98,11 @@
   .cover{background:var(--cover) var(--cover-tex,none) center top/var(--cover-tex-size,auto);color:var(--on-cover)}
   .cover .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px 44px;max-width:1000px;margin-inline:auto;padding-block:44px 40px}
   .title-block{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-  /* シリーズ名(ミニシアター):説明書・作品ページの黒い帯と同じ */
-  .series{display:flex;align-items:center;gap:8px;margin:0;padding:6px 12px 5px;border-radius:4px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
-  .series::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  /* シリーズ(ミニシアター):タイトルの上に黒い帯(角は丸めない)。白いシリーズのロゴを中に */
+  .series{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:6px 12px 5px;background:#0a0c0c;color:#fff;font:700 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+  .series:not(:has(img))::before{content:"";width:16px;height:12px;border-radius:2px;background:#fff;-webkit-mask:var(--film-icon) center/contain no-repeat;mask:var(--film-icon) center/contain no-repeat}
+  .series:has(img){align-self:stretch;padding:9px 16px}
+  .series img{width:min(300px,100%);height:auto}
   .h1{margin:0;width:min(var(--logo-w,400px),100%)}
   .h1 img{margin-inline:auto}
   .doc-name{margin:0;padding:.38em 1.2em .42em;border-radius:999px;background:var(--on-cover);color:var(--cover);font-size:clamp(16px,2.2vw,19px);font-weight:800;letter-spacing:.04em}
@@ -455,7 +457,7 @@
   <div class="cover">
     <div class="inner gut">
       <div class="title-block">
-        <p class="series">MINI THEATRE SERIES 02</p>
+        <p class="series"><img src="../../../img/site/mini_theatre_logo_w.png?v=a4923cb6" alt="MINI THEATRE SERIES 02"></p>
         <h1 class="h1"><img src="../../../img/logo/bashlogo_4C.png?v=05a46cc7" alt="BASH&SMASH! バッシュ&スマッシュ"></h1>
         <p class="doc-name"><span class="ja"><span class="bx">遊び方説明書<wbr>(WEB版)</span></span><span class="en">Rulebook (Web edition)</span></p>
         <dl class="spec">

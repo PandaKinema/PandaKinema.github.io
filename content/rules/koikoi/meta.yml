@@ -3,6 +3,7 @@ key: koikoi
 title_ja: こいこいのぼり 真打
 title_en: KOIKOINOBORI SHINUCHI
 series: MINI THEATRE SERIES 01
+series_logo: site/mini_theatre_logo_w.png   # タイトルの上の黒い帯に入れるシリーズのロゴ(白)
 logo: logo/koikoilogo.png
 logo_alt: こいこいのぼり 真打 KOIKOINOBORI SHINUCHI
 players_ja: 2人

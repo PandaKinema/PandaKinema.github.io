@@ -178,6 +178,15 @@ def keys():
     return [k for k in order if k in have] + sorted(k for k in have if k not in order)
 
 
+def series_band(meta):
+    """シリーズ(ミニシアター):タイトルの上に、黒い帯に白いシリーズのロゴ。ロゴがなければ文字で"""
+    if not meta.get('series'):
+        return ''
+    if meta.get('series_logo'):
+        return '        <p class="series"><img src="{{img:%s}}" alt="%s"></p>\n' % (meta['series_logo'], H.escape(meta['series']))
+    return '        <p class="series">%s</p>\n' % H.escape(meta['series'])
+
+
 def build_page(key):
     d = os.path.join(SRC, key)
     meta = load(os.path.join(d, 'meta.yml'))
@@ -223,7 +232,7 @@ def build_page(key):
         'body': body, 'video': video, 'history': history_html(hist),
         'updated': max((h['date'] for h in hist), default=''),
         'logo': '{{img:%s}}' % meta['logo'],
-        'series': ('        <p class="series">%s</p>\n' % H.escape(meta['series'])) if meta.get('series') else '',
+        'series': series_band(meta),
         'og_image': og, 'page_url': SITE_URL + 'games/%s/rules/' % key,
     }
     for k in ('title_ja', 'title_en', 'logo_alt', 'players_ja', 'players_en', 'time_ja', 'time_en', 'age_ja', 'age_en',

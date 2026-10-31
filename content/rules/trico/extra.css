@@ -23,16 +23,21 @@
   @media (min-width:900px){ .viz.tc-top>.arrow{margin-top:33px} }
 
   /* 内容物:説明書と同じく、カード30枚を6列に。右に小物 */
-  .tc-contents{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 32px;align-items:start}
+  .tc-contents{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:24px 28px;align-items:start}
   .tc-grid{--cols:6;--cols-sm:6;gap:5px}
   .tc-items{display:flex;flex-direction:column;gap:14px;padding-top:34px}
   .tc-item{display:flex;align-items:center;gap:14px;min-width:0}
-  .tc-pic{flex:none;display:flex;justify-content:center;width:104px}
+  .tc-pic{flex:none;display:flex;justify-content:center;width:84px}
   .tc-item .clbl{flex:1;min-width:0}
   .tc-one{width:52px;border-radius:4.2%/3%;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .tc-man{width:96px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .tc-one.tc-lh{width:76px;border-radius:3%/4.2%}
+  /* リードプレイヤーマーカーは横向きが正しい向き。図ではカードと同じ高さに */
+  .card.tc-lh{width:calc(var(--cw,52px) * 1.957)}
+  .card.tc-lh img{border-radius:3%/4.2%}
+  .tc-man{width:84px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .tc-marks{display:flex;gap:4px}
   .tc-marks img{width:34px}
+  .tc-pic .tc-marks img{width:26px}
   @media (max-width:760px){
     .tc-contents{grid-template-columns:minmax(0,1fr)}
     .tc-grid{max-width:340px}
@@ -70,9 +75,9 @@
     .tc-note{font-size:13px;text-align:left}
   }
 
-  /* 場のカードの WIN:赤い札を傾けてカードの上に */
+  /* 場のカードの WIN:赤い札をカードの上に */
   .tc-win-row{padding-top:16px}
-  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;rotate:-9deg;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
+  .tc-win{position:absolute;left:50%;top:0;z-index:3;translate:-50% -62%;padding:4px 10px 5px;border:2px solid #fff;border-radius:999px;background:var(--hl);color:#fff;font:800 13px/1 var(--num);letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.28)}
   .fig-txt{text-align:left}
 
   /* ニコ・トリコのキャラ */
