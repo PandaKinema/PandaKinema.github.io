@@ -3,7 +3,7 @@ key: bash
 title_ja: BASH&SMASH!
 title_en: BASH&SMASH!
 series: MINI THEATRE SERIES 02
-series_logo: site/mini_theatre_logo_w.png   # タイトルの上の黒い帯に入れるシリーズのロゴ(白)
+series_logo: site/mini_theatre_logo_02.png   # タイトルの上の黒い帯に入れるシリーズのロゴ(白・番号入り)
 logo: logo/bashlogo_4C.png
 logo_alt: BASH&SMASH! バッシュ&スマッシュ
 players_ja: 2人
