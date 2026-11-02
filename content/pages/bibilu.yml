@@ -75,8 +75,8 @@ steps:
   - text_ja: もし同じ数字を出した人がいたら**バッティング。バッティングした人だけが塔を建てる!**
     text_en: If anyone played the same number, it is a **clash.** **Only the
       clashing players build!**
-  - text_ja: 塔はどんどん上に重ねていく。ただし、6枚を超えると、**天罰マークの数だけ下から崩れる!**
-    text_en: Towers keep growing upward. But past 6 cards, **they crumble from the
+  - text_ja: 塔はどんどん上に重ねていく。ただし、6枚になると、**天罰マークの数だけ下から崩れる!**
+    text_en: Towers keep growing upward. But at 6 cards, **they crumble from the
       bottom by the number of punishment marks!**
   - text_ja: 手札がなくなったらゲーム終了! **「塔の1番上の数字×高さ」が最も大きい人が勝ち!**
     text_en: When hands run out, the game ends! **Highest “top number × height” wins!**

@@ -746,7 +746,7 @@ GAMES['bibilu'] = dict(
              v='<div class="picks">' + pick(7, 0, '2') + pick(5, 1) + pick(3, 2) + pick(8, 3, '1') + '</div>'),
         dict(cls='s2', b=L('もし同じ数字を出した人がいたら[[バッティング。]][[バッティングした人だけが塔を建てる!]]', 'If anyone played the same number, it is a [[clash.]] [[Only the clashing players build!]]'),
              v='<div class="picks">' + pick(3, 0, 'star') + pick(3, 1, 'star') + pick(10, 2) + pick(2, 3) + '</div>'),
-        dict(cls='s3', b=L('塔はどんどん上に重ねていく。ただし、6枚を超えると、[[天罰マークの数だけ下から崩れる!]]', 'Towers keep growing upward. But past 6 cards, [[they crumble from the bottom by the number of punishment marks!]]'),
+        dict(cls='s3', b=L('塔はどんどん上に重ねていく。ただし、6枚になると、[[天罰マークの数だけ下から崩れる!]]', 'Towers keep growing upward. But at 6 cards, [[they crumble from the bottom by the number of punishment marks!]]'),
              v='<div class="lscene">' + ltower([2, 5, 3, 7, 1, 8], fall=4) + '<div class="lnotes"><p class="n1">' + L('<em>6枚目に8を獲得!</em><br>8の天罰マークは<br>4つなので…', '<em>6th card: an 8!</em><br>The 8 has 4<br>marks, so…') + '</p><p class="n2">' + L('<em>下から4枚<br>捨てる!</em>', '<em>Discard 4<br>from the bottom!</em>') + '</p><p class="n3">' + L('上の2枚は残る', 'The top 2 stay') + '</p></div></div>'),
         dict(cls='s4', b=L('手札がなくなったらゲーム終了! [[「塔の1番上の数字×高さ」が最も大きい人が勝ち!]]', 'When hands run out, the game ends! [[Highest “top number × height” wins!]]'),
              v='<div class="lscene">' + ltower([3, 5, 2, 7, 8]) + '<div class="lscore"><p>' + L('8×5=<b>40点!</b>', '8×5=<b>40 pts!</b>') + '</p><span class="hop"><img class="hop-orb" src="{{img:b_tupa_orb.webp}}" alt=""><img class="hop-tok" src="{{img:b_tupa_body.webp}}" alt="トゥーパ"></span></div></div>'),
