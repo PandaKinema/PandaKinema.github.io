@@ -234,7 +234,7 @@ function propagateTemplateStyle(){
   syncPages();
   if(t.lib)scheduleLibrarySync(card.tpl);
 }
-function startDeck(){deck={cards:{},order:[],templates:{},fmt:2,font:"gothic"};tplWatch=null;currentPage=0;selected=0;padOrder();syncPages()}
+function startDeck(){deck={cards:{},order:[],templates:{},fmt:2,font:"gothic"};tplWatch=null;startDismissed=false;currentPage=0;selected=0;padOrder();syncPages()}
 function applyCardGeometry(container){
   const f=faceMM(),q=pairMM(),g=gridRC();
   container.style.setProperty("--face-w",f.w+"mm");
@@ -850,7 +850,8 @@ function renderSheet(){
   if(tplNotice){showAppToast(tplNotice,{duration:5000});tplNotice=null}
   recordHistory();
   const blank=deck.order.every(isBlankCard);
-  ["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});
+  ["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank||!startDismissed});
+  syncStartChooser(blank);
   el("sheetTitle").textContent=sheetTitle;
   buildSheet(grid,currentFaces(),true);
   setBackOffset(grid,layoutMode()==="both"&&arrangement()==="back");
@@ -892,6 +893,7 @@ function closeMobilePanel(){
 
 function openMobilePanel(name,buttonId){
   if(!mobileUIActive())return;
+  dismissStart();   // スマホでパネルを開いたら、最初の画面は閉じて無地から
   if(mobileSheetMode&&["Face","Template","Options"].includes(name))setMobileSheetMode(false);
   if(mobilePanelOpen===name){ closeMobilePanel(); return; }
   closeMobilePanel();
@@ -1905,6 +1907,41 @@ async function openSample(){
   closeMobilePanel();setPaper();renderSheet();syncControls();
 }
 document.querySelectorAll(".open-sample").forEach(b=>b.addEventListener("click",openSample));
+/* ---- 最初の画面「何を作る？」:空の作品のときに出す。選ぶと1ページぶんのカードが同じテンプレートでつながって並ぶ ---- */
+let startDismissed=false,startSig="";
+const START_FACES={playing:()=>makePlaying(),tcg:()=>makeTcg(),word:()=>makeWord(),plain:()=>makePlain()};
+function syncStartChooser(blank){
+  const box=el("startChooser");if(!box)return;
+  const show=blank&&!startDismissed;box.hidden=!show;document.body.classList.toggle("start-open",show);
+  if(!show)return;
+  // カードの大きさ(見出しの選択と同じもの)
+  const src=el("cardSize"),sel=el("startCardSize");
+  if(sel.options.length!==src.options.length||[...sel.options].some((o,i)=>o.textContent!==src.options[i].textContent))sel.innerHTML=src.innerHTML;
+  sel.value=src.value;
+  // 小さな絵は大きさが変わったときだけ描き直す
+  const sig=src.value+"|"+cardOrientation+"|"+customCard.w+"x"+customCard.h+"|"+(window.CMMI18N&&CMMI18N.lang);
+  if(sig===startSig)return;startSig=sig;
+  box.querySelectorAll(".start-tile[data-start]").forEach(t=>{const make=START_FACES[t.dataset.start],art=t.querySelector(".start-art");if(!make||!art)return;art.innerHTML="";art.appendChild(faceThumb(make(),mobileUIActive()?54:64))});
+}
+const PLAYING_NUMS=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+function startWith(kind){
+  if(kind==="table"){openBulk();return}
+  if(kind==="sample"){openSample();return}
+  startDismissed=true;
+  if(kind!=="plain"){
+    const front=START_FACES[kind]();
+    const tid=addTemplate({front,back:makePlain()},uniqueTplName(T(BULK_KINDS[kind].name)),false);
+    deck.order.slice(0,cardsPerPage()).forEach((id,i)=>{applyTemplate(tid,id);if(kind==="playing")deck.cards[id].front.number=PLAYING_NUMS[i%13]});
+    tplWatch=null;currentPage=0;selected=0;
+    showAppToast(T("1ページぶん並べました。どれか1枚の色や配置を変えると、全部に反映されます。"),{duration:6000});
+  }
+  syncPages();renderSheet();syncControls();
+}
+document.querySelectorAll("#startTiles [data-start]").forEach(b=>b.addEventListener("click",()=>startWith(b.dataset.start)));
+function dismissStart(){if(startDismissed)return;startDismissed=true;const blank=deck.order.every(isBlankCard);["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});syncStartChooser(blank)}
+el("startLater").addEventListener("click",dismissStart);
+el("startCardSize").addEventListener("change",e=>{const src=el("cardSize");src.value=e.target.value;src.dispatchEvent(new Event("change",{bubbles:true}));syncStartChooser(deck.order.every(isBlankCard))});
+document.addEventListener("cmm-langchange",()=>{startSig="";syncStartChooser(deck.order.every(isBlankCard))});
 /* ---- フォントの選択 ---- */
 document.querySelectorAll("select.font-select[id]").forEach(x=>x.innerHTML=fontOptions(true));
 if(el("deckFont")){el("deckFont").innerHTML=fontOptions(false);el("deckFont").addEventListener("change",e=>{deck.font=e.target.value;renderSheet();syncControls()})}

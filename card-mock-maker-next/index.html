@@ -187,6 +187,21 @@
     </nav>
 
     <div class="canvas-area">
+      <section id="startChooser" class="start-chooser" hidden aria-labelledby="startTitle">
+        <div class="start-box">
+          <h2 id="startTitle" class="start-title">何を作る？</h2>
+          <label class="start-size"><span>カードの大きさ</span><select id="startCardSize" aria-label="カードの大きさ"></select></label>
+          <div id="startTiles" class="start-tiles">
+            <button type="button" class="start-tile" data-start="playing"><span class="start-art no-i18n"></span><b>トランプ</b><small>数字とマーク</small></button>
+            <button type="button" class="start-tile" data-start="tcg"><span class="start-art no-i18n"></span><b>トレカ</b><small>名前・絵・テキスト</small></button>
+            <button type="button" class="start-tile" data-start="word"><span class="start-art no-i18n"></span><b>ワードゲーム</b><small>大きな1語</small></button>
+            <button type="button" class="start-tile" data-start="plain"><span class="start-art no-i18n"></span><b>無地から作る</b><small>文字や画像を自由に置く</small></button>
+            <button type="button" class="start-tile" data-start="table"><span class="start-art start-art-icon" aria-hidden="true">▦</span><b>表から作る</b><small>リストからまとめて</small></button>
+            <button type="button" class="start-tile" data-start="sample"><span class="start-art start-art-icon" aria-hidden="true">★</span><b>見本を見る</b><small>できあがりの例</small></button>
+          </div>
+          <button type="button" id="startLater" class="start-later">あとで決める</button>
+        </div>
+      </section>
       <div id="emptyHint" class="empty-hint" hidden>
         <span>カードをクリックして、右のパネルの「面の種類」から作りはじめます。</span>
         <button type="button" class="open-sample">見本を開く</button>

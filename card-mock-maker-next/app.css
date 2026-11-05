@@ -2242,3 +2242,34 @@ header .header-actions{display:flex;align-items:center;gap:8px;flex:none;margin-
 .proj-info{flex:1;min-width:0;display:grid;gap:4px}
 .proj-open{font-weight:700}
 @media(max-width:720px){.proj-new{min-height:46px}}
+
+/* ---- 最初の画面「何を作る？」 ---- */
+.canvas-area{position:relative}
+.start-chooser{position:absolute;top:0;left:0;right:0;min-height:100%;z-index:30;display:flex;align-items:flex-start;justify-content:center;padding:40px 24px;background:rgba(246,246,243,.86);backdrop-filter:blur(2px)}
+.start-chooser[hidden]{display:none!important}
+.start-box{width:min(760px,100%);padding:28px 28px 20px;border:1px solid var(--ui-border);border-radius:16px;background:var(--ui-panel);box-shadow:0 18px 48px rgba(0,0,0,.12);text-align:center}
+.start-title{margin:0 0 14px;font-size:22px;font-weight:800;letter-spacing:.04em}
+.start-size{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;font-size:12px;color:var(--ui-muted)}
+.start-size select{height:32px;padding:2px 28px 2px 10px;font-size:13px}
+.start-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.start-tile{display:flex!important;flex-direction:column;align-items:center;gap:4px;min-height:0!important;padding:14px 10px 12px!important;border:1px solid var(--ui-border)!important;border-radius:12px!important;background:var(--ui-control)!important;color:var(--ink)!important;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.start-tile:hover,.start-tile:focus-visible{border-color:var(--ink)!important;box-shadow:0 6px 18px rgba(0,0,0,.08);transform:translateY(-1px)}
+.start-tile b{font-size:14px}
+.start-tile small{font-size:11px;color:var(--ui-muted);line-height:1.4}
+.start-art{display:flex;align-items:center;justify-content:center;height:96px;margin-bottom:6px}
+.start-art .bulk-thumb{box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.start-art-icon{width:64px;font-size:34px;color:var(--ui-muted)}
+.start-later{margin-top:14px;border:0!important;background:transparent!important;color:var(--ui-muted)!important;font-size:12px!important;text-decoration:underline;min-height:0!important}
+@media(prefers-color-scheme:dark){.start-chooser{background:rgba(20,22,24,.82)}}
+@media(max-width:720px){
+  .start-chooser{position:static;min-height:0;padding:0 0 10px;background:transparent;backdrop-filter:none}
+  .start-box{padding:16px 12px 10px;border-radius:12px;box-shadow:none}
+  .start-title{font-size:18px;margin-bottom:10px}
+  .start-size{margin-bottom:12px}
+  .start-size select{height:40px;font-size:15px}
+  .start-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .start-art{height:80px}
+  body.start-open #mobileCardPreview{display:none!important}
+}
+@media print{.start-chooser{display:none!important}}
+.start-size span{white-space:nowrap}
