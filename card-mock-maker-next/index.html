@@ -39,7 +39,7 @@
     <option value="tarot">タロット (70×120)</option><option value="square">スクエア (70×70)</option>
     <option value="custom">自由 (63×88)</option><option value="custom-edit">サイズを入力…</option>
   </select>
-  <select id="impositionMode" title="面付けモード"><option value="duplex">両面（折り）</option><option value="single">片面</option><option value="both">両面印刷</option></select>
+  <select id="impositionMode" title="並べ方"><option value="duplex">両面（折り）</option><option value="single">片面</option><option value="both">両面印刷</option></select>
   <input id="sheetTitleInput" type="text" placeholder="タイトル" style="width:330px">
   <span class="toolbar-spacer header-action-gap"></span>
   <div class="header-actions">
@@ -226,13 +226,13 @@
       <div id="mobileQuickBar" class="mobile-quick-bar" aria-label="スマホ用ツールバー">
         <button id="mobileFaceTab" type="button"><span class="mq-icon">▣</span><span>面</span></button>
         <button id="mobileTemplateTab" type="button"><span class="mq-icon">A</span><span>テンプレ</span></button>
-        <button id="mobileOptionsJump" type="button"><span class="mq-icon">＋</span><span>オプション</span></button>
+        <button id="mobileOptionsJump" type="button"><span class="mq-icon">＋</span><span>パーツ</span></button>
         <button id="mobilePaperTab" type="button"><span class="mq-icon">▤</span><span>用紙</span></button>
         <button id="mobileMore" type="button"><span class="mq-icon">•••</span><span>メニュー</span></button>
       </div>
       
       <div id="mobileFacePanel" class="mobile-tool-panel" aria-hidden="true">
-        <div class="mobile-panel-head"><strong>面</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div class="mobile-panel-head"><strong>選んでいるカード</strong><button type="button" class="mobile-panel-close">×</button></div>
         <div id="mobileFacePanelBody" class="mobile-panel-body"></div>
       </div>
       <div id="mobileTemplatePanel" class="mobile-tool-panel" aria-hidden="true">
@@ -243,13 +243,13 @@
             <button id="mobileMakePlain" type="button">無地に戻す</button>
           </div>
           <div id="mobileTemplateHint" class="m-hint hidden">
-            <p>この面はテンプレートを使っていません。テンプレートを使うときは、面の種類を「テンプレート」にします。</p>
-            <button id="mobileMakeTemplate" type="button">この面をテンプレートにする</button>
+            <p>この面はテンプレートを使っていません。使うときは、ここから選びます。</p>
+            <div class="m-kind-buttons"><button type="button" data-kind="playing">トランプ</button><button type="button" data-kind="tcg">トレカ</button><button type="button" data-kind="word">ワードゲーム</button></div>
           </div>
         </div>
       </div>
       <div id="mobileOptionsPanel" class="mobile-tool-panel" aria-hidden="true">
-        <div class="mobile-panel-head"><strong>オプション</strong><button type="button" class="mobile-panel-close">×</button></div>
+        <div class="mobile-panel-head"><strong>パーツ</strong><button type="button" class="mobile-panel-close">×</button></div>
         <div id="mobileOptionsPanelBody" class="mobile-panel-body"></div>
       </div>
       <div id="mobilePaperPanel" class="mobile-tool-panel" aria-hidden="true">
@@ -257,7 +257,7 @@
         <div id="mobilePaperPanelBody" class="mobile-panel-body m-form">
           <div class="m-field"><span class="m-label">用紙</span><div class="m-slot m-slot-pair" data-slot="paperSize paperOrientation"></div></div>
           <div class="m-field"><span class="m-label">カード</span><div class="m-slot" data-slot="cardSize"></div></div>
-          <div class="m-field"><span class="m-label">面付け</span><div class="m-slot" data-slot="impositionMode"></div></div>
+          <div class="m-field"><span class="m-label">並べ方</span><div class="m-slot" data-slot="impositionMode"></div></div>
           <div class="m-field m-duplex-field" hidden><span class="m-label">両面印刷</span><div class="m-slot" data-slot="duplexSettings"></div><p class="duplex-note"></p></div>
           <div class="m-field"><span class="m-label">タイトル</span><div class="m-slot" data-slot="sheetTitleInput"></div></div>
           <div class="m-field"><span class="m-label">基本のフォント</span><div class="m-slot" data-slot="deckFont"></div></div>
@@ -322,7 +322,7 @@
 <aside>
 
   <div class="group face-section">
-    <div class="section-title">面</div>
+    <div class="section-title">選んでいるカード</div>
     <div id="selectedLabel" class="hint selected-face-label">カード1（ページ内1）・オモテ</div>
     <div class="qty-row">
       <span class="qty-label">枚数</span>
@@ -334,56 +334,30 @@
     <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
       <option value="plain">無地</option>
-      <option value="template">テンプレート</option>
+      <option value="playing">トランプ</option>
+      <option value="tcg">トレカ</option>
+      <option value="word">ワードゲーム</option>
       <option value="image">画像</option>
       <option value="mytpl">マイテンプレート</option>
     </select>
     <div id="myTplPicker" class="mytpl-picker hidden">
       <div id="myTplChoices" class="mytpl-choices no-i18n"></div>
-      <p id="myTplEmpty" class="tpl-note" hidden>まだマイテンプレートがありません。カードの見た目を整えたら、下の「テンプレートとして保存」で作れます。</p>
+      <div id="myTplEmpty" class="tpl-empty" hidden><p class="tpl-note">まだマイテンプレートがありません。カードの見た目を整えてから保存すると、ここに並びます。</p><button id="myTplSaveNow" type="button" class="mini">いまのカードをテンプレートとして保存</button></div>
       <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
     </div>
 
-    <div class="tool-block face-bg-tool">
-      <div class="tool-strip">
-        <div class="tool-color fill-color" title="面色">
-          <input id="faceBgColor" class="palette-target" type="color" value="#ffffff" aria-label="背景の面色">
-        </div>
-        <div class="tool-color stroke-color" title="線色">
-          <input id="faceBorderColor" class="palette-target" type="color" value="#222222" aria-label="背景の線色">
-        </div>
-        <div class="tool-number-wrap stroke-width-control" title="線の太さ">
-          <span class="stroke-width-icon" aria-hidden="true"></span>
-          <select id="faceBorderWidth" class="stroke-width-select" aria-label="背景の線の太さ" title="線幅">
-            <option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1" selected>1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option>
-          </select>
-          <select id="faceBorderAlign" class="stroke-align-select" aria-label="背景の線の位置" title="線の位置">
-            <option value="inside" selected>内側</option><option value="center">中央</option><option value="outside">外側</option>
-          </select>
-        </div>
-      </div>
-      <div class="tool-file-line">
-        <span class="file-line-label">背景画像</span>
-        <input id="faceBgImageInput" type="file" accept="image/*" aria-label="背景画像">
-        <button id="clearFaceBgImage" class="mini" title="背景画像を削除">削除</button>
-      </div>
-    </div>
-    <div class="copy-tools face-copy-tools">
-      <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
-      <button id="copyToPageSide" class="mini copy-wide">この面をこのページの同じ面にコピー</button>
-      <button id="copyToAllPagesSide" class="mini copy-wide">この面をすべてのページの同じ面にコピー</button>
-      <button id="tplSaveQuick" type="button" class="mini copy-wide">テンプレートとして保存</button>
-    </div>
   </div>
 
   <div id="templateSelector" class="group template-section">
-    <div class="section-title">テンプレート</div>
-    <label>種類</label>
-    <select id="templateType">
-      <option value="playing">トランプ</option>
-      <option value="tcg">トレカ</option>
-      <option value="word">ワードゲーム</option>
-    </select>
+    <div id="tplSectionTitle" class="section-title">テンプレート</div>
+    <div class="tpl-kind-row" hidden>
+      <label for="templateType">種類</label>
+      <select id="templateType">
+        <option value="playing">トランプ</option>
+        <option value="tcg">トレカ</option>
+        <option value="word">ワードゲーム</option>
+      </select>
+    </div>
   </div>
 
   <div id="playingControls" class="group compact-template-controls">
@@ -527,16 +501,44 @@
     <input id="imageInput" type="file" accept="image/*">
   </div>
 
+  <details id="faceStyleFold" class="group panel-fold">
+    <summary><span class="fold-title">背景とふち</span><span id="faceStyleChip" class="fold-chip" aria-hidden="true"></span></summary>
+      <div class="tool-block face-bg-tool">
+        <div class="tool-strip">
+          <div class="tool-color fill-color" title="面色">
+            <input id="faceBgColor" class="palette-target" type="color" value="#ffffff" aria-label="背景の面色">
+          </div>
+          <div class="tool-color stroke-color" title="線色">
+            <input id="faceBorderColor" class="palette-target" type="color" value="#222222" aria-label="背景の線色">
+          </div>
+          <div class="tool-number-wrap stroke-width-control" title="線の太さ">
+            <span class="stroke-width-icon" aria-hidden="true"></span>
+            <select id="faceBorderWidth" class="stroke-width-select" aria-label="背景の線の太さ" title="線幅">
+              <option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1" selected>1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option>
+            </select>
+            <select id="faceBorderAlign" class="stroke-align-select" aria-label="背景の線の位置" title="線の位置">
+              <option value="inside" selected>内側</option><option value="center">中央</option><option value="outside">外側</option>
+            </select>
+          </div>
+        </div>
+        <div class="tool-file-line">
+          <span class="file-line-label">背景画像</span>
+          <input id="faceBgImageInput" type="file" accept="image/*" aria-label="背景画像">
+          <button id="clearFaceBgImage" class="mini" title="背景画像を削除">削除</button>
+        </div>
+      </div>
+  </details>
+
   <div class="group option-section" id="textBoxControls">
-    <div class="section-title">オプション</div>
+    <div class="section-title">パーツを足す</div>
     <div class="option-tool-head">
-      <strong>テキストボックス</strong>
+      <strong>文字</strong>
       <button id="addTextBox" class="mini option-add-button" aria-label="追加">＋</button>
     </div>
     <div id="textBoxList"></div>
 
     <div class="option-tool-head option-subtool">
-      <strong>フレームテキスト</strong>
+      <strong>枠つき文字</strong>
       <button id="addFrameText" class="mini option-add-button" aria-label="追加">＋</button>
     </div>
     <div id="frameTextList"></div>
@@ -551,6 +553,16 @@
     <div class="option-tool-head option-subtool"><strong>図形</strong><div class="shape-add-row"><button type="button" class="mini add-shape" data-shape="circle">○</button><button type="button" class="mini add-shape" data-shape="triangle">△</button><button type="button" class="mini add-shape" data-shape="rect">□</button><button type="button" class="mini add-shape" data-shape="polygon">⬡</button><button type="button" class="mini add-shape" data-shape="star">★</button></div></div>
     <div id="shapeList"></div>
   </div>
+
+  <details id="faceToolsFold" class="group panel-fold">
+    <summary><span class="fold-title">コピー・テンプレート保存</span></summary>
+      <div class="copy-tools face-copy-tools">
+        <div class="copy-face-row"><button id="copyFace" class="mini">面をコピー</button><button id="pasteFace" class="mini" disabled>面をペースト</button></div>
+        <button id="copyToPageSide" class="mini copy-wide">この面をこのページの同じ面にコピー</button>
+        <button id="copyToAllPagesSide" class="mini copy-wide">この面をすべてのページの同じ面にコピー</button>
+        <button id="tplSaveQuick" type="button" class="mini copy-wide">テンプレートとして保存</button>
+      </div>
+  </details>
 
   <div class="public-beta-note">
     <strong>Ver.1.0</strong>

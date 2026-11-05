@@ -256,7 +256,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&l
 function ensureTextBoxes(d){ if(!Array.isArray(d.textBoxes)) d.textBoxes=[]; return d.textBoxes; }
 function makeTextBox(i=0){return {id:"tb_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:T("テキスト"),style:{size:SIZE.text,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},box:{x:20,y:18+i*16,w:60,h:14},centerSnap:false}}
 function ensureFrameTexts(d){if(!Array.isArray(d.frameTexts))d.frameTexts=[];return d.frameTexts}
-function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:T("フレームテキスト"),style:{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
+function makeFrameText(i=0){return {id:"ft_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),text:T("枠つき文字"),style:{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false},borderColor:"#222222",borderNone:false,borderWidth:1,fillColor:"#ffffff",fillNone:false,box:{x:18,y:22+i*14,w:64,h:18},centerSnap:false}}
 function ensureOptionImages(d){if(!Array.isArray(d.optionImages))d.optionImages=[];if(!Array.isArray(d.shapes))d.shapes=[];return d.optionImages}
 function ensureShapes(d){if(!Array.isArray(d.shapes))d.shapes=[];return d.shapes}
 function makeShape(type,i=0){return {id:"sh_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),type,points:(type==="star"?5:6),fillColor:"#ffffff",fillNone:false,borderColor:"#222222",borderNone:false,borderWidth:1,borderAlign:"inside",box:{x:30,y:30+i*4,w:38,h:38},centerSnap:false}}
@@ -925,7 +925,7 @@ function cloneControlsForMobile(){
   if(want===mobilePlaced)return;
   if(want){
     const q=s=>document.querySelector(s);
-    [[ "mobileFacePanelBody",[".face-section","#imageControls"]],
+    [[ "mobileFacePanelBody",[".face-section","#imageControls","#faceStyleFold","#faceToolsFold"]],
      [ "mobileTemplatePanelBody",["#templateSelector","#playingControls","#tcgControls","#wordControls","#customControls"]],
      [ "mobileOptionsPanelBody",["#textBoxControls","aside .public-beta-note"]]
     ].forEach(([host,sels])=>sels.forEach(sel=>moveForMobile(q(sel),el(host))));
@@ -1179,7 +1179,7 @@ function renderTextBoxEditors(d){
     wrap.className="textbox-editor";
     wrap.innerHTML=`
       <div class="textbox-editor-head">
-        <strong>テキストボックス${index+1}</strong>
+        <strong>文字${index+1}</strong>
         <button type="button" class="textbox-delete">削除</button>
       </div>
       <input class="tb-text" type="text" value="${esc(item.text||"")}" placeholder="テキスト${index+1}">
@@ -1254,8 +1254,8 @@ function renderFrameTextEditors(d){
   items.forEach((item,index)=>{
     const st=item.style||{size:SIZE.frame,bold:false,italic:false,underline:false,color:"#222222",colorNone:false};
     const wrap=document.createElement("div");wrap.className="frame-editor";
-    wrap.innerHTML=`<div class="frame-editor-head"><strong>フレームテキスト${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
-      <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="フレームテキスト">
+    wrap.innerHTML=`<div class="frame-editor-head"><strong>枠つき文字${index+1}</strong><button type="button" class="textbox-delete">削除</button></div>
+      <input class="ft-text" type="text" value="${esc(item.text||"")}" placeholder="枠つき文字">
       <div class="tool-strip tool-strip-secondary">
         <div class="tool-number-wrap" title="文字サイズ"><span class="size-icon">A</span><input class="ft-size tool-number" type="number"><span class="unit-suffix"></span></div>
         <label class="style-toggle"><input class="ft-bold" type="checkbox" ${st.bold?"checked":""}><span class="bold-mark">B</span></label>
@@ -1306,7 +1306,7 @@ function syncControls(){
   syncMyTplPicker(qcard,qtpl,pickOnly);
   refreshCopyButtonLabels();
   syncDuplexUI();
-  el("faceType").value=(qtpl||pickOnly)?"mytpl":d.type;
+  el("faceType").value=(qtpl||pickOnly)?"mytpl":d.type==="template"?(d.template||"playing"):d.type;
   const templ=d.type==="template"&&!pickOnly;
   el("templateSelector").classList.toggle("hidden",!templ);
   el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
@@ -1316,8 +1316,10 @@ function syncControls(){
 
 
   el("suitImageControls").classList.add("hidden");
+  syncFaceStyleChip(d);
   if(templ){
     el("templateType").value=d.template||"playing";
+    el("tplSectionTitle").textContent=T(TPL_SECTION_TITLES[d.template||"playing"]||"テンプレート");
     if((d.template||"playing")==="playing"){
       el("playingControls").classList.remove("hidden");
       el("numInput").value=d.number??"";el("suitInput").value=d.suit??"●";
@@ -1539,7 +1541,7 @@ el("mobileTemplateTab")?.addEventListener("click",()=>{cloneControlsForMobile();
 el("mobileOptionsJump")?.addEventListener("click",()=>{cloneControlsForMobile();openMobilePanel("Options","mobileOptionsJump")});
 el("mobileMore")?.addEventListener("click",()=>openMobilePanel("More","mobileMore"));
 el("mobilePaperTab")?.addEventListener("click",()=>{cloneControlsForMobile();updateFit();openMobilePanel("Paper","mobilePaperTab")});
-el("mobileMakeTemplate")?.addEventListener("click",()=>{const f=el("faceType");f.value="template";f.dispatchEvent(new Event("change",{bubbles:true}))});
+document.querySelectorAll("#mobileTemplateHint [data-kind]").forEach(b=>b.addEventListener("click",()=>{const f=el("faceType");f.value=b.dataset.kind;f.dispatchEvent(new Event("change",{bubbles:true}))}));
 el("mobileMakePlain")?.addEventListener("click",()=>{const f=el("faceType");f.value="plain";f.dispatchEvent(new Event("change",{bubbles:true}))});
 ["mobilePdfSave","mobilePdfLoad","mobilePrint","mobileDupPage","mobileDeletePage"].forEach(id=>el(id)?.addEventListener("click",closeMobilePanel));
 el("mobileUndo")?.addEventListener("click",()=>el("undoBtn")?.click());
@@ -1602,19 +1604,28 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("sizeModal").hi
 el("impositionMode").addEventListener("change",e=>{el("paperOrientation").value=optimalPaperOrientationForMode();resizePagesForLayout();e.target.dataset.prev=e.target.value;setPaper();syncControls()});
 window.addEventListener("resize",fitPaper);
 
+/* 面の種類は1つのリストで選ぶ(無地・トランプ・トレカ・ワードゲーム・画像・マイテンプレート)。
+   以前の「テンプレート」→「種類」の2段階は、ここでまとめて扱う */
+const FACE_KINDS=["playing","tcg","word"];
+const TPL_SECTION_TITLES={playing:"トランプの数字とマーク",tcg:"トレカの文字と画像",word:"ワードゲームのことば"};
+function faceKindValue(d){return d.type==="template"?(d.template||"playing"):d.type}
 el("faceType").addEventListener("change",e=>{
-  const t=e.target.value,id=cardIdAt(currentPage,selected),c=deck.cards[id];
+  let t=e.target.value;if(t==="template")t="playing";
+  const id=cardIdAt(currentPage,selected),c=deck.cards[id];
   if(t==="mytpl"){myTplPick=id+":"+slotAt(currentPage,selected).side;syncControls();return}
   myTplPick=null;
   // マイテンプレートから別の種類へ:テンプレートから外す(同じ種類なら見た目はそのまま)
   if(c&&c.tpl){
     const tp=deck.templates&&deck.templates[c.tpl];delete c.tpl;tplWatch=null;
     if(tp)showAppToast(T("テンプレート「{name}」から外しました",{name:tp.name}),{duration:4000});
-    if(t===currentFaces()[selected].type){renderSheet();syncControls();return}
+    if(t===faceKindValue(currentFaces()[selected])){renderSheet();syncControls();return}
   }
   const keep=keepCommon(currentFaces()[selected]);
-  if(t==="plain")setFaceAt(currentPage,selected,{type:"plain",...keep});
-  else if(t==="template")setFaceAt(currentPage,selected,{...makePlaying(),...keep});
+  if(FACE_KINDS.includes(t)){
+    if(currentFaces()[selected].type==="template"){el("templateType").value=t;el("templateType").dispatchEvent(new Event("change",{bubbles:true}));return}
+    setFaceAt(currentPage,selected,{...({playing:makePlaying,tcg:makeTcg,word:makeWord}[t])(),...keep});
+  }
+  else if(t==="plain")setFaceAt(currentPage,selected,{type:"plain",...keep});
   else if(t==="image")setFaceAt(currentPage,selected,{type:"image",src:null,...keep});
   renderSheet();syncControls();
 });
@@ -1714,11 +1725,14 @@ el("clearFaceBgImage").addEventListener("click",()=>{
 let faceClipboard=null;
 function refreshCopyButtonLabels(){
   if(arrangement()==="single"){
-    el("copyToPageSide").textContent="このページのすべての面にコピー";
-    el("copyToAllPagesSide").textContent="すべてのページのすべての面にコピー";
+    el("copyToPageSide").textContent="このページのカード全部にコピー";
+    el("copyToAllPagesSide").textContent="全ページのカード全部にコピー";
+  }else if((arrangement()==="pairs"&&selected%2===1)||arrangement()==="back"){
+    el("copyToPageSide").textContent="このページのウラ全部にコピー";
+    el("copyToAllPagesSide").textContent="全ページのウラ全部にコピー";
   }else{
-    el("copyToPageSide").textContent="この面をこのページの同じ面にコピー";
-    el("copyToAllPagesSide").textContent="この面をすべてのページの同じ面にコピー";
+    el("copyToPageSide").textContent="このページのオモテ全部にコピー";
+    el("copyToAllPagesSide").textContent="全ページのオモテ全部にコピー";
   }
   el("pasteFace").disabled=!faceClipboard;
 }
@@ -1770,8 +1784,8 @@ const BULK_ALIASES={
   name:["カード名","名前","名称","タイトル","name","title","cardname"],
   desc:["テキスト","説明","説明文","効果","本文","text","desc","description","effect","rules"],
   main:["ことば","言葉","お題","ワード","word","main"],
-  textbox:["テキストボックス","テキスト","textbox","text"],
-  frame:["フレームテキスト","フレーム","frametext","framedtext","frame"],
+  textbox:["文字","テキストボックス","テキスト","textbox","text"],
+  frame:["枠つき文字","枠付き文字","枠文字","フレームテキスト","フレーム","frametext","framedtext","frame"],
   qty:["枚数","数量","copies","count","qty","quantity"]
 };
 const BULK_KINDS={playing:{name:"トランプ",make:makePlaying,keys:["number","suit"]},tcg:{name:"トレカ",make:makeTcg,keys:["name","desc"]},word:{name:"ワードゲーム",make:makeWord,keys:["main"]}};
@@ -1792,8 +1806,8 @@ function bulkFields(card){
       else if(f.template==="tcg"){add("name","カード名",0,(d,v)=>{d.name=v},d=>d.name);add("desc","テキスト",0,(d,v)=>{d.desc=v},d=>d.desc)}
       else if(f.template==="word")add("main","ことば",0,(d,v)=>{d.main=v},d=>d.main);
     }
-    (f.textBoxes||[]).forEach((_,i)=>add("textbox","テキストボックス",i+1,(d,v)=>{d.textBoxes[i].text=v},d=>d.textBoxes[i].text));
-    (f.frameTexts||[]).forEach((_,i)=>add("frame","フレームテキスト",i+1,(d,v)=>{d.frameTexts[i].text=v},d=>d.frameTexts[i].text));
+    (f.textBoxes||[]).forEach((_,i)=>add("textbox","文字",i+1,(d,v)=>{d.textBoxes[i].text=v},d=>d.textBoxes[i].text));
+    (f.frameTexts||[]).forEach((_,i)=>add("frame","枠つき文字",i+1,(d,v)=>{d.frameTexts[i].text=v},d=>d.frameTexts[i].text));
   });
   return out;
 }
@@ -3003,6 +3017,21 @@ setPaper();renderSheet();syncControls();
 initHistory();renderSwatches();
 initAutosave();
 /* ---- 言語 ---- */
+
+/* ---- 右のパネル:たたんである「背景とふち」「コピー・テンプレート保存」。開け閉めは覚えておく ---- */
+function syncFaceStyleChip(d){
+  const chip=el("faceStyleChip");if(!chip)return;
+  chip.style.backgroundImage=d.bgImage?`url("${d.bgImage}")`:"";
+  chip.style.backgroundColor=d.bgNone?"transparent":(d.bgColor||"#ffffff");
+  chip.classList.toggle("none",!!d.bgNone&&!d.bgImage);
+  chip.style.boxShadow=d.bgBorderNone?"":`inset 0 0 0 2px ${d.bgBorderColor||"#222"}`;
+}
+["faceStyleFold","faceToolsFold"].forEach(id=>{
+  const f=el(id);if(!f)return;
+  try{if(localStorage.getItem("pk-fold-"+id)==="1")f.open=true}catch(_){}
+  f.addEventListener("toggle",()=>{try{localStorage.setItem("pk-fold-"+id,f.open?"1":"0")}catch(_){}});
+});
+el("myTplSaveNow")?.addEventListener("click",()=>{myTplPick=null;openTplSave()});
 if(window.CMMI18N){
   CMMI18N.init();
   document.querySelectorAll("[data-lang-btn]").forEach(b=>b.addEventListener("click",()=>CMMI18N.setLang(b.dataset.langBtn)));

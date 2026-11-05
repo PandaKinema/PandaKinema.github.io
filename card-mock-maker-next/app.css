@@ -2283,3 +2283,26 @@ header .header-actions{display:flex;align-items:center;gap:8px;flex:none;margin-
 .inline-editing .ph{display:none}
 .face.drop-over,.tcg-image.drop-over{outline:.8mm dashed var(--cyan,#00a0c8)!important;outline-offset:-.8mm}
 .face.drop-over::after,.tcg-image.drop-over::after{content:"";position:absolute;inset:0;background:rgba(0,160,200,.12);pointer-events:none;z-index:200}
+
+/* ---- 右のパネルの整理:たたむ欄 ---- */
+.panel-fold>summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:13px;letter-spacing:.02em;min-height:30px;user-select:none;-webkit-user-select:none}
+.panel-fold>summary::-webkit-details-marker{display:none}
+.panel-fold>summary::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);margin:0 3px 0 1px;transition:transform .15s;flex:none;opacity:.7}
+.panel-fold[open]>summary::before{transform:rotate(45deg)}
+.panel-fold>summary:hover .fold-title{text-decoration:underline;text-underline-offset:3px}
+.panel-fold>summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+.fold-chip{margin-left:auto;width:30px;height:20px;border-radius:4px;border:1px solid var(--ui-border);background:#fff center/cover no-repeat;flex:none}
+.fold-chip.none{background:repeating-conic-gradient(#ddd 0 25%,#fff 0 50%) 0 0/8px 8px}
+.panel-fold .face-copy-tools{margin-top:6px;padding-top:0;border-top:0}
+.tpl-kind-row[hidden]{display:none!important}
+@media (max-width:720px){.mobile-panel-body .tpl-kind-row[hidden]{display:block!important}}   /* スマホの「テンプレ」タブでは、ここでも種類を切り替えられる */
+.tpl-empty .mini{width:100%;margin-top:8px}
+.m-kind-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:720px){
+  .mobile-panel-body .panel-fold{border-top:1px solid var(--ui-border);margin-top:12px;padding-top:8px}
+  .mobile-panel-body .panel-fold>summary{min-height:40px;font-size:14px}
+  .m-hint .m-kind-buttons button{min-height:44px;font-size:13px;padding:0 4px;white-space:nowrap}
+}
+#templateSelector{padding-bottom:0}
+#templateSelector .section-title{margin-bottom:8px}
+#templateSelector ~ .compact-template-controls{border-top:0;margin-top:0;padding-top:0}
