@@ -9,7 +9,7 @@ const EN={
   "履歴":"History","取り消し":"Undo","やり直し":"Redo","取り消し（⌘Z / Ctrl+Z）":"Undo (⌘Z / Ctrl+Z)","やり直し（⇧⌘Z / Ctrl+Y）":"Redo (⇧⌘Z / Ctrl+Y)",
   "用紙サイズ":"Paper size","用紙方向":"Paper orientation","横":"Landscape","縦":"Portrait","カードサイズ":"Card size",
   "面付けモード":"Layout","面付け":"Layout","両面":"Front & back","片面":"Single-sided","両面（折り）":"Front & back (fold)","両面印刷":"Duplex printing",
-  "タイトル":"Title","いまの作業を消して新しく始める":"Clear the current work and start over","新規":"New",
+  "タイトル":"Title","新しい作品を始める（いまの作品は作品の一覧に残ります）":"Start a new project (the current one stays in My projects)","新規":"New",
   "PDF保存":"Save PDF","PDF読み込み":"Open PDF","印刷":"Print","設定":"Settings","準備中…":"Preparing…","PDF作成中…":"Creating PDF…",
   "長さの単位":"Length unit","文字の単位":"Text unit","級（Q）":"Q (0.25 mm)","基本のフォント":"Default font",
   "単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。":"Units are saved in this browser. The default font belongs to the current deck.",
