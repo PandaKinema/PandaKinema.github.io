@@ -92,9 +92,16 @@ const CARD_SIZES={
   business:{label:"名刺",w:55,h:91},
   yugioh:{label:"遊戯王サイズ",w:59,h:86},
   credit:{label:"クレジット",w:54,h:86},
-  half:{label:"ハーフ",w:44,h:63}
+  half:{label:"ハーフ",w:44,h:63},
+  mini:{label:"ミニ",w:41,h:63},
+  minieuro:{label:"ミニユーロ",w:44,h:68},
+  tarot:{label:"タロット",w:70,h:120},
+  square:{label:"スクエア",w:70,h:70}
 };
-function cardMM(){return CARD_SIZES[el("cardSize")?.value]||CARD_SIZES.poker}
+/* 自由な大きさ(mm)。向きは用紙に合わせて回すので、幅≦高さにそろえて持つ */
+let customCard={w:63,h:88};
+function normCustom(c){const w=Number(c&&c.w),h=Number(c&&c.h);if(!(w>0&&h>0))return {w:63,h:88};return {w:Math.min(w,h),h:Math.max(w,h)}}
+function cardMM(){const v=el("cardSize")?.value;if(v==="custom")return {label:"自由",w:customCard.w,h:customCard.h};return CARD_SIZES[v]||CARD_SIZES.poker}
 /* 面付け:fold=表裏を並べて折る / both=両面印刷 / single=片面 */
 function layoutMode(){const v=el("impositionMode")?.value;return v==="single"?"single":v==="both"?"both":"fold"}
 function isPairLayout(){return layoutMode()==="fold"}
@@ -415,7 +422,9 @@ function fitPaper(){
 /* 線の太さ・カードサイズの表示を、設定した長さの単位に */
 function relabelLengths(root=document){
   root.querySelectorAll("select.stroke-width-select option").forEach(o=>{o.textContent=fmtLen(Number(o.value))});
-  const cs=el("cardSize");if(cs)[...cs.options].forEach(o=>{const c=CARD_SIZES[o.value];if(!c)return;o.textContent=`${c.label} (${fmtLen(c.w,false)}×${fmtLen(c.h,false)}${units.len==="mm"?"":" "+LEN_UNITS[units.len].label})`});
+  const cs=el("cardSize");
+  if(cs){const o=cs.querySelector('option[value="custom"]');if(o)o.textContent=`${T("自由")} (${fmtLen(customCard.w,false)}×${fmtLen(customCard.h,false)}${units.len==="mm"?"":" "+LEN_UNITS[units.len].label})`}
+  if(cs)[...cs.options].forEach(o=>{const c=CARD_SIZES[o.value];if(!c)return;o.textContent=`${c.label} (${fmtLen(c.w,false)}×${fmtLen(c.h,false)}${units.len==="mm"?"":" "+LEN_UNITS[units.len].label})`});
 }
 function updateFit(){
   const p=paperMM(),b=blockMM(),x=(p.w-b.w)/2,y=(p.h-b.h)/2,c=cardMM();
@@ -694,7 +703,8 @@ function historyState(){
     sheetTitle,
     paperSize:el("paperSize").value,
     paperOrientation:el("paperOrientation").value,
-    cardSize:el("cardSize").value,
+    cardSize:el("cardSize").value==="custom-edit"?(el("cardSize").dataset.prev||"poker"):el("cardSize").value,   // 「サイズを入力…」は選んだ瞬間に元へ戻すので記録しない
+    customCard,
     impositionMode:el("impositionMode").value,
     cardOrientation
   },packImages);
@@ -776,7 +786,7 @@ function applyHistorySnapshot(snapshot){
   sheetTitle=st.sheetTitle||"";
   el("paperSize").value=st.paperSize||"a4";
   el("paperOrientation").value=st.paperOrientation||"landscape";
-  el("cardSize").value=st.cardSize||"poker";
+  customCard=normCustom(st.customCard);el("cardSize").value=st.cardSize||"poker";el("cardSize").dataset.prev=el("cardSize").value;relabelLengths();
   el("impositionMode").value=st.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=st.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));
   el("sheetTitleInput").value=sheetTitle;
 
@@ -1406,7 +1416,43 @@ el("mobileViewToggle")?.addEventListener("click",()=>{if(!mobileSheetMode&&["Fac
 el("mobileNextCard")?.addEventListener("click",()=>mobileSheetMode?goToMobilePage(1):goToMobileCard(1));
 el("paperSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
 el("paperOrientation").addEventListener("change",()=>{cardOrientation=(el("paperOrientation").value==="landscape")?(!isPairLayout()?"landscape":"portrait"):(!isPairLayout()?"portrait":"landscape");resizePagesForLayout();setPaper();syncControls()});
-el("cardSize").addEventListener("change",()=>{resizePagesForLayout();setPaper();syncControls()});
+el("cardSize").addEventListener("change",e=>{
+  if(e.target.value==="custom-edit"){e.target.value=e.target.dataset.prev||"poker";openSizeModal();return}
+  e.target.dataset.prev=e.target.value;resizePagesForLayout();setPaper();syncControls();
+});
+/* ---- カードの大きさを入力 ---- */
+function sizeFit(w,h){
+  // 今の用紙・並べ方で何枚入るか(入らなければ0)
+  const p=paperMM(),land=isLandscapeCard(),f=land?{w:h,h:w}:{w,h},q=!isPairLayout()?f:(land?{w:f.w,h:f.h*2}:{w:f.w*2,h:f.h});
+  return Math.floor(p.w/q.w)*Math.floor(p.h/q.h);
+}
+function paperLabel(){const a=el("paperSize").value==="a3"?"A3":"A4",land=el("paperOrientation").value==="landscape";return window.CMMI18N&&CMMI18N.lang==="en"?`${a} ${land?"landscape":"portrait"}`:a+(land?"横":"縦")}
+function readSizeModal(){const k=LEN_UNITS[units.len].k;return normCustom({w:Number(el("customW").value)*k,h:Number(el("customH").value)*k})}
+function syncSizeModal(){
+  const k=LEN_UNITS[units.len].k,w=Number(el("customW").value)*k,h=Number(el("customH").value)*k,note=el("sizeNote");
+  let ok=w>=15&&h>=15&&w<=297&&h<=297,msg="";
+  if(!ok)msg=T("15〜297 mmの大きさにしてください。");
+  else{const c=normCustom({w,h}),n=sizeFit(c.w,c.h);ok=n>0;
+    msg=n>0?T("{paper}に{n}枚入ります。",{paper:paperLabel(),n})
+           :T("この用紙には入りません。用紙の大きさや向き、並べ方を変えてみてください。")}
+  note.textContent=msg;note.classList.toggle("bad",!ok);el("sizeOk").disabled=!ok;
+}
+function openSizeModal(){
+  toggleSettings(false);
+  const u=LEN_UNITS[units.len];["W","H"].forEach(a=>{const inp=el("custom"+a);inp.step=OFFSET_STEP[units.len]||.1;inp.value=fmtLen(a==="W"?customCard.w:customCard.h,false)});
+  document.querySelectorAll("#sizeModal .unit-len-label").forEach(n=>n.textContent=u.label);
+  el("sizeModal").hidden=false;syncSizeModal();if(!mobileUIActive()){el("customW").focus();el("customW").select()}
+}
+function closeSizeModal(){el("sizeModal").hidden=true}
+["customW","customH"].forEach(id=>el(id).addEventListener("input",syncSizeModal));
+["customW","customH"].forEach(id=>el(id).addEventListener("keydown",e=>{if(e.key==="Enter"&&!el("sizeOk").disabled){e.preventDefault();el("sizeOk").click()}}));
+el("sizeOk").addEventListener("click",()=>{
+  customCard=readSizeModal();const cs=el("cardSize");cs.value="custom";cs.dataset.prev="custom";
+  closeSizeModal();relabelLengths();resizePagesForLayout();setPaper();syncControls();
+});
+document.querySelectorAll("[data-size-close]").forEach(b=>b.addEventListener("click",closeSizeModal));
+el("sizeModal").addEventListener("click",e=>{if(e.target===el("sizeModal"))closeSizeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("sizeModal").hidden)closeSizeModal()});
 el("impositionMode").addEventListener("change",e=>{el("paperOrientation").value=optimalPaperOrientationForMode();resizePagesForLayout();e.target.dataset.prev=e.target.value;setPaper();syncControls()});
 window.addEventListener("resize",fitPaper);
 
@@ -1873,7 +1919,7 @@ el("deletePage").addEventListener("click",()=>deletePage(currentPage));
 
 function getProject(){
   padOrder();
-  return {app:"card-mock-maker",version:2,paperSize:el("paperSize").value,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,impositionMode:el("impositionMode").value,cardOrientation,sheetTitle,printSettings,deck};
+  return {app:"card-mock-maker",version:2,paperSize:el("paperSize").value,paperOrientation:el("paperOrientation").value,cardSize:el("cardSize").value,customCard,impositionMode:el("impositionMode").value,cardOrientation,sheetTitle,printSettings,deck};
 }
 
 function migrateGenericTextBoxes(project){(project.pages||[]).forEach(pg=>pg.forEach(d=>{if(!d)return;if(!Array.isArray(d.textBoxes))d.textBoxes=[];if(!Array.isArray(d.optionImages))d.optionImages=[];if(d.template==="custom"&&d.customTexts&&!d.textBoxes.length){["t1","t2","t3","t4","t5"].forEach((k,i)=>{if(d.customTexts[k])d.textBoxes.push({id:"tb_legacy_"+Date.now()+"_"+i,text:d.customTexts[k],style:(d.customStyles&&d.customStyles[k])||{size:i?14:18,bold:false,italic:false,color:"#222222"},box:(d.customBoxes&&d.customBoxes[k])||{x:20,y:18+i*16,w:60,h:14},centerSnap:false})});delete d.customTexts;delete d.customStyles;delete d.customBoxes;delete d.customCount}if(d.template==="word"&&d.sub){if(d.textBoxes.length<5)d.textBoxes.push({id:"tb_word_"+Date.now(),text:d.sub,style:d.subStyle||{size:12,bold:false,italic:false,color:d.subColor||"#222222"},box:d.subBox||{x:20,y:73,w:60,h:14},centerSnap:false});delete d.sub;delete d.subStyle;delete d.subColor;delete d.subBox}}));return project}
@@ -1924,7 +1970,8 @@ function restoreProject(p){
   deck=p.deck?normalizeDeck(deep(p.deck)):deckFromPages(deep(p.pages),p.impositionMode);
   printSettings={binding:"long",backOffsetX:0,backOffsetY:0,...(p.printSettings||{})};delete printSettings.backFlip;
   sheetTitle=p.sheetTitle||"";
-  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=p.cardSize||"poker";el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
+  customCard=normCustom(p.customCard);
+  el("paperSize").value=p.paperSize||"a4";el("paperOrientation").value=p.paperOrientation||"landscape";el("cardSize").value=CARD_SIZES[p.cardSize]||p.cardSize==="custom"?p.cardSize:"poker";el("cardSize").dataset.prev=el("cardSize").value;relabelLengths();el("impositionMode").value=p.impositionMode||"duplex";el("impositionMode").dataset.prev=el("impositionMode").value;cardOrientation=p.cardOrientation||((el("impositionMode").value!=="duplex")?el("paperOrientation").value:(el("paperOrientation").value==="portrait"?"landscape":"portrait"));el("sheetTitleInput").value=sheetTitle;
   currentPage=0;selected=0;lastArrangement=null;syncPages();setupAllColorInputs();
   tplWatch=null;setPaper();renderSheet();syncControls();
   initHistory();

@@ -53,7 +53,9 @@ const EN={
   // ---- フォント
   "ゴシック":"Sans-serif","明朝":"Serif","丸ゴシック":"Rounded","極太":"Heavy","端末の標準":"System font",
   // ---- カードサイズ名
-  "ポーカー":"Poker","ブリッジ":"Bridge","名刺":"Business card","遊戯王サイズ":"Japanese size","クレジット":"Credit card","ハーフ":"Mini",
+  "ポーカー":"Poker","ブリッジ":"Bridge","名刺":"Business card","遊戯王サイズ":"Japanese size","クレジット":"Credit card","ハーフ":"Half","ミニ":"Mini","ミニユーロ":"Mini Euro","タロット":"Tarot","スクエア":"Square","自由":"Custom","サイズを入力…":"Enter size…",
+  "幅":"Width","高さ":"Height","決定":"OK","15〜297 mmの大きさにしてください。":"Use a size from 15 to 297 mm.","{paper}に{n}枚入ります。":"{n} fit on {paper}.",
+  "この用紙には入りません。用紙の大きさや向き、並べ方を変えてみてください。":"This won't fit on the paper. Try another paper size, orientation or layout.",
   // ---- 保存・読み込み・通知
   "保存したPDFは「PDF読み込み」で再編集できます":"You can edit a saved PDF again with “Open PDF”.",
   "PDFライブラリを読み込めませんでした。インターネット接続を確認してください。":"Couldn't load the PDF library. Please check your internet connection.",
@@ -155,7 +157,7 @@ const PATTERNS=[
   [/^テキストボックス(\d+)$/,(m)=>`Text box ${m[1]}`],[/^フレームテキスト(\d+)$/,(m)=>`Framed text ${m[1]}`],[/^画像(\d+)$/,(m)=>`Image ${m[1]}`],
   [/^テキスト(\d+)$/,(m)=>`Text ${m[1]}`],
   [/^(円|三角形|四角形|多角形|星|図形)(\d+)$/,(m)=>`${({円:"Circle",三角形:"Triangle",四角形:"Rectangle",多角形:"Polygon",星:"Star",図形:"Shape"})[m[1]]} ${m[2]}`],
-  [/^(ポーカー|ブリッジ|名刺|遊戯王サイズ|クレジット|ハーフ) \((.+)\)$/,(m)=>`${EN[m[1]]} (${m[2]})`],
+  [/^(ポーカー|ブリッジ|名刺|遊戯王サイズ|クレジット|ハーフ|ミニ|ミニユーロ|タロット|スクエア) \((.+)\)$/,(m)=>`${EN[m[1]]} (${m[2]})`],
   [/^(A[34])(横|縦)に(.+?)×(.+?) (\S+)のカードが(\d+)枚（余白 左右(.+?)・上下(.+?)）。印刷は「実際のサイズ（100%）」で。$/,
     (m)=>`${m[1]} ${m[2]==="横"?"landscape":"portrait"}: ${m[6]} cards of ${m[3]}×${m[4]} ${m[5]} (margins ${m[7]} left/right, ${m[8]} top/bottom). Print at “Actual size (100%)”.`],
   [/^前回の続きを開きました\((.+)保存\)$/,(m)=>`Restored your last session (saved ${m[1]})`],
