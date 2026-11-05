@@ -2273,3 +2273,13 @@ header .header-actions{display:flex;align-items:center;gap:8px;flex:none;margin-
 }
 @media print{.start-chooser{display:none!important}}
 .start-size span{white-space:nowrap}
+
+/* ---- カードの上で直接直す ---- */
+.face.selected [data-edit]:not(.generic-textbox):not(.frame-text){cursor:text}
+.face.selected .tcg-name[data-edit]:hover,.face.selected .tcg-desc[data-edit]:hover,.face.selected .word-main[data-edit]:hover{outline:.35mm dashed rgba(0,150,190,.55);outline-offset:-.6mm}
+.inline-editing{outline:.5mm solid var(--cyan,#00a0c8)!important;outline-offset:-.5mm;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;caret-color:currentColor;z-index:120!important}
+.generic-textbox.inline-editing,.frame-text.inline-editing{touch-action:auto}
+.inline-editing.is-empty::before{content:attr(data-ph);opacity:.35;pointer-events:none;position:absolute;inset:0;display:flex;align-items:inherit;justify-content:inherit;padding:inherit;white-space:nowrap;overflow:hidden}
+.inline-editing .ph{display:none}
+.face.drop-over,.tcg-image.drop-over{outline:.8mm dashed var(--cyan,#00a0c8)!important;outline-offset:-.8mm}
+.face.drop-over::after,.tcg-image.drop-over::after{content:"";position:absolute;inset:0;background:rgba(0,160,200,.12);pointer-events:none;z-index:200}

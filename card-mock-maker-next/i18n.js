@@ -35,6 +35,7 @@ const EN={
   "この面をこのページの同じ面にコピー":"Copy to the same side on this page","この面をすべてのページの同じ面にコピー":"Copy to the same side on all pages",
   "このページのすべての面にコピー":"Copy to every card on this page","すべてのページのすべての面にコピー":"Copy to every card on all pages",
   "画像を読み込む":"Load image","画像未設定":"No image","画像を読み込めませんでした。":"Couldn't load the image.",
+  "カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"Double-click text on a card to edit it right there. Drag an image onto a card to place it.","選んだカードの文字をタップすると、その場で直せます。":"Tap text on the selected card to edit it right there.","画像を選んでいるカードに貼りました。":"Pasted the image onto the selected card.",
   // ---- テンプレート
   "種類":"Type","トランプ":"Playing card","トレカ":"Trading card","ワードゲーム":"Word game",
   "数字":"Number","数字の大きさ":"Number size","太字":"Bold","斜体":"Italic","下線":"Underline","数字の色":"Number color","フォント":"Font","基本":"Default",
