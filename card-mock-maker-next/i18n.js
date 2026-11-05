@@ -72,9 +72,9 @@ const EN={
   "ウラ面は、紙を上下に裏返したとき重なるように、上下を入れ替えて並べています。":"This is how the backs print: swapped top and bottom so they line up when the sheet is flipped top to bottom.",
   "ウラ面は、紙を左右に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped sideways. Do a single test print first.",
   "ウラ面は、紙を上下に裏返したときオモテと重なる位置に並びます。最初は1枚だけ試し刷りしてください。":"Backs are placed where they line up with the fronts when the sheet is flipped top to bottom. Do a single test print first.",
-  "カード1枚ずつの画像（PNG）":"One image per card (PNG)","カードを1枚ずつPNG画像にして、ZIPファイルにまとめます。ほかのツールで使ったり、紹介画像にしたりできます。":"Saves each card as a PNG image, together in a ZIP file. Use them in other tools or to show off your cards.",
-  "オンライン用の山札（ZIP）":"Deck for online play (ZIP)","ZIPファイルを読み込めるオンラインセッションツールに、そのまま山札として置けます。枚数ぶんのカードが入り、オモテ・ウラも設定済みです。":"Drop it into an online play tool that reads ZIP files and it becomes a deck, with every copy included and fronts and backs already set.",
-  "山札の分け方":"Decks","ひとつにまとめる":"One deck","テンプレートごと":"One per template","ウラ面ごと":"One per card back",
+  
+  
+  "カードを1枚ずつPNG画像にして、ZIPファイルにまとめます。":"Saves each card as a PNG image, together in a ZIP file.","枚数ぶんのカードを、オモテ・ウラの画像つきの山札データにして、ZIPファイルにまとめます。":"Turns all your cards, copies included, into deck data with front and back images, in a ZIP file.","山札の分け方":"Decks","ひとつにまとめる":"One deck","テンプレートごと":"One per template","ウラ面ごと":"One per card back",
   "カードの大きさ":"Card size","1.5マス":"1.5 squares","2マス（標準）":"2 squares (standard)","2.5マス":"2.5 squares","3マス":"3 squares",
   "画像の大きさ":"Image size","標準（横480px）":"Standard (480px wide)","高画質（横720px）":"High quality (720px wide)",
   "{m}枚のカードで、山札を{s}つ作ります。":"{m} cards in {s} deck(s).","山札のZIPを書き出しました":"Deck ZIP exported","山札":"Deck","そのほか":"Others",
