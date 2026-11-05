@@ -1894,8 +1894,12 @@ function sampleDeck(){
   [playing("A","♠","#111111"),playing("7","♥","#d94a4a"),tcg,word].forEach(front=>{const id=newCardId();d.cards[id]={front:deep(front),back:back()};d.order.push(id)});
   return d;
 }
-function openSample(){
-  if(!deck.order.every(isBlankCard)&&!confirm(T("いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)")))return;
+async function openSample(){
+  toggleSettings(false);
+  if(!deck.order.every(isBlankCard)){
+    if(autosaveFailed||!autosaveDb){if(!confirm(T("いまの作業を見本に置き換えますか？\n(元に戻すときは「取り消し」)")))return}
+    else await beginNewProject();   // いまの作品は一覧に残して、見本は新しい作品として開く
+  }
   el("paperSize").value="a4";el("paperOrientation").value="landscape";el("cardSize").value="poker";el("impositionMode").value="duplex";cardOrientation="portrait";
   deck=sampleDeck();currentPage=0;selected=0;lastArrangement=null;sheetTitle=T("見本");el("sheetTitleInput").value=sheetTitle;
   closeMobilePanel();setPaper();renderSheet();syncControls();
@@ -2228,9 +2232,9 @@ function ensureTemplateInDeck(tid){
   deck.templates[tid]={name:x.name,front:deep(x.front),back:deep(x.back),lib:true};return true;
 }
 /* 面の小さな絵(一括作成の確認・テンプレートの一覧) */
-function faceThumb(face,W){
-  const fm=faceMM(),k=W/(fm.w*MM_TO_PX),box=document.createElement("div");
-  box.className="bulk-thumb "+(isLandscapeCard()?"landscape-card":"portrait-card")+" card-size-"+el("cardSize").value;
+function faceThumb(face,W,opt={}){
+  const fm=opt.fm||faceMM(),land=opt.land??isLandscapeCard(),k=W/(fm.w*MM_TO_PX),box=document.createElement("div");
+  box.className="bulk-thumb "+(land?"landscape-card":"portrait-card")+" card-size-"+(opt.size||el("cardSize").value);
   box.style.width=W+"px";box.style.height=Math.round(fm.h*MM_TO_PX*k)+"px";
   const f=document.createElement("div");f.className="face";f.style.width=fm.w*MM_TO_PX+"px";f.style.height=fm.h*MM_TO_PX+"px";f.style.transform=`scale(${k})`;
   box.appendChild(f);renderFace(f,face||makePlain(),false,-1);return box;
@@ -2543,6 +2547,7 @@ el("loadPdf").addEventListener("change",async e=>{
     if(!project)throw new Error(T("このPDFにはCard Mock Makerの編集データがありません。"));
     const text=new TextDecoder().decode(project.data);
     const parsed=JSON.parse(text);
+    await beginNewProject();   // 読み込んだPDFは新しい作品として開く(いまの作品は一覧に残る)
     restoreProject(hydrateProjectImages(parsed,atts));
   }catch(err){
     console.error(err);alert(err.message||T("PDFを読み込めませんでした。"));
@@ -2550,18 +2555,31 @@ el("loadPdf").addEventListener("change",async e=>{
 });
 
 /* ---- 自動保存:このブラウザ内(IndexedDB)に、変更から少しおいて保存。次に開くと続きから ---- */
+/* ---- 作品の保存:このブラウザ(IndexedDB)に作品をいくつでも。画像は作品どうしで共有して1つずつ持つ ----
+   projects: id → {json(履歴と同じ形), ids(使っている画像)} / meta: id → 一覧に出す情報 / images: 画像id → dataURL / kv: current=開いている作品 */
 const AUTOSAVE_DB="card-mock-maker",AUTOSAVE_MS=1200;
 let autosaveDb=null,autosaveReady=false,autosaveStopped=false,autosaveFailed=false,autosaveTimer=null,autosaveLastJson=null,autosaveBusy=null;
+let currentProjectId=null,currentProjectCreated=0;
 const autosavedImageIds=new Set();
 function idbReq(r){return new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 function idbDone(tx){return new Promise((res,rej)=>{tx.oncomplete=()=>res();tx.onabort=tx.onerror=()=>rej(tx.error||new Error("transaction failed"))})}
 function openAutosaveDb(){
   return new Promise((res,rej)=>{
     if(!window.indexedDB)return rej(new Error("IndexedDB unavailable"));
-    const r=indexedDB.open(AUTOSAVE_DB,1);
-    r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains("kv"))db.createObjectStore("kv");if(!db.objectStoreNames.contains("images"))db.createObjectStore("images")};
+    const r=indexedDB.open(AUTOSAVE_DB,2);
+    r.onupgradeneeded=()=>{const db=r.result;["kv","images"].forEach(n=>{if(!db.objectStoreNames.contains(n))db.createObjectStore(n)});["projects","meta"].forEach(n=>{if(!db.objectStoreNames.contains(n))db.createObjectStore(n,{keyPath:"id"})})};
     r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error("IndexedDB blocked"));
   });
+}
+function newProjectId(){return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+const imgIdsOf=json=>[...new Set([...json.matchAll(/cmm-img:\/\/([a-z0-9]+)/g)].map(m=>m[1]))];
+const blankCardOf=c=>!c||(isBlankFace(c.front)&&isBlankFace(c.back));
+/* 一覧に出す情報(作品の中身から作る。中身は画像をidにした形のまま) */
+function metaFromState(id,st,ids,savedAt,created){
+  const d=st.deck||{},order=d.order||[],cards=d.cards||{},first=order.find(k=>!blankCardOf(cards[k]));
+  const size=st.cardSize||"poker",base=size==="custom"?normCustom(st.customCard):(CARD_SIZES[size]||CARD_SIZES.poker),land=st.cardOrientation==="landscape";
+  return {id,name:st.sheetTitle||"",savedAt,created:created||savedAt,cards:order.filter(k=>!blankCardOf(cards[k])).length,
+    preview:first?JSON.stringify(cards[first].front):null,size,fm:land?{w:base.h,h:base.w}:{w:base.w,h:base.h},land,ids};
 }
 function scheduleAutosave(){
   if(!autosaveReady||autosaveStopped||autosaveFailed)return;
@@ -2570,23 +2588,79 @@ function scheduleAutosave(){
 function writeAutosave(){
   const json=historyState();
   if(json===autosaveLastJson)return Promise.resolve();
-  const ids=[...new Set([...json.matchAll(/cmm-img:\/\/([a-z0-9]+)/g)].map(m=>m[1]))];
-  const tx=autosaveDb.transaction(["kv","images"],"readwrite"),imgs=tx.objectStore("images");
-  ids.forEach(id=>{if(!autosavedImageIds.has(id)){const u=imgUrlById.get(id);if(u)imgs.put(u,id)}});
-  tx.objectStore("kv").put({json,ids,savedAt:Date.now(),format:1},"project");
-  const keys=imgs.getAllKeys();
-  keys.onsuccess=()=>{const keep=new Set(ids);keys.result.forEach(k=>{if(!keep.has(k))imgs.delete(k)})};
-  return idbDone(tx).then(()=>{autosavedImageIds.clear();ids.forEach(id=>autosavedImageIds.add(id));autosaveLastJson=json});
+  if(!currentProjectId){
+    if(deck.order.every(isBlankCard)&&!sheetTitle)return Promise.resolve();   // 何も作っていない作品は保存しない(一覧が空の作品で埋まらないように)
+    currentProjectId=newProjectId();currentProjectCreated=Date.now();
+  }
+  const id=currentProjectId,ids=imgIdsOf(json),now=Date.now();
+  const tx=autosaveDb.transaction(["kv","images","projects","meta"],"readwrite"),imgs=tx.objectStore("images");
+  ids.forEach(i=>{if(!autosavedImageIds.has(i)){const u=imgUrlById.get(i);if(u)imgs.put(u,i)}});
+  tx.objectStore("projects").put({id,json,ids,format:2});
+  tx.objectStore("meta").put(metaFromState(id,JSON.parse(json),ids,now,currentProjectCreated));
+  tx.objectStore("kv").put(id,"current");
+  return idbDone(tx).then(()=>{ids.forEach(i=>autosavedImageIds.add(i));autosaveLastJson=json});
 }
 function runAutosave(){
   clearTimeout(autosaveTimer);autosaveTimer=null;
   if(!autosaveReady||autosaveStopped||autosaveFailed||!autosaveDb)return Promise.resolve();
   const go=()=>writeAutosave().catch(err=>{
     console.warn("autosave failed",err);autosaveFailed=true;
-    showAppToast("自動保存できませんでした(ブラウザの保存容量が足りない可能性があります)。こまめに「PDF保存」してください。",{duration:9000});
+    showAppToast(T("自動保存できませんでした(ブラウザの保存容量が足りない可能性があります)。こまめに「PDF保存」してください。"),{duration:9000});
   });
   autosaveBusy=(autosaveBusy?autosaveBusy.then(go):go()).finally(()=>{});
   return autosaveBusy;
+}
+/* どの作品も使っていない画像を消す(読み書きを1つの処理で行うので、保存の途中の画像を消すことはない) */
+function gcImages(){
+  if(!autosaveDb)return Promise.resolve();
+  const tx=autosaveDb.transaction(["meta","images"],"readwrite"),metas=tx.objectStore("meta").getAll();
+  metas.onsuccess=()=>{
+    const keep=new Set();metas.result.forEach(m=>(m.ids||[]).forEach(i=>keep.add(i)));imgIdsOf(historyState()).forEach(i=>keep.add(i));
+    const st=tx.objectStore("images"),keys=st.getAllKeys();
+    keys.onsuccess=()=>keys.result.forEach(k=>{if(!keep.has(k)){st.delete(k);autosavedImageIds.delete(k)}});
+  };
+  return idbDone(tx).catch(e=>console.warn(e));
+}
+/* 以前の版の自動保存(1つだけ)を、作品の1つとして引き継ぐ */
+async function migrateOldAutosave(){
+  const tx=autosaveDb.transaction(["kv","projects","meta"],"readwrite"),kv=tx.objectStore("kv"),r=kv.get("project");
+  r.onsuccess=()=>{
+    const old=r.result;if(!old||typeof old.json!=="string")return;
+    try{
+      const id=newProjectId(),st=JSON.parse(old.json),ids=old.ids||imgIdsOf(old.json),t=old.savedAt||Date.now();
+      tx.objectStore("projects").put({id,json:old.json,ids,format:2});
+      tx.objectStore("meta").put(metaFromState(id,st,ids,t,t));
+      kv.put(id,"current");
+    }catch(e){console.warn(e)}
+    kv.delete("project");
+  };
+  await idbDone(tx);
+}
+async function loadImagesInto(ids){
+  const need=(ids||[]).filter(i=>!imgUrlById.has(i));if(!need.length)return;
+  const st=autosaveDb.transaction("images").objectStore("images");
+  const found=await Promise.all(need.map(i=>idbReq(st.get(i)).then(u=>[i,u])));
+  found.forEach(([i,u])=>{if(typeof u==="string"){internImage(u,i);autosavedImageIds.add(i)}});
+}
+async function loadProject(id){
+  const tx=autosaveDb.transaction(["projects","meta"]);
+  const [rec,meta]=await Promise.all([idbReq(tx.objectStore("projects").get(id)),idbReq(tx.objectStore("meta").get(id))]);
+  if(!rec||typeof rec.json!=="string")return false;
+  await loadImagesInto(rec.ids);
+  applyHistorySnapshot(rec.json);initHistory();
+  currentProjectId=id;currentProjectCreated=meta&&meta.created||Date.now();autosaveLastJson=rec.json;tplWatch=null;myTplPick=null;
+  const kv=autosaveDb.transaction("kv","readwrite");kv.objectStore("kv").put(id,"current");await idbDone(kv).catch(()=>{});
+  return meta||{savedAt:Date.now()};
+}
+async function listProjects(){
+  if(!autosaveDb)return [];
+  const all=await idbReq(autosaveDb.transaction("meta").objectStore("meta").getAll());
+  return all.sort((a,b)=>b.savedAt-a.savedAt);
+}
+/* 新しい作品をはじめる準備:いまの作品を保存して、次に保存するときは新しい作品として保存する */
+async function beginNewProject(){
+  await runAutosave();
+  currentProjectId=null;currentProjectCreated=0;autosaveLastJson=null;
 }
 function showAppToast(message,{action=null,duration=8000}={}){
   let t=document.querySelector(".app-toast");
@@ -2598,32 +2672,31 @@ function showAppToast(message,{action=null,duration=8000}={}){
   if(duration)showAppToast.timer=setTimeout(()=>t.classList.remove("show"),duration);
 }
 async function startNewProject(){
-  if(!confirm(T("いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)")))return;
-  autosaveStopped=true;clearTimeout(autosaveTimer);
-  try{
-    if(autosaveBusy)await autosaveBusy.catch(()=>{});
-    if(autosaveDb){const tx=autosaveDb.transaction(["kv","images"],"readwrite");tx.objectStore("kv").clear();tx.objectStore("images").clear();await idbDone(tx)}
-  }catch(err){console.warn(err)}
-  location.reload();
+  const blank=deck.order.every(isBlankCard)&&!sheetTitle;
+  // 保存できない環境では、いまの作業が消えるので確かめる
+  if((autosaveFailed||!autosaveDb)&&!blank&&!confirm(T("いまの作業を消して、新しく作りはじめますか？\n(PDF保存していない内容は元に戻せません)")))return;
+  toggleSettings(false);closeProjects();closeMobilePanel();
+  await beginNewProject();
+  sheetTitle="";el("sheetTitleInput").value="";printSettings={binding:"long",backOffsetX:0,backOffsetY:0};
+  startDeck();setPaper();renderSheet();syncControls();initHistory();
+  if(!blank&&!autosaveFailed&&autosaveDb)showAppToast(T("新しい作品をはじめました。前の作品は「作品の一覧」から開けます。"),{duration:5000});
 }
 function timeLabel(ms){const d=new Date(ms),p=n=>String(n).padStart(2,"0");const today=new Date().toDateString()===d.toDateString();return (today?"":`${d.getMonth()+1}/${d.getDate()} `)+`${p(d.getHours())}:${p(d.getMinutes())}`}
 async function initAutosave(){
   try{
     autosaveDb=await openAutosaveDb();
-    const rec=await idbReq(autosaveDb.transaction("kv").objectStore("kv").get("project"));
+    await migrateOldAutosave();
     const untouched=!undoStack.length&&historyPendingStart===null;
-    if(rec&&typeof rec.json==="string"&&untouched){
-      const st=autosaveDb.transaction("images").objectStore("images");
-      const found=await Promise.all((rec.ids||[]).map(id=>idbReq(st.get(id)).then(u=>[id,u])));
-      found.forEach(([id,u])=>{if(typeof u==="string"){internImage(u,id);autosavedImageIds.add(id)}});
-      const parsed=JSON.parse(rec.json,unpackImages);
-      if((parsed.deck&&parsed.deck.order&&parsed.deck.order.length)||(Array.isArray(parsed.pages)&&parsed.pages.length)){
-        applyHistorySnapshot(rec.json);
-        initHistory();
-        autosaveLastJson=rec.json;
-        showAppToast(`前回の続きを開きました(${timeLabel(rec.savedAt||Date.now())}保存)`,{action:{label:"新規",run:startNewProject}});
+    if(untouched){
+      let id=await idbReq(autosaveDb.transaction("kv").objectStore("kv").get("current"));
+      const list=await listProjects();
+      if(!list.some(m=>m.id===id))id=list[0]&&list[0].id;
+      if(id){
+        const meta=await loadProject(id);
+        if(meta)showAppToast(T("前回の続きを開きました({t}保存)",{t:timeLabel(meta.savedAt||Date.now())}),{action:{label:T("作品の一覧"),run:openProjects}});
       }
     }
+    gcImages();
   }catch(err){console.warn("autosave unavailable",err);autosaveFailed=true}
   autosaveReady=true;
   scheduleAutosave();
@@ -2638,6 +2711,73 @@ window.addEventListener("beforeunload",e=>{
   if(undoStack.length||historyPendingStart!==null){e.preventDefault();e.returnValue=""}
 });
 el("newProjectBtn")?.addEventListener("click",startNewProject);
+/* ---- 作品の一覧 ---- */
+async function openProjects(){
+  toggleSettings(false);closeMobilePanel();el("projModal").hidden=false;
+  await runAutosave();renderProjects();
+}
+function closeProjects(){el("projModal").hidden=true}
+async function renderProjects(){
+  const box=el("projList");box.innerHTML="";
+  if(!autosaveDb||autosaveFailed){const m=document.createElement("p");m.className="tpl-note";m.textContent=T("このブラウザでは作品を保存できません。「PDF保存」で保存してください。");box.appendChild(m);return}
+  const list=await listProjects();
+  if(!list.length){const m=document.createElement("p");m.className="tpl-note";m.textContent=T("まだ保存された作品はありません。カードを作ると、自動でここに保存されます。");box.appendChild(m);return}
+  for(const m of list){
+    const cur=m.id===currentProjectId,row=document.createElement("div");row.className="proj-item"+(cur?" current":"");
+    const th=document.createElement("div");th.className="proj-thumb";
+    if(m.preview){try{await loadImagesInto(imgIdsOf(m.preview));th.appendChild(faceThumb(JSON.parse(m.preview,unpackImages),48,{fm:m.fm,land:m.land,size:m.size}))}catch(e){}}
+    const info=document.createElement("div");info.className="proj-info";
+    const name=document.createElement("input");name.type="text";name.className="tpl-name";name.maxLength=60;name.value=m.name;name.placeholder=T("無題の作品");name.setAttribute("aria-label",T("作品の名前"));
+    name.addEventListener("change",()=>renameProject(m.id,name.value));
+    const meta=document.createElement("div");meta.className="tpl-meta";meta.textContent=(cur?T("編集中")+" · ":"")+T("カード{n}枚",{n:m.cards})+" · "+timeLabel(m.savedAt);
+    const acts=document.createElement("div");acts.className="tpl-acts";
+    const btn=(label,fn,cls)=>{const x=document.createElement("button");x.type="button";x.className="mini"+(cls?" "+cls:"");x.textContent=label;x.addEventListener("click",fn);acts.appendChild(x)};
+    if(!cur)btn(T("開く"),()=>openProject(m.id),"proj-open");
+    btn(T("複製"),()=>duplicateProject(m.id));
+    btn(T("削除"),()=>deleteProject(m),"tpl-del");
+    info.append(name,meta,acts);row.append(th,info);box.appendChild(row);
+  }
+}
+async function openProject(id){
+  await runAutosave();
+  const ok=await loadProject(id);closeProjects();
+  if(ok)showAppToast(T("「{name}」を開きました",{name:sheetTitle||T("無題の作品")}),{duration:3000});
+}
+async function renameProject(id,v){
+  const name=String(v||"").trim();
+  if(id===currentProjectId){sheetTitle=name;el("sheetTitleInput").value=name;renderSheet();await runAutosave();renderProjects();return}
+  const tx=autosaveDb.transaction(["projects","meta"],"readwrite"),ps=tx.objectStore("projects"),ms=tx.objectStore("meta");
+  const r=ps.get(id);r.onsuccess=()=>{const rec=r.result;if(!rec)return;const st=JSON.parse(rec.json);st.sheetTitle=name;rec.json=JSON.stringify(st);ps.put(rec);
+    const q=ms.get(id);q.onsuccess=()=>{if(q.result){q.result.name=name;ms.put(q.result)}}};
+  await idbDone(tx).catch(e=>console.warn(e));renderProjects();
+}
+async function duplicateProject(id){
+  if(id===currentProjectId)await runAutosave();
+  const tx=autosaveDb.transaction(["projects","meta"],"readwrite"),ps=tx.objectStore("projects"),ms=tx.objectStore("meta");
+  const r=ps.get(id),q=ms.get(id);
+  q.onsuccess=()=>{const rec=r.result,meta=q.result;if(!rec||!meta)return;
+    const nid=newProjectId(),st=JSON.parse(rec.json),now=Date.now();st.sheetTitle=T("{name}のコピー",{name:meta.name||T("無題の作品")});
+    const json=JSON.stringify(st);ps.put({id:nid,json,ids:rec.ids,format:2});ms.put(metaFromState(nid,st,rec.ids,now,now));};
+  await idbDone(tx).catch(e=>console.warn(e));renderProjects();
+}
+async function deleteProject(m){
+  if(!confirm(T("「{name}」を削除しますか？\n(元に戻せません。必要なら先に開いて「PDF保存」してください)",{name:m.name||T("無題の作品")})))return;
+  const tx=autosaveDb.transaction(["projects","meta"],"readwrite");tx.objectStore("projects").delete(m.id);tx.objectStore("meta").delete(m.id);
+  await idbDone(tx).catch(e=>console.warn(e));
+  if(m.id===currentProjectId){
+    currentProjectId=null;autosaveLastJson=null;
+    const next=(await listProjects())[0];
+    if(next)await loadProject(next.id);
+    else{sheetTitle="";el("sheetTitleInput").value="";startDeck();setPaper();renderSheet();syncControls();initHistory()}
+  }
+  await gcImages();renderProjects();
+}
+document.querySelectorAll(".open-projects").forEach(b=>b.addEventListener("click",openProjects));
+el("projNew").addEventListener("click",startNewProject);
+document.querySelectorAll("[data-proj-close]").forEach(b=>b.addEventListener("click",closeProjects));
+el("projModal").addEventListener("click",e=>{if(e.target===el("projModal"))closeProjects()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("projModal").hidden)closeProjects()});
+document.addEventListener("cmm-langchange",()=>{if(!el("projModal").hidden)renderProjects()});
 el("mobileNewProject")?.addEventListener("click",()=>{closeMobilePanel();startNewProject()});
 
 /* ウラ面のずれ補正:CSSの --bx/--by で、シートの中央からずらす */
