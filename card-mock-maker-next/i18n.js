@@ -21,7 +21,7 @@ const EN={
   "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
   "見本を開く":"Open sample","見本":"Sample",
   // ---- スマホ
-  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",
   "トランプの数字とマーク":"Playing card: number & suit","トレカの文字と画像":"Trading card: text & image","ワードゲームのことば":"Word card: word","枠つき文字":"Framed text","文字":"Text",
   "まだマイテンプレートがありません。カードの見た目を整えてから保存すると、ここに並びます。":"No templates yet. Style a card, then save it and it will appear here.","いまのカードをテンプレートとして保存":"Save this card as a template",
   "この面はテンプレートを使っていません。使うときは、ここから選びます。":"This face doesn't use a template. Pick one here to use it.",

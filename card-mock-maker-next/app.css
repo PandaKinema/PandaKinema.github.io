@@ -2306,3 +2306,25 @@ header .header-actions{display:flex;align-items:center;gap:8px;flex:none;margin-
 #templateSelector{padding-bottom:0}
 #templateSelector .section-title{margin-bottom:8px}
 #templateSelector ~ .compact-template-controls{border-top:0;margin-top:0;padding-top:0}
+
+/* ---- スマホ・タブレット:文字は画面上の大きな入力欄で直す ---- */
+.text-edit-bar{position:fixed;left:0;right:0;top:0;z-index:10080;padding:8px 12px 10px;padding-top:calc(8px + env(safe-area-inset-top));background:var(--ui-panel,#fff);border-bottom:1px solid var(--ui-border);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.text-edit-bar[hidden]{display:none!important}
+.teb-label{display:block;font-size:12px;font-weight:700;color:var(--ui-muted);margin:0 0 6px}
+.teb-row{display:flex;gap:8px;align-items:flex-end}
+.teb-row textarea{flex:1;min-width:0;font-size:16px!important;line-height:1.45;padding:9px 11px;border:1.5px solid var(--cyan);border-radius:10px;resize:none;min-height:44px;max-height:30vh;background:var(--ui-control,#fff);color:var(--ink)}
+.teb-done{flex:none;min-height:44px!important;padding:0 16px!important;border-radius:10px!important;background:var(--ink)!important;color:var(--ui-panel,#fff)!important;font-weight:700;font-size:15px!important;border:0!important}
+.bar-target{outline:.7mm solid var(--cyan)!important;outline-offset:-.7mm;background-image:linear-gradient(rgba(36,184,242,.14),rgba(36,184,242,.14))!important}
+@media(max-width:720px){
+  /* お知らせは上に出して、下のパネルを隠さない */
+  .app-toast{top:calc(var(--hdr-h,56px) + 6px);bottom:auto!important;transform:translateY(-8px);font-size:12.5px;padding:8px 8px 8px 12px}
+  .app-toast .app-toast-close{min-width:36px;min-height:36px}
+  #mobileTemplateBar{display:none!important}   /* 種類の切り替え・無地に戻すは「種類」「面の種類」でできる */
+  /* 最初の画面は、6つが1画面に入るように3列で */
+  .start-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .start-tile{padding:10px 4px 9px!important;gap:2px}
+  .start-tile b{font-size:13px;white-space:nowrap}
+  .start-tile small{font-size:10px;line-height:1.35}
+  .start-art{height:62px;margin-bottom:4px}
+  .start-art-icon{width:44px;font-size:26px}
+}

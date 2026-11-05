@@ -1445,8 +1445,59 @@ document.addEventListener("click",e=>{
   if(ptrType==="mouse")return;
   const n=editTarget(e);if(!n||n.isContentEditable)return;
   if(ptrStart&&Math.hypot(e.clientX-ptrStart.x,e.clientY-ptrStart.y)>8)return;
-  e.preventDefault();e.stopPropagation();startInlineEdit(n,{x:e.clientX,y:e.clientY});
+  e.preventDefault();e.stopPropagation();startBarEdit(n);
 },true);
+
+/* タッチでは、小さなカードの上で直接打つと文字が小さく、iPhoneでは画面が拡大されたままになるので、
+   画面の上に大きな入力欄を出して、打った文字をすぐカードに映す */
+let barEdit=null,barRaf=0;
+const BAR_LABELS={name:"カード名",desc:"テキスト",main:"ことば",number:"数字"};
+function barLabelOf(d,key){
+  if(key.startsWith("tb:"))return T("文字")+" "+(ensureTextBoxes(d).findIndex(x=>x.id===key.slice(3))+1);
+  if(key.startsWith("ft:"))return T("枠つき文字")+" "+(ensureFrameTexts(d).findIndex(x=>x.id===key.slice(3))+1);
+  return T(BAR_LABELS[key]||"テキスト");
+}
+function markBarTarget(){
+  if(!barEdit)return;
+  const q=barEdit.key==="number"?".center-num":`[data-edit="${CSS.escape(barEdit.key)}"]`;
+  document.querySelectorAll(`#sheetGrid .face.selected ${q},#mobileCardPair .face.selected ${q}`).forEach(n=>n.classList.add("bar-target"));
+}
+function placeBar(){const b=el("textEditBar"),vv=window.visualViewport;if(b&&!b.hidden)b.style.top=(vv?Math.max(0,vv.offsetTop):0)+"px"}
+window.visualViewport?.addEventListener("resize",placeBar);window.visualViewport?.addEventListener("scroll",placeBar);
+function startBarEdit(node){
+  const face=node.closest(".face[data-idx]");if(!face)return;
+  const idx=Number(face.dataset.idx),key=node.dataset.edit,d=currentFaces()[idx];if(!d||!key)return;
+  if(barEdit)finishBarEdit();
+  if(selected!==idx){selected=idx;renderSheet();syncControls()}
+  const multi=key==="desc",inp=el("tebInput");
+  barEdit={idx,key,page:currentPage,multi,before:String(getInlineText(d,key))};
+  el("tebLabel").textContent=barLabelOf(d,key);
+  inp.value=barEdit.before;inp.rows=multi?3:1;inp.setAttribute("enterkeyhint",multi?"enter":"done");inp.placeholder=T(INLINE_PH[key]||"テキスト");
+  el("textEditBar").hidden=false;document.body.classList.add("teb-open");placeBar();markBarTarget();
+  inp.focus({preventScroll:true});   // タップしたその場で呼ぶ(iPhoneでキーボードを出すため)
+  if(barEdit.before===T(INLINE_PH[key]||""))inp.select();else{const n=inp.value.length;inp.setSelectionRange(n,n)}
+}
+function finishBarEdit(){
+  const ed=barEdit;if(!ed)return;barEdit=null;cancelAnimationFrame(barRaf);
+  const d=pages[ed.page]?.[ed.idx];
+  if(d){let v=el("tebInput").value.replace(/\r/g,"");v=ed.multi?v:v.replace(/\s*\n\s*/g," ").trim();setInlineText(d,ed.key,v)}
+  el("textEditBar").hidden=true;document.body.classList.remove("teb-open");
+  if(document.activeElement===el("tebInput"))el("tebInput").blur();
+  renderSheet();syncControls();
+}
+el("tebInput").addEventListener("input",()=>{
+  if(!barEdit)return;const d=pages[barEdit.page]?.[barEdit.idx];if(!d)return;
+  let v=el("tebInput").value;if(!barEdit.multi)v=v.replace(/\n/g," ");
+  setInlineText(d,barEdit.key,v);
+  cancelAnimationFrame(barRaf);barRaf=requestAnimationFrame(()=>{renderSheet();markBarTarget()});
+});
+el("tebInput").addEventListener("keydown",e=>{
+  if(!barEdit||e.isComposing||e.keyCode===229)return;
+  if(e.key==="Escape"||(e.key==="Enter"&&(!barEdit.multi||e.metaKey||e.ctrlKey))){e.preventDefault();finishBarEdit()}
+});
+el("tebInput").addEventListener("blur",()=>setTimeout(()=>{if(barEdit&&document.activeElement!==el("tebInput"))finishBarEdit()},0));
+el("tebDone").addEventListener("pointerdown",e=>e.preventDefault());   // 押したときに入力欄からフォーカスが外れないように
+el("tebDone").addEventListener("click",finishBarEdit);
 let inlineHintShown=false;
 function inlineHint(){
   if(inlineHintShown)return;inlineHintShown=true;
@@ -2079,7 +2130,7 @@ function syncStartChooser(blank){
   // 小さな絵は大きさが変わったときだけ描き直す
   const sig=src.value+"|"+cardOrientation+"|"+customCard.w+"x"+customCard.h+"|"+(window.CMMI18N&&CMMI18N.lang);
   if(sig===startSig)return;startSig=sig;
-  box.querySelectorAll(".start-tile[data-start]").forEach(t=>{const make=START_FACES[t.dataset.start],art=t.querySelector(".start-art");if(!make||!art)return;art.innerHTML="";art.appendChild(faceThumb(make(),mobileUIActive()?54:64))});
+  box.querySelectorAll(".start-tile[data-start]").forEach(t=>{const make=START_FACES[t.dataset.start],art=t.querySelector(".start-art");if(!make||!art)return;art.innerHTML="";art.appendChild(faceThumb(make(),mobileUIActive()?40:64))});
 }
 const PLAYING_NUMS=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 function startWith(kind){
@@ -2865,6 +2916,8 @@ function showAppToast(message,{action=null,duration=8000}={}){
   const x=document.createElement("button");x.type="button";x.className="app-toast-close";x.setAttribute("aria-label","閉じる");x.textContent="×";x.addEventListener("click",()=>t.classList.remove("show"));t.appendChild(x);
   clearTimeout(showAppToast.timer);requestAnimationFrame(()=>t.classList.add("show"));
   if(duration)showAppToast.timer=setTimeout(()=>t.classList.remove("show"),duration);
+  // スマホでは画面のほかの場所に触れたら閉じる(パネルの操作のじゃまにならないように)
+  if(mobileUIActive()){const shownAt=Date.now(),off=e=>{if(t.contains(e.target))return;if(Date.now()-shownAt>400)t.classList.remove("show");document.removeEventListener("pointerdown",off,true)};document.removeEventListener("pointerdown",showAppToast.off||off,true);showAppToast.off=off;setTimeout(()=>document.addEventListener("pointerdown",off,true),0)}
 }
 async function startNewProject(){
   const blank=deck.order.every(isBlankCard)&&!sheetTitle;
