@@ -97,10 +97,18 @@
   <div class="modal-box modal-narrow">
     <div class="modal-head"><strong id="exportTitle">画像で書き出す</strong><button type="button" class="modal-close" data-export-close aria-label="閉じる">×</button></div>
     <div class="modal-body">
-      <p class="export-lead">カードを1枚ずつPNG画像にして、ZIPファイルにまとめて保存します。ほかのツールで使ったり、紹介画像にしたりできます。</p>
+      <div class="export-kind">
+        <label class="export-opt"><input type="radio" name="exportKind" value="cards" checked><span><b>カード1枚ずつの画像（PNG）</b><small>カードを1枚ずつPNG画像にして、ZIPファイルにまとめます。ほかのツールで使ったり、紹介画像にしたりできます。</small></span></label>
+        <label class="export-opt"><input type="radio" name="exportKind" value="deck"><span><b>オンライン用の山札（ZIP）</b><small>ZIPファイルを読み込めるオンラインセッションツールに、そのまま山札として置けます。枚数ぶんのカードが入り、オモテ・ウラも設定済みです。</small></span></label>
+      </div>
       <div id="exportCardsOpts" class="export-opts">
         <label class="ds-item" id="exportSidesRow"><span>書き出す面</span><select id="exportSides"><option value="front">オモテ面</option><option value="back">ウラ面</option><option value="both">オモテ面とウラ面</option></select></label>
         <label class="ds-item"><span>解像度</span><select id="exportDpi"><option value="150">150 dpi</option><option value="300" selected>300 dpi</option></select></label>
+      </div>
+      <div id="exportDeckOpts" class="export-opts" hidden>
+        <label class="ds-item"><span>山札の分け方</span><select id="deckGroup"><option value="one">ひとつにまとめる</option><option value="tpl">テンプレートごと</option><option value="back">ウラ面ごと</option></select></label>
+        <label class="ds-item"><span>カードの大きさ</span><select id="deckSize"><option value="1.5">1.5マス</option><option value="2" selected>2マス（標準）</option><option value="2.5">2.5マス</option><option value="3">3マス</option></select></label>
+        <label class="ds-item"><span>画像の大きさ</span><select id="deckRes"><option value="480">標準（横480px）</option><option value="720">高画質（横720px）</option></select></label>
       </div>
     </div>
     <div class="modal-foot"><span id="exportSummary" class="bulk-summary no-i18n"></span><button type="button" data-export-close>やめる</button><button type="button" id="exportGo" class="primary">書き出す</button></div>

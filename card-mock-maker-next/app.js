@@ -2332,11 +2332,80 @@ function exportList(){
   return out;
 }
 let exportBusy=false,exportCancel=false;
+function exportKind(){return document.querySelector('input[name="exportKind"]:checked')?.value||"cards"}
+/* ---- オンライン用の山札:画像(名前はなんでもよく、中身のSHA-256で見分けられる)と、山札のXMLをZIPに ----
+   XMLは「山札(card-stack)の中にカード(card)」の形。カードはウラ向きで、オモテ・ウラの画像は画像のSHA-256で指す */
+const faceSig=f=>JSON.stringify(f,(k,v)=>k==="id"?undefined:packImages(k,v));
+function deckGroups(){
+  const mode=el("deckGroup").value,groups=new Map();
+  exportList().forEach(it=>{
+    const c=deck.cards[it.id];let key="all",name=null;
+    if(mode==="tpl"){const t=c.tpl&&deck.templates&&deck.templates[c.tpl];key=t?c.tpl:"_";name=t?t.name:T("そのほか")}
+    else if(mode==="back")key=faceSig(isSingleMode()?makePlain():c.back);
+    if(!groups.has(key))groups.set(key,{name,items:[]});
+    groups.get(key).items.push(it);
+  });
+  const arr=[...groups.values()],base=sheetTitle||T("山札");
+  arr.forEach((g,i)=>{if(!g.name)g.name=arr.length>1?`${base} ${i+1}`:base});
+  return arr;
+}
+/* カードの名前と本文(山札の中のカードの名前・詳細に入れる) */
+function cardTexts(card,no){
+  const f=card.front||{},texts=[];let name="";
+  if(f.type==="template"){
+    if(f.template==="tcg"){name=String(f.name||"").trim();if(String(f.desc||"").trim())texts.push(String(f.desc).trim())}
+    else if(f.template==="word")name=String(f.main||"").trim();
+    else if(f.template==="playing")name=`${f.number??""}${f.suit??""}`.trim();
+  }
+  [...(f.textBoxes||[]),...(f.frameTexts||[])].forEach(x=>{const v=String(x&&x.text||"").trim();if(v)texts.push(v)});
+  if(!name&&texts.length)name=texts.shift().split("\n")[0];
+  return {name:(name||T("カード{n}",{n:no})).slice(0,60),detail:texts.join("\n")};
+}
+const xmlEsc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function stackXml(name,cards,size){
+  const card=c=>`<card location.name="table" location.x="0" location.y="0" posZ="0" state="1" rotate="0" owner="" zindex="0"><data name="card"><data name="image"><data type="image" name="imageIdentifier"></data><data type="image" name="front">${c.front}</data><data type="image" name="back">${c.back}</data></data><data name="common"><data name="name">${xmlEsc(c.name)}</data><data name="size">${size}</data></data><data name="detail">${c.detail?`<data type="note" name="${xmlEsc(T("テキスト"))}">${xmlEsc(c.detail)}</data>`:""}</data></data></card>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<card-stack location.name="table" location.x="0" location.y="0" posZ="0" rotate="0" zindex="0" owner="" isShowTotal="true"><data name="card-stack"><data name="image"><data type="image" name="imageIdentifier"></data></data><data name="common"><data name="name">${xmlEsc(name)}</data></data><data name="detail"></data></data><node name="cardRoot">${cards.map(card).join("")}</node></card-stack>`;
+}
+async function sha256Hex(bytes){const h=new Uint8Array(await crypto.subtle.digest("SHA-256",bytes));return [...h].map(b=>b.toString(16).padStart(2,"0")).join("")}
+const canvasBlob=(c,type,q)=>new Promise((ok,ng)=>c.toBlob(b=>b?ok(b):ng(new Error("toBlob")),type,q));
+/* 1枚2MBまでのツールが多いので、PNGが重いとき(写真など)はJPEGにする */
+async function deckImageBytes(c){
+  const LIMIT=1.8*1024*1024;
+  let b=await canvasBlob(c,"image/png");if(b.size<=LIMIT)return {bytes:new Uint8Array(await b.arrayBuffer()),ext:"png"};
+  for(const q of [.9,.8,.7]){b=await canvasBlob(c,"image/jpeg",q);if(b.size<=LIMIT)break}
+  return {bytes:new Uint8Array(await b.arrayBuffer()),ext:"jpg"};
+}
+async function buildDeckZip(staging,progress){
+  const groups=deckGroups(),size=Number(el("deckSize").value)||2,fm=faceMM(),scale=(Number(el("deckRes").value)||480)/(fm.w*MM_TO_PX);
+  const single=isSingleMode(),cache=new Map(),images=[],xmls=[];
+  const faces=new Set();groups.forEach(g=>g.items.forEach(it=>{const c=deck.cards[it.id];faces.add(faceSig(c.front));faces.add(faceSig(single?makePlain():c.back))}));
+  const total=faces.size;let done=0;
+  const imageId=async face=>{
+    const k=faceSig(face);if(cache.has(k))return cache.get(k);
+    if(exportCancel)throw new Error("cancel");progress(++done,total);
+    const cv=await renderFaceCanvas(face,scale,staging),{bytes,ext}=await deckImageBytes(cv);cv.width=cv.height=0;
+    const id=await sha256Hex(bytes);images.push({name:`${String(images.length+1).padStart(3,"0")}.${ext}`,data:bytes});cache.set(k,id);return id;
+  };
+  let no=0;
+  for(const [gi,g] of groups.entries()){
+    const cards=[];
+    for(const it of g.items){
+      const c=deck.cards[it.id],front=await imageId(c.front),back=await imageId(single?makePlain():c.back),tx=cardTexts(c,++no);
+      for(let k=0;k<it.n;k++)cards.push({front,back,...tx});
+    }
+    xmls.push({name:`deck_${gi+1}.xml`,data:new TextEncoder().encode(stackXml(g.name,cards,size))});
+  }
+  return makeZip([...images,...xmls]);   // 画像を先に(読み込む側が順に読むため)
+}
 function syncExportUI(msg){
-  const list=exportList(),single=isSingleMode();
+  const list=exportList(),single=isSingleMode(),kind=exportKind();
+  el("exportCardsOpts").hidden=kind!=="cards";el("exportDeckOpts").hidden=kind!=="deck";
   el("exportSidesRow").hidden=single;
-  const sides=single?"front":el("exportSides").value,files=list.length*(sides==="both"?2:1);
-  el("exportSummary").textContent=msg||(!list.length?T("書き出すカードがありません。"):T("{n}種類のカードを書き出します（画像{f}枚）。",{n:list.length,f:files}));
+  let text;
+  if(!list.length)text=T("書き出すカードがありません。");
+  else if(kind==="deck"){const g=deckGroups(),m=list.reduce((a,x)=>a+x.n,0);text=T("{m}枚のカードで、山札を{s}つ作ります。",{m,s:g.length})}
+  else{const sides=single?"front":el("exportSides").value;text=T("{n}種類のカードを書き出します（画像{f}枚）。",{n:list.length,f:list.length*(sides==="both"?2:1)})}
+  el("exportSummary").textContent=msg||text;
   el("exportGo").disabled=exportBusy||!list.length;
 }
 function openExport(){toggleSettings(false);closeMobilePanel();exportCancel=false;el("exportModal").hidden=false;syncExportUI()}
@@ -2350,6 +2419,13 @@ async function runExport(){
   const base=safeFileName(sheetTitle)||"cards",files=[];
   try{
     await fontsReady();
+    if(exportKind()==="deck"){
+      const zip=await buildDeckZip(staging,(i,n)=>syncExportUI(T("書き出し中… {i} / {n}",{i,n})));
+      downloadBlob(zip,`${base}_deck.zip`);
+      exportBusy=false;el("exportModal").hidden=true;
+      showAppToast(T("山札のZIPを書き出しました"),{duration:4000});
+      return;
+    }
     const sides=isSingleMode()?["front"]:el("exportSides").value==="both"?["front","back"]:[el("exportSides").value];
     const scale=Number(el("exportDpi").value)/96,jobs=[];
     list.forEach((it,i)=>sides.forEach(side=>jobs.push({it,i,side})));
@@ -2372,7 +2448,7 @@ document.querySelectorAll(".open-export").forEach(b=>b.addEventListener("click",
 document.querySelectorAll("[data-export-close]").forEach(b=>b.addEventListener("click",closeExport));
 el("exportModal").addEventListener("click",e=>{if(e.target===el("exportModal"))closeExport()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!el("exportModal").hidden)closeExport()});
-document.querySelectorAll('#exportSides,#exportDpi').forEach(x=>x.addEventListener("change",()=>syncExportUI()));
+document.querySelectorAll('input[name="exportKind"],#exportSides,#exportDpi,#deckGroup,#deckSize,#deckRes').forEach(x=>x.addEventListener("change",()=>syncExportUI()));
 el("exportGo").addEventListener("click",runExport);
 document.addEventListener("cmm-langchange",()=>{if(!el("exportModal").hidden&&!exportBusy)syncExportUI()});
 

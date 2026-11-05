@@ -541,11 +541,18 @@
   
 <div class="split">
   <div>
-    <p lang="ja"><b class="ui">•••</b>の<b class="ui">画像で書き出す</b>で、カードを1枚ずつPNG画像にして、ZIPファイルにまとめて保存します。ほかのツールで使ったり、紹介画像にしたりできます。</p><p lang="en"><b class="ui">Export images</b> in the <b class="ui">•••</b> menu saves each card as a PNG image, together in a ZIP file. Use them in other tools or to show off your cards.</p>
-    <ul lang="ja"><li><b class="ui">書き出す面</b>：<b class="ui">オモテ面</b>・<b class="ui">ウラ面</b>・<b class="ui">オモテ面とウラ面</b>から選べます（片面のときはオモテ面だけ）。</li><li><b class="ui">解像度</b>：150 dpi か 300 dpi。印刷に使うなら300 dpiがおすすめです。</li><li>同じカードは1つにまとめ、ファイル名に「_x3」のように枚数が入ります。空のカードは書き出しません。</li></ul><ul lang="en"><li><b class="ui">Sides</b>: <b class="ui">Front</b>, <b class="ui">Back</b> or <b class="ui">Front and back</b> (front only for single-sided).</li><li><b class="ui">Resolution</b>: 150 or 300 dpi. Use 300 dpi if you'll print them.</li><li>Copies are exported once, with the count in the file name, like “_x3”. Empty cards are skipped.</li></ul>
+    <p lang="ja"><b class="ui">•••</b>の<b class="ui">画像で書き出す</b>で、カードを画像にしてZIPファイルで保存します。書き出し方は2つあります。</p><p lang="en"><b class="ui">Export images</b> in the <b class="ui">•••</b> menu saves your cards as images in a ZIP file, in one of two ways.</p>
   </div>
   <figure class="shot "><img style="max-width:420px" lang="ja" src="img/export-ja.webp?v=20261026" width="1000" height="429" alt="画像で書き出す" loading="lazy" decoding="async"><img style="max-width:420px" lang="en" src="img/export-en.webp?v=20261026" width="1000" height="429" alt="Export images" loading="lazy" decoding="async"><figcaption><span lang="ja">画像で書き出す</span><span lang="en">Export images</span></figcaption></figure>
 </div>
+<h3><span lang="ja">カード1枚ずつの画像（PNG）</span><span lang="en">One image per card (PNG)</span></h3>
+<p lang="ja">カードを1枚ずつPNG画像にします。ほかのツールで使ったり、紹介画像にしたりできます。</p><p lang="en">Each card becomes a PNG image, for other tools or for showing off your cards.</p>
+<ul lang="ja"><li><b class="ui">書き出す面</b>：<b class="ui">オモテ面</b>・<b class="ui">ウラ面</b>・<b class="ui">オモテ面とウラ面</b>から選べます（片面のときはオモテ面だけ）。</li><li><b class="ui">解像度</b>：150 dpi か 300 dpi。印刷に使うなら300 dpiがおすすめです。</li><li>同じカードは1つにまとめ、ファイル名に「_x3」のように枚数が入ります。空のカードは書き出しません。</li></ul><ul lang="en"><li><b class="ui">Sides</b>: <b class="ui">Front</b>, <b class="ui">Back</b> or <b class="ui">Front and back</b> (front only for single-sided).</li><li><b class="ui">Resolution</b>: 150 or 300 dpi. Use 300 dpi if you'll print them.</li><li>Copies are exported once, with the count in the file name, like “_x3”. Empty cards are skipped.</li></ul>
+<h3><span lang="ja">オンライン用の山札（ZIP）</span><span lang="en">Deck for online play (ZIP)</span></h3>
+<p lang="ja">ZIPファイルを読み込めるオンラインセッションツールで、作ったカードをそのまま山札として使えます。枚数ぶんのカードが入り、オモテ・ウラの画像も設定済みです。</p><p lang="en">Use your cards as a ready-made deck in an online play tool that reads ZIP files. Every copy is included, and fronts and backs are already set.</p>
+<ol class="steps" lang="ja"><li>書き出したZIPファイルを、ツールの画面（テーブル）にドラッグ&ドロップします。</li><li>山札が置かれます。カードはウラ向きで入っています。</li></ol><ol class="steps" lang="en"><li>Drag and drop the exported ZIP file onto the tool’s table.</li><li>A deck appears, with the cards face down.</li></ol>
+<ul lang="ja"><li><b class="ui">山札の分け方</b>：<b class="ui">ひとつにまとめる</b>・<b class="ui">テンプレートごと</b>・<b class="ui">ウラ面ごと</b>から選べます。山札が複数あるときは同じ場所に重なって置かれるので、ずらして使ってください。</li><li><b class="ui">カードの大きさ</b>：テーブルのマス目いくつぶんの幅にするか。ふつうは2マスです。</li><li><b class="ui">画像の大きさ</b>：画像は参加者どうしで送り合うので、軽い<b class="ui">標準（横480px）</b>がおすすめです。</li><li>カード名（トレカのカード名など）と本文も、カードのデータに入ります。</li></ul><ul lang="en"><li><b class="ui">Decks</b>: <b class="ui">One deck</b>, <b class="ui">One per template</b> or <b class="ui">One per card back</b>. Several decks land on the same spot, so drag them apart.</li><li><b class="ui">Card size</b>: how many table squares wide each card is. 2 is standard.</li><li><b class="ui">Image size</b>: images are sent between players, so the lighter <b class="ui">Standard (480px wide)</b> is recommended.</li><li>Card names (such as the trading card name) and card text go into each card’s data too.</li></ul>
+<div class="note tip"><b class="note-l"><span lang="ja">ヒント</span><span lang="en">Tip</span></b><p lang="ja">ZIPファイルの読み込みに対応しているかは、ツールによって違います。</p><p lang="en">Whether a tool can read the ZIP file depends on the tool.</p></div>
 
 </section>
 <section class="g-sec" id="phone" aria-labelledby="phone-h">
@@ -578,7 +585,7 @@
     </dl>
     <p lang="ja">単位はこのブラウザに、基本のフォントは作品に保存されます。</p><p lang="en">Units are remembered by this browser; the default font is saved with the project.</p>
   </div>
-  <figure class="shot "><img style="max-width:300px" lang="ja" src="img/menu-ja.webp?v=20261026" width="560" height="872" alt="メニュー（•••）" loading="lazy" decoding="async"><img style="max-width:300px" lang="en" src="img/menu-en.webp?v=20261026" width="560" height="878" alt="The menu (•••)" loading="lazy" decoding="async"><figcaption><span lang="ja">メニュー（•••）</span><span lang="en">The menu (•••)</span></figcaption></figure>
+  <figure class="shot "><img style="max-width:300px" lang="ja" src="img/menu-ja.webp?v=20261026" width="560" height="796" alt="メニュー（•••）" loading="lazy" decoding="async"><img style="max-width:300px" lang="en" src="img/menu-en.webp?v=20261026" width="560" height="806" alt="The menu (•••)" loading="lazy" decoding="async"><figcaption><span lang="ja">メニュー（•••）</span><span lang="en">The menu (•••)</span></figcaption></figure>
 </div>
 <div class="note tip"><b class="note-l"><span lang="ja">ヒント</span><span lang="en">Tip</span></b><p lang="ja">フォントはインターネットから読み込みます。オフラインのときは、端末にある文字に置き換わることがあります。</p><p lang="en">Fonts load from the internet. When offline, your device’s own fonts may be used instead.</p></div>
 
