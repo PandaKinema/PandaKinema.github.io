@@ -194,9 +194,9 @@ function unlinkSelected(){
    deck.templates[tid]={name,front,back,lib}。カードは deck.cards[id].tpl=tid でテンプレートにつながる。
    つながったカードのどれかで見た目(色・大きさ・配置・画像)を変えると、テンプレートと同じテンプレートのカードすべてに反映する。
    文字(と、トレカの絵・画像の面の画像)はカードごと。lib=true は、このブラウザにも保存しているもの */
-const CONTENT_KEYS={playing:["number","suit"],tcg:["name","desc","image"],word:["main"]};
+const CONTENT_KEYS={playing:["number","suit"],tcg:["name","desc","image","imageFit"],word:["main"]};
 function faceKindOf(f){return !f?"":f.type==="template"?"t:"+f.template:f.type}
-function contentKeys(f){return !f?[]:f.type==="template"?(CONTENT_KEYS[f.template]||[]):f.type==="image"?["src"]:[]}
+function contentKeys(f){return !f?[]:f.type==="template"?(CONTENT_KEYS[f.template]||[]):f.type==="image"?["src","srcFit"]:[]}
 function styleOf(f){
   if(!f)return "";
   const o={...f};contentKeys(f).forEach(k=>delete o[k]);
@@ -271,7 +271,7 @@ function renderGenericTextBoxes(faceEl,d,selectable=false,idx=-1){
     const div=document.createElement("div");div.className="generic-textbox"+(selectable?" editable":"");
     div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";
     div.style.fontSize=(st.size||SIZE.text)+"pt";if(st.font)div.style.fontFamily=fontCss(st.font);div.style.fontWeight=st.bold?700:400;div.style.fontStyle=st.italic?"italic":"normal";div.style.textDecoration=st.underline?"underline":"none";div.style.color=st.colorNone?"transparent":(st.color||"#222");div.textContent=item.text||"";
-    if(selectable){div.dataset.edit="tb:"+item.id;const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableGenericTextBox(div,idx,item.id)}
+    if(selectable){div.dataset.edit=div.dataset.part="tb:"+item.id;const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableGenericTextBox(div,idx,item.id)}
     faceEl.appendChild(div);
   });
   renderFrameTexts(faceEl,d,selectable,idx);
@@ -292,19 +292,19 @@ function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
     div.style.border="0";if(!item.borderNone){const w=Number(item.borderWidth)||1,c=item.borderColor||"#222",a=item.borderAlign||"inside";if(a==="outside")div.style.boxShadow=`0 0 0 ${w}mm ${c}`;else if(a==="center")div.style.boxShadow=`inset 0 0 0 ${w/2}mm ${c},0 0 0 ${w/2}mm ${c}`;else div.style.boxShadow=`inset 0 0 0 ${w}mm ${c}`}
     div.style.background=item.fillNone?"transparent":(item.fillColor||"#fff");
     div.textContent=item.text||"";
-    if(selectable){div.dataset.edit="ft:"+item.id;const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableFrameText(div,idx,item.id)}
+    if(selectable){div.dataset.edit=div.dataset.part="ft:"+item.id;const h=document.createElement("div");h.className="resize-handle";div.appendChild(h);enableFrameText(div,idx,item.id)}
     faceEl.appendChild(div);
   });
 }
 function renderOptionImages(faceEl,d,selectable=false,idx=-1){
-  ensureOptionImages(d).forEach((item,n)=>{if(!item.src)return;const b=item.box||{x:30,y:28+n*5,w:40,h:30};const div=document.createElement("div");div.className="option-image"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";div.style.transform=`rotate(${Number(item.rotation)||0}deg)`;div.innerHTML=`<img src="${item.src}" alt="">`;if(selectable){div.innerHTML+=`<div class="resize-handle"></div><div class="rotate-handle"></div>`;enableOptionImage(div,idx,item.id)}faceEl.appendChild(div)})
+  ensureOptionImages(d).forEach((item,n)=>{if(!item.src)return;const b=item.box||{x:30,y:28+n*5,w:40,h:30};const div=document.createElement("div");div.className="option-image"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";div.style.transform=`rotate(${Number(item.rotation)||0}deg)`;div.innerHTML=`<img src="${item.src}" alt="">`;if(selectable){div.dataset.part="img:"+item.id;div.innerHTML+=`<div class="resize-handle"></div><div class="rotate-handle"></div>`;enableOptionImage(div,idx,item.id)}faceEl.appendChild(div)})
 }
 function renderShapes(faceEl,d,selectable=false,idx=-1){
   ensureShapes(d).forEach(item=>{const b=item.box||{x:30,y:30,w:38,h:38},div=document.createElement("div");div.className="option-shape"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.aspectRatio="1 / 1";
     let tag=item.type==="circle"?'<ellipse cx="50" cy="50" rx="46" ry="46"/>':item.type==="rect"?'<rect x="4" y="4" width="92" height="92"/>':`<polygon points="${shapePoints(item.type,item.points)}"/>`;
     const sw=Math.max(.1,Number(item.borderWidth)||1), align=item.borderAlign||"inside"; let svgStroke=sw*MM_TO_PX; if(align==="inside")svgStroke*=2; else if(align==="outside")svgStroke*=2;
     div.innerHTML=`<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g fill="${item.fillNone?'none':item.fillColor||'#fff'}" stroke="${item.borderNone?'none':item.borderColor||'#222'}" stroke-width="${svgStroke}" vector-effect="non-scaling-stroke">${tag}</g></svg>${selectable?'<div class="resize-handle"></div>':''}`;
-    if(selectable)enableShape(div,idx,item.id);faceEl.appendChild(div)})
+    if(selectable){div.dataset.part="shape:"+item.id;enableShape(div,idx,item.id)}faceEl.appendChild(div)})
 }
 function enableShape(node,idx,itemId){let mode=null,sx=0,sy=0,start=null;const h=node.querySelector('.resize-handle'),get=()=>ensureShapes(currentFaces()[idx]).find(x=>x.id===itemId);const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;sx=e.clientX;sy=e.clientY;start={...(get().box)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up,{once:true})};node.addEventListener('pointerdown',e=>{if(e.target!==h)down(e,'move')});h&&h.addEventListener('pointerdown',e=>down(e,'resize'));function move(e){const it=get(),r=node.closest('.face').getBoundingClientRect(),dx=(e.clientX-sx)/r.width*100,dy=(e.clientY-sy)/r.height*100;const currentH=it.box.h||start.h||38;if(mode==='move'){const visualH=(it.box.w||start.w)*r.width/r.height;it.box={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-visualH),h:visualH}}else{let nw=start.w+(Math.abs(dx)>=Math.abs(dy)?dx:dy*r.height/r.width);nw=clamp(nw,8,100-start.x);let nh=nw*r.width/r.height;if(nh>100-start.y){nh=100-start.y;nw=nh*r.height/r.width}it.box={...start,w:nw,h:nh}}Object.assign(node.style,{left:it.box.x+'%',top:it.box.y+'%',width:it.box.w+'%',height:'auto',aspectRatio:'1 / 1'})}function up(){mode=null;window.removeEventListener('pointermove',move);syncControls()}}
 
@@ -374,7 +374,7 @@ function onImagePicked(input,apply){
 
 /* 面の種類やテンプレートを切り替えても引き継ぐもの(背景・線・オプション) */
 function keepCommon(old){
-  return {bgColor:old.bgColor||"#ffffff",bgNone:!!old.bgNone,bgImage:old.bgImage||null,
+  return {bgColor:old.bgColor||"#ffffff",bgNone:!!old.bgNone,bgImage:old.bgImage||null,bgFit:old.bgFit||null,
     bgBorderColor:old.bgBorderColor||"#222222",bgBorderWidth:old.bgBorderWidth??1,bgBorderNone:old.bgBorderNone!==false,bgBorderAlign:old.bgBorderAlign||"inside",
     textBoxes:deep(ensureTextBoxes(old)),frameTexts:deep(ensureFrameTexts(old)),optionImages:deep(ensureOptionImages(old)),shapes:deep(ensureShapes(old))};
 }
@@ -597,8 +597,53 @@ function renderSuitHTML(d){
 }
 function cornerVisible(pos,key){pos=pos||"four";if(pos==="top")return key==="tl"||key==="tr";if(pos==="diagRight")return key==="tr"||key==="bl";if(pos==="diagLeft")return key==="tl"||key==="br";return true}
 
-function renderFace(faceEl,d,selectable=false,idx=-1){
+/* ---- 文字のはみ出し:枠に入りきらない文字は自動で小さくする(作品の設定でオフにできる)。
+   小さくしても入らないときは、画面だけ赤い点線で知らせる(印刷・PDF・画像には出ない) ---- */
+const FIT_SEL=".tcg-name,.tcg-desc,.word-main,.generic-textbox,.frame-text";
+const fitBase=new WeakMap();
+function fitTexts(root,mark=true){
+  if(!root)return;
+  const auto=deck.autoFit!==false;
+  root.querySelectorAll(FIT_SEL).forEach(n=>{
+    if(n.isContentEditable)return;
+    if(!n.clientWidth&&!n.clientHeight)return;   // まだ画面に並んでいない
+    if(fitBase.has(n))n.style.fontSize=fitBase.get(n);else fitBase.set(n,n.style.fontSize||"");
+    const hs=[...n.querySelectorAll(".resize-handle,.rotate-handle")];hs.forEach(h=>h.style.display="none");
+    const over=()=>n.scrollHeight>n.clientHeight+1||n.scrollWidth>n.clientWidth+1;
+    let o=over();
+    if(o&&auto){
+      const base=parseFloat(getComputedStyle(n).fontSize)||12;let lo=base*.4,hi=base;
+      for(let i=0;i<8;i++){const mid=(lo+hi)/2;n.style.fontSize=mid+"px";if(over())hi=mid;else lo=mid}
+      n.style.fontSize=lo+"px";o=over();
+    }
+    hs.forEach(h=>h.style.display="");
+    if(mark)n.classList.toggle("text-over",o);
+  });
+}
+let fitQueue=new Set(),fitRaf=0;
+function queueFit(faceEl){fitQueue.add(faceEl);if(!fitRaf)fitRaf=requestAnimationFrame(flushFit)}
+function flushFit(){fitRaf=0;const q=fitQueue;fitQueue=new Set();q.forEach(f=>{if(f.isConnected)fitTexts(f)});syncOverNote()}
+function syncOverNote(){
+  const note=el("overNote");if(!note)return;
+  const f=document.querySelector(mobileUIActive()?"#mobileCardPair .face.selected":"#sheetGrid .face.selected");
+  const o=!!(f&&f.querySelector(".text-over"));note.hidden=!o;
+  if(o)note.querySelector("span").textContent=deck.autoFit===false
+    ?T("文字が枠からはみ出しています(赤い点線)。文字を減らすか小さくするか、「自動で小さくする」をオンにしてください。")
+    :T("文字が枠に入りきりません(赤い点線)。文字を減らすか、枠を大きくしてください。");
+  el("overAutoOn").hidden=deck.autoFit!==false;
+}
+function renderFace(faceEl,d,selectable=false,idx=-1){renderFaceInner(faceEl,d,selectable,idx);queueFit(faceEl)}
+/* ---- 画像の位置と大きさ:{x,y}は見せたい場所(0〜100%)、zは拡大(1〜4倍)。切り抜きはいつも枠いっぱい ---- */
+const FIT_KEYS={image:"imageFit",src:"srcFit",bg:"bgFit"};
+function normFit(f){return {x:clamp(f&&f.x!=null?Number(f.x):50,0,100),y:clamp(f&&f.y!=null?Number(f.y):50,0,100),z:clamp(f&&f.z?Number(f.z):1,1,4)}}
+function applyImgFit(img,fit){
+  img.style.objectPosition=img.style.transformOrigin=img.style.transform="";
+  if(!fit)return;const {x,y,z}=normFit(fit);if(z===1&&x===50&&y===50)return;
+  img.style.objectPosition=`${x}% ${y}%`;img.style.transformOrigin=`${x}% ${y}%`;if(z!==1)img.style.transform=`scale(${z})`;
+}
+function renderFaceInner(faceEl,d,selectable=false,idx=-1){
   faceEl.innerHTML="";
+  faceEl.classList.toggle("can-pan",!!selectable&&((d.type==="image"&&!!d.src)||!!d.bgImage));
   faceEl.style.fontFamily=fontCss(deck.font);
   faceEl.style.background=d.bgNone?"transparent":(d.bgColor||"#ffffff");
   const faceBorderW=Number(d.bgBorderWidth)||1;
@@ -620,13 +665,13 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     bg.style.height="100%";
     bg.style.objectFit="cover";
     bg.style.zIndex="0";
-    bg.style.pointerEvents="none";
+    bg.style.pointerEvents="none";bg.className="face-bg-img";applyImgFit(bg,d.bgFit);
     faceEl.appendChild(bg);
   }
 
   if(d.type==="plain"){renderGenericTextBoxes(faceEl,d,selectable,idx);return;}
   if(d.type==="image"){
-    if(d.src){const img=document.createElement("img");img.src=d.src;img.style.width="100%";img.style.height="100%";img.style.objectFit="cover";img.style.position="relative";img.style.zIndex="1";faceEl.appendChild(img)}
+    if(d.src){const img=document.createElement("img");img.src=d.src;img.className="face-src-img";img.style.width="100%";img.style.height="100%";img.style.objectFit="cover";img.style.position="relative";img.style.zIndex="1";applyImgFit(img,d.srcFit);faceEl.appendChild(img)}
     else faceEl.innerHTML='<div class="empty ph">画像未設定</div>';
     renderGenericTextBoxes(faceEl,d,selectable,idx);
     return
@@ -657,6 +702,7 @@ function renderFace(faceEl,d,selectable=false,idx=-1){
     wrap.innerHTML=`<div class="tcg-name"${ed("name")} style="${ns.font?`font-family:${fontCss(ns.font)};`:""}font-size:${ns.size||SIZE.tcgName}pt;font-weight:${ns.bold?700:400};font-style:${ns.italic?"italic":"normal"};text-decoration:${ns.underline?"underline":"none"}">${d.name?esc(d.name):'<span class="ph">カード名</span>'}</div>
       <div class="tcg-image"${selectable?' data-drop="image"':""}>${d.image?`<img src="${d.image}">`:'<span class="ph">画像</span>'}</div>
       <div class="tcg-desc"${ed("desc")} style="${ds.font?`font-family:${fontCss(ds.font)};`:""}font-size:${ds.size||SIZE.tcgDesc}pt;font-weight:${ds.bold?700:400};font-style:${ds.italic?"italic":"normal"};text-decoration:${ds.underline?"underline":"none"}">${d.desc?esc(d.desc):'<span class="ph">テキスト</span>'}</div>`;
+    {const ti=wrap.querySelector(".tcg-image img");if(ti)applyImgFit(ti,d.imageFit)}
     faceEl.appendChild(wrap);renderGenericTextBoxes(faceEl,d,selectable,idx);return
   }
 
@@ -856,6 +902,7 @@ function renderSheet(){
   syncStartChooser(blank);
   el("sheetTitle").textContent=sheetTitle;
   buildSheet(grid,currentFaces(),true);
+  markActivePart();
   setBackOffset(grid,layoutMode()==="both"&&arrangement()==="back");
   el("pageCount").textContent=`${currentPage+1} / ${pages.length}`;
   el("addPage").disabled=pages.length>=MAX_PAGES;
@@ -863,6 +910,8 @@ function renderSheet(){
   el("deletePage").disabled=pages.length<=1;
   renderPageSidebar();
   renderMobileCardPreview();
+  flushFit();   // 見えている用紙のカードは、描いたその場で文字の大きさを合わせる
+  {const d=currentFaces()[selected];if(d)syncImgFit(d)}   // 画像を入れたらすぐ「大きさ・左右・上下」を出す
   scheduleAutosave();
 }
 
@@ -1302,11 +1351,12 @@ function syncControls(){
   // 面の種類「マイテンプレート」:テンプレートにつながっているカード、または選ぼうとしているところ
   const qcard=deck.cards[qid],qtpl=qcard&&qcard.tpl&&deck.templates&&deck.templates[qcard.tpl];
   if(myTplPick&&myTplPick!==qid+":"+slotAt(currentPage,selected).side)myTplPick=null;
-  const pickOnly=!!myTplPick&&!qtpl;
+  const pickOnly=!!myTplPick;   // 「マイテンプレート」を選んで一覧から選んでいるところ(つながっているカードの付け替えもここから)
   syncMyTplPicker(qcard,qtpl,pickOnly);
   refreshCopyButtonLabels();
   syncDuplexUI();
-  el("faceType").value=(qtpl||pickOnly)?"mytpl":d.type==="template"?(d.template||"playing"):d.type;
+  // つながっているカードも、面の種類には「トレカ」など中身の種類を出す(つながりは下の一行で伝える)
+  el("faceType").value=pickOnly?"mytpl":d.type==="template"?(d.template||"playing"):d.type;
   const templ=d.type==="template"&&!pickOnly;
   el("templateSelector").classList.toggle("hidden",!templ);
   el("playingControls").classList.add("hidden");el("tcgControls").classList.add("hidden");el("wordControls").classList.add("hidden");el("customControls").classList.add("hidden");
@@ -1316,7 +1366,7 @@ function syncControls(){
 
 
   el("suitImageControls").classList.add("hidden");
-  syncFaceStyleChip(d);
+  syncFaceStyleChip(d);syncImgFit(d);
   if(templ){
     el("templateType").value=d.template||"playing";
     el("tplSectionTitle").textContent=T(TPL_SECTION_TITLES[d.template||"playing"]||"テンプレート");
@@ -1363,6 +1413,8 @@ function syncControls(){
   el("tcgLayoutControls").classList.toggle("hidden",!showTcgLayout);
   relabelLengths(document);
   if(el("deckFont"))el("deckFont").value=deck.font||"system";
+  if(el("autoFit"))el("autoFit").checked=deck.autoFit!==false;
+  syncOverNote();
   renderSwatches();
 }
 function updateSelected(patch){setFaceAt(currentPage,selected,{...currentFaces()[selected],...patch});renderSheet()}
@@ -1505,14 +1557,61 @@ function inlineHint(){
   showAppToast(T(ptrType==="mouse"?"カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"選んだカードの文字をタップすると、その場で直せます。"),{duration:7000});
 }
 
+/* ---- キーボード操作(パソコン) ----
+   矢印:となりのカードへ / Enter:選んだカードの文字を直す / Delete:選んだパーツを消す / Esc:パーツの選択をやめる
+   ⌘C・⌘V(Ctrl+C・Ctrl+V):面をコピー・貼り付け */
+let activePart=null;   // カードの上で最後に触ったパーツ {page,idx,part:"tb:id"など}
+function typingIn(t){return !!(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))}
+function overlayOpen(){return !!document.querySelector(".modal:not([hidden])")||!el("settingsPop").hidden||!el("textEditBar").hidden||!!document.querySelector(".color-popup.open,.color-popup:not([hidden])")}
+function markActivePart(){
+  document.querySelectorAll(".part-active").forEach(n=>n.classList.remove("part-active"));
+  if(!activePart)return;
+  if(activePart.page!==currentPage||activePart.idx!==selected){activePart=null;return}
+  const n=document.querySelector(`#sheetGrid .face.selected [data-part="${CSS.escape(activePart.part)}"]`);
+  if(n)n.classList.add("part-active");else activePart=null;
+}
+el("sheetGrid").addEventListener("pointerdown",e=>{
+  const p=e.target.closest(".face.selected [data-part]");
+  activePart=p?{page:currentPage,idx:selected,part:p.dataset.part}:null;markActivePart();
+},true);
+function deleteActivePart(){
+  const a=activePart;if(!a)return false;
+  const i=a.part.indexOf(":"),k=a.part.slice(0,i),id=a.part.slice(i+1),d=currentFaces()[selected];
+  const list=({tb:ensureTextBoxes,ft:ensureFrameTexts,img:ensureOptionImages,shape:ensureShapes}[k]||(()=>null))(d);if(!list)return false;
+  const at=list.findIndex(x=>x.id===id);if(at<0)return false;
+  list.splice(at,1);activePart=null;renderSheet();syncControls();return true;
+}
+function moveSelection(key){
+  const dir={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[key];
+  const faces=[...document.querySelectorAll("#sheetGrid .face[data-idx]")],cur=faces.find(f=>Number(f.dataset.idx)===selected);if(!cur)return;
+  const c=cur.getBoundingClientRect(),cx=c.left+c.width/2,cy=c.top+c.height/2;let best=null,bd=Infinity;
+  faces.forEach(f=>{if(f===cur)return;const r=f.getBoundingClientRect(),dx=r.left+r.width/2-cx,dy=r.top+r.height/2-cy,along=dx*dir[0]+dy*dir[1];if(along<=4)return;
+    const dist=along+(Math.abs(dx*dir[1])+Math.abs(dy*dir[0]))*2;if(dist<bd){bd=dist;best=f}});
+  if(best)selected=Number(best.dataset.idx);
+  else if(dir[0]+dir[1]>0&&currentPage<pages.length-1){currentPage++;selected=0}       // 最後のカードの先は次のページへ
+  else if(dir[0]+dir[1]<0&&currentPage>0){currentPage--;selected=pages[currentPage].length-1}
+  else return;
+  activePart=null;renderSheet();syncControls();
+  document.querySelector("#sheetGrid .face.selected")?.scrollIntoView({block:"nearest",inline:"nearest"});
+}
+document.addEventListener("keydown",e=>{
+  if(e.defaultPrevented||e.isComposing||mobileUIActive()||typingIn(e.target)||inlineEdit||overlayOpen())return;
+  const mod=e.metaKey||e.ctrlKey;
+  if(!mod&&!e.altKey&&/^Arrow/.test(e.key)){e.preventDefault();moveSelection(e.key);return}
+  if(!mod&&e.key==="Enter"){const n=document.querySelector("#sheetGrid .face.selected [data-edit]");if(n){e.preventDefault();startInlineEdit(n)}return}
+  if(!mod&&(e.key==="Delete"||e.key==="Backspace")){if(deleteActivePart())e.preventDefault();return}
+  if(e.key==="Escape"&&activePart){activePart=null;markActivePart();return}
+  if(mod&&!e.shiftKey&&e.key.toLowerCase()==="c"&&getSelection().isCollapsed){e.preventDefault();el("copyFace").click();showAppToast(T("この面をコピーしました。ほかの面を選んで ⌘V / Ctrl+V で貼れます。"),{duration:3500})}
+});
+
 /* 画像をカードに置く:TCGの中段は中段の画像、画像の面と無地は面の画像、それ以外は背景 */
 function placeImageOnFace(idx,src,zone){
   selected=idx;
   const d=currentFaces()[idx];if(!d)return;
-  if(d.type==="template"&&d.template==="tcg"&&zone!=="bg")setFaceAt(currentPage,idx,{...d,image:src});
-  else if(d.type==="image")setFaceAt(currentPage,idx,{...d,src});
+  if(d.type==="template"&&d.template==="tcg"&&zone!=="bg")setFaceAt(currentPage,idx,{...d,image:src,imageFit:null});
+  else if(d.type==="image")setFaceAt(currentPage,idx,{...d,src,srcFit:null});
   else if(d.type==="plain")setFaceAt(currentPage,idx,{type:"image",src,...keepCommon(d)});
-  else setFaceAt(currentPage,idx,{...d,bgImage:src});
+  else setFaceAt(currentPage,idx,{...d,bgImage:src,bgFit:null});
   renderSheet();syncControls();
 }
 function dropZoneAt(e){
@@ -1553,7 +1652,11 @@ document.addEventListener("paste",async e=>{
   const t=e.target;
   if(inlineEdit||t.closest?.("input,textarea,select,[contenteditable]")||document.querySelector(".modal:not([hidden])"))return;
   const item=[...(e.clipboardData?.items||[])].find(i=>i.kind==="file"&&/^image\//.test(i.type));
-  const file=item&&item.getAsFile();if(!file)return;
+  const file=item&&item.getAsFile();
+  if(!file){   // 画像がなければ、⌘C でコピーした面を貼る
+    if(faceClipboard&&!mobileUIActive()){e.preventDefault();el("pasteFace").click();showAppToast(T("コピーした面を貼りました。"),{duration:3000})}
+    return;
+  }
   e.preventDefault();
   try{placeImageOnFace(selected,await readImageFile(file),"");showAppToast(T("画像を選んでいるカードに貼りました。"),{duration:3500})}
   catch(err){console.error(err);alert(T("画像を読み込めませんでした。"))}
@@ -1664,7 +1767,9 @@ el("faceType").addEventListener("change",e=>{
   let t=e.target.value;if(t==="template")t="playing";
   const id=cardIdAt(currentPage,selected),c=deck.cards[id];
   if(t==="mytpl"){myTplPick=id+":"+slotAt(currentPage,selected).side;syncControls();return}
-  myTplPick=null;
+  const wasPicking=!!myTplPick;myTplPick=null;
+  // 一覧から選ぶのをやめて、いまと同じ種類に戻しただけなら、テンプレートからは外さない
+  if(wasPicking&&c&&c.tpl&&t===faceKindValue(currentFaces()[selected])){syncControls();return}
   // マイテンプレートから別の種類へ:テンプレートから外す(同じ種類なら見た目はそのまま)
   if(c&&c.tpl){
     const tp=deck.templates&&deck.templates[c.tpl];delete c.tpl;tplWatch=null;
@@ -1733,7 +1838,7 @@ document.querySelectorAll('input[name="tcgLayout"]').forEach(r=>r.addEventListen
 ["tcgTopHeight","tcgMiddleHeight","tcgBottomHeight"].forEach(id=>el(id).addEventListener("input",()=>{
   updateSelected({tcgTopHeight:Number(el("tcgTopHeight").value)||16,tcgMiddleHeight:Number(el("tcgMiddleHeight").value)||50,tcgBottomHeight:Number(el("tcgBottomHeight").value)||28});
 }));
-onImagePicked(el("tcgImageInput"),src=>updateSelected({image:src}));
+onImagePicked(el("tcgImageInput"),src=>updateSelected({image:src,imageFit:null}));
 
 el("wordMain").addEventListener("input",()=>updateSelected({main:el("wordMain").value}));
 el("wordMainColor").addEventListener("input",()=>{const c=el("wordMainColor").value;addRecentColor(c);updateSelected({mainColor:c,mainColorNone:false});renderSwatches()});
@@ -1767,9 +1872,9 @@ el("tcgBorderAlign").addEventListener("change",()=>updateSelected({borderAlign:e
 el("tcgPanelColor").addEventListener("colornone",()=>updateSelected({panelNone:true}));
 el("wordMainColor").addEventListener("colornone",()=>updateSelected({mainColorNone:true}));
 
-onImagePicked(el("faceBgImageInput"),src=>updateSelected({bgImage:src}));
+onImagePicked(el("faceBgImageInput"),src=>updateSelected({bgImage:src,bgFit:null}));
 el("clearFaceBgImage").addEventListener("click",()=>{
-  updateSelected({bgImage:null});
+  updateSelected({bgImage:null,bgFit:null});
   el("faceBgImageInput").value="";
 });
 
@@ -2153,6 +2258,8 @@ el("startCardSize").addEventListener("change",e=>{const src=el("cardSize");src.v
 document.addEventListener("cmm-langchange",()=>{startSig="";syncStartChooser(deck.order.every(isBlankCard))});
 /* ---- フォントの選択 ---- */
 document.querySelectorAll("select.font-select[id]").forEach(x=>x.innerHTML=fontOptions(true));
+el("autoFit")?.addEventListener("change",e=>{deck.autoFit=e.target.checked;renderSheet();syncControls()});
+el("overAutoOn")?.addEventListener("click",()=>{deck.autoFit=true;renderSheet();syncControls()});
 if(el("deckFont")){el("deckFont").innerHTML=fontOptions(false);el("deckFont").addEventListener("change",e=>{deck.font=e.target.value;renderSheet();syncControls()})}
 [["playingFont","numberStyle"],["tcgNameFont","nameStyle"],["tcgDescFont","descStyle"],["wordMainFont","mainStyle"]].forEach(([id,key])=>el(id)?.addEventListener("change",e=>{
   updateSelected({[key]:{...(currentFaces()[selected][key]||{}),font:e.target.value}});
@@ -2320,7 +2427,8 @@ async function flattenImagesForRaster(root,scale){
       const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w*scale));c.height=Math.max(1,Math.round(h*scale));
       const ctx=c.getContext("2d");ctx.imageSmoothingQuality="high";
       const iw=img.naturalWidth,ih=img.naturalHeight,bw=c.width,bh=c.height;
-      if(fit==="cover"){const k=Math.max(bw/iw,bh/ih),sw=bw/k,sh=bh/k;ctx.drawImage(img,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,bw,bh)}
+      if(fit==="cover"){const k=Math.max(bw/iw,bh/ih),sw=bw/k,sh=bh/k,pos=(getComputedStyle(img).objectPosition||"").split(/\s+/),pct=v=>/%$/.test(v||"")?parseFloat(v)/100:.5;   // 見せる場所(object-position)も写す
+        ctx.drawImage(img,(iw-sw)*pct(pos[0]),(ih-sh)*pct(pos[1]),sw,sh,0,0,bw,bh)}
       else if(fit==="contain"||fit==="scale-down"){const k=Math.min(bw/iw,bh/ih,fit==="scale-down"?scale:Infinity),dw=iw*k,dh=ih*k;ctx.drawImage(img,(bw-dw)/2,(bh-dh)/2,dw,dh)}
       else ctx.drawImage(img,0,0,bw,bh);
       // 「.xxx img{…}」のようにタグ名で当たっている配置を引き継ぐため、計算済みの値を写す
@@ -2402,7 +2510,7 @@ async function buildEditablePdf(){
       sheet.style.position="relative";sheet.style.background="#fff";sheet.style.overflow="hidden";
       // Editing-only fold guides must never be rasterized into exported PDFs.
       sheet.querySelectorAll(".fold,.screen-guide").forEach(node=>node.remove());
-      staging.appendChild(sheet);
+      staging.appendChild(sheet);fitTexts(sheet,false);
 
       const scale=rasterScale(sheet),hasPhoto=!!sheet.querySelector("img");
       await prepareForRaster(sheet,scale);
@@ -2488,7 +2596,7 @@ function faceThumb(face,W,opt={}){
 /* 面の種類「マイテンプレート」の選択肢(小さな絵と名前) */
 let myTplPick=null,myTplSig="";
 function syncMyTplPicker(card,t,pickOnly){
-  const show=!!t||pickOnly;el("myTplPicker").classList.toggle("hidden",!show);
+  const show=pickOnly;el("myTplPicker").classList.toggle("hidden",!show);
   el("tplStatus").hidden=!t;
   if(t){const n=tplCount(card.tpl);el("tplStatusText").textContent=n>1?T("見た目を変えると、テンプレート「{name}」の{n}枚すべてに反映されます。文字はこのカードだけ。",{name:t.name,n})
     :T("テンプレート「{name}」を使っています。ほかのカードにも使うと、見た目を変えたときに全部に反映されます。",{name:t.name})}
@@ -2617,7 +2725,7 @@ async function renderFaceCanvas(face,scale,staging){
   const pair=document.createElement("div");pair.className="pair";const f=document.createElement("div");f.className="face";
   pair.appendChild(f);g.appendChild(pair);staging.appendChild(g);
   try{
-    renderFace(f,face,false,-1);
+    renderFace(f,face,false,-1);fitTexts(g,false);
     await prepareForRaster(g,scale);
     return await html2canvas(f,{backgroundColor:"#ffffff",scale,width:fm.w*MM_TO_PX,height:fm.h*MM_TO_PX,useCORS:true,logging:false});
   }finally{g.remove()}
@@ -3055,7 +3163,10 @@ function makeOutputSheet(sh){
 }
 function preparePrintPages(){
   const wrap=el("printPages");wrap.innerHTML="";
-  outputSheets().forEach(sh=>wrap.appendChild(makeOutputSheet(sh)));
+  const m=document.createElement("div");m.style.cssText="position:fixed;left:-12000px;top:0;visibility:hidden";document.body.appendChild(m);
+  const sheets=outputSheets().map(sh=>{const x=makeOutputSheet(sh);m.appendChild(x);return x});
+  fitTexts(m,false);   // 文字の大きさは、印刷用の用紙を実際に並べて合わせる
+  sheets.forEach(x=>wrap.appendChild(x));m.remove();
 }
 function setExactPrintPage(){const p=paperMM(),paperName=el("paperSize").value==="a3"?"A3":"A4",orientation=el("paperOrientation").value;let st=el("printPageStyle");if(!st){st=document.createElement("style");st.id="printPageStyle";document.body.appendChild(st)}st.textContent=`@page{size:${paperName} ${orientation};margin:0}\n@media print{.print-sheet{width:${p.w}mm!important;height:${p.h}mm!important;min-width:${p.w}mm!important;max-width:${p.w}mm!important;min-height:${p.h}mm!important;max-height:${p.h}mm!important}}`}
 el("printBtn").addEventListener("click",async()=>{const b=el("printBtn"),t=b.textContent;b.disabled=true;b.textContent="準備中…";try{await fontsReady()}finally{b.disabled=false;b.textContent=t}setExactPrintPage();preparePrintPages();requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
@@ -3070,6 +3181,63 @@ setPaper();renderSheet();syncControls();
 initHistory();renderSwatches();
 initAutosave();
 /* ---- 言語 ---- */
+
+/* ---- 画像の位置と大きさ:パネルのスライダー、パソコンはカードの上でドラッグしても動かせる ---- */
+document.querySelectorAll(".img-fit").forEach(box=>{
+  const key=FIT_KEYS[box.dataset.fit];
+  box.innerHTML=`<label class="img-fit-row"><span>大きさ</span><input type="range" min="100" max="400" step="5" data-k="z"></label><label class="img-fit-row"><span>左右</span><input type="range" min="0" max="100" step="1" data-k="x"></label><label class="img-fit-row"><span>上下</span><input type="range" min="0" max="100" step="1" data-k="y"></label><div class="img-fit-foot"><span class="img-fit-hint">カードの上でドラッグしても動かせます</span><button type="button" class="mini img-fit-reset">元に戻す</button></div>`;
+  box.querySelectorAll("input[type=range]").forEach(r=>r.addEventListener("input",()=>{
+    const f=normFit(currentFaces()[selected][key]);f[r.dataset.k]=r.dataset.k==="z"?Number(r.value)/100:Number(r.value);updateSelected({[key]:f});
+  }));
+  box.querySelector(".img-fit-reset").addEventListener("click",()=>{updateSelected({[key]:null});syncControls()});
+});
+function syncImgFit(d){
+  document.querySelectorAll(".img-fit").forEach(box=>{
+    const w=box.dataset.fit,has=w==="image"?!!d.image:w==="src"?(d.type==="image"&&!!d.src):!!d.bgImage;
+    box.hidden=!has;if(!has)return;
+    const f=normFit(d[FIT_KEYS[w]]);
+    [["z",Math.round(f.z*100)],["x",Math.round(f.x)],["y",Math.round(f.y)]].forEach(([k,v])=>{const r=box.querySelector(`[data-k=${k}]`);if(document.activeElement!==r)r.value=v});
+  });
+}
+el("sheetGrid").addEventListener("pointerdown",e=>{
+  if(e.pointerType!=="mouse"||e.button!==0||inlineEdit)return;
+  const face=e.target.closest(".face.selected[data-idx]");if(!face)return;
+  if(e.target.closest(".generic-textbox,.frame-text,.option-image,.option-shape,.resize-handle"))return;
+  const d=currentFaces()[Number(face.dataset.idx)];if(!d)return;
+  const ti=e.target.closest(".tcg-image");let which=null,box=face,img=null;
+  if(ti&&d.image){which="image";box=ti;img=ti.querySelector("img")}
+  else if(ti)return;
+  else if(d.type==="image"&&d.src){which="src";img=face.querySelector(".face-src-img")}
+  else if(d.bgImage){which="bg";img=face.querySelector(".face-bg-img")}
+  if(!which||!img||!img.naturalWidth)return;
+  const key=FIT_KEYS[which],f0=normFit(d[key]),r=box.getBoundingClientRect();
+  const k=Math.max(r.width/img.naturalWidth,r.height/img.naturalHeight),ox=r.width*(f0.z*img.naturalWidth*k/r.width-1),oy=r.height*(f0.z*img.naturalHeight*k/r.height-1);
+  if(ox<1&&oy<1)return;   // 枠とぴったり同じ形で拡大もしていないときは、動かす余地がない
+  e.preventDefault();
+  const x0=e.clientX,y0=e.clientY;let moved=false;
+  const move=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;if(!moved&&Math.hypot(dx,dy)<4)return;moved=true;face.classList.add("panning");
+    d[key]={...f0,x:ox>=1?clamp(f0.x-dx/ox*100,0,100):f0.x,y:oy>=1?clamp(f0.y-dy/oy*100,0,100):f0.y};applyImgFit(img,d[key])};
+  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);face.classList.remove("panning");if(moved){renderSheet();syncControls()}};
+  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+});
+
+/* ---- ホーム画面に追加・オフライン:一度開けば、電波がなくても開ける ---- */
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(err=>console.warn(err)));
+  if(matchMedia("(display-mode: standalone)").matches||navigator.standalone)navigator.storage?.persist?.().catch(()=>{});   // ホーム画面から開いたときは、保存した作品が消されにくいように頼んでおく
+}
+let installPrompt=null;
+const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+function syncInstallButtons(){const show=!isStandalone()&&(!!installPrompt||isIOS());document.querySelectorAll(".install-btn").forEach(b=>b.hidden=!show)}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;syncInstallButtons()});
+window.addEventListener("appinstalled",()=>{installPrompt=null;syncInstallButtons();showAppToast(T("ホーム画面に追加しました。電波がないところでも開けます。"),{duration:5000})});
+document.querySelectorAll(".install-btn").forEach(b=>b.addEventListener("click",async()=>{
+  toggleSettings(false);closeMobilePanel();
+  if(installPrompt){const p=installPrompt;installPrompt=null;p.prompt();try{await p.userChoice}catch(_){}syncInstallButtons();return}
+  showAppToast(T("Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。一度開けば、電波がないところでも使えます。"),{duration:9000});
+}));
+syncInstallButtons();
 
 /* ---- 右のパネル:たたんである「背景とふち」「コピー・テンプレート保存」。開け閉めは覚えておく ---- */
 function syncFaceStyleChip(d){

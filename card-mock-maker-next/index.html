@@ -15,6 +15,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;700&family=Dela+Gothic+One&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="カードモック">
 <link rel="stylesheet" href="app.css">
 
 </head>
@@ -61,12 +66,14 @@
     <button type="button" class="open-export">画像で書き出す</button>
     <button type="button" class="open-tpl">マイテンプレート</button>
     <button type="button" class="open-projects">作品の一覧</button>
+    <button type="button" id="installBtn" class="install-btn" hidden>ホーム画面に追加</button>
   </div>
   <div class="settings-title">設定</div>
   <div class="settings-row" data-mslot="units"><label for="unitLen">長さの単位</label><select id="unitLen"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="pt">pt</option><option value="px">px</option></select></div>
   <div class="settings-row" data-mslot="units"><label for="unitText">文字の単位</label><select id="unitText"><option value="pt">pt</option><option value="Q">級（Q）</option><option value="px">px</option></select></div>
   <div class="settings-row"><label for="deckFont">基本のフォント</label><select id="deckFont"></select></div>
-  <p class="settings-note">単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。</p>
+  <div class="settings-row settings-check"><label id="autoFitLabel" class="check-label"><input id="autoFit" type="checkbox" checked><span>はみ出す文字は自動で小さくする</span></label></div>
+  <p class="settings-note">単位はこのブラウザに保存されます。基本のフォントと文字の自動調整は、作品ごとの設定です。</p>
   <div class="settings-row"><span class="settings-label">言語 / Language</span><div class="lang-switch" role="group" aria-label="言語 / Language"><button type="button" data-lang-btn="ja" aria-pressed="true">JA</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div></div>
 </div>
 
@@ -261,6 +268,7 @@
           <div class="m-field m-duplex-field" hidden><span class="m-label">両面印刷</span><div class="m-slot" data-slot="duplexSettings"></div><p class="duplex-note"></p></div>
           <div class="m-field"><span class="m-label">タイトル</span><div class="m-slot" data-slot="sheetTitleInput"></div></div>
           <div class="m-field"><span class="m-label">基本のフォント</span><div class="m-slot" data-slot="deckFont"></div></div>
+          <div class="m-field"><span class="m-label">文字</span><div class="m-slot" data-slot="autoFitLabel"></div></div>
           <div class="m-field"><span class="m-label">長さの単位</span><div class="m-slot" data-slot="unitLen"></div></div>
           <div class="m-field"><span class="m-label">文字の単位</span><div class="m-slot" data-slot="unitText"></div></div>
           <p class="fit-note"></p>
@@ -276,6 +284,7 @@
             <button id="mobilePrint" type="button">印刷</button>
             <button id="mobileExport" type="button" class="open-export">画像で書き出す</button>
             <button id="mobileProjects" type="button" class="open-projects">作品の一覧</button>
+            <button id="mobileInstall" type="button" class="install-btn" hidden>ホーム画面に追加</button>
           </div>
           <div class="m-group-title">つくる</div>
           <div class="mobile-more-grid">
@@ -330,6 +339,7 @@
       <button id="unlinkCard" type="button" class="mini" hidden>このカードだけ別にする</button>
     </div>
     <p id="qtyNote" class="qty-note" hidden></p>
+    <div id="overNote" class="over-note" hidden><span></span><button id="overAutoOn" type="button" class="mini" hidden>自動で小さくする</button></div>
 
     <label for="faceType" class="face-type-label">面の種類</label>
     <select id="faceType">
@@ -343,8 +353,8 @@
     <div id="myTplPicker" class="mytpl-picker hidden">
       <div id="myTplChoices" class="mytpl-choices no-i18n"></div>
       <div id="myTplEmpty" class="tpl-empty" hidden><p class="tpl-note">まだマイテンプレートがありません。カードの見た目を整えてから保存すると、ここに並びます。</p><button id="myTplSaveNow" type="button" class="mini">いまのカードをテンプレートとして保存</button></div>
-      <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
     </div>
+    <div id="tplStatus" class="tpl-status" hidden><span id="tplStatusText"></span><button id="tplUnlink" type="button" class="mini">テンプレートから外す</button></div>
 
   </div>
 
@@ -427,6 +437,7 @@
         <span class="file-line-label">中段の画像</span>
         <input id="tcgImageInput" type="file" accept="image/*" aria-label="中段の画像">
       </div>
+      <div class="img-fit" data-fit="image" hidden></div>
     </div>
 
     <div class="tool-block">
@@ -499,6 +510,7 @@
   <div id="imageControls" class="group hidden">
     <label>画像を読み込む</label>
     <input id="imageInput" type="file" accept="image/*">
+    <div class="img-fit" data-fit="src" hidden></div>
   </div>
 
   <details id="faceStyleFold" class="group panel-fold">
@@ -526,6 +538,7 @@
           <input id="faceBgImageInput" type="file" accept="image/*" aria-label="背景画像">
           <button id="clearFaceBgImage" class="mini" title="背景画像を削除">削除</button>
         </div>
+        <div class="img-fit" data-fit="bg" hidden></div>
       </div>
   </details>
 

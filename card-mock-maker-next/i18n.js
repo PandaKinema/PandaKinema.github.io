@@ -12,7 +12,7 @@ const EN={
   "タイトル":"Title","新しい作品を始める（いまの作品は作品の一覧に残ります）":"Start a new project (the current one stays in My projects)","新規":"New",
   "PDF保存":"Save PDF","PDF読み込み":"Open PDF","印刷":"Print","設定":"Settings","準備中…":"Preparing…","PDF作成中…":"Creating PDF…",
   "長さの単位":"Length unit","文字の単位":"Text unit","級（Q）":"Q (0.25 mm)","基本のフォント":"Default font",
-  "単位はこのブラウザに保存されます。基本のフォントは今のデッキの設定です。":"Units are saved in this browser. The default font belongs to the current deck.",
+  "単位はこのブラウザに保存されます。基本のフォントと文字の自動調整は、作品ごとの設定です。":"Units are saved in this browser. The default font and text shrinking are saved with each project.",
   "言語":"Language","言語 / Language":"Language",
   // ---- ページ
   "ページ":"Pages","ページ追加":"Add page","＋ ページ":"+ Page","ページ複製":"Duplicate page","複製":"Duplicate","ページ削除":"Delete page","削除":"Delete",
@@ -21,7 +21,10 @@ const EN={
   "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
   "見本を開く":"Open sample","見本":"Sample",
   // ---- スマホ
-  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","ホーム画面に追加":"Add to Home Screen","ホーム画面に追加しました。電波がないところでも開けます。":"Added to your home screen. It opens even without a connection.",
+  "Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。一度開けば、電波がないところでも使えます。":"In Safari, tap the Share button (□ with ↑) and choose “Add to Home Screen”. Once opened, it works without a connection.","コピーした面を貼りました。":"Pasted the copied face.","この面をコピーしました。ほかの面を選んで ⌘V / Ctrl+V で貼れます。":"Copied this face. Select another face and press ⌘V / Ctrl+V to paste it.","大きさ":"Size","左右":"Left–right","上下":"Up–down","元に戻す":"Reset","カードの上でドラッグしても動かせます":"You can also drag it on the card","はみ出す文字は自動で小さくする":"Shrink text that doesn't fit","自動で小さくする":"Shrink automatically",
+  "文字が枠からはみ出しています(赤い点線)。文字を減らすか小さくするか、「自動で小さくする」をオンにしてください。":"Some text doesn't fit its box (red dotted line). Shorten it, make it smaller, or turn on “Shrink automatically”.",
+  "文字が枠に入りきりません(赤い点線)。文字を減らすか、枠を大きくしてください。":"Some text still doesn't fit (red dotted line). Shorten it or make the box bigger.","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",
   "トランプの数字とマーク":"Playing card: number & suit","トレカの文字と画像":"Trading card: text & image","ワードゲームのことば":"Word card: word","枠つき文字":"Framed text","文字":"Text",
   "まだマイテンプレートがありません。カードの見た目を整えてから保存すると、ここに並びます。":"No templates yet. Style a card, then save it and it will appear here.","いまのカードをテンプレートとして保存":"Save this card as a template",
   "この面はテンプレートを使っていません。使うときは、ここから選びます。":"This face doesn't use a template. Pick one here to use it.",
