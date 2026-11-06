@@ -591,6 +591,7 @@ function openColorPopup(input,anchor){
 function renderSwatches(){refreshOpenColorPopup()}
 
 function renderSuitHTML(d){
+  if(d.suitMode!=="image"&&!d.suit)return "";   // スート「なし」:マークを出さない(数字の位置はそのまま)
   const size=d.suitSize||"medium",count=clamp(Number(d.suitCount)||1,1,5);
   const one=()=>d.suitMode==="image"&&d.suitImage?`<img class="suit-img ${size}" src="${d.suitImage}" alt="">`:`<span class="suit-text ${size}">${esc(d.suit||"")}</span>`;
   return `<span class="suit-stack">${Array.from({length:count},one).join("")}</span>`;
@@ -1354,15 +1355,17 @@ function renderTextBoxEditors(d){
     refreshColorTrigger(color);
   });
 
-  el("addTextBox").disabled=items.length>=5;
+  el("addTextBox").disabled=items.length>=PART_LIMIT;addDupButtons(list,"tb",items);
 }
 
 function renderOptionImageEditors(d){
   const list=el("optionImageList"),items=ensureOptionImages(d);list.innerHTML="";
   items.forEach((item,index)=>{const wrap=document.createElement("div");wrap.className="option-image-editor";wrap.innerHTML=`<div class="option-image-editor-head"><strong>画像${index+1}</strong><button type="button" class="textbox-delete">削除</button></div><div class="option-image-row"><img src="${item.src}" alt=""><label>回転 <input class="option-image-angle" type="number" min="-180" max="180" value="${Number(item.rotation)||0}">°</label></div><label class="checkline" style="margin:6px 0 0"><input class="oi-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;const angle=wrap.querySelector(".option-image-angle"),center=wrap.querySelector(".oi-center"),del=wrap.querySelector(".textbox-delete");angle.oninput=()=>{item.rotation=Number(angle.value)||0;renderSheet()};center.onchange=()=>{item.centerSnap=center.checked;renderSheet()};del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};list.appendChild(wrap)});el("addOptionImage").disabled=items.length>=5
+;addDupButtons(list,"img",items);
 }
 
-function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);list.innerHTML='';items.forEach((item,i)=>{const w=document.createElement('div');w.className='shape-editor';const names={circle:'円',triangle:'三角形',rect:'四角形',polygon:'多角形',star:'星'};w.innerHTML=`<div class="shape-editor-head"><strong>${names[item.type]||'図形'}${i+1}</strong><button class="textbox-delete" type="button">削除</button></div><div class="shape-editor-row">${['polygon','star'].includes(item.type)?`<label>頂点 <input class="shape-points" type="number" min="${item.type==='star'?4:3}" max="12" value="${item.points||5}" style="width:54px"></label>`:''}<div class="tool-color fill-color" title="面色"><input class="shape-fill" type="color" value="${item.fillColor||'#fff'}"></div><div class="tool-color stroke-color" title="線色"><input class="shape-stroke" type="color" value="${item.borderColor||'#222'}"></div><select class="shape-width stroke-width-select"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1">1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select><select class="shape-align stroke-align-select"><option value="inside">内側</option><option value="center">中央</option><option value="outside">外側</option></select></div>`;const pts=w.querySelector('.shape-points'),fill=w.querySelector('.shape-fill'),stroke=w.querySelector('.shape-stroke'),width=w.querySelector('.shape-width'),align=w.querySelector('.shape-align');width.value=String(item.borderWidth||1);align.value=item.borderAlign||'inside';if(pts)pts.oninput=()=>{item.points=clamp(Number(pts.value)||5,item.type==='star'?4:3,12);renderSheet()};fill.dataset.none=item.fillNone?'1':'0';stroke.dataset.none=item.borderNone?'1':'0';fill.oninput=()=>{item.fillColor=fill.value;item.fillNone=false;renderSheet()};stroke.oninput=()=>{item.borderColor=stroke.value;item.borderNone=false;renderSheet()};fill.addEventListener('colornone',()=>{item.fillNone=true;renderSheet()});stroke.addEventListener('colornone',()=>{item.borderNone=true;renderSheet()});width.onchange=()=>{item.borderWidth=Number(width.value)||1;renderSheet()};align.onchange=()=>{item.borderAlign=align.value;renderSheet()};w.querySelector('.textbox-delete').onclick=()=>{items.splice(i,1);renderSheet();syncControls()};list.appendChild(w);[fill,stroke].forEach(setupColorInput)})}
+function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);list.innerHTML='';items.forEach((item,i)=>{const w=document.createElement('div');w.className='shape-editor';const names={circle:'円',triangle:'三角形',rect:'四角形',polygon:'多角形',star:'星'};w.innerHTML=`<div class="shape-editor-head"><strong>${names[item.type]||'図形'}${i+1}</strong><button class="textbox-delete" type="button">削除</button></div><div class="shape-editor-row">${['polygon','star'].includes(item.type)?`<label>頂点 <input class="shape-points" type="number" min="${item.type==='star'?4:3}" max="12" value="${item.points||5}" style="width:54px"></label>`:''}<div class="tool-color fill-color" title="面色"><input class="shape-fill" type="color" value="${item.fillColor||'#fff'}"></div><div class="tool-color stroke-color" title="線色"><input class="shape-stroke" type="color" value="${item.borderColor||'#222'}"></div><select class="shape-width stroke-width-select"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1">1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select><select class="shape-align stroke-align-select"><option value="inside">内側</option><option value="center">中央</option><option value="outside">外側</option></select></div>`;const pts=w.querySelector('.shape-points'),fill=w.querySelector('.shape-fill'),stroke=w.querySelector('.shape-stroke'),width=w.querySelector('.shape-width'),align=w.querySelector('.shape-align');width.value=String(item.borderWidth||1);align.value=item.borderAlign||'inside';if(pts)pts.oninput=()=>{item.points=clamp(Number(pts.value)||5,item.type==='star'?4:3,12);renderSheet()};fill.dataset.none=item.fillNone?'1':'0';stroke.dataset.none=item.borderNone?'1':'0';fill.oninput=()=>{item.fillColor=fill.value;item.fillNone=false;renderSheet()};stroke.oninput=()=>{item.borderColor=stroke.value;item.borderNone=false;renderSheet()};fill.addEventListener('colornone',()=>{item.fillNone=true;renderSheet()});stroke.addEventListener('colornone',()=>{item.borderNone=true;renderSheet()});width.onchange=()=>{item.borderWidth=Number(width.value)||1;renderSheet()};align.onchange=()=>{item.borderAlign=align.value;renderSheet()};w.querySelector('.textbox-delete').onclick=()=>{items.splice(i,1);renderSheet();syncControls()};list.appendChild(w);[fill,stroke].forEach(setupColorInput)});addDupButtons(list,"shape",items);
+}
 
 function renderFrameTextEditors(d){
   const list=el("frameTextList"),items=ensureFrameTexts(d);list.innerHTML="";
@@ -1405,7 +1408,7 @@ function renderFrameTextEditors(d){
     del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};
     list.appendChild(wrap);[tc,bc,fc].forEach(x=>{setupColorInput(x);refreshColorTrigger(x)});
   });
-  el("addFrameText").disabled=items.length>=5;
+  el("addFrameText").disabled=items.length>=PART_LIMIT;addDupButtons(list,"ft",items);
 }
 
 function syncControls(){
@@ -1438,7 +1441,7 @@ function syncControls(){
     el("tplSectionTitle").textContent=T(TPL_SECTION_TITLES[d.template||"playing"]||"テンプレート");
     if((d.template||"playing")==="playing"){
       el("playingControls").classList.remove("hidden");
-      el("numInput").value=d.number??"";el("suitInput").value=d.suit??"●";
+      el("numInput").value=d.number??"";el("suitInput").value=d.suit??"●";if(el("suitInput").selectedIndex<0)el("suitInput").value="●";
       el("playingNumberColor").value=d.numberColor||d.color||"#d94a4a";el("playingNumberColor").dataset.none=d.numberColorNone?"1":"0";
       el("suitSize").value=d.suitSize||"medium";
       el("suitCount").value=String(d.suitCount||1);
@@ -1658,6 +1661,7 @@ el("partBar")?.addEventListener("click",e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const act=b.dataset.act;
   if(act==="done"){activePart=null;markActivePart();return}
   if(act==="delete"){deleteActivePart();return}
+  if(act==="dup"){const a=activePart;if(!a)return;const i=a.part.indexOf(":");duplicatePart(a.part.slice(0,i),a.part.slice(i+1));return}
   const item=activePartItem();if(!item)return;const o=item.box||{x:20,y:20,w:60,h:14};
   if(act==="center")item.box={...o,x:50-o.w/2};
   else{
@@ -1697,8 +1701,31 @@ document.addEventListener("keydown",e=>{
   if(!mod&&e.key==="Enter"){const n=document.querySelector("#sheetGrid .face.selected [data-edit]");if(n){e.preventDefault();startInlineEdit(n)}return}
   if(!mod&&(e.key==="Delete"||e.key==="Backspace")){if(deleteActivePart())e.preventDefault();return}
   if(e.key==="Escape"&&activePart){activePart=null;markActivePart();return}
+  if(mod&&!e.shiftKey&&e.key.toLowerCase()==="d"&&activePart){e.preventDefault();const a=activePart,i=a.part.indexOf(":");duplicatePart(a.part.slice(0,i),a.part.slice(i+1));return}
   if(mod&&!e.shiftKey&&e.key.toLowerCase()==="c"&&getSelection().isCollapsed){e.preventDefault();el("copyFace").click();showAppToast(T("この面をコピーしました。ほかの面を選んで ⌘V / Ctrl+V で貼れます。"),{duration:3500})}
 });
+
+/* ---- パーツの複製:同じアイコンを並べたいときなどに。1つの面に置けるパーツは種類ごとに12個まで ---- */
+const PART_LIMIT=12;
+const PART_LISTS={tb:d=>ensureTextBoxes(d),ft:d=>ensureFrameTexts(d),img:d=>ensureOptionImages(d),shape:d=>ensureShapes(d)};
+const PART_PREFIX={tb:"tb_",ft:"ft_",img:"oi_",shape:"sh_"};
+function partLimitToast(){showAppToast(T("パーツは種類ごとに、1つの面に{n}個まで置けます。",{n:PART_LIMIT}),{duration:3500})}
+function duplicatePart(kind,id){
+  const d=currentFaces()[selected],list=PART_LISTS[kind]?.(d);if(!list)return false;
+  if(list.length>=PART_LIMIT){partLimitToast();return false}
+  const i=list.findIndex(x=>x.id===id);if(i<0)return false;
+  const c=JSON.parse(JSON.stringify(list[i]));c.id=PART_PREFIX[kind]+Date.now()+"_"+Math.random().toString(36).slice(2,7);
+  if(c.box){const b=c.box;c.box={...b,x:b.x+4<=100-b.w?b.x+4:Math.max(0,b.x-4),y:b.y+4<=100-b.h?b.y+4:Math.max(0,b.y-4)}}   // 少しずらして重ねる
+  list.splice(i+1,0,c);activePart={page:currentPage,idx:selected,part:kind+":"+c.id};
+  renderSheet();syncControls();return true;
+}
+function addDupButtons(list,kind,items){
+  [...list.children].forEach((w,i)=>{
+    const item=items[i],del=w.querySelector(".textbox-delete");if(!item||!del||w.querySelector(".part-dup"))return;
+    const b=document.createElement("button");b.type="button";b.className="part-dup";b.textContent=T("複製");b.disabled=items.length>=PART_LIMIT;
+    b.addEventListener("click",()=>duplicatePart(kind,item.id));del.parentNode.insertBefore(b,del);
+  });
+}
 
 /* 画像をカードに置く:TCGの中段は中段の画像、画像の面と無地は面の画像、それ以外は背景 */
 function placeImageOnFace(idx,src,zone){
@@ -1901,6 +1928,7 @@ el("templateType").addEventListener("change",e=>{
 });
 
 ["numInput","suitInput","suitSize","suitCount","suitMode","cornerPlacement"].forEach(id=>el(id).addEventListener("input",()=>{
+  if(id==="suitInput"&&el("suitInput").value==="")el("suitMode").value="text";   // 「なし」を選んだら、画像のスートもやめる
   updateSelected({
     number:el("numInput").value,
     suit:el("suitInput").value,
@@ -1942,11 +1970,11 @@ el("wordMainColor").addEventListener("input",()=>{const c=el("wordMainColor").va
 
 
 
-el("addTextBox").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureTextBoxes(d);if(items.length>=5)return;items.push(makeTextBox(items.length));renderSheet();syncControls()});
-el("addFrameText").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureFrameTexts(d);if(items.length>=5)return;items.push(makeFrameText(items.length));renderSheet();syncControls()});
-document.querySelectorAll(".add-shape").forEach(b=>b.addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureShapes(d);if(items.length>=10)return;items.push(makeShape(b.dataset.shape,items.length));renderSheet();syncControls()}));
-el("addOptionImage").addEventListener("click",()=>{if(ensureOptionImages(currentFaces()[selected]).length>=5)return;el("optionImageInput").click()});
-onImagePicked(el("optionImageInput"),src=>{const items=ensureOptionImages(currentFaces()[selected]);if(items.length<5)items.push(makeOptionImage(src,items.length));renderSheet();syncControls()});
+el("addTextBox").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureTextBoxes(d);if(items.length>=PART_LIMIT)return;items.push(makeTextBox(items.length));renderSheet();syncControls()});
+el("addFrameText").addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureFrameTexts(d);if(items.length>=PART_LIMIT)return;items.push(makeFrameText(items.length));renderSheet();syncControls()});
+document.querySelectorAll(".add-shape").forEach(b=>b.addEventListener("click",()=>{const d=currentFaces()[selected],items=ensureShapes(d);if(items.length>=PART_LIMIT){partLimitToast();return}items.push(makeShape(b.dataset.shape,items.length));renderSheet();syncControls()}));
+el("addOptionImage").addEventListener("click",()=>{if(ensureOptionImages(currentFaces()[selected]).length>=PART_LIMIT){partLimitToast();return}el("optionImageInput").click()});
+onImagePicked(el("optionImageInput"),src=>{const items=ensureOptionImages(currentFaces()[selected]);if(items.length<PART_LIMIT)items.push(makeOptionImage(src,items.length));renderSheet();syncControls()});
 
 onImagePicked(el("imageInput"),src=>{
   setFaceAt(currentPage,selected,{type:"image",src,...keepCommon(currentFaces()[selected])});renderSheet();
@@ -2054,7 +2082,7 @@ function bulkFields(card){
     const f=card&&card[side];if(!f)return;
     const add=(kind,name,n,set,get)=>out.push({side,kind,name,n,set,get});
     if(f.type==="template"){
-      if(f.template==="playing"){add("number","数字",0,(d,v)=>{d.number=v},d=>d.number);add("suit","スート",0,(d,v)=>{d.suit=v},d=>d.suit)}
+      if(f.template==="playing"){add("number","数字",0,(d,v)=>{d.number=v},d=>d.number);add("suit","スート",0,(d,v)=>{d.suit=/^(なし|無し|none|-|ー|—)$/i.test(String(v).trim())?"":v},d=>d.suit||T("なし"))}
       else if(f.template==="tcg"){add("name","カード名",0,(d,v)=>{d.name=v},d=>d.name);add("desc","テキスト",0,(d,v)=>{d.desc=v},d=>d.desc)}
       else if(f.template==="word")add("main","ことば",0,(d,v)=>{d.main=v},d=>d.main);
     }

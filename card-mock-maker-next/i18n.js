@@ -21,7 +21,7 @@ const EN={
   "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
   "見本を開く":"Open sample","見本":"Sample",
   // ---- スマホ
-  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","小さく":"Smaller","大きく":"Bigger","中央へ":"Center","パーツの選択をやめる":"Deselect part","ホーム画面に追加":"Add to Home Screen","ホーム画面に追加しました。":"Added to your home screen.",
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","パーツは種類ごとに、1つの面に{n}個まで置けます。":"Each face can hold up to {n} parts of each kind.","小さく":"Smaller","大きく":"Bigger","中央へ":"Center","パーツの選択をやめる":"Deselect part","ホーム画面に追加":"Add to Home Screen","ホーム画面に追加しました。":"Added to your home screen.",
   "Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。":"In Safari, tap the Share button (□ with ↑) and choose “Add to Home Screen”.","コピーした面を貼りました。":"Pasted the copied face.","この面をコピーしました。ほかの面を選んで ⌘V / Ctrl+V で貼れます。":"Copied this face. Select another face and press ⌘V / Ctrl+V to paste it.","大きさ":"Size","左右":"Left–right","上下":"Up–down","元に戻す":"Reset","カードの上でドラッグしても動かせます":"You can also drag it on the card","はみ出す文字は自動で小さくする":"Shrink text that doesn't fit","自動で小さくする":"Shrink automatically",
   "文字が枠からはみ出しています(赤い点線)。文字を減らすか小さくするか、「自動で小さくする」をオンにしてください。":"Some text doesn't fit its box (red dotted line). Shorten it, make it smaller, or turn on “Shrink automatically”.",
   "文字が枠に入りきりません(赤い点線)。文字を減らすか、枠を大きくしてください。":"Some text still doesn't fit (red dotted line). Shorten it or make the box bigger.","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",

@@ -2442,3 +2442,8 @@ button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:m
   .mobile-card-nav{grid-template-columns:44px minmax(0,1fr) 44px!important;height:44px!important;min-height:44px!important}
   .mobile-card-nav button:not(.m-view-toggle){width:44px!important;min-width:44px!important;height:44px!important}
 }
+
+/* ---- パーツの複製ボタン ---- */
+.part-dup{margin-left:auto;margin-right:6px;font-size:11px;padding:2px 8px;min-height:24px;border-radius:6px}
+.textbox-editor-head,.option-image-editor-head,.shape-editor-head,.frame-editor-head{display:flex;align-items:center;gap:6px}
+@media(max-width:720px){.part-bar{gap:4px;padding:0 8px}.part-bar button{padding:0 4px;font-size:13.5px}.mobile-panel-body .part-dup{min-height:42px;font-size:13px;padding:0 12px}}
