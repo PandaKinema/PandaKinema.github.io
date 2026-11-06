@@ -2378,6 +2378,14 @@ function startWith(kind){
 document.querySelectorAll("#startTiles [data-start]").forEach(b=>b.addEventListener("click",()=>startWith(b.dataset.start)));
 function dismissStart(){if(startDismissed)return;startDismissed=true;const blank=deck.order.every(isBlankCard);["emptyHint","mobileEmptyHint"].forEach(id=>{if(el(id))el(id).hidden=!blank});syncStartChooser(blank)}
 el("startLater").addEventListener("click",dismissStart);
+el("startOpenPdf")?.addEventListener("click",()=>el("loadPdf").click());
+/* 以前の版(β)から来た人に、変わったところを伝える(このブラウザでは一度だけ) */
+function showBetaNote(hadCustom){
+  try{if(localStorage.getItem("pk-beta-note"))return;localStorage.setItem("pk-beta-note","1")}catch(_){}
+  el("betaCustomNote").hidden=!hadCustom;el("betaModal").hidden=false;
+}
+document.querySelectorAll("[data-beta-close]").forEach(b=>b.addEventListener("click",()=>{el("betaModal").hidden=true}));
+el("betaModal").addEventListener("click",e=>{if(e.target===el("betaModal"))el("betaModal").hidden=true});
 el("startCardSize").addEventListener("change",e=>{const src=el("cardSize");src.value=e.target.value;src.dispatchEvent(new Event("change",{bubbles:true}));syncStartChooser(deck.order.every(isBlankCard))});
 document.addEventListener("cmm-langchange",()=>{startSig="";syncStartChooser(deck.order.every(isBlankCard))});
 /* ---- フォントの選択 ---- */
@@ -3025,8 +3033,11 @@ el("loadPdf").addEventListener("change",async e=>{
     if(!project)throw new Error(T("このPDFにはCard Mock Makerの編集データがありません。"));
     const text=new TextDecoder().decode(project.data);
     const parsed=JSON.parse(text);
+    // 以前の版(β)のPDF:作品の形が違う(deckがない)。中身は新しい形に直して開き、変わったところを一度伝える
+    const fromBeta=!parsed.deck&&Array.isArray(parsed.pages),hadCustom=fromBeta&&parsed.pages.some(pg=>(pg||[]).some(d=>d&&d.type==="template"&&d.template==="custom"));
     await beginNewProject();   // 読み込んだPDFは新しい作品として開く(いまの作品は一覧に残る)
     restoreProject(hydrateProjectImages(parsed,atts));
+    if(fromBeta)showBetaNote(hadCustom);
   }catch(err){
     console.error(err);alert(err.message||T("PDFを読み込めませんでした。"));
   }finally{e.target.value=""}

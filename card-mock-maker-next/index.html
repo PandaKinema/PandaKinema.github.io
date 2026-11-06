@@ -137,6 +137,24 @@
   </div>
 </div>
 
+<div id="betaModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="betaTitle">
+  <div class="modal-box modal-narrow">
+    <div class="modal-head"><strong id="betaTitle">以前の版のPDFを開きました</strong><button type="button" class="modal-close" data-beta-close aria-label="閉じる">×</button></div>
+    <div class="modal-body beta-body">
+      <p>中身はそのまま開けています。新しい版で変わったところです。</p>
+      <ul>
+        <li>「テンプレート」→「テンプレ1〜3」と選んでいたものは、<b>面の種類</b>で「トランプ」「トレカ」「ワードゲーム」を直接選びます。</li>
+        <li id="betaCustomNote" hidden>「テンプレ4：カスタム」で作ったカードは、「無地」と文字のパーツになっています。</li>
+        <li>名前が変わりました：オプション → <b>パーツ</b>、テキストボックス → <b>文字</b>、フレームテキスト → <b>枠つき文字</b>、面付け → <b>並べ方</b>。</li>
+        <li>背景の色や線は「<b>背景とふち</b>」、面のコピーは「<b>コピー・テンプレート保存</b>」を押すと開きます。</li>
+        <li>枠に入りきらない文字は、自動で小さくして収めます（メニューで切り替えられます）。</li>
+        <li>作品はこのブラウザに<b>自動で保存</b>され、メニューの「作品の一覧」から開けます。</li>
+      </ul>
+    </div>
+    <div class="modal-foot"><a class="beta-guide-link" href="guide/#changes" target="_blank" rel="noopener">くわしく見る</a><button type="button" class="primary" data-beta-close>はじめる</button></div>
+  </div>
+</div>
+
 <div id="sizeModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="sizeTitle">
   <div class="modal-box modal-narrow">
     <div class="modal-head"><strong id="sizeTitle">カードの大きさ</strong><button type="button" class="modal-close" data-size-close aria-label="閉じる">×</button></div>
@@ -206,7 +224,11 @@
             <button type="button" class="start-tile" data-start="table"><span class="start-art start-art-icon" aria-hidden="true">▦</span><b>表から作る</b><small>リストからまとめて</small></button>
             <button type="button" class="start-tile" data-start="sample"><span class="start-art start-art-icon" aria-hidden="true">★</span><b>見本を見る</b><small>できあがりの例</small></button>
           </div>
-          <button type="button" id="startLater" class="start-later">あとで決める</button>
+          <div class="start-foot">
+            <button type="button" id="startOpenPdf" class="start-open-pdf">保存したPDFを開く</button>
+            <button type="button" id="startLater" class="start-later">あとで決める</button>
+          </div>
+          <a class="start-beta-link" href="guide/#changes" target="_blank" rel="noopener">以前の版（β）を使っていた方へ</a>
         </div>
       </section>
       <div id="emptyHint" class="empty-hint" hidden>

@@ -2447,3 +2447,14 @@ button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:m
 .part-dup{margin-left:auto;margin-right:6px;font-size:11px;padding:2px 8px;min-height:24px;border-radius:6px}
 .textbox-editor-head,.option-image-editor-head,.shape-editor-head,.frame-editor-head{display:flex;align-items:center;gap:6px}
 @media(max-width:720px){.part-bar{gap:4px;padding:0 8px}.part-bar button{padding:0 4px;font-size:13.5px}.mobile-panel-body .part-dup{min-height:42px;font-size:13px;padding:0 12px}}
+
+/* ---- 以前の版から来た人へ ---- */
+.start-foot{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:14px;flex-wrap:wrap}
+.start-foot .start-later{margin-top:0}
+.start-open-pdf{border:1px solid var(--ui-border)!important;background:var(--ui-control)!important;border-radius:999px!important;padding:0 16px!important;min-height:36px;font-size:13px!important}
+.start-beta-link{display:block;margin-top:10px;text-align:center;font-size:11.5px;color:var(--ui-muted)}
+.beta-body p{margin:0 0 8px}
+.beta-body ul{margin:0;padding-left:1.2em;display:grid;gap:7px;font-size:13px;line-height:1.6}
+.beta-body li[hidden]{display:none}
+.beta-guide-link{margin-right:auto;font-size:13px}
+@media(max-width:720px){.start-open-pdf{min-height:44px;font-size:14px!important}.start-beta-link{font-size:12.5px;padding:6px 0}}
