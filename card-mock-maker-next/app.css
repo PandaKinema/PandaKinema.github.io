@@ -2458,3 +2458,6 @@ button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:m
 .beta-body li[hidden]{display:none}
 .beta-guide-link{margin-right:auto;font-size:13px}
 @media(max-width:720px){.start-open-pdf{min-height:44px;font-size:14px!important}.start-beta-link{font-size:12.5px;padding:6px 0}}
+
+/* カードごとにレイアウトを閉じる(文字の大きさ合わせで、ほかのカードまで計算し直さないように) */
+.face{contain:layout}

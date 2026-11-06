@@ -602,24 +602,32 @@ function cornerVisible(pos,key){pos=pos||"four";if(pos==="top")return key==="tl"
    小さくしても入らないときは、画面だけ赤い点線で知らせる(印刷・PDF・画像には出ない) ---- */
 const FIT_SEL=".tcg-name,.tcg-desc,.word-main,.generic-textbox,.frame-text";
 const fitBase=new WeakMap();
+const fitCache=new Map();   // 同じ文字・同じ枠・同じ書体なら、合わせた大きさを使い回す(用紙とページ一覧のカードで同じ計算をしない)
 function fitTexts(root,mark=true){
   if(!root)return;
   const auto=deck.autoFit!==false;
-  root.querySelectorAll(FIT_SEL).forEach(n=>{
-    if(n.isContentEditable)return;
-    if(!n.clientWidth&&!n.clientHeight)return;   // まだ画面に並んでいない
-    if(fitBase.has(n))n.style.fontSize=fitBase.get(n);else fitBase.set(n,n.style.fontSize||"");
-    const hs=[...n.querySelectorAll(".resize-handle,.rotate-handle")];hs.forEach(h=>h.style.display="none");
+  const list=[...root.querySelectorAll(FIT_SEL)].filter(n=>!n.isContentEditable);if(!list.length)return;
+  // 1) まとめて元の大きさに戻し、つまみを隠す(書き込みだけ)
+  const hs=[...root.querySelectorAll(".resize-handle,.rotate-handle")];hs.forEach(h=>h.style.display="none");
+  list.forEach(n=>{if(fitBase.has(n))n.style.fontSize=fitBase.get(n);else fitBase.set(n,n.style.fontSize||"")});
+  // 2) まとめて読む(レイアウトは1回)
+  const items=list.map(n=>{
+    if(!n.clientWidth&&!n.clientHeight)return null;   // まだ画面に並んでいない
+    const cs=getComputedStyle(n);
+    const key=[auto?1:0,n.className.replace(/\b(text-over|part-active|bar-target|inline-editing)\b/g,"").trim(),cs.fontSize,cs.fontFamily,cs.fontWeight,cs.lineHeight,cs.letterSpacing,cs.writingMode,n.clientWidth,n.clientHeight,n.textContent].join("|");
+    return {n,key,hit:fitCache.get(key),base:parseFloat(cs.fontSize)||12};
+  }).filter(Boolean);
+  // 3) はじめて見る組み合わせだけ、実際に入るかを確かめて合わせる
+  items.forEach(it=>{
+    if(it.hit)return;const n=it.n;
     const over=()=>n.scrollHeight>n.clientHeight+1||n.scrollWidth>n.clientWidth+1;
-    let o=over();
-    if(o&&auto){
-      const base=parseFloat(getComputedStyle(n).fontSize)||12;let lo=base*.4,hi=base;
-      for(let i=0;i<8;i++){const mid=(lo+hi)/2;n.style.fontSize=mid+"px";if(over())hi=mid;else lo=mid}
-      n.style.fontSize=lo+"px";o=over();
-    }
-    hs.forEach(h=>h.style.display="");
-    if(mark)n.classList.toggle("text-over",o);
+    let o=over(),fs=null;
+    if(o&&auto){let lo=it.base*.4,hi=it.base;for(let i=0;i<8;i++){const mid=(lo+hi)/2;n.style.fontSize=mid+"px";if(over())hi=mid;else lo=mid}fs=lo;n.style.fontSize=lo+"px";o=over()}
+    it.hit={fs,o};if(fitCache.size>6000)fitCache.clear();fitCache.set(it.key,it.hit);it.done=true;
   });
+  // 4) 使い回しの分を書き込む
+  items.forEach(it=>{if(!it.done&&it.hit.fs!=null)it.n.style.fontSize=it.hit.fs+"px";if(mark)it.n.classList.toggle("text-over",it.hit.o)});
+  hs.forEach(h=>h.style.display="");
 }
 let fitQueue=new Set(),fitRaf=0;
 function queueFit(faceEl){fitQueue.add(faceEl);if(!fitRaf)fitRaf=requestAnimationFrame(flushFit)}
@@ -909,7 +917,7 @@ function renderSheet(){
   el("addPage").disabled=pages.length>=MAX_PAGES;
   el("dupPage").disabled=pages.length>=MAX_PAGES;
   el("deletePage").disabled=pages.length<=1;
-  renderPageSidebar();
+  throttleSidebar();
   renderMobileCardPreview();
   flushFit();   // 見えている用紙のカードは、描いたその場で文字の大きさを合わせる
   {const d=currentFaces()[selected];if(d)syncImgFit(d)}   // 画像を入れたらすぐ「大きさ・左右・上下」を出す
@@ -986,7 +994,7 @@ function cloneControlsForMobile(){
   }
   mobilePlaced=want;
 }
-window.matchMedia("(max-width:720px)").addEventListener("change",()=>{cloneControlsForMobile();fitPaper()});
+window.matchMedia("(max-width:720px)").addEventListener("change",()=>{cloneControlsForMobile();fitPaper();renderMobileCardPreview()});
 
 /* パネルはカードのすぐ下からタブの上までを使う(狭い画面でも最低220pxは確保) */
 function placeMobilePanel(){
@@ -1138,8 +1146,18 @@ document.querySelectorAll(".mobile-face-labels [data-side]").forEach(b=>b.addEve
 })();
 let swipedAt=0;
 window.addEventListener("resize",()=>{if(mobileUIActive())rescaleMobileFaces()});
+/* 文字を打っているあいだなど、続けて描き直すときは、左のページ一覧は少し待ってからまとめて描く(用紙は毎回すぐ描く) */
+let sidebarAt=0,sidebarTimer=null,sidebarSig="";
+function throttleSidebar(){
+  const now=performance.now(),fm=cardMM(),sig=[pages.length,currentPage,arrangement(),fm.w,fm.h,el("paperSize").value,el("paperOrientation").value,el("impositionMode").value].join("|");
+  clearTimeout(sidebarTimer);
+  // ページの数や並べ方が変わったときは、すぐ描く
+  if(now-sidebarAt>250||sig!==sidebarSig){sidebarAt=now;sidebarSig=sig;renderPageSidebar();return}
+  sidebarTimer=setTimeout(()=>{sidebarAt=performance.now();renderPageSidebar();flushFit()},260);
+}
 function renderMobileCardPreview(){
   if(inlineEdit)finishInlineEdit(false);
+  if(!mobileUIActive())return;   // パソコンの画面では隠れているので描かない(スマホの幅になったら描く)
   const host=el("mobileCardPair");if(!host)return;
   const faces=currentFaces(),c=cardMM(),landscape=isLandscapeCard();
   const paired=arrangement()==="pairs";
