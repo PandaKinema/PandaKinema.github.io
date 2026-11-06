@@ -1120,7 +1120,7 @@ document.querySelectorAll(".mobile-face-labels [data-side]").forEach(b=>b.addEve
     if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y;
     if(!sw.on){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3)sw.on=true;else{if(Math.abs(dy)>12)sw=null;return}}
     const total=pages.length*cardsPerPage(),i=mobileCardIndex(),edge=(dx<0&&i>=total-1)||(dx>0&&i<=0);
-    sw.dx=dx;host.style.transition="none";host.style.transform=`translateX(${edge?dx*.25:dx}px) rotate(${(edge?dx*.25:dx)*.02}deg)`;
+    sw.dx=dx;host.style.transition="none";host.style.transform=`translateX(${edge?dx*.25:dx}px)`;
   });
   const end=e=>{
     if(!sw||e.pointerId!==sw.id)return;const s=sw;sw=null;if(!s.on)return;
@@ -1129,7 +1129,7 @@ document.querySelectorAll(".mobile-face-labels [data-side]").forEach(b=>b.addEve
     const go=can&&(Math.abs(s.dx)>70||(Date.now()-s.t<300&&Math.abs(s.dx)>35));
     host.style.transition="transform .16s ease-in";
     if(!go){host.style.transform="";return}
-    host.style.transform=`translateX(${-dir*70}vw) rotate(${-dir*4}deg)`;
+    host.style.transform=`translateX(${-dir*70}vw)`;
     setTimeout(()=>{host.style.transition="none";host.style.transform=`translateX(${dir*55}vw)`;goToMobileCard(dir);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{host.style.transition="transform .2s cubic-bezier(.2,.8,.3,1)";host.style.transform=""}))},150);
   };
@@ -3327,11 +3327,11 @@ const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigat
 const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 function syncInstallButtons(){const show=!isStandalone()&&(!!installPrompt||isIOS());document.querySelectorAll(".install-btn").forEach(b=>b.hidden=!show)}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;syncInstallButtons()});
-window.addEventListener("appinstalled",()=>{installPrompt=null;syncInstallButtons();showAppToast(T("ホーム画面に追加しました。電波がないところでも開けます。"),{duration:5000})});
+window.addEventListener("appinstalled",()=>{installPrompt=null;syncInstallButtons();showAppToast(T("ホーム画面に追加しました。"),{duration:4000})});
 document.querySelectorAll(".install-btn").forEach(b=>b.addEventListener("click",async()=>{
   toggleSettings(false);closeMobilePanel();
   if(installPrompt){const p=installPrompt;installPrompt=null;p.prompt();try{await p.userChoice}catch(_){}syncInstallButtons();return}
-  showAppToast(T("Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。一度開けば、電波がないところでも使えます。"),{duration:9000});
+  showAppToast(T("Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。"),{duration:8000});
 }));
 syncInstallButtons();
 
