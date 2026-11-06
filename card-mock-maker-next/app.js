@@ -932,7 +932,7 @@ function mobileAddPage(){
 
 function closeMobilePanel(){
   mobilePanelOpen="";
-  document.body.classList.remove("m-panel-open");
+  document.body.classList.remove("m-panel-open","m-panel-full");
   rescaleMobileFaces();
   if(mobileSheetMode)renderMobileSheet();
   document.querySelectorAll(".mobile-tool-panel").forEach(p=>{
@@ -994,11 +994,30 @@ function placeMobilePanel(){
   const sheetFrame=mobileSheetMode?document.querySelector("#mobileSheetView .m-sheet-frame"):null;
   const ref=sheetFrame||((labels&&labels.offsetParent)?labels:pair);if(!ref||!bar)return;
   const barTop=bar.getBoundingClientRect().top;
-  const top=Math.max(56,Math.min(ref.getBoundingClientRect().bottom+8,barTop-8-220));
+  const hb=document.querySelector("header")?.getBoundingClientRect().bottom||56;
+  const top=document.body.classList.contains("m-panel-full")?Math.round(hb+8):Math.max(56,Math.min(ref.getBoundingClientRect().bottom+8,barTop-8-220));   // 上に引き上げたときは画面いっぱい
   document.documentElement.style.setProperty("--m-panel-top",Math.round(top)+"px");
   document.documentElement.style.setProperty("--m-panel-bottom",Math.round(innerHeight-barTop+8)+"px");
 }
 window.addEventListener("resize",placeMobilePanel);
+/* パネルの上の取っ手:下に引くと閉じる、上に引くと画面いっぱいに広がる(広げたあと下に引くと元の大きさ) */
+function setPanelFull(on){document.body.classList.toggle("m-panel-full",!!on);placeMobilePanel()}
+document.querySelectorAll(".mobile-tool-panel").forEach(p=>{
+  const head=p.querySelector(".mobile-panel-head");if(!head)return;
+  const g=document.createElement("div");g.className="m-grab";g.setAttribute("aria-hidden","true");head.prepend(g);
+  let st=null;
+  head.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;st={id:e.pointerId,y:e.clientY,t:Date.now(),dy:0};try{head.setPointerCapture(e.pointerId)}catch(_){}});
+  head.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;st.dy=e.clientY-st.y;p.style.transition="none";p.style.transform=`translateY(${st.dy>0?st.dy:st.dy*.3}px)`});
+  const end=e=>{
+    if(!st||e.pointerId!==st.id)return;const s=st;st=null;const fast=Date.now()-s.t<260;p.style.transition="transform .18s ease";
+    if(s.dy>70||(fast&&s.dy>28)){
+      if(document.body.classList.contains("m-panel-full")){setPanelFull(false);p.style.transform=""}
+      else{p.style.transform="translateY(105%)";setTimeout(()=>{p.style.transition="";p.style.transform="";closeMobilePanel()},170)}
+    }else if(s.dy<-45||(fast&&s.dy<-22)){setPanelFull(true);p.style.transform=""}
+    else p.style.transform="";
+  };
+  head.addEventListener("pointerup",end);head.addEventListener("pointercancel",end);
+});
 
 document.querySelectorAll('input[type=file]').forEach(inp=>{
   if(!inp.id||inp.classList.contains("hidden"))return;
@@ -1070,16 +1089,62 @@ function goToMobilePage(delta){
 }
 
 function rescaleMobileFaces(){
-  document.querySelectorAll("#mobileCardPair .m-face-inner").forEach(n=>{const w=n.parentElement.clientWidth;if(w)n.style.transform=`scale(${w/parseFloat(n.style.width)})`});
+  sizeOneFace();
+  document.querySelectorAll("#mobileCardPair .m-face-inner").forEach(n=>{const w=n.parentElement.clientWidth;if(w){const k=w/parseFloat(n.style.width);n.style.transform=`scale(${k})`;n.style.setProperty("--m-inv",String(1/k))}});
 }
+/* 1枚の面を、カードの上下の空きに収まるいちばん大きな大きさにする(パネルを開いたら、パネルの上に収まる大きさ) */
+function sizeOneFace(){
+  const host=el("mobileCardPair");if(!host||!mobileUIActive()||mobileSheetMode)return;
+  const f=host.querySelector(".face");if(!f)return;
+  const fm=faceMM(),ratio=fm.w/fm.h,vw=document.documentElement.clientWidth;
+  const top=host.getBoundingClientRect().top,seg=document.querySelector(".mobile-face-labels");
+  const segH=seg&&seg.style.display!=="none"?56:14,barTop=el("mobileQuickBar")?.getBoundingClientRect().top||innerHeight;
+  const maxH=mobilePanelOpen?Math.max(130,Math.min(innerHeight*.3,300)):Math.max(160,barTop-top-segH-6);
+  const w=Math.min(vw-40,560,maxH*ratio),h=w/ratio;
+  f.style.setProperty("width",Math.floor(w)+"px","important");f.style.setProperty("height",Math.floor(h)+"px","important");
+}
+document.querySelectorAll(".mobile-face-labels [data-side]").forEach(b=>b.addEventListener("click",()=>{
+  const side=Number(b.dataset.side);if(arrangement()!=="pairs"||selected%2===side)return;
+  selected=Math.floor(selected/2)*2+side;activePart=null;renderSheet();syncControls();
+  el("mobileCardPair").querySelector(".face")?.classList.add("flip-in");
+}));
+/* 左右にスワイプで前後のカードへ(指についてくる。パーツを動かしているときは動かない) */
+(()=>{
+  const host=el("mobileCardPair");if(!host)return;let sw=null;
+  host.addEventListener("pointerdown",e=>{
+    if(e.pointerType==="mouse"||!mobileUIActive()||mobileSheetMode)return;
+    if(e.target.closest("[data-part],.resize-handle,.rotate-handle,[contenteditable]"))return;
+    sw={id:e.pointerId,x:e.clientX,y:e.clientY,t:Date.now(),dx:0,on:false};
+  });
+  host.addEventListener("pointermove",e=>{
+    if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y;
+    if(!sw.on){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3)sw.on=true;else{if(Math.abs(dy)>12)sw=null;return}}
+    const total=pages.length*cardsPerPage(),i=mobileCardIndex(),edge=(dx<0&&i>=total-1)||(dx>0&&i<=0);
+    sw.dx=dx;host.style.transition="none";host.style.transform=`translateX(${edge?dx*.25:dx}px) rotate(${(edge?dx*.25:dx)*.02}deg)`;
+  });
+  const end=e=>{
+    if(!sw||e.pointerId!==sw.id)return;const s=sw;sw=null;if(!s.on)return;
+    swipedAt=Date.now();
+    const dir=s.dx<0?1:-1,total=pages.length*cardsPerPage(),i=mobileCardIndex(),can=dir>0?i<total-1:i>0;
+    const go=can&&(Math.abs(s.dx)>70||(Date.now()-s.t<300&&Math.abs(s.dx)>35));
+    host.style.transition="transform .16s ease-in";
+    if(!go){host.style.transform="";return}
+    host.style.transform=`translateX(${-dir*70}vw) rotate(${-dir*4}deg)`;
+    setTimeout(()=>{host.style.transition="none";host.style.transform=`translateX(${dir*55}vw)`;goToMobileCard(dir);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{host.style.transition="transform .2s cubic-bezier(.2,.8,.3,1)";host.style.transform=""}))},150);
+  };
+  host.addEventListener("pointerup",end);host.addEventListener("pointercancel",end);
+})();
+let swipedAt=0;
 window.addEventListener("resize",()=>{if(mobileUIActive())rescaleMobileFaces()});
 function renderMobileCardPreview(){
   if(inlineEdit)finishInlineEdit(false);
   const host=el("mobileCardPair");if(!host)return;
   const faces=currentFaces(),c=cardMM(),landscape=isLandscapeCard();
   const paired=arrangement()==="pairs";
-  host.innerHTML="";host.className="mobile-card-pair "+(landscape?"mobile-landscape-card":"mobile-portrait-card")+(paired?"":" single-mode");
-  const indices=paired?[Math.floor(selected/2)*2,Math.floor(selected/2)*2+1]:[selected];
+  // スマホでは、選んでいる面を1枚だけ大きく出す(オモテ・ウラは下の切り替えで)
+  host.innerHTML="";host.className="mobile-card-pair one-face single-mode "+(landscape?"mobile-landscape-card":"mobile-portrait-card");
+  const indices=[selected];
   indices.forEach(idx=>{const f=document.createElement("div");f.className="face"+(idx===selected?" selected":"");f.dataset.idx=idx;f.style.setProperty("--mobile-card-ratio",landscape?`${c.h}/${c.w}`:`${c.w}/${c.h}`);const fm=faceMM(),inner=document.createElement("div");inner.className="m-face-inner";inner.style.width=fm.w*MM_TO_PX+"px";inner.style.height=fm.h*MM_TO_PX+"px";f.appendChild(inner);renderFace(inner,faces[idx],idx===selected,idx);f.addEventListener("click",()=>{if(selected===idx)return;selected=idx;renderMobileCardPreview();syncControls();inlineHint()});host.appendChild(f)});
   rescaleMobileFaces();
   const absolute=mobileCardIndex();
@@ -1101,7 +1166,8 @@ function renderMobileCardPreview(){
   el("mobilePrevCard").disabled=absolute<=0;
   const atEnd=absolute>=total-1,nb=el("mobileNextCard");
   nb.disabled=atEnd&&pages.length>=MAX_PAGES;nb.textContent=atEnd?"＋":"→";nb.setAttribute("aria-label",atEnd?"ページを追加":"次のカード");nb.classList.toggle("is-add",atEnd);
-  const labels=document.querySelector(".mobile-face-labels");if(labels){labels.style.display=paired?"":"none";labels.classList.toggle("stacked",landscape)}
+  const labels=document.querySelector(".mobile-face-labels");if(labels){labels.style.display=paired?"":"none";labels.querySelectorAll("[data-side]").forEach(b=>b.setAttribute("aria-pressed",String(Number(b.dataset.side)===selected%2)))}
+  sizeOneFace();rescaleMobileFaces();markActivePart();
   if(mobilePanelOpen)requestAnimationFrame(placeMobilePanel);
 }
 
@@ -1497,6 +1563,7 @@ document.addEventListener("click",e=>{
   if(ptrType==="mouse")return;
   const n=editTarget(e);if(!n||n.isContentEditable)return;
   if(ptrStart&&Math.hypot(e.clientX-ptrStart.x,e.clientY-ptrStart.y)>8)return;
+  if(Date.now()-swipedAt<400)return;
   e.preventDefault();e.stopPropagation();startBarEdit(n);
 },true);
 
@@ -1554,7 +1621,7 @@ let inlineHintShown=false;
 function inlineHint(){
   if(inlineHintShown)return;inlineHintShown=true;
   try{if(localStorage.getItem("pk-hint-inline"))return;localStorage.setItem("pk-hint-inline","1")}catch(_){}
-  showAppToast(T(ptrType==="mouse"?"カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"選んだカードの文字をタップすると、その場で直せます。"),{duration:7000});
+  showAppToast(T(ptrType==="mouse"?"カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"選んだカードの文字をタップすると、その場で直せます。左右にスワイプすると、前後のカードへ移ります。"),{duration:7000});
 }
 
 /* ---- キーボード操作(パソコン) ----
@@ -1565,11 +1632,40 @@ function typingIn(t){return !!(t&&t.closest&&t.closest("input,textarea,select,[c
 function overlayOpen(){return !!document.querySelector(".modal:not([hidden])")||!el("settingsPop").hidden||!el("textEditBar").hidden||!!document.querySelector(".color-popup.open,.color-popup:not([hidden])")}
 function markActivePart(){
   document.querySelectorAll(".part-active").forEach(n=>n.classList.remove("part-active"));
-  if(!activePart)return;
-  if(activePart.page!==currentPage||activePart.idx!==selected){activePart=null;return}
-  const n=document.querySelector(`#sheetGrid .face.selected [data-part="${CSS.escape(activePart.part)}"]`);
-  if(n)n.classList.add("part-active");else activePart=null;
+  if(activePart&&(activePart.page!==currentPage||activePart.idx!==selected))activePart=null;
+  if(activePart){
+    const q=`.face.selected [data-part="${CSS.escape(activePart.part)}"]`,ns=document.querySelectorAll(`#sheetGrid ${q},#mobileCardPair ${q}`);
+    if(ns.length)ns.forEach(n=>n.classList.add("part-active"));else activePart=null;
+  }
+  syncPartBar();
 }
+/* スマホ:カードの上のパーツに触れたら、下に「小さく・大きく・中央へ・削除」を出す(つまみを細かく動かさなくてよいように) */
+function syncPartBar(){
+  const bar=el("partBar");if(!bar)return;const on=mobileUIActive()&&!!activePart&&!mobileSheetMode;
+  bar.hidden=!on;document.body.classList.toggle("part-on",on);
+}
+function activePartItem(){
+  const a=activePart;if(!a)return null;const i=a.part.indexOf(":"),k=a.part.slice(0,i),id=a.part.slice(i+1),d=currentFaces()[selected];
+  const list=({tb:ensureTextBoxes,ft:ensureFrameTexts,img:ensureOptionImages,shape:ensureShapes}[k]||(()=>null))(d);
+  return list?list.find(x=>x.id===id)||null:null;
+}
+el("mobileCardPair")?.addEventListener("pointerdown",e=>{
+  const p=e.target.closest(".face.selected [data-part]");
+  if(p){activePart={page:currentPage,idx:selected,part:p.dataset.part};markActivePart()}
+  else if(activePart&&e.target.closest(".face")){activePart=null;markActivePart()}
+},true);
+el("partBar")?.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const act=b.dataset.act;
+  if(act==="done"){activePart=null;markActivePart();return}
+  if(act==="delete"){deleteActivePart();return}
+  const item=activePartItem();if(!item)return;const o=item.box||{x:20,y:20,w:60,h:14};
+  if(act==="center")item.box={...o,x:50-o.w/2};
+  else{
+    let k=act==="bigger"?1.15:1/1.15;k=Math.min(k,100/o.w,100/o.h);if(o.w*k<6)k=6/o.w;
+    const w=o.w*k,h=o.h*k,x=clamp(o.x+o.w/2-w/2,0,100-w),y=clamp(o.y+o.h/2-h/2,0,100-h);item.box={...o,x,y,w,h};
+  }
+  renderSheet();syncControls();
+});
 el("sheetGrid").addEventListener("pointerdown",e=>{
   const p=e.target.closest(".face.selected [data-part]");
   activePart=p?{page:currentPage,idx:selected,part:p.dataset.part}:null;markActivePart();
@@ -1707,7 +1803,7 @@ el("mobileDupPage")?.addEventListener("click",()=>el("dupPage")?.click());
 el("mobileDeletePage")?.addEventListener("click",()=>el("deletePage")?.click());
 el("mobilePrevCard")?.addEventListener("click",()=>mobileSheetMode?goToMobilePage(-1):goToMobileCard(-1));
 el("mobileViewToggle")?.addEventListener("click",()=>{if(!mobileSheetMode&&["Face","Template","Options"].includes(mobilePanelOpen))closeMobilePanel();setMobileSheetMode(!mobileSheetMode)});
-[el("mobileCardPair"),el("mobileSheetView")].forEach(area=>{if(!area)return;let sx=null,sy=0;
+[el("mobileSheetView")].forEach(area=>{if(!area)return;let sx=null,sy=0;   // カード1枚の表示のスワイプは、指についてくる版(上)で扱う
   area.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"||e.target.closest(".editable"))return;sx=e.clientX;sy=e.clientY});
   area.addEventListener("pointerup",e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;
     if(!(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5))return;
@@ -3238,6 +3334,21 @@ document.querySelectorAll(".install-btn").forEach(b=>b.addEventListener("click",
   showAppToast(T("Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。一度開けば、電波がないところでも使えます。"),{duration:9000});
 }));
 syncInstallButtons();
+
+/* ---- 指で触る端末では、数字の入力欄の左右に − ＋ を足す(小さな矢印や数字キーの入力をしなくてよいように) ---- */
+const coarse=matchMedia("(pointer:coarse)");
+function addSteppers(root){
+  if(!coarse.matches)return;
+  root.querySelectorAll(".tool-number-wrap:not(.has-steps)").forEach(w=>{
+    const inp=w.querySelector('input[type=number]');if(!inp)return;w.classList.add("has-steps");
+    const mk=(txt,dir,label)=>{const b=document.createElement("button");b.type="button";b.className="num-step";b.textContent=txt;b.setAttribute("aria-label",T(label));
+      b.addEventListener("click",()=>{const st=parseFloat(inp.step)||.5,v=(parseFloat(inp.value)||0)+dir*st,mn=inp.min!==""?parseFloat(inp.min):-Infinity,mx=inp.max!==""?parseFloat(inp.max):Infinity;
+        inp.value=String(Math.round(clamp(v,mn,mx)*100)/100);inp.dispatchEvent(new Event("input",{bubbles:true}));inp.dispatchEvent(new Event("change",{bubbles:true}))});return b};
+    w.insertBefore(mk("−",-1,"小さく"),w.firstChild);w.appendChild(mk("＋",1,"大きく"));
+  });
+}
+addSteppers(document);
+new MutationObserver(ms=>{if(!coarse.matches)return;for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1&&(n.matches?.(".tool-number-wrap")||n.querySelector?.(".tool-number-wrap:not(.has-steps)")))addSteppers(n.parentNode||n)}).observe(document.body,{childList:true,subtree:true});
 
 /* ---- 右のパネル:たたんである「背景とふち」「コピー・テンプレート保存」。開け閉めは覚えておく ---- */
 function syncFaceStyleChip(d){

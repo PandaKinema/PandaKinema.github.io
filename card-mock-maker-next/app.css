@@ -2359,3 +2359,86 @@ header .header-actions{display:flex;align-items:center;gap:8px;flex:none;margin-
 @media print{.part-active{outline:none!important}}
 .settings-row.settings-check{grid-template-columns:1fr;margin:10px 0 4px}
 .settings-row.settings-check .check-label{color:var(--ink)}
+
+/* ---- スマホ:カードを1枚大きく ---- */
+@media(max-width:720px){
+  .mobile-card-pair.one-face{display:flex!important;justify-content:center;margin:4px auto 0!important;will-change:transform}
+  .mobile-card-pair.one-face .face{flex:none!important;max-width:none!important}
+  .mobile-card-pair.one-face .face.selected::after{display:none!important}
+  .m-side-seg{display:flex!important;justify-content:center;gap:0;margin:10px auto 0!important;width:max-content;border:1px solid var(--ui-border);border-radius:22px;overflow:hidden;background:var(--ui-control)}
+  .m-side-seg[style*="none"]{display:none!important}
+  .m-side-seg button{min-width:96px;height:40px;border:0!important;border-radius:0!important;background:transparent;font-size:14px!important;color:var(--ui-muted);touch-action:manipulation}
+  .m-side-seg button[aria-pressed="true"]{background:var(--ink);color:var(--ui-panel);font-weight:700}
+  body.m-panel-open .m-side-seg{margin-top:6px!important}
+  body.m-panel-open .m-side-seg button{height:34px}
+  .mobile-card-pair .face.flip-in{animation:cmmFlip .22s ease-out}
+}
+@keyframes cmmFlip{from{transform:perspective(600px) rotateY(70deg);opacity:.4}to{transform:none;opacity:1}}
+
+/* ---- スマホ:パーツの操作 ---- */
+.m-face-inner .resize-handle{width:calc(30px*var(--m-inv,1))!important;height:calc(30px*var(--m-inv,1))!important;right:calc(-15px*var(--m-inv,1))!important;bottom:calc(-15px*var(--m-inv,1))!important;border-width:calc(2px*var(--m-inv,1))!important;border-radius:50%!important}
+.m-face-inner .rotate-handle{width:calc(26px*var(--m-inv,1))!important;height:calc(26px*var(--m-inv,1))!important;top:calc(-40px*var(--m-inv,1))!important;transform:translateX(-50%)!important;border-width:calc(2px*var(--m-inv,1))!important}
+.m-face-inner .resize-handle::after,.m-face-inner .rotate-handle::after{content:"";position:absolute;inset:calc(-10px*var(--m-inv,1))}
+.m-face-inner .part-active{outline-width:calc(2px*var(--m-inv,1))!important;outline-offset:calc(2px*var(--m-inv,1))!important}
+@media(max-width:720px){
+  .part-bar{display:flex;justify-content:center;gap:6px;margin:10px auto 0;padding:0 12px;flex-wrap:nowrap}
+  .part-bar[hidden]{display:none!important}
+  .part-bar button{min-height:44px;min-width:0;flex:1 1 0;max-width:92px;padding:0 6px;border-radius:12px;font-size:14px;touch-action:manipulation;white-space:nowrap}
+  .part-bar .part-del{color:#c0392b;border-color:rgba(192,57,43,.4)}
+  .part-bar .part-done{flex:0 0 48px;background:var(--ink);color:var(--ui-panel);border-color:var(--ink);font-size:18px}
+  body.part-on .m-side-seg{display:none!important}
+}
+
+/* ---- スマホ:パネルの取っ手 ---- */
+@media(max-width:720px){
+  .mobile-panel-head{position:relative;touch-action:none;height:48px!important;flex-basis:48px!important;padding-top:6px!important;cursor:grab}
+  .m-grab{position:absolute;top:6px;left:50%;width:40px;height:5px;border-radius:3px;background:var(--ui-border);transform:translateX(-50%);pointer-events:none}
+  .mobile-panel-close{width:44px!important;height:44px!important;min-width:44px!important;font-size:22px!important}
+  body.m-panel-full .mobile-tool-panel.open{box-shadow:0 -6px 30px rgba(0,0,0,.22)}
+}
+
+/* ---- 指で押しやすい大きさ(スマホ・タブレット) ---- */
+button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:manipulation}
+@media(pointer:coarse){
+  input[type=range]:not(.color-hue){-webkit-appearance:none;appearance:none;height:34px;background:transparent;padding:0}
+  input[type=range]:not(.color-hue)::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--ui-border-strong,#bbb)}
+  input[type=range]:not(.color-hue)::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-11px;border-radius:50%;background:#fff;border:2px solid var(--cyan);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  input[type=range]:not(.color-hue)::-moz-range-track{height:6px;border-radius:3px;background:var(--ui-border-strong,#bbb)}
+  input[type=range]:not(.color-hue)::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--cyan)}
+  .color-hue{height:28px!important;border-radius:14px!important}
+  .color-hue::-webkit-slider-runnable-track{height:26px!important}
+  .color-hue::-webkit-slider-thumb{width:30px!important;height:30px!important;margin-top:-2px!important;border-width:3px!important}
+  .color-hue::-moz-range-thumb{width:28px!important;height:28px!important}
+  .color-field{height:170px!important}
+  .color-popup .swatches{gap:6px!important;grid-template-columns:repeat(auto-fill,minmax(34px,1fr))!important}
+  .color-popup .swatch{min-height:34px!important}
+  .color-popup-close{min-width:44px;min-height:44px;font-size:22px!important}
+  .color-popup input,.color-popup select,.color-popup button{min-height:40px}
+  .num-step{display:inline-flex;align-items:center;justify-content:center;width:36px;min-width:36px;height:40px;padding:0;border:1px solid var(--ui-border);background:var(--ui-control);color:var(--ink);font-size:20px;line-height:1;border-radius:8px;flex:none}
+  .tool-number-wrap.has-steps .size-icon{display:none}
+}
+@media(max-width:720px){
+  header .history-controls button,#helpBtn{min-width:44px!important;min-height:44px!important}
+  .mobile-card-nav button:not(.m-view-toggle){min-width:46px!important;min-height:44px!important}
+  .mobile-card-nav .m-view-toggle{height:38px!important;border-radius:19px!important;padding:0 14px!important}
+  .mobile-panel-body input[type=text],.mobile-panel-body input[type=number],.mobile-panel-body input:not([type]),.mobile-panel-body select,.mobile-panel-body .tool-main-input{min-height:44px!important}
+  .mobile-panel-body textarea{min-height:64px}
+  .mobile-panel-body button,.mobile-panel-body .mini,.mobile-panel-body .file-btn{min-height:42px}
+  .mobile-panel-body .style-toggle span{min-width:42px!important;min-height:42px!important;display:inline-flex!important;align-items:center;justify-content:center}
+  .mobile-panel-body .color-trigger{min-width:44px!important;min-height:44px!important}
+  .mobile-panel-body .face-copy-tools button,.mobile-panel-body #tplSaveQuick{min-height:46px!important;font-size:14px!important}
+  .mobile-panel-body label:has(> input[type=checkbox]){min-height:44px;display:flex;align-items:center;gap:10px}
+  .mobile-panel-body input[type=checkbox]{width:22px;height:22px}
+  .mobile-panel-body .panel-fold>summary{min-height:48px}
+  .mobile-panel-body .tool-number-wrap{gap:4px}
+  .mobile-panel-body .tool-number-wrap .tool-number{width:56px!important;min-width:56px!important;text-align:center}
+  .mobile-quick-bar button{min-height:56px}
+}
+@media(max-width:720px){
+  .mobile-panel-body .tcg-size-strip{display:flex!important;flex-direction:column;align-items:stretch;width:100%}
+  .mobile-panel-body .tcg-size-control{width:100%;grid-template-columns:40px 1fr;font-size:13px}
+}
+@media(max-width:720px){
+  .mobile-card-nav{grid-template-columns:44px minmax(0,1fr) 44px!important;height:44px!important;min-height:44px!important}
+  .mobile-card-nav button:not(.m-view-toggle){width:44px!important;min-width:44px!important;height:44px!important}
+}

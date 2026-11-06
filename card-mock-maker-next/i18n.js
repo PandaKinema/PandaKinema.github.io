@@ -21,7 +21,7 @@ const EN={
   "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
   "見本を開く":"Open sample","見本":"Sample",
   // ---- スマホ
-  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","ホーム画面に追加":"Add to Home Screen","ホーム画面に追加しました。電波がないところでも開けます。":"Added to your home screen. It opens even without a connection.",
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","小さく":"Smaller","大きく":"Bigger","中央へ":"Center","パーツの選択をやめる":"Deselect part","ホーム画面に追加":"Add to Home Screen","ホーム画面に追加しました。電波がないところでも開けます。":"Added to your home screen. It opens even without a connection.",
   "Safariの共有ボタン(□に↑)から「ホーム画面に追加」を選んでください。一度開けば、電波がないところでも使えます。":"In Safari, tap the Share button (□ with ↑) and choose “Add to Home Screen”. Once opened, it works without a connection.","コピーした面を貼りました。":"Pasted the copied face.","この面をコピーしました。ほかの面を選んで ⌘V / Ctrl+V で貼れます。":"Copied this face. Select another face and press ⌘V / Ctrl+V to paste it.","大きさ":"Size","左右":"Left–right","上下":"Up–down","元に戻す":"Reset","カードの上でドラッグしても動かせます":"You can also drag it on the card","はみ出す文字は自動で小さくする":"Shrink text that doesn't fit","自動で小さくする":"Shrink automatically",
   "文字が枠からはみ出しています(赤い点線)。文字を減らすか小さくするか、「自動で小さくする」をオンにしてください。":"Some text doesn't fit its box (red dotted line). Shorten it, make it smaller, or turn on “Shrink automatically”.",
   "文字が枠に入りきりません(赤い点線)。文字を減らすか、枠を大きくしてください。":"Some text still doesn't fit (red dotted line). Shorten it or make the box bigger.","パーツを足す":"Add parts","選んでいるカード":"Selected card","並べ方":"Layout","背景とふち":"Background & border","コピー・テンプレート保存":"Copy & save as template",
@@ -42,7 +42,7 @@ const EN={
   "この面をこのページの同じ面にコピー":"Copy to the same side on this page","この面をすべてのページの同じ面にコピー":"Copy to the same side on all pages",
   "このページのすべての面にコピー":"Copy to every card on this page","すべてのページのすべての面にコピー":"Copy to every card on all pages",
   "画像を読み込む":"Load image","画像未設定":"No image","画像を読み込めませんでした。":"Couldn't load the image.",
-  "カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"Double-click text on a card to edit it right there. Drag an image onto a card to place it.","選んだカードの文字をタップすると、その場で直せます。":"Tap text on the selected card to edit it right there.","画像を選んでいるカードに貼りました。":"Pasted the image onto the selected card.",
+  "カードの文字はダブルクリックで、その場で直せます。画像はカードにドラッグして置けます。":"Double-click text on a card to edit it right there. Drag an image onto a card to place it.","選んだカードの文字をタップすると、その場で直せます。":"Tap text on the selected card to edit it right there.","選んだカードの文字をタップすると、その場で直せます。左右にスワイプすると、前後のカードへ移ります。":"Tap text on the selected card to edit it. Swipe left or right to move between cards.","オモテ・ウラ":"Front / back","画像を選んでいるカードに貼りました。":"Pasted the image onto the selected card.",
   // ---- テンプレート
   "種類":"Type","トランプ":"Playing card","トレカ":"Trading card","ワードゲーム":"Word game",
   "数字":"Number","数字の大きさ":"Number size","太字":"Bold","斜体":"Italic","下線":"Underline","数字の色":"Number color","フォント":"Font","基本":"Default",
