@@ -2461,3 +2461,17 @@ button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:m
 
 /* カードごとにレイアウトを閉じる(文字の大きさ合わせで、ほかのカードまで計算し直さないように) */
 .face{contain:layout}
+
+/* ---- 個数:同じ画像・図形を並べる ---- */
+.option-image.rep,.option-shape.rep{overflow:visible}
+.rep-cell{position:absolute;left:0;top:0;width:100%;height:100%}
+.rep-cell svg{display:block;width:100%;height:100%}
+.option-image.rep>img{display:none}
+.part-repeat{margin:6px 0 4px;display:grid;gap:6px}
+.part-repeat .pr-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ui-muted);margin:0}
+.part-repeat .pr-row>span:first-child{flex:0 0 4.2em}
+.part-repeat .tool-number{width:56px}
+.part-repeat small{font-size:11px;color:var(--ui-muted)}
+.part-repeat .pr-more{display:grid;gap:6px}
+.part-repeat .pr-more[hidden]{display:none}
+.part-repeat select{width:100%}

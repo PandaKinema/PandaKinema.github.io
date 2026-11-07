@@ -21,7 +21,7 @@ const EN={
   "下の「面」「テンプレ」から作りはじめます。":"Start from “Face” or “Template” below.",
   "見本を開く":"Open sample","見本":"Sample",
   // ---- スマホ
-  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","保存したPDFを開く":"Open a saved PDF","以前の版（β）を使っていた方へ":"Used the earlier (β) version?","以前の版のPDFを開きました":"Opened a PDF from the earlier version",
+  "スマホ用ツールバー":"Phone toolbar","面":"Face","テンプレ":"Template","オプション":"Options","パーツ":"Parts","完了":"Done","表のひな形をダウンロード":"Download a table template","表のひな形":"table-template","Excelやスプレッドシートで書き始めるための表(CSV)":"A CSV to start from in Excel or a spreadsheet","表のひな形をダウンロードしました。書いたら「CSVファイルを読み込む」で読み込めます。":"Downloaded a table template. When it's filled in, load it with “Load a CSV file”.","個数":"Count","横に・中央そろえ":"In a row, centered","横に・左から":"In a row, from the left","縦に・中央そろえ":"In a column, centered","縦に・上から":"In a column, from the top","折り返し":"Wrap","個ごと（0はしない）":"per line (0 = no wrap)","画像の個数":"Image count","図形の個数":"Shape count","保存したPDFを開く":"Open a saved PDF","以前の版（β）を使っていた方へ":"Used the earlier (β) version?","以前の版のPDFを開きました":"Opened a PDF from the earlier version",
   "中身はそのまま開けています。新しい版で変わったところです。":"Everything opened as it was. Here's what changed in the new version.",
   "「テンプレート」→「テンプレ1〜3」と選んでいたものは、":"Instead of choosing “Template” and then “Template 1–3”, ","で「トランプ」「トレカ」「ワードゲーム」を直接選びます。":" now lists Playing card, Trading card and Word game directly.",
   "「テンプレ4：カスタム」で作ったカードは、「無地」と文字のパーツになっています。":"Cards made with “Template 4: Custom” are now Blank faces with text parts.",

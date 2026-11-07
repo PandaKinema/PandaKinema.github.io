@@ -201,6 +201,7 @@ function styleOf(f){
   if(!f)return "";
   const o={...f};contentKeys(f).forEach(k=>delete o[k]);
   ["textBoxes","frameTexts"].forEach(k=>{if(Array.isArray(o[k]))o[k]=o[k].map(x=>{const y={...x};delete y.text;return y})});
+  ["optionImages","shapes"].forEach(k=>{if(Array.isArray(o[k]))o[k]=o[k].map(x=>{const y={...x};delete y.count;return y})});   // 個数はカードごと
   return JSON.stringify(o,packImages);
 }
 /* 見た目は src から、文字は dst のまま(テキストボックスなどは id で対応づける) */
@@ -208,6 +209,7 @@ function restyleFace(src,dst){
   const out=deep(src);
   if(dst&&faceKindOf(dst)===faceKindOf(src))contentKeys(src).forEach(k=>{if(dst[k]!==undefined)out[k]=dst[k]===null?null:deep(dst[k])});
   ["textBoxes","frameTexts"].forEach(k=>(out[k]||[]).forEach((x,i)=>{const list=(dst&&dst[k])||[],d=x.id!=null?list.find(y=>y&&y.id===x.id):list[i];if(d&&d.text!==undefined)x.text=d.text}));
+  ["optionImages","shapes"].forEach(k=>(out[k]||[]).forEach((x,i)=>{const list=(dst&&dst[k])||[],d=x.id!=null?list.find(y=>y&&y.id===x.id):list[i];if(d)x.count=d.count;else delete x.count}));
   return out;
 }
 function tplCount(tid){let n=0;for(const id of deck.order)if(deck.cards[id]&&deck.cards[id].tpl===tid)n++;return n}
@@ -296,14 +298,25 @@ function renderFrameTexts(faceEl,d,selectable=false,idx=-1){
     faceEl.appendChild(div);
   });
 }
+/* ---- 個数:同じ画像・図形を、1個の大きさのままN個並べる(パーツの枠は1個ぶん。中央そろえなら枠を中心に並ぶ) ---- */
+const REP_GAP=1.15;   // 1個の大きさに対する間隔
+function repCount(item){return clamp(parseInt(item&&item.count)||1,1,20)}
+function repCells(item,inner){
+  const n=repCount(item);if(n<2)return inner;
+  const flow=item.flow||"row-center",col=flow.startsWith("col"),center=flow.endsWith("center"),K=clamp(parseInt(item.wrap)||0,0,20)||n;let h="";
+  for(let i=0;i<n;i++){const line=Math.floor(i/K),j=i%K,len=Math.min(K,n-line*K),pos=center?j-(len-1)/2:j,a=pos*REP_GAP*100,b=line*REP_GAP*100;
+    h+=`<div class="rep-cell" style="left:${col?b:a}%;top:${col?a:b}%">${inner}</div>`}
+  return h;
+}
 function renderOptionImages(faceEl,d,selectable=false,idx=-1){
-  ensureOptionImages(d).forEach((item,n)=>{if(!item.src)return;const b=item.box||{x:30,y:28+n*5,w:40,h:30};const div=document.createElement("div");div.className="option-image"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";div.style.transform=`rotate(${Number(item.rotation)||0}deg)`;div.innerHTML=`<img src="${item.src}" alt="">`;if(selectable){div.dataset.part="img:"+item.id;div.innerHTML+=`<div class="resize-handle"></div><div class="rotate-handle"></div>`;enableOptionImage(div,idx,item.id)}faceEl.appendChild(div)})
+  ensureOptionImages(d).forEach((item,n)=>{if(!item.src)return;const b=item.box||{x:30,y:28+n*5,w:40,h:30};const div=document.createElement("div");div.className="option-image"+(selectable?" editable":"")+(repCount(item)>1?" rep":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.height=b.h+"%";div.style.transform=`rotate(${Number(item.rotation)||0}deg)`;div.innerHTML=repCells(item,`<img src="${item.src}" alt="">`);if(selectable){div.dataset.part="img:"+item.id;div.innerHTML+=`<div class="resize-handle"></div><div class="rotate-handle"></div>`;enableOptionImage(div,idx,item.id)}faceEl.appendChild(div)})
 }
 function renderShapes(faceEl,d,selectable=false,idx=-1){
   ensureShapes(d).forEach(item=>{const b=item.box||{x:30,y:30,w:38,h:38},div=document.createElement("div");div.className="option-shape"+(selectable?" editable":"");div.style.left=b.x+"%";div.style.top=b.y+"%";div.style.width=b.w+"%";div.style.aspectRatio="1 / 1";
     let tag=item.type==="circle"?'<ellipse cx="50" cy="50" rx="46" ry="46"/>':item.type==="rect"?'<rect x="4" y="4" width="92" height="92"/>':`<polygon points="${shapePoints(item.type,item.points)}"/>`;
     const sw=Math.max(.1,Number(item.borderWidth)||1), align=item.borderAlign||"inside"; let svgStroke=sw*MM_TO_PX; if(align==="inside")svgStroke*=2; else if(align==="outside")svgStroke*=2;
-    div.innerHTML=`<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g fill="${item.fillNone?'none':item.fillColor||'#fff'}" stroke="${item.borderNone?'none':item.borderColor||'#222'}" stroke-width="${svgStroke}" vector-effect="non-scaling-stroke">${tag}</g></svg>${selectable?'<div class="resize-handle"></div>':''}`;
+    if(repCount(item)>1)div.classList.add("rep");
+    div.innerHTML=repCells(item,`<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g fill="${item.fillNone?'none':item.fillColor||'#fff'}" stroke="${item.borderNone?'none':item.borderColor||'#222'}" stroke-width="${svgStroke}" vector-effect="non-scaling-stroke">${tag}</g></svg>`)+(selectable?'<div class="resize-handle"></div>':'');
     if(selectable){div.dataset.part="shape:"+item.id;enableShape(div,idx,item.id)}faceEl.appendChild(div)})
 }
 function enableShape(node,idx,itemId){let mode=null,sx=0,sy=0,start=null;const h=node.querySelector('.resize-handle'),get=()=>ensureShapes(currentFaces()[idx]).find(x=>x.id===itemId);const down=(e,m)=>{e.preventDefault();e.stopPropagation();mode=m;sx=e.clientX;sy=e.clientY;start={...(get().box)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up,{once:true})};node.addEventListener('pointerdown',e=>{if(e.target!==h)down(e,'move')});h&&h.addEventListener('pointerdown',e=>down(e,'resize'));function move(e){const it=get(),r=node.closest('.face').getBoundingClientRect(),dx=(e.clientX-sx)/r.width*100,dy=(e.clientY-sy)/r.height*100;const currentH=it.box.h||start.h||38;if(mode==='move'){const visualH=(it.box.w||start.w)*r.width/r.height;it.box={...start,x:clamp(start.x+dx,0,100-start.w),y:clamp(start.y+dy,0,100-visualH),h:visualH}}else{let nw=start.w+(Math.abs(dx)>=Math.abs(dy)?dx:dy*r.height/r.width);nw=clamp(nw,8,100-start.x);let nh=nw*r.width/r.height;if(nh>100-start.y){nh=100-start.y;nw=nh*r.height/r.width}it.box={...start,w:nw,h:nh}}Object.assign(node.style,{left:it.box.x+'%',top:it.box.y+'%',width:it.box.w+'%',height:'auto',aspectRatio:'1 / 1'})}function up(){mode=null;window.removeEventListener('pointermove',move);syncControls()}}
@@ -1379,10 +1392,10 @@ function renderTextBoxEditors(d){
 function renderOptionImageEditors(d){
   const list=el("optionImageList"),items=ensureOptionImages(d);list.innerHTML="";
   items.forEach((item,index)=>{const wrap=document.createElement("div");wrap.className="option-image-editor";wrap.innerHTML=`<div class="option-image-editor-head"><strong>画像${index+1}</strong><button type="button" class="textbox-delete">削除</button></div><div class="option-image-row"><img src="${item.src}" alt=""><label>回転 <input class="option-image-angle" type="number" min="-180" max="180" value="${Number(item.rotation)||0}">°</label></div><label class="checkline" style="margin:6px 0 0"><input class="oi-center" type="checkbox" ${item.centerSnap?"checked":""}>中央にスナップ</label>`;const angle=wrap.querySelector(".option-image-angle"),center=wrap.querySelector(".oi-center"),del=wrap.querySelector(".textbox-delete");angle.oninput=()=>{item.rotation=Number(angle.value)||0;renderSheet()};center.onchange=()=>{item.centerSnap=center.checked;renderSheet()};del.onclick=()=>{items.splice(index,1);renderSheet();syncControls()};list.appendChild(wrap)});el("addOptionImage").disabled=items.length>=5
-;addDupButtons(list,"img",items);
+;addDupButtons(list,"img",items);addRepeatControls(list,"img",items);
 }
 
-function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);list.innerHTML='';items.forEach((item,i)=>{const w=document.createElement('div');w.className='shape-editor';const names={circle:'円',triangle:'三角形',rect:'四角形',polygon:'多角形',star:'星'};w.innerHTML=`<div class="shape-editor-head"><strong>${names[item.type]||'図形'}${i+1}</strong><button class="textbox-delete" type="button">削除</button></div><div class="shape-editor-row">${['polygon','star'].includes(item.type)?`<label>頂点 <input class="shape-points" type="number" min="${item.type==='star'?4:3}" max="12" value="${item.points||5}" style="width:54px"></label>`:''}<div class="tool-color fill-color" title="面色"><input class="shape-fill" type="color" value="${item.fillColor||'#fff'}"></div><div class="tool-color stroke-color" title="線色"><input class="shape-stroke" type="color" value="${item.borderColor||'#222'}"></div><select class="shape-width stroke-width-select"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1">1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select><select class="shape-align stroke-align-select"><option value="inside">内側</option><option value="center">中央</option><option value="outside">外側</option></select></div>`;const pts=w.querySelector('.shape-points'),fill=w.querySelector('.shape-fill'),stroke=w.querySelector('.shape-stroke'),width=w.querySelector('.shape-width'),align=w.querySelector('.shape-align');width.value=String(item.borderWidth||1);align.value=item.borderAlign||'inside';if(pts)pts.oninput=()=>{item.points=clamp(Number(pts.value)||5,item.type==='star'?4:3,12);renderSheet()};fill.dataset.none=item.fillNone?'1':'0';stroke.dataset.none=item.borderNone?'1':'0';fill.oninput=()=>{item.fillColor=fill.value;item.fillNone=false;renderSheet()};stroke.oninput=()=>{item.borderColor=stroke.value;item.borderNone=false;renderSheet()};fill.addEventListener('colornone',()=>{item.fillNone=true;renderSheet()});stroke.addEventListener('colornone',()=>{item.borderNone=true;renderSheet()});width.onchange=()=>{item.borderWidth=Number(width.value)||1;renderSheet()};align.onchange=()=>{item.borderAlign=align.value;renderSheet()};w.querySelector('.textbox-delete').onclick=()=>{items.splice(i,1);renderSheet();syncControls()};list.appendChild(w);[fill,stroke].forEach(setupColorInput)});addDupButtons(list,"shape",items);
+function renderShapeEditors(d){const list=el('shapeList'),items=ensureShapes(d);list.innerHTML='';items.forEach((item,i)=>{const w=document.createElement('div');w.className='shape-editor';const names={circle:'円',triangle:'三角形',rect:'四角形',polygon:'多角形',star:'星'};w.innerHTML=`<div class="shape-editor-head"><strong>${names[item.type]||'図形'}${i+1}</strong><button class="textbox-delete" type="button">削除</button></div><div class="shape-editor-row">${['polygon','star'].includes(item.type)?`<label>頂点 <input class="shape-points" type="number" min="${item.type==='star'?4:3}" max="12" value="${item.points||5}" style="width:54px"></label>`:''}<div class="tool-color fill-color" title="面色"><input class="shape-fill" type="color" value="${item.fillColor||'#fff'}"></div><div class="tool-color stroke-color" title="線色"><input class="shape-stroke" type="color" value="${item.borderColor||'#222'}"></div><select class="shape-width stroke-width-select"><option value="0.5">0.5 mm</option><option value="0.75">0.75 mm</option><option value="1">1 mm</option><option value="2">2 mm</option><option value="3">3 mm</option></select><select class="shape-align stroke-align-select"><option value="inside">内側</option><option value="center">中央</option><option value="outside">外側</option></select></div>`;const pts=w.querySelector('.shape-points'),fill=w.querySelector('.shape-fill'),stroke=w.querySelector('.shape-stroke'),width=w.querySelector('.shape-width'),align=w.querySelector('.shape-align');width.value=String(item.borderWidth||1);align.value=item.borderAlign||'inside';if(pts)pts.oninput=()=>{item.points=clamp(Number(pts.value)||5,item.type==='star'?4:3,12);renderSheet()};fill.dataset.none=item.fillNone?'1':'0';stroke.dataset.none=item.borderNone?'1':'0';fill.oninput=()=>{item.fillColor=fill.value;item.fillNone=false;renderSheet()};stroke.oninput=()=>{item.borderColor=stroke.value;item.borderNone=false;renderSheet()};fill.addEventListener('colornone',()=>{item.fillNone=true;renderSheet()});stroke.addEventListener('colornone',()=>{item.borderNone=true;renderSheet()});width.onchange=()=>{item.borderWidth=Number(width.value)||1;renderSheet()};align.onchange=()=>{item.borderAlign=align.value;renderSheet()};w.querySelector('.textbox-delete').onclick=()=>{items.splice(i,1);renderSheet();syncControls()};list.appendChild(w);[fill,stroke].forEach(setupColorInput)});addDupButtons(list,"shape",items);addRepeatControls(list,"shape",items);
 }
 
 function renderFrameTextEditors(d){
@@ -1681,7 +1694,11 @@ el("partBar")?.addEventListener("click",e=>{
   if(act==="delete"){deleteActivePart();return}
   if(act==="dup"){const a=activePart;if(!a)return;const i=a.part.indexOf(":");duplicatePart(a.part.slice(0,i),a.part.slice(i+1));return}
   const item=activePartItem();if(!item)return;const o=item.box||{x:20,y:20,w:60,h:14};
-  if(act==="center")item.box={...o,x:50-o.w/2};
+  if(act==="center"){
+    const n=repCount(item),flow=item.flow||"row-center",K=clamp(parseInt(item.wrap)||0,0,20)||n;
+    const gw=n>1&&flow==="row-start"?(Math.min(n,K)-1)*REP_GAP*o.w+o.w:o.w;   // 左から並べているときは、並び全体を真ん中へ
+    item.box={...o,x:50-(n>1&&flow==="row-start"?gw:o.w)/2};
+  }
   else{
     let k=act==="bigger"?1.15:1/1.15;k=Math.min(k,100/o.w,100/o.h);if(o.w*k<6)k=6/o.w;
     const w=o.w*k,h=o.h*k,x=clamp(o.x+o.w/2-w/2,0,100-w),y=clamp(o.y+o.h/2-h/2,0,100-h);item.box={...o,x,y,w,h};
@@ -1736,6 +1753,36 @@ function duplicatePart(kind,id){
   if(c.box){const b=c.box;c.box={...b,x:b.x+4<=100-b.w?b.x+4:Math.max(0,b.x-4),y:b.y+4<=100-b.h?b.y+4:Math.max(0,b.y-4)}}   // 少しずらして重ねる
   list.splice(i+1,0,c);activePart={page:currentPage,idx:selected,part:kind+":"+c.id};
   renderSheet();syncControls();return true;
+}
+function fitRepeatToCard(item){
+  const o=item.box;if(!o)return;const n=repCount(item),flow=item.flow||"row-center",col=flow.startsWith("col"),K=clamp(parseInt(item.wrap)||0,0,20)||n,len=Math.min(n,K);
+  const span=(len-1)*REP_GAP+1,size=col?o.h:o.w,room=92;if(size*span<=room)return;
+  const k=room/(size*span),w=o.w*k,h=o.h*k;
+  item.box={...o,w,h,x:col?clamp(o.x+o.w/2-w/2,0,100-w):(flow==="row-start"?4:50-w/2),y:col?(flow==="col-start"?4:50-h/2):clamp(o.y+o.h/2-h/2,0,100-h)};
+}
+function addRepeatControls(list,kind,items){
+  [...list.children].forEach((w,i)=>{
+    const item=items[i];if(!item||w.querySelector(".part-repeat"))return;
+    const n=repCount(item),box=document.createElement("div");box.className="part-repeat";
+    box.innerHTML=`<label class="pr-row"><span>${T("個数")}</span><span class="tool-number-wrap"><input class="tool-number pr-n" type="number" min="1" max="20" step="1" value="${n}"></span></label>`+
+      `<div class="pr-more"${n>1?"":" hidden"}><select class="pr-flow" aria-label="${T("並べ方")}"><option value="row-center">${T("横に・中央そろえ")}</option><option value="row-start">${T("横に・左から")}</option><option value="col-center">${T("縦に・中央そろえ")}</option><option value="col-start">${T("縦に・上から")}</option></select>`+
+      `<label class="pr-row"><span>${T("折り返し")}</span><span class="tool-number-wrap"><input class="tool-number pr-k" type="number" min="0" max="20" step="1" value="${parseInt(item.wrap)||0}"></span><small>${T("個ごと（0はしない）")}</small></label></div>`;
+    const head=w.firstElementChild;head.after(box);
+    box.querySelector(".pr-flow").value=item.flow||"row-center";
+    box.querySelector(".pr-n").addEventListener("change",e=>{
+      const before=repCount(item);item.count=clamp(parseInt(e.target.value)||1,1,20);
+      if(item.count>before)fitRepeatToCard(item);   // 増やして用紙からはみ出すときは、1個の大きさを小さくして収める
+      renderSheet();syncControls();
+    });
+    box.querySelector(".pr-k").addEventListener("change",e=>{item.wrap=clamp(parseInt(e.target.value)||0,0,20);renderSheet()});
+    box.querySelector(".pr-flow").addEventListener("change",e=>{
+      // 中央そろえ⇔左から(上から)を切り替えても、並びが今の場所から動かないように基準の位置を合わせる
+      const from=item.flow||"row-center",to=e.target.value,o=item.box,n=repCount(item),K=clamp(parseInt(item.wrap)||0,0,20)||n,len=Math.min(n,K);
+      if(o&&from.slice(0,3)===to.slice(0,3)&&from!==to){const col=to.startsWith("col"),sz=col?o.h:o.w,shift=(len-1)/2*REP_GAP*sz*(to.endsWith("center")?1:-1);
+        item.box=col?{...o,y:clamp(o.y+shift,0,100-o.h)}:{...o,x:clamp(o.x+shift,0,100-o.w)}}
+      item.flow=to;fitRepeatToCard(item);renderSheet();
+    });
+  });
 }
 function addDupButtons(list,kind,items){
   [...list.children].forEach((w,i)=>{
@@ -2084,7 +2131,9 @@ const BULK_ALIASES={
   main:["ことば","言葉","お題","ワード","word","main"],
   textbox:["文字","テキストボックス","テキスト","textbox","text"],
   frame:["枠つき文字","枠付き文字","枠文字","フレームテキスト","フレーム","frametext","framedtext","frame"],
-  qty:["枚数","数量","copies","count","qty","quantity"]
+  qty:["枚数","数量","copies","count","qty","quantity"],
+  imgcount:["画像の個数","画像の数","アイコンの数","アイコンの個数","imagecount","iconcount","icons"],
+  shapecount:["図形の個数","図形の数","shapecount","shapes"]
 };
 const BULK_KINDS={playing:{name:"トランプ",make:makePlaying,keys:["number","suit"]},tcg:{name:"トレカ",make:makeTcg,keys:["name","desc"]},word:{name:"ワードゲーム",make:makeWord,keys:["main"]}};
 const BULK_EXAMPLES={
@@ -2106,6 +2155,8 @@ function bulkFields(card){
     }
     (f.textBoxes||[]).forEach((_,i)=>add("textbox","文字",i+1,(d,v)=>{d.textBoxes[i].text=v},d=>d.textBoxes[i].text));
     (f.frameTexts||[]).forEach((_,i)=>add("frame","枠つき文字",i+1,(d,v)=>{d.frameTexts[i].text=v},d=>d.frameTexts[i].text));
+    (f.optionImages||[]).forEach((_,i)=>add("imgcount","画像の個数",i+1,(d,v)=>{d.optionImages[i].count=clamp(parseInt(String(v).replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)))||1,1,20)},d=>String(repCount(d.optionImages[i]))));
+    (f.shapes||[]).forEach((_,i)=>add("shapecount","図形の個数",i+1,(d,v)=>{d.shapes[i].count=clamp(parseInt(String(v).replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)))||1,1,20)},d=>String(repCount(d.shapes[i]))));
   });
   return out;
 }
@@ -2296,6 +2347,23 @@ el("bulkExample").addEventListener("click",()=>{
   if(!bulk)return;
   if(el("bulkText").value.trim()&&!confirm(T("貼り付けた内容を例に置き換えますか？")))return;
   bulk.auto=false;el("bulkText").value=bulkExample();el("bulkHeader").checked=true;bulk.csv=false;renderBulk();
+});
+/* 表のひな形:選んでいるテンプレートに合わせた見出しと例の行を、Excelでも文字化けしないCSVで渡す(書いたらそのまま読み込める) */
+function bulkTemplateRows(){
+  const lang=window.CMMI18N&&CMMI18N.lang==="en"?"en":"ja",heads=bulk.fields.map(bulkHeadName).concat(T("枚数")),w=heads.length;let rows;
+  if(bulk.kind==="selected"||bulk.kind.startsWith("my:")){
+    const c=bulkTemplateCard();
+    rows=[1,2,3].map(r=>bulk.fields.map(f=>/count$/.test(f.kind)?String(r):String(f.get(c[f.side])??"")).concat("1"));
+  }else rows=BULK_EXAMPLES[bulk.kind][lang].map(r=>{const x=r.slice(0,w);while(x.length<w)x.push(x.length===w-1?"1":"");return x});
+  return [heads,...rows];
+}
+el("bulkTemplateDl")?.addEventListener("click",()=>{
+  if(!bulk)return;
+  const cell=v=>/[",\n\r]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':v;
+  const csv="\ufeff"+bulkTemplateRows().map(r=>r.map(cell).join(",")).join("\r\n")+"\r\n";
+  const name=bulk.kind.startsWith("my:")?(bulkMyTemplate()?.name||T("マイテンプレート")):bulk.kind==="selected"?T("選んでいるカード"):T(BULK_KINDS[bulk.kind].name);
+  downloadBlob(new Blob([csv],{type:"text/csv;charset=utf-8"}),`${T("表のひな形")}_${String(name).replace(/[\\/:*?"<>|]/g,"_")}.csv`);
+  showAppToast(T("表のひな形をダウンロードしました。書いたら「CSVファイルを読み込む」で読み込めます。"),{duration:5000});
 });
 el("bulkFileBtn").addEventListener("click",()=>el("bulkFile").click());
 el("bulkFile").addEventListener("change",async e=>{
