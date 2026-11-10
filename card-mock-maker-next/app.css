@@ -2475,3 +2475,8 @@ button,select,label,summary,input,[role=button],.file-btn,.swatch{touch-action:m
 .part-repeat .pr-more{display:grid;gap:6px}
 .part-repeat .pr-more[hidden]{display:none}
 .part-repeat select{width:100%}
+
+/* ---- ご意見・ご要望（Googleフォーム）への入口 ---- */
+.settings-feedback{margin-top:12px;padding-top:12px;border-top:1px solid var(--ui-border)}
+.settings-feedback button{width:100%;min-height:32px;font-size:12px}
+.mobile-more-panel .m-feedback-grid .open-feedback{grid-column:1/-1}

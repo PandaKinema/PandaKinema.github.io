@@ -2486,6 +2486,28 @@ if(el("deckFont")){el("deckFont").innerHTML=fontOptions(false);el("deckFont").ad
 function applyUnits(){saveUnits();relabelLengths(document);updateFit();syncControls()}
 if(el("unitLen")){el("unitLen").value=units.len;el("unitLen").addEventListener("change",e=>{units.len=e.target.value;applyUnits()})}
 if(el("unitText")){el("unitText").value=units.text;el("unitText").addEventListener("change",e=>{units.text=e.target.value;applyUnits()})}
+// ご意見・ご要望フォーム。使っている環境を「ご使用の環境」に入れて開く
+const FEEDBACK_FORM="https://docs.google.com/forms/d/e/1FAIpQLSfvJ7wGWu429npbA55X5kqrXcCbYOyQaKBSF5m5vWAtzHPkgQ/viewform";
+const FEEDBACK_ENV_ENTRY="entry.628110980";
+const APP_VERSION="1.0";
+function feedbackEnv(){
+  const ua=navigator.userAgent||"";let m,br="その他のブラウザ";
+  const touchMac=/Macintosh/.test(ua)&&navigator.maxTouchPoints>1;
+  const os=/iPhone/.test(ua)?"iPhone":(/iPad/.test(ua)||touchMac)?"iPad":/Android/.test(ua)?"Android":/Windows/.test(ua)?"Windows":/CrOS/.test(ua)?"ChromeOS":/Mac/.test(ua)?"Mac":/Linux/.test(ua)?"Linux":"その他";
+  if((m=ua.match(/Edg(?:A|iOS)?\/(\d+)/)))br="Edge "+m[1];
+  else if((m=ua.match(/(?:CriOS|Chrome)\/(\d+)/)))br="Chrome "+m[1];
+  else if((m=ua.match(/(?:FxiOS|Firefox)\/(\d+)/)))br="Firefox "+m[1];
+  else if(/Safari/.test(ua)&&(m=ua.match(/Version\/(\d+(?:\.\d+)?)/)))br="Safari "+m[1];
+  let standalone=false;try{standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){}
+  const cards=deck&&deck.order?deck.order.length:0;
+  return ["Ver."+APP_VERSION,os,br,"画面 "+innerWidth+"×"+innerHeight,"カード "+cards+"枚",navigator.language||"",standalone?"ホーム画面から":"ブラウザ"].filter(Boolean).join(" / ");
+}
+function openFeedback(){
+  const url=FEEDBACK_FORM+"?usp=pp_url&"+FEEDBACK_ENV_ENTRY+"="+encodeURIComponent(feedbackEnv());
+  window.open(url,"_blank","noopener");
+  if(typeof toggleSettings==="function")toggleSettings(false);
+}
+document.addEventListener("click",e=>{if(e.target.closest(".open-feedback")){e.preventDefault();openFeedback()}});
 function toggleSettings(force){const pop=el("settingsPop");if(!pop)return;const open=force??pop.hidden;pop.hidden=!open;el("settingsBtn")?.setAttribute("aria-expanded",String(open))}
 el("settingsBtn")?.addEventListener("click",e=>{e.stopPropagation();toggleSettings()});
 document.addEventListener("click",e=>{const pop=el("settingsPop");if(pop&&!pop.hidden&&!e.target.closest("#settingsPop,#settingsBtn"))toggleSettings(false)});
