@@ -20,12 +20,17 @@
   main: '#163f53'
   accent: '#ffffff'
 - key: mockmaker
-  name: カードモックツクール β
+  name: カードモックツクール
   url: https://pandakinema.com/card-mock-maker/
-  title_image: ''
+  title_image: img/logo/cmm_title.png
+  front: img/tools/tool_cmm_front.webp
   image: img/tools/tool_cmm_screen.webp
   thumb: img/tools/tool_cmm_icon.webp
-  intro_ja: カードゲームのモックをブラウザ上で簡単に作成・印刷できるツール。
-  intro_en: A tool for easily making and printing card game mockups in your browser.
+  intro_ja: |-
+    カードゲームのモックをブラウザ上で
+    簡単に作成できるツール。
+  intro_en: |-
+    A tool for easily making card game mockups
+    in your browser.
   main: '#2a3138'
   accent: '#ffffff'

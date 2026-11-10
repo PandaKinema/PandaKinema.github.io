@@ -174,7 +174,7 @@ const EN={
   "これ以上カードを増やせません（最大{n}ページ）":"Can't add more cards (up to {n} pages).",
   "ドラゴン":"Dragon","このカードを出したとき、山札からカードを1枚引く。":"When you play this card, draw a card.",
   // ---- メタ
-  "カードモックツクール（改良テスト版） | Card Mock Maker":"Card Mock Maker (test build)",
+  "カードモックツクール | Card Mock Maker":"Card Mock Maker",
 };
 const PATTERNS=[
   [/^カード(\d+)（ページ内(\d+)）・(オモテ|ウラ)$/,(m)=>`Card ${m[1]} (#${m[2]} on page) · ${m[3]==="オモテ"?"Front":"Back"}`],
@@ -256,7 +256,7 @@ function setLang(l,{save=true}={}){
   lang=l==="en"?"en":"ja";
   document.documentElement.lang=lang;
   if(save){try{localStorage.setItem("pk-lang",lang)}catch(e){}}
-  if(lang==="en"){applyTo(document.body);document.title=T("カードモックツクール（改良テスト版） | Card Mock Maker")}
+  if(lang==="en"){applyTo(document.body);document.title=T("カードモックツクール | Card Mock Maker")}
   else{restoreAll();document.title=document.documentElement.dataset.jaTitle||document.title}
   document.querySelectorAll("[data-lang-btn]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.langBtn===lang)));
   document.dispatchEvent(new CustomEvent("cmm-langchange",{detail:{lang}}));

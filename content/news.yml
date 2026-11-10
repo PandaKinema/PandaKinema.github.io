@@ -1,3 +1,11 @@
+- date: 2026-11-10
+  cat_ja: 公開
+  cat_en: Launch
+  text_ja: カードモックツクール Ver.1.0を公開しました
+  text_en: Card Mock Maker Ver.1.0 is out
+  body_ja: カードゲームのモックを作れるツール「カードモックツクール」を、β版から大きく作り直したVer.1.0を公開しました。カードの上で直接編集できるようになったほか、自動保存や表からのまとめての作成などに対応しています。使い方ガイドもあわせてご覧ください。
+  body_en: We've released Ver.1.0 of Card Mock Maker, our tool for making card game mockups, rebuilt from the β version. You can now edit right on the card, and it saves automatically and can make many cards at once from a table. Have a look at the guide too.
+  link: /card-mock-maker/
 - date: 2026-11-01
   cat_ja: お知らせ
   cat_en: News
