@@ -162,7 +162,9 @@ def tool_art(t, where):
     return ''
 def tool_title(t, cls):
     if t.get('title_image'):
-        return '<img class="%s" src="img/%s" alt="%s">' % (cls, img(t['title_image']), e(t['name']))
+        w, h = size(t['title_image'])
+        tall = ' tall' if w < h * 5 else ''   # 横長の文字ロゴでなく、2段組みなどの背の高いロゴ:高さで大きさを決める
+        return '<img class="%s%s" src="img/%s" alt="%s">' % (cls, tall, img(t['title_image']), e(t['name']))
     return '<span class="tool-name">%s</span>' % e(t['name'])
 def tool_btn(t, tag='a'):   # ボタンはボードゲームと同じ「見る」
     lab = AR + L('見る', 'View')
